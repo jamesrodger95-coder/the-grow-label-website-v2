@@ -252,17 +252,17 @@ export default function HomePage() {
                 labelledBy="stages-title"
                 caption="Proportions shown are illustrative of the shape of the staircase, not a benchmark. Real figures come from a client’s own systems."
               />
+              {/* A row inside a <dl> may contain only <dt> and <dd>, so the
+                  index sits inside the term rather than as a sibling span. */}
               <dl className="ledger" style={{ marginTop: 40 }}>
                 {VALUE_STAGES.map((stage, i) => (
-                  <div className="lrow" key={stage.id}>
-                    <span className="lrow__idx">{`0${i + 1}`}</span>
-                    <dt className="lrow__key">{stage.name}</dt>
-                    <dd className="lrow__val" style={{ margin: 0 }}>
-                      {stage.definition}
-                    </dd>
-                    <span className="lrow__fig label label--strong" style={{ textAlign: 'right' }}>
-                      {stage.confidence}
-                    </span>
+                  <div className="lrow lrow--stage" key={stage.id}>
+                    <dt className="lrow__key">
+                      <span className="lrow__idx">{`0${i + 1}`}</span>
+                      {stage.name}
+                    </dt>
+                    <dd className="lrow__val">{stage.definition}</dd>
+                    <dd className="lrow__tag">{stage.confidence}</dd>
                   </div>
                 ))}
               </dl>
@@ -309,7 +309,7 @@ export default function HomePage() {
             />
           </Reveal>
           <div className="two-col">
-            <Reveal>
+            <Reveal className="sticky-aside">
               <p className="lead">{EVIDENCE.lead}</p>
               <p style={{ marginTop: 28 }}>
                 <TextLink href="/methodology">What we cannot claim</TextLink>

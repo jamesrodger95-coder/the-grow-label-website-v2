@@ -155,15 +155,13 @@ export default function StyleguidePage() {
             £248,610
           </p>
 
-          <div className="ledger">
+          <div className="spec">
             {TYPE_SCALE.map((t, i) => (
-              <div className="lrow" key={t.name}>
+              <div className="spec__row" key={t.name}>
                 <span className="lrow__idx">{`0${i + 1}`}</span>
                 <span className="lrow__key mono">{t.name}</span>
                 <span className="lrow__val mono">{t.value}</span>
-                <span className="lrow__fig micro" style={{ fontSize: 13 }}>
-                  {t.use}
-                </span>
+                <span className="micro">{t.use}</span>
               </div>
             ))}
           </div>
@@ -321,7 +319,7 @@ export default function StyleguidePage() {
       <section className="surface--void on-dark section" aria-labelledby="sg-space">
         <div className="shell">
           <SectionHeader num="§ 06 / 06" aside="Tokens" id="sg-space" title="Spacing and rhythm" />
-          <div className="ledger">
+          <div className="spec">
             {[
               ['--gl-slot', '46px', 'The schedule-slot unit the grid is tuned to'],
               ['--gl-s-4', '16px', 'Tight internal spacing'],
@@ -331,13 +329,11 @@ export default function StyleguidePage() {
               ['--gl-section-y', 'clamp(72px, 9vw, 152px)', 'Section padding'],
               ['--gl-gutter', 'clamp(20px, 4.4vw, 64px)', 'Page gutter'],
             ].map(([token, value, role], i) => (
-              <div className="lrow" key={token}>
+              <div className="spec__row" key={token}>
                 <span className="lrow__idx">{`0${i + 1}`}</span>
                 <span className="lrow__key mono">{token}</span>
                 <span className="lrow__val mono">{value}</span>
-                <span className="lrow__fig micro" style={{ fontSize: 13 }}>
-                  {role}
-                </span>
+                <span className="micro">{role}</span>
               </div>
             ))}
           </div>

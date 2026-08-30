@@ -26,6 +26,9 @@
 .nav__mark {
   display: inline-flex;
   align-items: center;
+  /* The mark is a link, so it carries a real target rather than the height of
+     its own text (WCAG 2.2 target size). */
+  min-height: 44px;
   gap: 10px;
   font-family: var(--gl-font-mono);
   font-size: 0.8125rem;
@@ -220,7 +223,7 @@
 }
 .hero__title {
   margin-bottom: clamp(24px, 3vw, 38px);
-  max-width: 17ch;
+  max-width: 19ch;
 }
 .hero__lead {
   max-width: 54ch;
@@ -262,8 +265,8 @@
   inset: 0;
   pointer-events: none;
   overflow: hidden;
-  -webkit-mask-image: radial-gradient(120% 90% at 78% 46%, #000 12%, transparent 72%);
-  mask-image: radial-gradient(120% 90% at 78% 46%, #000 12%, transparent 72%);
+  -webkit-mask-image: radial-gradient(90% 88% at 62% 44%, #000 8%, transparent 76%);
+  mask-image: radial-gradient(90% 88% at 62% 44%, #000 8%, transparent 76%);
 }
 .signalfield__grid {
   position: absolute;
@@ -290,8 +293,10 @@
 }
 .hero__columnhead {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 12px;
+  align-items: baseline;
+  gap: 4px 12px;
   padding-bottom: 12px;
   margin-bottom: 14px;
   border-bottom: 1px solid var(--gl-rule-dark);
@@ -357,9 +362,8 @@
   border-bottom: 1px solid var(--rule);
   transition: background var(--gl-dur-base) var(--gl-ease-out);
 }
-.modblock:first-child {
-  border-top: 1px solid var(--rule);
-}
+/* No top rule on the first block: the section header already closes with one,
+   and two hairlines 64px apart read as an error rather than as structure. */
 .modblock__name {
   display: flex;
   align-items: baseline;
@@ -755,4 +759,123 @@ select.field__control {
 .prose strong {
   color: inherit;
   font-weight: 520;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================= */
+.foot {
+  background: var(--gl-void);
+  color: var(--gl-on-dark);
+}
+.foot__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+  gap: var(--gl-s-8) var(--gl-s-5);
+  padding-block: var(--gl-s-9) var(--gl-s-7);
+  border-top: 1px solid var(--gl-rule-dark);
+}
+@media (max-width: 900px) {
+  .foot__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .foot__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--gl-s-7) 0;
+  }
+}
+.foot__nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.foot__nav a {
+  display: block;
+  padding-block: 7px;
+  color: var(--gl-on-dark-muted);
+  font-size: var(--gl-t-small);
+  line-height: 1.4;
+  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+}
+.foot__nav a:hover {
+  color: var(--gl-on-dark);
+}
+.foot__base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gl-s-3) var(--gl-s-6);
+  justify-content: space-between;
+  align-items: center;
+  padding-block: var(--gl-s-5);
+  border-top: 1px solid var(--gl-rule-dark);
+}
+.foot__base a {
+  color: var(--gl-on-dark-muted);
+  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+}
+.foot__base a:hover {
+  color: var(--gl-on-dark);
+}
+
+/* ==========================================================================
+   PAGE-HEADER COMPANION RAIL
+   ========================================================================= */
+.phead__body--split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(28px, 5vw, 80px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .phead__body--split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.rail-index__list {
+  border-top: 1px solid var(--rule);
+}
+.rail-index__item {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  row-gap: 4px;
+  column-gap: var(--gl-s-3);
+  padding-block: 13px;
+  border-bottom: 1px solid var(--rule);
+  transition: background var(--gl-dur-fast) var(--gl-ease-out);
+}
+.rail-index__item:hover {
+  background: var(--rule-soft);
+}
+.rail-index__num {
+  font-family: var(--gl-font-mono);
+  font-size: var(--gl-t-label);
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  padding-top: 3px;
+}
+.rail-index__name {
+  font-family: var(--gl-font-display);
+  font-size: 1.375rem;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+.rail-index__note {
+  grid-column: 2;
+  font-size: var(--gl-t-micro);
+  line-height: 1.45;
+  color: var(--faint);
+}
+.rail-index__item[aria-current='page'] {
+  background: var(--rule-soft);
+}
+.rail-index__item[aria-current='page'] .rail-index__num,
+.rail-index__item[aria-current='page'] .rail-index__name {
+  color: var(--accent);
+}
+.rail-index__foot {
+  margin-top: var(--gl-s-4);
+  max-width: 40ch;
 }

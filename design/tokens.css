@@ -28,6 +28,8 @@
 
   /* --- Hairlines (the ledger rules) -------------------------------------- */
   --gl-rule-dark:      rgba(244, 243, 239, 0.13);
+  --gl-slot-open-dark: rgba(244, 243, 239, 0.26);
+  --gl-slot-open-light: rgba(16, 16, 24, 0.30);
   --gl-rule-dark-soft: rgba(244, 243, 239, 0.07);
   --gl-rule-light:     rgba(16, 16, 24, 0.16);
   --gl-rule-light-soft:rgba(16, 16, 24, 0.08);
@@ -65,7 +67,7 @@
   --gl-font-mono:    var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 
   /* --- Type scale (fluid) ------------------------------------------------- */
-  --gl-t-display-1: clamp(3rem, 8.6vw, 8.5rem);
+  --gl-t-display-1: clamp(2.75rem, 7.2vw, 7rem);
   --gl-t-display-2: clamp(2.375rem, 5.6vw, 5rem);
   --gl-t-display-3: clamp(1.875rem, 3.6vw, 3.125rem);
   --gl-t-display-4: clamp(1.5rem, 2.4vw, 2.125rem);

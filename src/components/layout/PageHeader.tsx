@@ -13,6 +13,7 @@ export function PageHeader({
   emphasis,
   lead,
   strip,
+  aside,
   children,
 }: {
   label: string;
@@ -21,6 +22,8 @@ export function PageHeader({
   emphasis?: string;
   lead: string;
   strip?: readonly { key: string; detail: string }[];
+  /** Optional companion content, shown beside the title on wide viewports. */
+  aside?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   return (
@@ -29,25 +32,32 @@ export function PageHeader({
         <div className="phead__inner">
           <div className="phead__meta">
             <span className="label label--accent">{label}</span>
-            {meta ? <span className="label">{meta}</span> : null}
+            {meta ? <span className="small">{meta}</span> : null}
           </div>
-          <Reveal variant="reveal">
-            <h1 className="display d2 phead__title" id="page-title">
-              {title}
-              {emphasis ? (
-                <>
-                  {' '}
-                  <em>{emphasis}</em>
-                </>
-              ) : null}
-            </h1>
-          </Reveal>
-          <Reveal as="p" className="lead phead__lead" index={1}>
-            {lead}
-          </Reveal>
-          {children}
+
+          <div className={aside ? 'phead__body phead__body--split' : 'phead__body'}>
+            <div>
+              <Reveal variant="reveal">
+                <h1 className="display d2 phead__title" id="page-title">
+                  {title}
+                  {emphasis ? (
+                    <>
+                      {' '}
+                      <em>{emphasis}</em>
+                    </>
+                  ) : null}
+                </h1>
+              </Reveal>
+              <Reveal as="p" className="lead phead__lead" index={1}>
+                {lead}
+              </Reveal>
+              {children}
+            </div>
+            {aside ? <Reveal index={2}>{aside}</Reveal> : null}
+          </div>
+
           {strip ? (
-            <Reveal index={2} style={{ marginTop: 'clamp(36px, 4vw, 64px)' }}>
+            <Reveal index={3} style={{ marginTop: 'clamp(36px, 4vw, 64px)' }}>
               <KeyValueStrip items={strip} />
             </Reveal>
           ) : null}

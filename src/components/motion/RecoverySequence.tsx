@@ -26,44 +26,55 @@ type MarkState = {
   stage?: 1 | 2 | 3 | 4;
 };
 
+/**
+ * Geometry, in a 260 x 88 viewBox. The left 56 units are a label gutter that
+ * only the staircase states use, so the scattered and queued states still read
+ * as occupying the whole field.
+ */
+const BAR_X = 58;
+const BAR_WIDTHS = [158, 116, 97, 86];
+const BAR_Y = (i: number) => 10 + i * 18;
+
 const SCATTERED: MarkState[] = [
-  { x: 14, y: 12, w: 14, h: 2.5, o: 0.22 },
-  { x: 62, y: 25, w: 10, h: 2.5, o: 0.34 },
-  { x: 132, y: 9, w: 16, h: 2.5, o: 0.2 },
-  { x: 38, y: 45, w: 12, h: 2.5, o: 0.4 },
-  { x: 96, y: 60, w: 14, h: 2.5, o: 0.26 },
-  { x: 158, y: 37, w: 11, h: 2.5, o: 0.44 },
-  { x: 74, y: 75, w: 15, h: 2.5, o: 0.24 },
-  { x: 118, y: 50, w: 9, h: 2.5, o: 0.3 },
+  { x: 18, y: 12, w: 18, h: 2.5, o: 0.22 },
+  { x: 80, y: 25, w: 13, h: 2.5, o: 0.34 },
+  { x: 172, y: 9, w: 21, h: 2.5, o: 0.2 },
+  { x: 49, y: 45, w: 16, h: 2.5, o: 0.4 },
+  { x: 125, y: 60, w: 18, h: 2.5, o: 0.26 },
+  { x: 205, y: 37, w: 14, h: 2.5, o: 0.44 },
+  { x: 96, y: 75, w: 20, h: 2.5, o: 0.24 },
+  { x: 153, y: 50, w: 12, h: 2.5, o: 0.3 },
 ];
 
 const QUEUED: MarkState[] = Array.from({ length: 8 }, (_, i) => ({
-  x: 70,
+  x: 91,
   y: 8 + i * 9.5,
-  w: 60,
+  w: 78,
   h: 2.5,
   o: 0.78,
 }));
 
-const BAR_WIDTHS = [160, 118, 99, 88];
-
 const STAIRCASE: MarkState[] = Array.from({ length: 8 }, (_, i) => {
   if (i < 4) {
     return {
-      x: 20,
-      y: 10 + i * 18,
-      w: BAR_WIDTHS[i] ?? 88,
+      x: BAR_X,
+      y: BAR_Y(i),
+      w: BAR_WIDTHS[i] ?? 86,
       h: 11,
       o: 1,
       stage: (i + 1) as 1 | 2 | 3 | 4,
     };
   }
   // The remaining marks fold into the bar above them and fade out.
-  const target = 10 + (i - 4) * 18;
-  return { x: 20, y: target, w: BAR_WIDTHS[i - 4] ?? 88, h: 11, o: 0 };
+  return { x: BAR_X, y: BAR_Y(i - 4), w: BAR_WIDTHS[i - 4] ?? 86, h: 11, o: 0 };
 });
 
 const STATES: MarkState[][] = [SCATTERED, QUEUED, STAIRCASE, STAIRCASE];
+
+const STAGE_LABELS = ['Estimated', 'Booked', 'Attended', 'Collected'];
+
+/** Right edge of the collected bar — the only figure that is money. */
+const COLLECTED_EDGE = BAR_X + (BAR_WIDTHS[3] ?? 86);
 
 const FRAMES = [
   {
@@ -153,6 +164,7 @@ export function RecoverySequence() {
   // somewhere to travel from; reduced motion keeps the completed final state.
   const active = reduced ? FRAMES.length - 1 : live ? state : 0;
   const marks = STATES[active] ?? STAIRCASE;
+  const showStaircase = active >= 2;
   const showMarker = active >= 3;
   const frame = FRAMES[active] ?? FRAMES[FRAMES.length - 1]!;
 
@@ -175,9 +187,9 @@ export function RecoverySequence() {
           <div>
             <svg
               className="seqart"
-              viewBox="0 0 200 88"
+              viewBox="0 0 260 92"
               role="img"
-              aria-label="Scattered revenue signals consolidating into a queue and resolving into a four-stage value staircase: estimated, booked, attended, collected."
+              aria-label="Scattered revenue signals consolidating into a queue and resolving into a four-stage value staircase: estimated, then booked, then attended, then collected, each smaller than the one above it."
             >
               {marks.map((mark, i) => (
                 <rect
@@ -192,17 +204,45 @@ export function RecoverySequence() {
                   style={{ transitionDelay: `${i * 45}ms` }}
                 />
               ))}
-              <line
-                x1="108"
-                y1="10"
-                x2="108"
-                y2="84"
-                stroke="var(--gl-signal)"
-                strokeWidth="0.8"
-                strokeDasharray="2 3"
-                opacity={showMarker ? 0.8 : 0}
+
+              {/* Stage names appear only once the staircase exists. */}
+              <g
+                className="seqart__labels"
+                opacity={showStaircase ? 1 : 0}
+                aria-hidden="true"
+                fill="var(--gl-on-dark-muted)"
+              >
+                {STAGE_LABELS.map((label, i) => (
+                  <text key={label} x={50} y={BAR_Y(i) + 8.4} textAnchor="end">
+                    {label}
+                  </text>
+                ))}
+              </g>
+
+              <g
+                opacity={showMarker ? 1 : 0}
                 style={{ transition: 'opacity var(--gl-dur-slow) var(--gl-ease-out)' }}
-              />
+                aria-hidden="true"
+              >
+                <line
+                  x1={COLLECTED_EDGE}
+                  y1={BAR_Y(0) - 4}
+                  x2={COLLECTED_EDGE}
+                  y2={BAR_Y(3) + 16}
+                  stroke="var(--gl-signal)"
+                  strokeWidth="0.7"
+                  strokeDasharray="2 3"
+                  opacity="0.85"
+                />
+                <text
+                  className="seqart__marker"
+                  x={COLLECTED_EDGE + 4}
+                  y={BAR_Y(3) + 20}
+                  fill="var(--gl-signal)"
+                >
+                  Money in the account
+                </text>
+              </g>
             </svg>
             <p className="micro" style={{ marginTop: 14 }}>
               Illustrative of the shape of the staircase. Proportions are not a benchmark and no

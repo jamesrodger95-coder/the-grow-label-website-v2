@@ -1,11 +1,14 @@
 import type { CSSProperties } from 'react';
+import { VALUE_STAGES } from '@/content/site';
 
 /**
  * Multi-location comparison ledger — the veterinary page's signature device.
  *
- * One ruled row per site, each showing the same four value stages so the
- * comparison is like-for-like. The proportions are illustrative of the shape of
- * a group's variation, not data: no client figures appear on this website.
+ * One ruled row per site. Each row carries four small tracks, one per value
+ * stage, filled to that stage's own percentage of the same scale — so a site's
+ * decline reads left to right, and any single stage can be compared down the
+ * column. Proportions are illustrative of how much sites in one group vary on
+ * identical definitions; no client figures appear on this website.
  */
 
 type Site = { name: string; stages: [number, number, number, number] };
@@ -21,43 +24,50 @@ const SITES: Site[] = [
 export function SiteComparison() {
   return (
     <div>
-      <div className="sites__row" style={{ borderBottom: '1px solid var(--rule)' }}>
+      <div className="sites__row sites__row--head">
         <span className="label">Practice</span>
-        <span className="label">Estimated → booked → attended → collected</span>
+        <span className="sites__bar" aria-hidden="true">
+          {VALUE_STAGES.map((stage) => (
+            <span className="label" key={stage.id}>
+              {stage.name.slice(0, 3)}
+            </span>
+          ))}
+        </span>
         <span className="label" style={{ textAlign: 'right' }}>
-          Spread
+          Drop-off
         </span>
       </div>
-      <div className="sites">
+
+      <ul className="sites">
         {SITES.map((site) => {
           const collected = site.stages[3];
           return (
-            <div className="sites__row" key={site.name}>
+            <li className="sites__row" key={site.name}>
               <span className="lrow__key">{site.name}</span>
-              <span className="sites__bar" aria-hidden="true">
+              <span className="sites__bar">
                 {site.stages.map((value, i) => (
-                  <span
-                    className="sites__seg"
-                    key={i}
-                    style={
-                      {
-                        background: `var(--stage-${i + 1})`,
-                        transform: `scaleY(${(0.45 + (value / 100) * 0.55).toFixed(2)})`,
-                      } as CSSProperties
-                    }
-                  />
+                  <span className="sites__track" key={VALUE_STAGES[i]?.id ?? i}>
+                    <span className="gl-sr">{`${VALUE_STAGES[i]?.name}: ${value} of 100`}</span>
+                    <span
+                      className="sites__fill"
+                      aria-hidden="true"
+                      style={
+                        { width: `${value}%`, background: `var(--stage-${i + 1})` } as CSSProperties
+                      }
+                    />
+                  </span>
                 ))}
               </span>
-              <span className="mono" style={{ fontSize: 'var(--gl-t-small)', textAlign: 'right' }}>
-                {`${100 - collected} pts`}
-              </span>
-            </div>
+              <span className="mono sites__spread">{`${100 - collected} pts`}</span>
+            </li>
           );
         })}
-      </div>
+      </ul>
+
       <p className="micro" style={{ marginTop: 16, maxWidth: '46ch' }}>
-        Illustrative of how much sites in one group can differ on identical definitions. These are
-        not client figures and not a benchmark.
+        Each track is one value stage on the same scale, so the drop from estimated to collected
+        reads across, and a single stage reads down. Illustrative of the spread a group can carry on
+        identical definitions — not client figures and not a benchmark.
       </p>
     </div>
   );

@@ -198,8 +198,21 @@
 .seqart {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 7;
-  max-height: 340px;
+  aspect-ratio: 260 / 92;
+  max-height: 320px;
+}
+.seqart text {
+  font-family: var(--gl-font-mono);
+  font-size: 5.4px;
+  letter-spacing: 0.09px;
+  text-transform: uppercase;
+}
+.seqart__labels {
+  transition: opacity var(--gl-dur-slow) var(--gl-ease-out);
+  transition-delay: 220ms;
+}
+.seqart__marker {
+  font-size: 5px;
 }
 .seqart rect {
   transition:

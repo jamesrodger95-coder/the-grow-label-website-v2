@@ -435,6 +435,8 @@ select {
 .tlink {
   position: relative;
   display: inline-flex;
+  /* Never stretch: as a flex item the rule would span the whole column. */
+  align-self: start;
   align-items: center;
   gap: 10px;
   padding-block: 6px;
@@ -469,7 +471,10 @@ select {
 }
 .lrow {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) minmax(0, 1.15fr) auto;
+  /* The trailing column is fixed, not auto: an auto track resizes with the
+     longest tag in each row and the detail column then starts at a different
+     x on every line, which reads as misalignment down the ledger. */
+  grid-template-columns: 3.5rem minmax(0, 0.8fr) minmax(0, 1.55fr) 11rem;
   align-items: baseline;
   gap: var(--gl-s-5);
   padding-block: var(--gl-s-5);
@@ -496,23 +501,71 @@ select {
   text-align: right;
   white-space: nowrap;
 }
+/* A trailing classification (module name, confidence basis). Deliberately set
+   at label scale: it qualifies the row, it is not the subject of it. */
+.lrow__tag {
+  font-family: var(--gl-font-mono);
+  font-size: var(--gl-t-label);
+  letter-spacing: var(--gl-tr-label);
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: right;
+  text-wrap: balance;
+}
+
+/* Row variants. Declared as classes rather than inline grid overrides so the
+   mobile rules below are never defeated by specificity. */
+.lrow--pair {
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+}
+.lrow--pair-action {
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+}
+.lrow--action {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 @media (max-width: 760px) {
   .lrow {
     grid-template-columns: 2.5rem minmax(0, 1fr);
     row-gap: var(--gl-s-2);
   }
-  .lrow__val {
+  /* Every cell after the index stacks into the content column. Targeting the
+     sibling combinator rather than named cells means an unclassed wrapper
+     element cannot fall back into the 2.5rem index column and overflow. */
+  .lrow > .lrow__idx ~ * {
     grid-column: 2;
   }
   .lrow__fig {
-    grid-column: 2;
     text-align: left;
+    /* A trailing label is wider than its column once the row stacks. */
+    white-space: normal;
+  }
+  /* Rows ending in an affordance keep that column rather than stacking it. */
+  .lrow--pair-action {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  }
+  .lrow--pair-action > .lrow__idx ~ * {
+    grid-column: auto;
+  }
+  .lrow--action {
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 }
 
 /* ==========================================================================
    THE CAPACITY COLUMN — filled vs open slots
    ========================================================================= */
+/* The column is a schedule, not a chart: cap its width wherever it is placed so
+   the slots keep a slot-like proportion instead of reading as a barcode. */
+.capblock {
+  max-width: 300px;
+}
+.hero__aside .capblock {
+  max-width: 224px;
+  margin-left: auto;
+}
 .capcol {
   display: grid;
   gap: 3px;
@@ -524,7 +577,9 @@ select {
 }
 .capslot--open {
   background: transparent;
-  box-shadow: inset 0 0 0 1px var(--rule);
+  /* A hairline at rule opacity disappears at 13px: an open slot is the whole
+     point of the device, so it gets its own, more visible token. */
+  box-shadow: inset 0 0 0 1px var(--slot-open);
 }
 .capslot--recovered {
   background: var(--stage-4);
@@ -577,5 +632,23 @@ select {
   }
   .stagebar__track {
     grid-column: 1 / -1;
+  }
+}
+
+/* A ledger row whose term carries its own index (required inside a <dl>, where
+   a row may contain only <dt> and <dd>). */
+.lrow--stage {
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr) 11rem;
+}
+.lrow--stage .lrow__idx {
+  margin-right: 14px;
+}
+.lrow--stage dd {
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .lrow--stage {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 6px;
   }
 }

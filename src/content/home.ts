@@ -10,7 +10,7 @@ export const HERO = {
   titleLead: 'Find the revenue your practice already earned',
   titleEmphasis: 'and never collected.',
   lead: 'Grow Label watches the calls, enquiries, recalls and open treatment plans your practice already generates, works the ones that were missed, and reports what came back at four separate stages — estimated, booked, attended and collected.',
-  columnLabel: 'A working day, one room',
+  columnLabel: 'A working day',
   columnNote:
     'Every open slot in a working schedule is demand that already existed and did not arrive.',
 } as const;

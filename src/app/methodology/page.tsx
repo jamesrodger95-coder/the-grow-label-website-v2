@@ -179,7 +179,7 @@ export default function MethodologyPage() {
                   'Can I open any number and see the source event that produced it?',
                   'How do you decide that two contacts are the same opportunity?',
                 ].map((question, i) => (
-                  <li className="lrow" key={question} style={{ gridTemplateColumns: '2.5rem 1fr' }}>
+                  <li className="lrow lrow--pair" key={question}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span className="lrow__key" style={{ fontWeight: 400 }}>
                       {question}

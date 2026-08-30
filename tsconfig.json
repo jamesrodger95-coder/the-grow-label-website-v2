@@ -41,7 +41,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "vitest.config.ts",
+    "vitest.config.mts",
     "playwright.config.ts",
     ".next/dev/types/**/*.ts"
   ],

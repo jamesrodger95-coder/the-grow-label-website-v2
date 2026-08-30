@@ -172,7 +172,8 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                         style={{ '--i': drawerIndex } as CSSProperties}
                       >
                         {link.label}
-                        <span>{String(drawerIndex).padStart(2, '0')}</span>
+                        {/* Decorative ordinal: keep it out of the link name. */}
+                        <span aria-hidden="true">{String(drawerIndex).padStart(2, '0')}</span>
                       </Link>
                     );
                   })}

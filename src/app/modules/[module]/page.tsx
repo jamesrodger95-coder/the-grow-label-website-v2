@@ -9,6 +9,7 @@ import {
   StepList,
   TextLink,
 } from '@/components/primitives';
+import { ModuleRail } from '@/components/layout/ModuleRail';
 import { getModule, MODULES, MODULE_SLUGS } from '@/content/modules';
 
 type Params = { module: string };
@@ -45,9 +46,9 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
     <>
       <PageHeader
         label={`Module 0${module.index} / 04`}
-        meta={module.position}
         title={module.name}
         lead={module.lead}
+        aside={<ModuleRail current={module.slug} />}
         strip={[
           { key: 'Monitors', detail: module.monitors.map((m) => m.key).join(' · ') },
           { key: 'Acts on', detail: module.actions.map((a) => a.key).join(' · ') },
@@ -81,7 +82,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               </p>
               <div className="ledger">
                 {module.monitors.map((item, i) => (
-                  <div className="lrow" key={item.key} style={{ gridTemplateColumns: '2.5rem 1fr' }}>
+                  <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
                       <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
@@ -116,7 +117,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               </p>
               <div className="ledger">
                 {module.actions.map((item, i) => (
-                  <div className="lrow" key={item.key} style={{ gridTemplateColumns: '2.5rem 1fr' }}>
+                  <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
                       <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
@@ -216,7 +217,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               </p>
               <div className="ledger">
                 {module.dataRequired.map((item, i) => (
-                  <div className="lrow" key={item.key} style={{ gridTemplateColumns: '2.5rem 1fr' }}>
+                  <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
                       <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
@@ -293,10 +294,9 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               <div className="ledger">
                 {others.map((other) => (
                   <Link
-                    className="lrow"
+                    className="lrow lrow--pair-action"
                     key={other.slug}
                     href={`/modules/${other.slug}`}
-                    style={{ gridTemplateColumns: '2.5rem 1fr auto' }}
                   >
                     <span className="lrow__idx">{`0${other.index}`}</span>
                     <span>

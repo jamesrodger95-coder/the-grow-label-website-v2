@@ -118,7 +118,7 @@ export function LedgerRow({
       <span className="lrow__key">{title}</span>
       <span className="lrow__val">{detail}</span>
       {tag ? (
-        <span className="lrow__fig label label--strong" style={{ textAlign: 'right' }}>
+        <span className="lrow__tag">
           {tag}
         </span>
       ) : (
@@ -190,7 +190,7 @@ export function CapacityColumn({
   openLabel?: string;
 }) {
   return (
-    <div>
+    <div className="capblock">
       {label ? (
         <div className="hero__columnhead">
           <span className="label">{label}</span>

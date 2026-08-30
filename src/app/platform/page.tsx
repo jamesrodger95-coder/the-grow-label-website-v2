@@ -131,7 +131,7 @@ export default function PlatformPage() {
             />
           </Reveal>
           <div className="two-col">
-            <Reveal>
+            <Reveal className="sticky-aside">
               <p className="lead">{PLATFORM.controls.lead}</p>
             </Reveal>
             <Reveal index={1}>
@@ -164,7 +164,7 @@ export default function PlatformPage() {
               </p>
               <div className="ledger">
                 {PLATFORM.data.required.map((item, i) => (
-                  <div className="lrow" key={item.key} style={{ gridTemplateColumns: '2.5rem 1fr' }}>
+                  <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
                       <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
@@ -228,17 +228,17 @@ export default function PlatformPage() {
                 labelledBy="reporting-title"
                 caption="Illustrative shape only. No benchmark, industry average or client figure appears anywhere on this site."
               />
-              <dl className="ledger" style={{ marginTop: 36 }}>
+              {/* A row inside a <dl> may contain only <dt> and <dd>, so the
+                  index sits inside the term rather than as a sibling span. */}
+              <dl className="ledger" style={{ marginTop: 40 }}>
                 {VALUE_STAGES.map((stage, i) => (
-                  <div className="lrow" key={stage.id}>
-                    <span className="lrow__idx">{`0${i + 1}`}</span>
-                    <dt className="lrow__key">{stage.name}</dt>
-                    <dd className="lrow__val" style={{ margin: 0 }}>
-                      {stage.definition}
-                    </dd>
-                    <span className="lrow__fig label label--strong" style={{ textAlign: 'right' }}>
-                      {stage.confidence}
-                    </span>
+                  <div className="lrow lrow--stage" key={stage.id}>
+                    <dt className="lrow__key">
+                      <span className="lrow__idx">{`0${i + 1}`}</span>
+                      {stage.name}
+                    </dt>
+                    <dd className="lrow__val">{stage.definition}</dd>
+                    <dd className="lrow__tag">{stage.confidence}</dd>
                   </div>
                 ))}
               </dl>

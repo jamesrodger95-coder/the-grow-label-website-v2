@@ -131,10 +131,9 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
               <div className="ledger">
                 {others.map((other) => (
                   <Link
-                    className="lrow"
+                    className="lrow lrow--action"
                     key={other.slug}
                     href={`/insights/${other.slug}`}
-                    style={{ gridTemplateColumns: '1fr auto' }}
                   >
                     <span>
                       <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>

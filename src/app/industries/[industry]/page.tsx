@@ -74,9 +74,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
             </Reveal>
             <Reveal index={1}>
               <p className="label" style={{ marginBottom: 18 }}>
-                {industry.slug === 'veterinary'
-                  ? 'The two patterns, in one sentence each'
-                  : 'The two patterns, in one sentence each'}
+                The two patterns, in one sentence each
               </p>
               <ul className="ticks">
                 {industry.slug === 'veterinary' ? (
@@ -137,7 +135,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
           <div className="ledger">
             {industry.workflows.map((workflow, i) => (
               <Reveal key={workflow.index} index={i}>
-                <div className="lrow" style={{ gridTemplateColumns: '3.5rem 1fr 1.15fr auto' }}>
+                <div className="lrow">
                   <span className="lrow__idx">{workflow.index}</span>
                   <span>
                     <span className="lrow__key" style={{ display: 'block', marginBottom: 6 }}>
@@ -151,7 +149,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
                     </span>
                     <span className="lrow__val">{workflow.reads}</span>
                   </span>
-                  <span className="label label--accent" style={{ textAlign: 'right' }}>
+                  <span className="lrow__tag accent">
                     {workflow.module}
                   </span>
                 </div>
