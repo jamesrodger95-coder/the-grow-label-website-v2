@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Logo } from '@/components/layout/Logo';
 import { NAV_GROUPS, SITE } from '@/content/site';
 import { bookingUrl, dashboardUrl } from '@/lib/env';
 
@@ -12,14 +13,8 @@ export function SiteFooter() {
       <div className="shell">
         <div className="foot__grid">
           <div>
-            <p className="nav__mark" style={{ marginBottom: 16 }}>
-              <svg className="nav__glyph" viewBox="0 0 15 15" aria-hidden="true" focusable="false">
-                <rect x="0" y="0" width="15" height="3" fill="var(--gl-purple)" opacity="0.3" />
-                <rect x="0" y="4" width="11" height="3" fill="var(--gl-purple)" opacity="0.55" />
-                <rect x="0" y="8" width="9" height="3" fill="var(--gl-purple)" opacity="0.78" />
-                <rect x="0" y="12" width="7" height="3" fill="var(--gl-purple)" />
-              </svg>
-              {SITE.name}
+            <p className="logo logo--on-dark" style={{ marginBottom: 16 }}>
+              <Logo tone="light" />
             </p>
             <p className="micro" style={{ maxWidth: '34ch' }}>
               {SITE.shortDescription}

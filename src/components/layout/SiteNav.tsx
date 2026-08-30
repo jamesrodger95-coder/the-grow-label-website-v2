@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { Logo } from '@/components/layout/Logo';
 import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE } from '@/content/site';
 
 /**
@@ -12,17 +13,6 @@ import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE } from '@/content/site';
  * management. The markup is complete on the server, so the nav is present and
  * usable in the initial HTML.
  */
-
-function Mark() {
-  return (
-    <svg className="nav__glyph" viewBox="0 0 15 15" aria-hidden="true" focusable="false">
-      <rect x="0" y="0" width="15" height="3" fill="var(--gl-purple)" opacity="0.3" />
-      <rect x="0" y="4" width="11" height="3" fill="var(--gl-purple)" opacity="0.55" />
-      <rect x="0" y="8" width="9" height="3" fill="var(--gl-purple)" opacity="0.78" />
-      <rect x="0" y="12" width="7" height="3" fill="var(--gl-purple)" />
-    </svg>
-  );
-}
 
 /**
  * A link is current when the reader is on it or somewhere beneath it.
@@ -139,9 +129,8 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     >
       <div className="shell">
         <div className="nav__bar">
-          <Link className="nav__mark" href="/" aria-label={`${SITE.name} — home`} onClick={close}>
-            <Mark />
-            {SITE.name}
+          <Link className="logo" href="/" aria-label={`${SITE.name} — home`} onClick={close}>
+            <Logo />
           </Link>
 
           <nav className="nav__links" aria-label="Primary">

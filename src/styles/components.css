@@ -45,23 +45,39 @@
     var(--gl-shadow-sm);
 }
 
-.nav__mark {
+/* The lockup: the mark and the wordmark. Used in the nav and the footer, and
+   nowhere else, because it is the only place the brand signs its own name. */
+.logo {
   display: inline-flex;
   align-items: center;
   gap: 9px;
   min-height: 44px;
   padding-left: 12px;
+  margin: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo__mark {
+  display: block;
+  height: 22px;
+  width: auto;
+  flex: none;
+}
+.logo__word {
   font-size: 0.9375rem;
   font-weight: var(--gl-w-semi);
   letter-spacing: -0.02em;
+  /* Black, as asked. Named rather than inherited so a dark surface cannot
+     quietly turn it to black-on-black, which is what happened in the footer. */
   color: var(--gl-ink);
-  white-space: nowrap;
 }
-.nav__glyph {
-  display: block;
-  width: 17px;
-  height: 17px;
-  flex: none;
+/* On the black footer the wordmark has to be the warm white instead; black on
+   near-black rendered the name completely invisible. */
+.logo--on-dark {
+  padding-left: 0;
+}
+.logo--on-dark .logo__word {
+  color: var(--gl-white);
 }
 
 .nav__links {
