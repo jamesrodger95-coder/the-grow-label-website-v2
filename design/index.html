@@ -1,0 +1,459 @@
+<helmet data-dc-atomics>
+  <meta name="design_doc_mode" content="canvas" />
+  <title>Grow Label — Visual Thesis &amp; Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300..700;1,300..700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./tokens.css" />
+  <link rel="stylesheet" href="./base.css" />
+  <link rel="stylesheet" href="./doc.css" />
+</helmet>
+
+<div class="doc">
+  <!-- ===================== THESIS ===================== -->
+  <section class="board board--dark on-dark" id="thesis">
+    <div class="board__tag">01 · Visual thesis</div>
+    <div class="board__inner">
+      <p class="label label--accent" style="margin-bottom: 28px">Grow Label — Website V2</p>
+      <h1 class="display d1" style="max-width: 16ch; margin-bottom: 40px">
+        The <em>capacity ledger</em>.
+      </h1>
+      <div class="thesis-cols">
+        <div>
+          <p class="label" style="margin-bottom: 14px">The observation</p>
+          <p class="body" style="font-size: 1.0625rem">
+            In a veterinary or dental group, lost revenue is not abstract. It is
+            <strong style="color: var(--gl-on-dark); font-weight: 500"
+              >whitespace in a column</strong
+            >
+            &mdash; a gap in tomorrow&rsquo;s day sheet &mdash; and
+            <strong style="color: var(--gl-on-dark); font-weight: 500">a row never written</strong>
+            into the ledger. The call that rang out at 4:52pm. The estimate accepted and never
+            scheduled. The recall that lapsed eleven months ago.
+          </p>
+          <p class="body" style="font-size: 1.0625rem">
+            So the site is built out of the two artefacts that operators already read every morning:
+            the <em>column</em> and the <em>ledger row</em>. Nothing here is a dashboard
+            illustration. It is the same object, at brand scale.
+          </p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom: 14px">The two structural devices</p>
+          <div class="dev-grid">
+            <div class="dev">
+              <div class="dev__art">
+                <div class="capcol" style="width: 66px">
+                  <div class="capslot"></div>
+                  <div class="capslot"></div>
+                  <div class="capslot capslot--open"></div>
+                  <div class="capslot"></div>
+                  <div class="capslot capslot--open"></div>
+                  <div class="capslot capslot--open"></div>
+                  <div class="capslot"></div>
+                  <div class="capslot capslot--recovered"></div>
+                  <div class="capslot capslot--open"></div>
+                  <div class="capslot"></div>
+                </div>
+              </div>
+              <p class="label" style="margin-bottom: 8px">The column</p>
+              <p class="micro">
+                A slot unit of 46px generates the whole spatial rhythm. Filled slots are solid; open
+                slots are hollow with a hairline. Vertical hairlines divide sections like a schedule
+                grid.
+              </p>
+            </div>
+            <div class="dev">
+              <div class="dev__art">
+                <div style="width: 100%">
+                  <div class="ministage"><i style="--w: 100%; --c: var(--gl-stage-1)"></i></div>
+                  <div class="ministage"><i style="--w: 74%; --c: var(--gl-stage-2)"></i></div>
+                  <div class="ministage"><i style="--w: 62%; --c: var(--gl-stage-3)"></i></div>
+                  <div class="ministage"><i style="--w: 55%; --c: var(--gl-stage-4)"></i></div>
+                </div>
+              </div>
+              <p class="label" style="margin-bottom: 8px">The four-stage bar</p>
+              <p class="micro">
+                Estimated &rarr; Booked &rarr; Attended &rarr; Collected. Four descending segments of
+                one hue. The signature graphic is an act of financial honesty, not decoration.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule" style="margin: 56px 0 32px"></div>
+      <div class="thesis-foot">
+        <div>
+          <p class="label label--accent" style="margin-bottom: 10px">Position</p>
+          <p class="d4 display" style="max-width: 22ch">
+            Grow Label shows the whole staircase, not the top step.
+          </p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom: 10px">Why this wins the room</p>
+          <p class="micro" style="max-width: 42ch">
+            Every competitor quotes one revenue number. A buyer paying five figures a quarter has
+            been burned by exactly that number. Leading with the four-stage decomposition converts
+            the brief&rsquo;s hardest constraint into the brand&rsquo;s sharpest differentiator.
+          </p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom: 10px">Deliberately not</p>
+          <p class="micro" style="max-width: 34ch">
+            No rounded feature cards. No purple gradient. No stock clinic photography. No glassmorphism.
+            Radius is 0&ndash;2px throughout, because ledgers do not have rounded corners.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== COLOUR ===================== -->
+  <section class="board board--light on-light" id="colour">
+    <div class="board__tag">02 · Colour</div>
+    <div class="board__inner">
+      <h2 class="display d3" style="margin-bottom: 12px">
+        Two grounds, <em>one</em> signal.
+      </h2>
+      <p class="lead" style="margin-bottom: 44px">
+        The page alternates between a cinematic near-black and a cool bone light. Violet appears only
+        where a revenue signal is being detected, followed or confirmed &mdash; never as ornament,
+        never as a gradient.
+      </p>
+
+      <p class="label" style="margin-bottom: 16px">Dark grounds</p>
+      <div class="swatches">
+        <div class="sw"><span style="background: #08080b"></span><b>--gl-void</b><i>#08080B</i></div>
+        <div class="sw"><span style="background: #0e0e13"></span><b>--gl-ink</b><i>#0E0E13</i></div>
+        <div class="sw">
+          <span style="background: #16161d"></span><b>--gl-ink-raised</b><i>#16161D</i>
+        </div>
+        <div class="sw">
+          <span style="background: #050507"></span><b>--gl-ink-sunken</b><i>#050507</i>
+        </div>
+      </div>
+
+      <p class="label" style="margin: 36px 0 16px">Light grounds</p>
+      <div class="swatches">
+        <div class="sw">
+          <span style="background: #f7f6f3; box-shadow: inset 0 0 0 1px var(--gl-rule-light)"></span
+          ><b>--gl-paper</b><i>#F7F6F3</i>
+        </div>
+        <div class="sw">
+          <span style="background: #efeee9; box-shadow: inset 0 0 0 1px var(--gl-rule-light)"></span
+          ><b>--gl-bone</b><i>#EFEEE9</i>
+        </div>
+        <div class="sw">
+          <span style="background: #e3e1da; box-shadow: inset 0 0 0 1px var(--gl-rule-light)"></span
+          ><b>--gl-bone-deep</b><i>#E3E1DA</i>
+        </div>
+      </div>
+
+      <p class="label" style="margin: 36px 0 16px">Signal violet &mdash; the only accent</p>
+      <div class="swatches">
+        <div class="sw">
+          <span style="background: #8a7bff"></span><b>--gl-signal</b><i>#8A7BFF · on dark 7.4:1</i>
+        </div>
+        <div class="sw">
+          <span style="background: #4b37c4"></span><b>--gl-signal-deep</b><i>#4B37C4 · on bone 7.9:1</i>
+        </div>
+        <div class="sw">
+          <span style="background: #5b47d6"></span><b>--gl-signal-core</b><i>#5B47D6 · mark only</i>
+        </div>
+        <div class="sw">
+          <span style="background: #e0574f"></span><b>--gl-alert</b><i>#E0574F · form errors only</i>
+        </div>
+      </div>
+
+      <p class="label" style="margin: 36px 0 16px">
+        Value-stage ramp &mdash; one hue at four levels of certainty
+      </p>
+      <div class="ramp">
+        <div><span style="background: var(--gl-stage-1-l)"></span>Estimated</div>
+        <div><span style="background: var(--gl-stage-2-l)"></span>Booked</div>
+        <div><span style="background: var(--gl-stage-3-l)"></span>Attended</div>
+        <div><span style="background: var(--gl-stage-4-l)"></span>Collected</div>
+      </div>
+      <p class="micro" style="margin-top: 14px; max-width: 60ch">
+        Four different colours would imply four different things. These are the same money at four
+        levels of certainty, so they are one hue at four densities. The ramp is the argument.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== TYPE ===================== -->
+  <section class="board board--dark on-dark" id="type">
+    <div class="board__tag">03 · Typography</div>
+    <div class="board__inner">
+      <h2 class="display d3" style="margin-bottom: 12px">Three faces, three jobs.</h2>
+      <p class="lead" style="margin-bottom: 48px">
+        A high-contrast editorial serif carries the argument; a grotesque carries the detail; a
+        monospace carries every number, label and section index. Neither Inter nor Poppins appears
+        anywhere.
+      </p>
+
+      <div class="type-spec">
+        <div class="type-spec__meta">
+          <p class="label label--accent">Display</p>
+          <p class="micro" style="margin-top: 8px">
+            Instrument Serif · 400 + Italic<br />Two static files. Set oversized at
+            &minus;0.03em with a 0.94 leading. The italic is a semantic device: it marks the
+            recovered half of every sentence.
+          </p>
+        </div>
+        <div class="type-spec__art">
+          <p class="display" style="font-size: 88px; line-height: 0.92">
+            Revenue that <em>should</em><br />have been captured.
+          </p>
+        </div>
+      </div>
+
+      <div class="type-spec">
+        <div class="type-spec__meta">
+          <p class="label label--accent">Interface</p>
+          <p class="micro" style="margin-top: 8px">
+            Archivo Variable · 300&ndash;700<br />A grotesque with authority and a tall x-height.
+            Body copy sits at 380 weight; emphasis at 500. One variable file.
+          </p>
+        </div>
+        <div class="type-spec__art">
+          <p style="font-size: 1.3125rem; line-height: 1.5; max-width: 46ch; color: var(--muted)">
+            Grow Label finds the demand a practice already generated and did not convert, then works
+            it until it is booked, attended and collected.
+          </p>
+          <p
+            style="
+              font-size: 1rem;
+              line-height: 1.62;
+              max-width: 58ch;
+              color: var(--muted);
+              margin-top: 18px;
+            "
+          >
+            Every figure the platform reports is traceable to a source event &mdash; a specific call,
+            a specific enquiry, a specific record &mdash; and every event carries an attribution
+            status you can dispute.
+          </p>
+        </div>
+      </div>
+
+      <div class="type-spec">
+        <div class="type-spec__meta">
+          <p class="label label--accent">Data &amp; labels</p>
+          <p class="micro" style="margin-top: 8px">
+            IBM Plex Mono · 400<br />Tabular figures for every number. Uppercase at 0.15em tracking
+            for eyebrows, section indices and axis labels.
+          </p>
+        </div>
+        <div class="type-spec__art">
+          <p class="label" style="margin-bottom: 14px">§ 04 / 09 &middot; Recovery stages</p>
+          <p class="figure" style="margin-bottom: 6px">£248,610</p>
+          <p class="micro">Estimated value · 1,204 source events · confidence: modelled</p>
+        </div>
+      </div>
+
+      <div class="rule" style="margin: 48px 0 28px"></div>
+      <p class="label" style="margin-bottom: 20px">Scale</p>
+      <div class="scale">
+        <div><b>d1</b><span>clamp(3rem, 8.6vw, 8.5rem)</span><i>Hero only. One per page.</i></div>
+        <div><b>d2</b><span>clamp(2.375rem, 5.6vw, 5rem)</span><i>Section statements.</i></div>
+        <div><b>d3</b><span>clamp(1.875rem, 3.6vw, 3.125rem)</span><i>Sub-sections, page heads.</i></div>
+        <div><b>d4</b><span>clamp(1.5rem, 2.4vw, 2.125rem)</span><i>Item titles.</i></div>
+        <div><b>lead</b><span>clamp(1.0625rem, 1.35vw, 1.3125rem)</span><i>Standfirst.</i></div>
+        <div><b>body</b><span>1rem / 1.62</span><i>Running copy.</i></div>
+        <div><b>label</b><span>0.6875rem mono / 0.15em</span><i>Eyebrows, indices, axes.</i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== GRID + COMPONENTS ===================== -->
+  <section class="board board--light on-light" id="system">
+    <div class="board__tag">04 · Grid &amp; components</div>
+    <div class="board__inner">
+      <h2 class="display d3" style="margin-bottom: 12px">A ruled page, not a card deck.</h2>
+      <p class="lead" style="margin-bottom: 44px">
+        12 columns on a 46px slot unit. Hairline rules do all the dividing work; elevation is used
+        almost nowhere. Corner radius is 0, except 2px on controls where a hit target needs
+        softening.
+      </p>
+
+      <p class="label" style="margin-bottom: 16px">Ledger row</p>
+      <div class="ledger" style="margin-bottom: 44px">
+        <div class="lrow">
+          <span class="lrow__idx">01</span>
+          <span class="lrow__key">Unanswered inbound calls</span>
+          <span class="lrow__val">Rung out, abandoned in queue, or arriving out of hours</span>
+          <span class="lrow__fig">ANSWER</span>
+        </div>
+        <div class="lrow">
+          <span class="lrow__idx">02</span>
+          <span class="lrow__key">Enquiries awaiting a reply</span>
+          <span class="lrow__val">Web forms, messages and callbacks past their response window</span>
+          <span class="lrow__fig">RESPOND</span>
+        </div>
+        <div class="lrow">
+          <span class="lrow__idx">03</span>
+          <span class="lrow__key">Accepted treatment never scheduled</span>
+          <span class="lrow__val">Agreed plans with no appointment attached</span>
+          <span class="lrow__fig">RETAIN</span>
+        </div>
+      </div>
+
+      <p class="label" style="margin-bottom: 16px">Four-stage value bar</p>
+      <div class="stagebar" style="max-width: 620px; margin-bottom: 44px">
+        <div class="stagebar__row">
+          <span class="stagebar__name">Estimated</span>
+          <span class="stagebar__track"
+            ><i class="stagebar__fill" style="--w: 100%; --c: var(--stage-1)"></i
+          ></span>
+          <span class="stagebar__fig">100%</span>
+        </div>
+        <div class="stagebar__row">
+          <span class="stagebar__name">Booked</span>
+          <span class="stagebar__track"
+            ><i class="stagebar__fill" style="--w: 74%; --c: var(--stage-2)"></i
+          ></span>
+          <span class="stagebar__fig">74%</span>
+        </div>
+        <div class="stagebar__row">
+          <span class="stagebar__name">Attended</span>
+          <span class="stagebar__track"
+            ><i class="stagebar__fill" style="--w: 62%; --c: var(--stage-3)"></i
+          ></span>
+          <span class="stagebar__fig">62%</span>
+        </div>
+        <div class="stagebar__row">
+          <span class="stagebar__name">Collected</span>
+          <span class="stagebar__track"
+            ><i class="stagebar__fill" style="--w: 55%; --c: var(--stage-4)"></i
+          ></span>
+          <span class="stagebar__fig">55%</span>
+        </div>
+      </div>
+      <p class="micro" style="margin: -32px 0 44px; max-width: 62ch">
+        Illustrative proportions only. Real figures are always rendered from a client&rsquo;s own
+        data and never quoted as a benchmark on the marketing site.
+      </p>
+
+      <p class="label" style="margin-bottom: 16px">Controls</p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center">
+        <a class="btn" href="#"
+          >Request an assessment <span class="btn__arrow" aria-hidden="true">&rarr;</span></a
+        >
+        <a class="btn btn--ghost" href="#"
+          >See the methodology <span class="btn__arrow" aria-hidden="true">&rarr;</span></a
+        >
+        <a class="tlink" href="#">Read the module brief <span aria-hidden="true">&rarr;</span></a>
+      </div>
+
+      <div class="rule" style="margin: 48px 0 28px"></div>
+      <p class="label" style="margin-bottom: 16px">Section header</p>
+      <div class="sec-head" style="margin-bottom: 0">
+        <div>
+          <span class="sec-head__num">§ 03 / 09</span>
+          <h3 class="display d3">Detection is the whole job.</h3>
+        </div>
+        <p class="sec-head__aside">Recovery system &middot; 03</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MOTION ===================== -->
+  <section class="board board--dark on-dark" id="motion">
+    <div class="board__tag">05 · Motion language</div>
+    <div class="board__inner">
+      <h2 class="display d3" style="margin-bottom: 12px">Three verbs. <em>Nothing else.</em></h2>
+      <p class="lead" style="margin-bottom: 44px">
+        Every animation on the site is one of three moves, and each one restates the product
+        argument. If a proposed effect is not one of these three, it does not ship.
+      </p>
+      <div class="verbs">
+        <div class="verb">
+          <p class="label label--accent" style="margin-bottom: 12px">Verb 01 — Detect</p>
+          <div class="verb__art">
+            <svg viewBox="0 0 200 90" role="img" aria-label="Faint scattered marks appearing">
+              <g fill="var(--gl-signal)">
+                <rect x="18" y="20" width="14" height="2" opacity="0.2" />
+                <rect x="52" y="58" width="14" height="2" opacity="0.35" />
+                <rect x="88" y="31" width="14" height="2" opacity="0.55" />
+                <rect x="126" y="67" width="14" height="2" opacity="0.75" />
+                <rect x="160" y="44" width="14" height="2" opacity="1" />
+              </g>
+            </svg>
+          </div>
+          <p class="micro">
+            Opacity 0&rarr;1 with a 4px rise, staggered 40ms. Marks appear where they actually are:
+            scattered, off-grid, low confidence. 340ms, ease-out.
+          </p>
+        </div>
+        <div class="verb">
+          <p class="label label--accent" style="margin-bottom: 12px">Verb 02 — Consolidate</p>
+          <div class="verb__art">
+            <svg viewBox="0 0 200 90" role="img" aria-label="Marks migrating into alignment">
+              <g fill="var(--gl-signal)" opacity="0.85">
+                <rect x="70" y="16" width="60" height="2" />
+                <rect x="70" y="30" width="60" height="2" />
+                <rect x="70" y="44" width="60" height="2" />
+                <rect x="70" y="58" width="60" height="2" />
+                <rect x="70" y="72" width="60" height="2" />
+              </g>
+              <g stroke="var(--gl-rule-dark)" stroke-width="1">
+                <line x1="70" y1="8" x2="70" y2="82" />
+                <line x1="130" y1="8" x2="130" y2="82" />
+              </g>
+            </svg>
+          </div>
+          <p class="micro">
+            translate3d only, to a shared x-position on the column grid. 680ms, ease-settle,
+            staggered from the outside in. This is the product: unstructured signal becomes a queue.
+          </p>
+        </div>
+        <div class="verb">
+          <p class="label label--accent" style="margin-bottom: 12px">Verb 03 — Settle</p>
+          <div class="verb__art">
+            <svg viewBox="0 0 200 90" role="img" aria-label="Bars stepping down through four stages">
+              <rect x="20" y="14" width="160" height="10" fill="var(--gl-stage-1)" />
+              <rect x="20" y="32" width="118" height="10" fill="var(--gl-stage-2)" />
+              <rect x="20" y="50" width="99" height="10" fill="var(--gl-stage-3)" />
+              <rect x="20" y="68" width="88" height="10" fill="var(--gl-stage-4)" />
+            </svg>
+          </div>
+          <p class="micro">
+            Bars grow left-to-right in sequence while their figures count up. 1100ms total.
+            The descending staircase is the honesty argument, animated.
+          </p>
+        </div>
+      </div>
+
+      <div class="rule" style="margin: 48px 0 28px"></div>
+      <div class="motion-rules">
+        <div>
+          <p class="label" style="margin-bottom: 10px">Budget</p>
+          <p class="micro">
+            No animation library. IntersectionObserver + CSS custom-property transitions, with one
+            rAF-throttled scroll-progress hook for the pinned sequence. Compositor properties only:
+            transform, opacity, clip-path.
+          </p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom: 10px">Never</p>
+          <p class="micro">
+            No smooth-scroll hijack. No compulsory intro. No WebGL. No autoplay video. Nothing
+            animates above the fold before the hero text is painted.
+          </p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom: 10px">Reduced motion</p>
+          <p class="micro">
+            Every sequence has an authored final state, not a disabled one. Under
+            prefers-reduced-motion the consolidated grid and the completed staircase render
+            immediately; durations collapse to 1ms.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

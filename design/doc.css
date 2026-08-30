@@ -1,0 +1,214 @@
+/* Artboard chrome for the Claude Design canvas. Not shipped to production. */
+
+body {
+  background: #1b1b1f;
+}
+
+.doc {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  padding: 56px;
+}
+
+.board {
+  position: relative;
+  width: 1440px;
+  max-width: 100%;
+}
+.board--dark {
+  background: var(--gl-void);
+  color: var(--gl-on-dark);
+}
+.board--light {
+  background: var(--gl-bone);
+  color: var(--gl-on-light);
+}
+.board--paper {
+  background: var(--gl-paper);
+  color: var(--gl-on-light);
+}
+.board__tag {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  font-family: var(--gl-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.board__inner {
+  padding: 72px;
+}
+.board__inner--flush {
+  padding: 0;
+}
+
+.rule {
+  height: 1px;
+  background: var(--rule);
+}
+
+.thesis-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: 64px;
+}
+.dev-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+.dev__art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  height: 168px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: var(--gl-ink-raised);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.ministage {
+  height: 9px;
+  margin-bottom: 5px;
+  background: var(--gl-rule-dark-soft);
+  position: relative;
+}
+.ministage i {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: var(--w);
+  background: var(--c);
+}
+.thesis-foot {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 44px;
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.sw span {
+  display: block;
+  height: 86px;
+  margin-bottom: 12px;
+}
+.sw b {
+  display: block;
+  font-family: var(--gl-font-mono);
+  font-size: 12px;
+  font-weight: 400;
+}
+.sw i {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--gl-font-mono);
+  font-size: 11px;
+  font-style: normal;
+  color: var(--faint);
+}
+.ramp {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+}
+.ramp span {
+  display: block;
+  height: 54px;
+  margin-bottom: 10px;
+}
+.ramp div {
+  font-family: var(--gl-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.type-spec {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 48px;
+  padding-block: 36px;
+  border-top: 1px solid var(--rule);
+}
+.scale {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--rule);
+}
+.scale > div {
+  display: grid;
+  grid-template-columns: 80px 300px minmax(0, 1fr);
+  gap: 24px;
+  padding-block: 13px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--gl-font-mono);
+  font-size: 12px;
+}
+.scale b {
+  font-weight: 400;
+  color: var(--accent);
+}
+.scale span {
+  color: var(--muted);
+}
+.scale i {
+  font-style: normal;
+  color: var(--faint);
+}
+
+.verbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+}
+.verb__art {
+  margin-bottom: 16px;
+  padding: 18px;
+  background: var(--gl-ink-raised);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.verb__art svg {
+  width: 100%;
+  height: auto;
+}
+.motion-rules {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 44px;
+}
+
+/* --- page artboards --- */
+.ab {
+  position: relative;
+}
+.ab__label {
+  position: absolute;
+  top: -26px;
+  left: 0;
+  font-family: var(--gl-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+.frame {
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.frame--mobile {
+  width: 390px;
+}
+.row {
+  display: flex;
+  gap: 56px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}

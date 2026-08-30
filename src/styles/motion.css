@@ -1,0 +1,283 @@
+/* ============================================================================
+   GROW LABEL — MOTION
+   Three verbs only: detect (appear in place), consolidate (migrate to the
+   grid), settle (step / count into the final state).
+
+   Contract: every element renders in its FINAL state by default. The animated
+   state is applied only once JavaScript has marked the tree as ready
+   (`data-motion="on"` on <html>), so a failed or blocked script leaves the page
+   complete and correct, and nothing above the fold waits for JavaScript.
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   VERB 01 — DETECT
+   Content appears where it already is: a short rise plus opacity.
+   ------------------------------------------------------------------------ */
+[data-motion='on'] .m-detect {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition:
+    opacity var(--gl-dur-slow) var(--gl-ease-out),
+    transform var(--gl-dur-slow) var(--gl-ease-out);
+  transition-delay: calc(var(--i, 0) * 45ms);
+  will-change: opacity, transform;
+}
+[data-motion='on'] .m-detect[data-inview='true'] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Display type reveals from behind a clipping edge rather than fading. */
+[data-motion='on'] .m-reveal {
+  clip-path: inset(0 0 108% 0);
+  transition: clip-path var(--gl-dur-slow) var(--gl-ease-settle);
+  transition-delay: calc(var(--i, 0) * 70ms);
+  will-change: clip-path;
+}
+[data-motion='on'] .m-reveal[data-inview='true'] {
+  clip-path: inset(-25% -8% -25% -8%);
+  will-change: auto;
+}
+
+/* A hairline draws in from its leading edge. */
+[data-motion='on'] .m-rule {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-slow) var(--gl-ease-out);
+  transition-delay: calc(var(--i, 0) * 45ms);
+}
+[data-motion='on'] .m-rule[data-inview='true'] {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   VERB 02 — CONSOLIDATE
+   Scattered marks migrate onto the column grid.
+   ------------------------------------------------------------------------ */
+.signalfield__mark {
+  /* Cursor proximity (--lift, 0–1) brightens and extends a mark very slightly. */
+  transform: translate3d(var(--dx, 0px), 0, 0);
+  transform-origin: left center;
+  scale: calc(1 + var(--lift, 0) * 0.14) 1;
+  opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
+}
+[data-motion='on'] .signalfield__mark {
+  opacity: 0;
+  transition:
+    opacity var(--gl-dur-slow) var(--gl-ease-out),
+    scale var(--gl-dur-base) var(--gl-ease-out),
+    transform var(--gl-dur-scene) var(--gl-ease-settle);
+  transition-delay: calc(400ms + var(--i, 0) * 90ms);
+}
+[data-motion='on'] .signalfield[data-inview='true'] .signalfield__mark {
+  opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
+  transition-delay:
+    calc(400ms + var(--i, 0) * 90ms), 0ms, calc(400ms + var(--i, 0) * 90ms);
+}
+
+/* Capacity slots resolve from open to recovered, in order. */
+[data-motion='on'] .capslot {
+  transition:
+    background-color var(--gl-dur-base) var(--gl-ease-out),
+    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+
+/* ---------------------------------------------------------------------------
+   VERB 03 — SETTLE
+   Value bars step out through the four stages.
+   ------------------------------------------------------------------------ */
+[data-motion='on'] .stagebar__fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-scene) var(--gl-ease-settle);
+  transition-delay: calc(var(--i, 0) * 130ms);
+  will-change: transform;
+}
+[data-motion='on'] .stagebar[data-inview='true'] .stagebar__fill {
+  transform: scaleX(1);
+  will-change: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   The recovery sequence: one tall section, native scrolling, four states
+   driven by a scroll-progress value written to --p (0 → 1).
+   ------------------------------------------------------------------------ */
+.sequence {
+  position: relative;
+}
+.sequence__stage {
+  position: sticky;
+  top: 68px;
+  display: grid;
+  align-content: center;
+  min-height: min(78vh, 720px);
+  padding-block: clamp(24px, 4vw, 56px);
+}
+.sequence__frames {
+  display: grid;
+}
+.sequence__frame {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  transition:
+    opacity var(--gl-dur-base) var(--gl-ease-out),
+    transform var(--gl-dur-slow) var(--gl-ease-out);
+  pointer-events: none;
+}
+.sequence__frame[data-active='true'] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+/* Without JS (or before hydration) the last frame is the authored final state. */
+.sequence__frame:last-child {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+[data-motion='on'] .sequence__frame:last-child:not([data-active='true']) {
+  opacity: 0;
+  transform: translate3d(0, 12px, 0);
+  pointer-events: none;
+}
+
+.sequence__rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: clamp(24px, 3vw, 40px);
+  background: var(--rule);
+  border-block: 1px solid var(--rule);
+}
+.sequence__step {
+  position: relative;
+  background: var(--gl-void);
+  padding: 14px 16px 14px 0;
+  overflow: hidden;
+}
+.sequence__step:not(:first-child) {
+  padding-left: 16px;
+}
+.sequence__step::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: var(--gl-signal);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-base) var(--gl-ease-precise);
+}
+.sequence__step[data-active='true']::before {
+  transform: scaleX(1);
+}
+.sequence__step[data-active='true'] .sequence__stepname {
+  color: var(--gl-on-dark);
+}
+.sequence__stepname {
+  color: var(--gl-on-dark-faint);
+  transition: color var(--gl-dur-base) var(--gl-ease-out);
+}
+.sequence__spacer {
+  height: 180vh;
+}
+@media (max-width: 760px) {
+  .sequence__spacer {
+    height: 150vh;
+  }
+  .sequence__rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --- Signature diagram used inside the sequence -------------------------- */
+.seqart {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 7;
+  max-height: 340px;
+}
+.seqart rect {
+  transition:
+    x var(--gl-dur-scene) var(--gl-ease-settle),
+    y var(--gl-dur-scene) var(--gl-ease-settle),
+    width var(--gl-dur-scene) var(--gl-ease-settle),
+    height var(--gl-dur-scene) var(--gl-ease-settle),
+    opacity var(--gl-dur-slow) var(--gl-ease-out),
+    fill var(--gl-dur-slow) var(--gl-ease-out);
+}
+
+/* ---------------------------------------------------------------------------
+   Mobile drawer
+   ------------------------------------------------------------------------ */
+.drawer {
+  animation: gl-drawer-in var(--gl-dur-base) var(--gl-ease-out) both;
+}
+.drawer__link {
+  animation: gl-link-in var(--gl-dur-base) var(--gl-ease-out) both;
+  animation-delay: calc(60ms + var(--i, 0) * 26ms);
+}
+@keyframes gl-drawer-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes gl-link-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Route transition — opacity only, on the main region, never blocking
+   ------------------------------------------------------------------------ */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: var(--gl-ease-out);
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — final states, immediately. Nothing is merely disabled.
+   ------------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion='on'] .m-detect,
+  [data-motion='on'] .m-reveal,
+  [data-motion='on'] .m-rule,
+  [data-motion='on'] .stagebar__fill,
+  [data-motion='on'] .signalfield__mark {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    transition-duration: 1ms;
+    transition-delay: 0ms;
+  }
+  [data-motion='on'] .signalfield__mark {
+    opacity: var(--o, 0.24);
+  }
+  .drawer,
+  .drawer__link {
+    animation: none;
+  }
+  .sequence__frame {
+    transition-duration: 1ms;
+  }
+  @view-transition {
+    navigation: none;
+  }
+}

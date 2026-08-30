@@ -1,0 +1,320 @@
+import Link from 'next/link';
+import type { ReactNode } from 'react';
+
+/**
+ * Server-rendered design-system primitives. None of these are client
+ * components: they are structure and type only, and any motion they take part
+ * in is driven by the `Reveal` wrapper or by CSS.
+ */
+
+/* -------------------------------------------------------------------------- */
+/* Section header                                                             */
+/* -------------------------------------------------------------------------- */
+
+export function SectionHeader({
+  num,
+  aside,
+  title,
+  emphasis,
+  id,
+  headingLevel = 2,
+}: {
+  num: string;
+  aside?: string;
+  title: string;
+  emphasis?: string;
+  id?: string;
+  headingLevel?: 2 | 3;
+}) {
+  const Heading = headingLevel === 3 ? 'h3' : 'h2';
+  return (
+    <div className="sec-head">
+      <div>
+        <span className="sec-head__num mono">{num}</span>
+        <Heading className="display d2" id={id}>
+          {title}
+          {emphasis ? (
+            <>
+              {' '}
+              <em>{emphasis}</em>
+            </>
+          ) : null}
+        </Heading>
+      </div>
+      {aside ? <p className="sec-head__aside">{aside}</p> : null}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Actions                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export function ActionLink({
+  href,
+  children,
+  variant = 'solid',
+  block = false,
+  external = false,
+}: {
+  href: string;
+  children: ReactNode;
+  variant?: 'solid' | 'ghost';
+  block?: boolean;
+  external?: boolean;
+}) {
+  const className = `btn${variant === 'ghost' ? ' btn--ghost' : ''}`;
+  const style = block ? { justifyContent: 'space-between' as const, width: '100%' } : undefined;
+  const content = (
+    <>
+      {children}
+      <span className="btn__arrow" aria-hidden="true">
+        &rarr;
+      </span>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a className={className} style={style} href={href} rel="noopener noreferrer" target="_blank">
+        {content}
+      </a>
+    );
+  }
+  return (
+    <Link className={className} style={style} href={href}>
+      {content}
+    </Link>
+  );
+}
+
+export function TextLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link className="tlink" href={href}>
+      {children}
+      <span aria-hidden="true">&rarr;</span>
+    </Link>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Ledger row                                                                 */
+/* -------------------------------------------------------------------------- */
+
+export function LedgerRow({
+  index,
+  title,
+  detail,
+  tag,
+}: {
+  index: string;
+  title: string;
+  detail: string;
+  tag?: string;
+}) {
+  return (
+    <div className="lrow">
+      <span className="lrow__idx">{index}</span>
+      <span className="lrow__key">{title}</span>
+      <span className="lrow__val">{detail}</span>
+      {tag ? (
+        <span className="lrow__fig label label--strong" style={{ textAlign: 'right' }}>
+          {tag}
+        </span>
+      ) : (
+        <span aria-hidden="true" />
+      )}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Key/value strip                                                            */
+/* -------------------------------------------------------------------------- */
+
+export function KeyValueStrip({ items }: { items: readonly { key: string; detail: string }[] }) {
+  return (
+    <dl className="kv">
+      {items.map((item) => (
+        <div className="kv__cell" key={item.key}>
+          <dt className="label kv__key">{item.key}</dt>
+          <dd className="micro" style={{ margin: 0 }}>
+            {item.detail}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Numbered step list                                                         */
+/* -------------------------------------------------------------------------- */
+
+export function StepList({
+  items,
+  headingLevel = 3,
+}: {
+  items: readonly { index: string; title: string; detail: string }[];
+  headingLevel?: 3 | 4;
+}) {
+  const Heading = headingLevel === 4 ? 'h4' : 'h3';
+  return (
+    <div className="steps">
+      {items.map((item) => (
+        <div className="step" key={item.index}>
+          <span className="step__num">{item.index}</span>
+          <Heading className="step__title">{item.title}</Heading>
+          <p className="small">{item.detail}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Capacity column                                                            */
+/* -------------------------------------------------------------------------- */
+
+export type SlotState = 'filled' | 'open' | 'recovered';
+
+export function CapacityColumn({
+  slots,
+  label,
+  note,
+  openLabel,
+}: {
+  slots: readonly SlotState[];
+  label?: string;
+  note?: string;
+  openLabel?: string;
+}) {
+  return (
+    <div>
+      {label ? (
+        <div className="hero__columnhead">
+          <span className="label">{label}</span>
+          {openLabel ? <span className="label label--accent">{openLabel}</span> : null}
+        </div>
+      ) : null}
+      <div className="capcol" aria-hidden="true">
+        {slots.map((state, i) => (
+          <span
+            // Slots are positional and never reordered.
+            // eslint-disable-next-line react/no-array-index-key
+            key={i}
+            className={
+              state === 'open'
+                ? 'capslot capslot--open'
+                : state === 'recovered'
+                  ? 'capslot capslot--recovered'
+                  : 'capslot'
+            }
+            style={{ '--i': i } as React.CSSProperties}
+          />
+        ))}
+      </div>
+      {note ? (
+        <div className="hero__columnfoot">
+          <p className="micro">{note}</p>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Four-stage value bar — the signature proof device                          */
+/* -------------------------------------------------------------------------- */
+
+export type StageRow = {
+  name: string;
+  /** 0–100. Illustrative proportions only; never a benchmark. */
+  width: number;
+  figure: string;
+};
+
+export function StageBar({
+  rows,
+  caption,
+  labelledBy,
+}: {
+  rows: readonly StageRow[];
+  caption?: string;
+  labelledBy?: string;
+}) {
+  return (
+    <div>
+      <div
+        className="stagebar"
+        data-motion-target="stagebar"
+        role="group"
+        aria-labelledby={labelledBy}
+      >
+        {rows.map((row, i) => (
+          <div className="stagebar__row" key={row.name}>
+            <span className="stagebar__name">{row.name}</span>
+            <span className="stagebar__track">
+              <span
+                className="stagebar__fill"
+                style={
+                  {
+                    '--w': `${row.width}%`,
+                    '--c': `var(--stage-${i + 1})`,
+                    '--i': i,
+                  } as React.CSSProperties
+                }
+              />
+            </span>
+            <span className="stagebar__fig">{row.figure}</span>
+          </div>
+        ))}
+      </div>
+      {caption ? (
+        <p className="micro" style={{ marginTop: 16 }}>
+          {caption}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Pull statement                                                             */
+/* -------------------------------------------------------------------------- */
+
+export function PullStatement({
+  label,
+  title,
+  emphasis,
+  body,
+}: {
+  label?: string;
+  title: string;
+  emphasis?: string;
+  body?: string;
+}) {
+  return (
+    <div className="pull">
+      {label ? (
+        <p className="label label--accent" style={{ marginBottom: 20 }}>
+          {label}
+        </p>
+      ) : null}
+      <p className="pull__text">
+        {title}
+        {emphasis ? (
+          <>
+            {' '}
+            <em>{emphasis}</em>
+          </>
+        ) : null}
+      </p>
+      {body ? (
+        <p className="small" style={{ marginTop: 24, maxWidth: '62ch' }}>
+          {body}
+        </p>
+      ) : null}
+    </div>
+  );
+}

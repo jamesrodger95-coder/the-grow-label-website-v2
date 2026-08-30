@@ -1,0 +1,267 @@
+@import '../styles/tokens.css';
+@import '../styles/base.css';
+@import '../styles/components.css';
+@import '../styles/motion.css';
+
+/* ============================================================================
+   APPLICATION-LEVEL COMPOSITION
+   Anything here is specific to how the Next.js routes assemble the design
+   system; the system itself lives in the imported files above.
+   ========================================================================= */
+
+html,
+body {
+  min-height: 100%;
+}
+
+#site-main:focus {
+  outline: none;
+}
+
+/* --- Stacked list of ledger rows used across several routes --------------- */
+.stack {
+  display: grid;
+  gap: clamp(28px, 3.2vw, 48px);
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+  gap: clamp(24px, 4vw, 72px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .two-col {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.two-col--even {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (max-width: 860px) {
+  .two-col--even {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- Key/value strip, hairline separated, never a card grid --------------- */
+.kv {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border-block: 1px solid var(--rule);
+}
+.kv__cell {
+  background: var(--cell-bg, transparent);
+  padding: var(--gl-s-5) var(--gl-s-5) var(--gl-s-5) 0;
+}
+.kv__cell + .kv__cell {
+  padding-left: var(--gl-s-5);
+}
+.surface--void .kv__cell {
+  --cell-bg: var(--gl-void);
+}
+.surface--ink .kv__cell {
+  --cell-bg: var(--gl-ink);
+}
+.surface--bone .kv__cell {
+  --cell-bg: var(--gl-bone);
+}
+.surface--paper .kv__cell {
+  --cell-bg: var(--gl-paper);
+}
+.surface--deep .kv__cell {
+  --cell-bg: var(--gl-bone-deep);
+}
+.kv__key {
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* --- Bare list with a leading hairline tick ------------------------------- */
+.ticks {
+  display: grid;
+  gap: 10px;
+}
+.ticks li {
+  position: relative;
+  padding-left: 24px;
+  font-size: var(--gl-t-small);
+  line-height: 1.5;
+  color: var(--muted);
+}
+.ticks li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.66em;
+  width: 12px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* --- Escalation ladder: trigger on the left, handover on the right -------- */
+.ladder {
+  border-top: 1px solid var(--rule);
+}
+.ladder__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(14px, 2.4vw, 40px);
+  padding-block: var(--gl-s-5);
+  border-bottom: 1px solid var(--rule);
+}
+.ladder__trigger {
+  font-size: var(--gl-t-small);
+  font-weight: 480;
+}
+.ladder__handover {
+  font-size: var(--gl-t-small);
+  color: var(--muted);
+}
+@media (max-width: 700px) {
+  .ladder__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+/* --- Stage relevance matrix ---------------------------------------------- */
+.matrix {
+  border-top: 1px solid var(--rule);
+}
+.matrix__row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9rem) minmax(5rem, 7rem) minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--gl-s-4);
+  padding-block: var(--gl-s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.matrix__role {
+  font-family: var(--gl-font-mono);
+  font-size: var(--gl-t-label);
+  letter-spacing: var(--gl-tr-label);
+  text-transform: uppercase;
+}
+.matrix__role--influences {
+  color: var(--accent);
+}
+.matrix__role--observes {
+  color: var(--faint);
+}
+@media (max-width: 620px) {
+  .matrix__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .matrix__row > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Site comparison ledger (veterinary) --------------------------------- */
+.sites {
+  border-top: 1px solid var(--rule);
+}
+.sites__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 2fr) auto;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 32px);
+  padding-block: var(--gl-s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.sites__bar {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  height: 12px;
+}
+.sites__seg {
+  height: 100%;
+}
+@media (max-width: 640px) {
+  .sites__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 10px;
+  }
+  .sites__bar {
+    grid-column: 1 / -1;
+  }
+}
+
+/* --- Recall interval rail (dental) --------------------------------------- */
+.rail {
+  border-top: 1px solid var(--rule);
+}
+.rail__row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--gl-s-4);
+  padding-block: var(--gl-s-4);
+  border-bottom: 1px solid var(--rule);
+}
+.rail__track {
+  position: relative;
+  height: 26px;
+  background: var(--rule-soft);
+}
+.rail__tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  opacity: var(--o, 1);
+}
+.rail__due {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--muted);
+}
+.rail__zone {
+  position: absolute;
+  inset-block: 0;
+  background: var(--gl-signal-wash);
+}
+.on-light .rail__zone {
+  background: var(--gl-signal-wash-l);
+}
+@media (max-width: 560px) {
+  .rail__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
+/* --- Dev routes ---------------------------------------------------------- */
+.dev-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gl-s-5);
+}
+.dev-swatch {
+  display: grid;
+  gap: 10px;
+}
+.dev-swatch__chip {
+  height: 76px;
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.dev-panel {
+  padding: var(--gl-s-5);
+  border: 1px solid var(--rule);
+}
+
+/* --- Not-found ----------------------------------------------------------- */
+.nf {
+  display: grid;
+  align-content: center;
+  min-height: calc(100vh - 68px);
+  padding-block: var(--gl-s-9);
+}
