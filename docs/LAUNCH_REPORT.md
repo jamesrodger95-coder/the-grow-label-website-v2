@@ -5,13 +5,15 @@ preview, not merged and not in production.**
 
 ## Deliverables
 
-| Item                | Value                                                                    |
-| ------------------- | ------------------------------------------------------------------------ |
-| GitHub repository   | `jamesrodger95-coder/the-grow-label-website-v2` (private)                 |
-| Default branch      | `main` — scaffold commit only, untouched since                            |
-| Working branch      | `feat/complete-claude-build`                                              |
-| Vercel project      | `the-grow-label-website-v2` — created for this work, isolated             |
-| Claude Design project | **Grow Label Website V2**                                              |
+| Item                  | Value                                                                   |
+| --------------------- | ----------------------------------------------------------------------- |
+| GitHub repository     | `jamesrodger95-coder/the-grow-label-website-v2` (private)               |
+| Default branch        | `main` — scaffold commit only, untouched since                          |
+| Working branch        | `feat/complete-claude-build`                                            |
+| Vercel project        | `the-grow-label-website-v2` — created for this work, isolated           |
+| Preview URL           | https://the-grow-label-website-v2-53068s7cn.vercel.app                  |
+| Pull request          | https://github.com/jamesrodger95-coder/the-grow-label-website-v2/pull/1 |
+| Claude Design project | **Grow Label Website V2**                                               |
 
 The repository name requested in the brief was available, so the fallback name
 was not needed.
@@ -21,7 +23,7 @@ was not needed.
 The preview deployment reports `target: preview`, confirmed with
 `vercel inspect`. No production flag was used at any point.
 
-**One thing to know.** Vercel assigns the *first* deployment of a brand-new
+**One thing to know.** Vercel assigns the _first_ deployment of a brand-new
 project to that project's production target automatically, regardless of flags.
 That happened here on the initial `vercel deploy`, and the CLI said so in its
 own output. The consequences are contained and worth stating plainly:
@@ -106,12 +108,12 @@ accessible name, and a logo link below the WCAG 2.2 target size.
 
 ## What is not configured
 
-| Item                       | Effect                                                          |
-| -------------------------- | --------------------------------------------------------------- |
+| Item                            | Effect                                                                                     |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
 | `CONTACT_WEBHOOK_URL` or Resend | The form renders its "form unavailable" state. It never accepts details it cannot deliver. |
-| `NEXT_PUBLIC_DASHBOARD_URL`| "Client sign in" does not render at all                          |
-| `NEXT_PUBLIC_BOOKING_URL`  | "Book a call" does not render at all                             |
-| `NEXT_PUBLIC_SITE_URL`     | Canonical URLs fall back to the Vercel URL                       |
+| `NEXT_PUBLIC_DASHBOARD_URL`     | "Client sign in" does not render at all                                                    |
+| `NEXT_PUBLIC_BOOKING_URL`       | "Book a call" does not render at all                                                       |
+| `NEXT_PUBLIC_SITE_URL`          | Canonical URLs fall back to the Vercel URL                                                 |
 
 Setting any of these in Vercel's preview environment will bring the affected
 feature to life without a code change.

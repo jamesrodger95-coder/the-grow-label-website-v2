@@ -26,7 +26,8 @@ the Vercel preview was created.
 
 - Repository: `the-grow-label-website-v2` (private)
 - Branch: `feat/complete-claude-build`, branched from `main`
-- Vercel project: `the-grow-label-website-v2` — **preview only**
+- Vercel project: `the-grow-label-website-v2` — preview at https://the-grow-label-website-v2-53068s7cn.vercel.app
+- Pull request: https://github.com/jamesrodger95-coder/the-grow-label-website-v2/pull/1 (open, not merged)
 - Node 24, pnpm 11, Next.js 16.3.3, React 19.2.8, TypeScript 5.9.3
 
 ## Design source

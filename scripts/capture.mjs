@@ -68,7 +68,10 @@ for (const [vpName, width, height] of viewports) {
     const errors = [];
     const failures = [];
     page.on('console', (m) => {
-      if (m.type() === 'error') errors.push(m.text());
+      if (m.type() !== 'error') return;
+      // The 404 route legitimately returns 404, and the browser logs that.
+      if (name === 'not-found' && /404/.test(m.text())) return;
+      errors.push(m.text());
     });
     page.on('pageerror', (e) => errors.push(`PAGEERROR ${e.message}`));
     page.on('response', (r) => {
