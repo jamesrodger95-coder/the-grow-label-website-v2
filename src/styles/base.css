@@ -526,7 +526,7 @@ select {
   grid-template-columns: minmax(0, 1fr) auto;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .lrow {
     grid-template-columns: 2.5rem minmax(0, 1fr);
     row-gap: var(--gl-s-2);
@@ -657,7 +657,7 @@ select {
 .lrow--stage dd {
   margin: 0;
 }
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .lrow--stage {
     grid-template-columns: minmax(0, 1fr);
     row-gap: 6px;
