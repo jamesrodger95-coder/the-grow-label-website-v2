@@ -257,6 +257,20 @@
   .hero__aside {
     display: none;
   }
+  /* The marks live in the corridor between the headline and the capacity
+     column. Once the hero is a single column there is no corridor, so they
+     would sit on top of the copy — the faint vertical grid stays. */
+  .signalfield__mark {
+    display: none;
+  }
+  /* Stack the hero actions to a common width rather than two ragged pills. */
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__actions .btn {
+    justify-content: space-between;
+  }
 }
 
 /* The signal field: scattered marks that consolidate onto the column grid. */

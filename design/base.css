@@ -630,8 +630,19 @@ select {
     grid-template-columns: minmax(0, 1fr) auto;
     row-gap: 10px;
   }
+  /* Name and basis read as one line, with the track beneath them — rather
+     than name, track, basis stacked three deep. */
+  .stagebar__name {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .stagebar__fig {
+    grid-column: 2;
+    grid-row: 1;
+  }
   .stagebar__track {
     grid-column: 1 / -1;
+    grid-row: 2;
   }
 }
 

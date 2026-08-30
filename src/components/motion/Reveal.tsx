@@ -29,6 +29,8 @@ export function Reveal({
   style,
   rootMargin,
   id,
+  role,
+  ariaLabelledBy,
 }: {
   children: ReactNode;
   as?: ElementType;
@@ -39,6 +41,8 @@ export function Reveal({
   style?: CSSProperties;
   rootMargin?: string;
   id?: string;
+  role?: string;
+  ariaLabelledBy?: string;
 }) {
   const { ref, inView } = useInView<HTMLElement>(rootMargin);
   const classes = [VARIANT_CLASS[variant], className].filter(Boolean).join(' ');
@@ -47,6 +51,8 @@ export function Reveal({
     <Tag
       ref={ref}
       id={id}
+      role={role}
+      aria-labelledby={ariaLabelledBy}
       className={classes || undefined}
       data-inview={inView ? 'true' : 'false'}
       style={{ '--i': index, ...style } as CSSProperties}

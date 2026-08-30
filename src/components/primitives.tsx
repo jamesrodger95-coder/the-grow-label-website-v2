@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { Reveal } from '@/components/motion/Reveal';
 
 /**
  * Server-rendered design-system primitives. None of these are client
@@ -238,11 +239,15 @@ export function StageBar({
 }) {
   return (
     <div>
-      <div
+      {/* The bar itself is the observed element: the fills key off
+          `.stagebar[data-inview="true"]`, so putting the observer on a wrapper
+          would leave them at scaleX(0) and invisible. */}
+      <Reveal
+        as="div"
+        variant="group"
         className="stagebar"
-        data-motion-target="stagebar"
         role="group"
-        aria-labelledby={labelledBy}
+        ariaLabelledBy={labelledBy}
       >
         {rows.map((row, i) => (
           <div className="stagebar__row" key={row.name}>
@@ -262,7 +267,7 @@ export function StageBar({
             <span className="stagebar__fig">{row.figure}</span>
           </div>
         ))}
-      </div>
+      </Reveal>
       {caption ? (
         <p className="micro" style={{ marginTop: 16 }}>
           {caption}
