@@ -1,5 +1,5 @@
 import { chromium } from '@playwright/test';
-const BASE = process.env.BASE_URL ?? 'http://localhost:3111';
+const BASE = process.env.BASE_URL ?? 'http://localhost:3112';
 const [, , path = '/', width = '360', height = '800'] = process.argv;
 const b = await chromium.launch();
 const p = await b.newPage({ viewport: { width: +width, height: +height }, hasTouch: true });

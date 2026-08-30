@@ -90,6 +90,28 @@ test.describe('mobile navigation', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   });
 
+  test('the drawer does not reopen when a route is revisited', async ({ page }) => {
+    await page.goto('/methodology');
+    await awaitHydration(page);
+    const toggle = page.getByRole('button', { name: /^(menu|close)$/i });
+    const drawer = page.getByRole('navigation', { name: 'All pages' });
+
+    // Leave through the logo, which sits in the header bar above the open
+    // drawer and is the one route control that is not inside it.
+    await toggle.click();
+    await expect(drawer).toBeVisible();
+    await page.getByRole('link', { name: /home$/i }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(drawer).toBeHidden();
+
+    // Returning to the route it was opened on must not resurrect it.
+    await page.goBack();
+    await expect(page).toHaveURL(/\/methodology$/);
+    await expect(drawer).toBeHidden();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    expect(await page.evaluate(() => document.body.style.overflow)).toBe('');
+  });
+
   test('targets clear the WCAG 2.2 minimum, and primary actions clear 44px', async ({ page }) => {
     await page.goto('/');
 

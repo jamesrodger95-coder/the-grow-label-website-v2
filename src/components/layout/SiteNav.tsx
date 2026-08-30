@@ -37,20 +37,25 @@ const DRAWER_ENTRIES = NAV_GROUPS.flatMap((group) =>
 
 export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
   const pathname = usePathname();
-  // The drawer is open *for a particular route*. Navigating changes `pathname`,
-  // which closes it during render — no effect, and no stale-open flash.
-  const [openFor, setOpenFor] = useState<string | null>(null);
-  const open = openFor === pathname;
+  const [open, setOpen] = useState(false);
+  const [lastPathname, setLastPathname] = useState(pathname);
+
+  // Close on any route change, including back and forward. Adjusting state
+  // during render is React's documented way to reset on a changed input; an
+  // effect would fire a second render pass, and deriving `open` from the route
+  // it was opened on would silently reopen the drawer on a return visit to
+  // that same route.
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
 
   const drawerId = useId();
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
 
-  const close = useCallback(() => setOpenFor(null), []);
-  const toggle = useCallback(
-    () => setOpenFor((current) => (current === pathname ? null : pathname)),
-    [pathname]
-  );
+  const close = useCallback(() => setOpen(false), []);
+  const toggle = useCallback(() => setOpen((current) => !current), []);
 
   // Focus management, escape handling and scroll lock while the drawer is open.
   useEffect(() => {
@@ -67,7 +72,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        setOpenFor(null);
+        setOpen(false);
         return;
       }
       if (event.key !== 'Tab' || !drawer) return;
@@ -104,7 +109,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     <header className="nav on-dark" data-open={open ? 'true' : 'false'}>
       <div className="shell">
         <div className="nav__bar">
-          <Link className="nav__mark" href="/" aria-label={`${SITE.name} — home`}>
+          <Link className="nav__mark" href="/" aria-label={`${SITE.name} — home`} onClick={close}>
             <Mark />
             {SITE.name}
           </Link>
@@ -133,7 +138,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                 Client sign in
               </a>
             ) : null}
-            <Link className="btn nav__cta" href={CTA.primary.href}>
+            <Link className="btn nav__cta" href={CTA.primary.href} onClick={close}>
               {CTA.primary.label}
               <span className="btn__arrow" aria-hidden="true">
                 &rarr;

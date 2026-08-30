@@ -3,22 +3,22 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 96,
+      "performance": 95,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2688,
+      "lcp": 2756,
       "cls": 0,
-      "tbt": 57,
-      "bytes": 318293,
-      "scriptBytes": 152202
+      "tbt": 121,
+      "bytes": 319593,
+      "scriptBytes": 152351
     },
     "problems": [],
     "notes": [
-      "LCP 2688ms over the 2500ms target"
+      "LCP 2756ms over the 2500ms target"
     ]
   },
   {
@@ -32,15 +32,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2521,
+      "lcp": 2546,
       "cls": 0,
-      "tbt": 58,
-      "bytes": 266443,
-      "scriptBytes": 152202
+      "tbt": 81,
+      "bytes": 266655,
+      "scriptBytes": 152351
     },
     "problems": [],
     "notes": [
-      "LCP 2521ms over the 2500ms target"
+      "LCP 2546ms over the 2500ms target"
     ]
   },
   {
@@ -54,15 +54,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2516,
+      "lcp": 2520,
       "cls": 0,
       "tbt": 54,
-      "bytes": 301679,
-      "scriptBytes": 152202
+      "bytes": 300554,
+      "scriptBytes": 152351
     },
     "problems": [],
     "notes": [
-      "LCP 2516ms over the 2500ms target"
+      "LCP 2520ms over the 2500ms target"
     ]
   },
   {
@@ -76,15 +76,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2510,
+      "lcp": 2570,
       "cls": 0,
-      "tbt": 45,
-      "bytes": 264482,
-      "scriptBytes": 152202
+      "tbt": 90,
+      "bytes": 264695,
+      "scriptBytes": 152351
     },
     "problems": [],
     "notes": [
-      "LCP 2510ms over the 2500ms target"
+      "LCP 2570ms over the 2500ms target"
     ]
   },
   {
@@ -98,15 +98,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2513,
+      "lcp": 2529,
       "cls": 0,
-      "tbt": 51,
-      "bytes": 265467,
-      "scriptBytes": 152202
+      "tbt": 58,
+      "bytes": 265685,
+      "scriptBytes": 152351
     },
     "problems": [],
     "notes": [
-      "LCP 2513ms over the 2500ms target"
+      "LCP 2529ms over the 2500ms target"
     ]
   },
   {
@@ -120,15 +120,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2520,
+      "lcp": 2549,
       "cls": 0,
-      "tbt": 56,
-      "bytes": 263885,
-      "scriptBytes": 154205
+      "tbt": 69,
+      "bytes": 264094,
+      "scriptBytes": 154351
     },
     "problems": [],
     "notes": [
-      "LCP 2520ms over the 2500ms target"
+      "LCP 2549ms over the 2500ms target"
     ]
   }
 ]

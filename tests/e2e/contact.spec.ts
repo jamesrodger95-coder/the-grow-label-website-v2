@@ -1,6 +1,16 @@
 import { expect, test } from '@playwright/test';
 
 /**
+ * The rate limiter keys on the client IP, and every local request shares one.
+ * Each test therefore sends a distinct forwarded-for value, so a test that is
+ * meant to exercise the honeypot or the timing gate is not silently answered by
+ * a 429 left over from the rate-limit test.
+ */
+function bucket(name: string) {
+  return { 'x-forwarded-for': `203.0.113.${name}` };
+}
+
+/**
  * The contact journey. These run against whatever delivery configuration the
  * environment has, so each assertion states which state it is checking.
  */
@@ -14,6 +24,7 @@ test('the endpoint reports its configuration honestly', async ({ request }) => {
 
 test('a malformed body is rejected with field errors, not accepted', async ({ request }) => {
   const res = await request.post('/api/contact', {
+    headers: bucket('11'),
     data: {
       name: '',
       email: 'nope',
@@ -33,6 +44,7 @@ test('a malformed body is rejected with field errors, not accepted', async ({ re
 
 test('a filled honeypot is never treated as a success', async ({ request }) => {
   const res = await request.post('/api/contact', {
+    headers: bucket('12'),
     data: {
       name: 'Spam Bot',
       email: 'bot@example.com',
@@ -51,6 +63,7 @@ test('a filled honeypot is never treated as a success', async ({ request }) => {
 
 test('an instant submission is rejected by the timing check', async ({ request }) => {
   const res = await request.post('/api/contact', {
+    headers: bucket('13'),
     data: {
       name: 'Fast Bot',
       email: 'fast@example.com',
@@ -77,7 +90,7 @@ test('repeated submissions hit the rate-limit boundary', async ({ request }) => 
 
   let sawLimit = false;
   for (let i = 0; i < 12; i++) {
-    const res = await request.post('/api/contact', { data: payload });
+    const res = await request.post('/api/contact', { headers: bucket('14'), data: payload });
     if (res.status() === 429) {
       sawLimit = true;
       expect(res.headers()['retry-after']).toBeTruthy();

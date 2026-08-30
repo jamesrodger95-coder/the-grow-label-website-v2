@@ -10,7 +10,7 @@ import { join } from 'node:path';
  * overflow and any element that overflows the viewport width.
  */
 
-const BASE = process.env.BASE_URL ?? 'http://localhost:3111';
+const BASE = process.env.BASE_URL ?? 'http://localhost:3112';
 const OUT = process.env.OUT_DIR ?? 'artifacts/final-screenshots';
 
 export const ROUTES = [

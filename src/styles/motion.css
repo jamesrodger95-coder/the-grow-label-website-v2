@@ -55,14 +55,28 @@
    VERB 02 — CONSOLIDATE
    Scattered marks migrate onto the column grid.
    ------------------------------------------------------------------------ */
+/* Entrance is pure CSS, so the hero paints complete with no JavaScript on the
+   critical path. Cursor proximity (--lift, 0-1) is layered on afterwards by
+   PointerSignals, and never arrives on touch or under reduced motion.
+
+   The two are split across an inner and an outer element on purpose. A filling
+   animation keeps its final keyframe as the animated value, which beats the
+   specified value — so if the entrance keyframes carried opacity, the later
+   --lift change would jump instead of easing. The wrapper owns the entrance,
+   the inner mark owns the transition. */
 .signalfield__mark {
-  /* Entrance is pure CSS: the hero paints complete with no JavaScript on the
-     critical path. Cursor proximity (--lift, 0-1) is layered on afterwards by
-     PointerSignals, and simply never arrives on touch or reduced motion. */
-  transform-origin: left center;
-  scale: calc(1 + var(--lift, 0) * 0.14) 1;
   animation: gl-signal-in var(--gl-dur-scene) var(--gl-ease-settle) both;
   animation-delay: calc(400ms + var(--i, 0) * 90ms);
+}
+.signalfield__mark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: inherit;
+  transform-origin: left center;
+  scale: calc(1 + var(--lift, 0) * 0.14) 1;
+  opacity: calc(var(--lift, 0) * 0.55);
   transition:
     opacity var(--gl-dur-base) var(--gl-ease-out),
     scale var(--gl-dur-base) var(--gl-ease-out);
@@ -73,7 +87,7 @@
     transform: translate3d(var(--dx, 0px), 0, 0);
   }
   to {
-    opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
+    opacity: var(--o, 0.24);
     transform: translate3d(0, 0, 0);
   }
 }
@@ -286,7 +300,9 @@
     animation: none;
     opacity: var(--o, 0.24);
     transform: none;
-    scale: 1;
+  }
+  .signalfield__mark::after {
+    display: none;
   }
   .drawer,
   .drawer__link {

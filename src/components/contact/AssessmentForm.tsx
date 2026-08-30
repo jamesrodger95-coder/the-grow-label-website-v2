@@ -59,7 +59,9 @@ export function AssessmentForm({
       sites: String(data.get('sites') ?? ''),
       message: String(data.get('message') ?? ''),
       website: String(data.get('website') ?? ''),
-      elapsed: mountedAt.current === 0 ? 0 : Date.now() - mountedAt.current,
+      // Omitted rather than zero when the mount effect has not run: the field
+      // is optional server-side, but a zero would trip the timing gate.
+      elapsed: mountedAt.current === 0 ? undefined : Date.now() - mountedAt.current,
     };
 
     setStatus('submitting');

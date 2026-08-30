@@ -9,12 +9,39 @@
  */
 import { chromium } from '@playwright/test';
 import lighthouse from 'lighthouse';
+import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-const BASE = process.env.LH_BASE_URL ?? 'http://localhost:3220';
+const SERVER_PORT = Number(process.env.LH_PORT ?? 3220);
+/** Set LH_BASE_URL to audit a server that is already running. */
+const BASE = process.env.LH_BASE_URL ?? `http://localhost:${SERVER_PORT}`;
 const OUT = process.env.LH_OUT ?? 'artifacts/lighthouse';
-const PORT = 9222;
+const DEBUG_PORT = 9222;
+
+/**
+ * Starts the production server unless one was supplied, so `pnpm lighthouse`
+ * works from a clean checkout rather than failing on connection-refused.
+ */
+async function startServer() {
+  if (process.env.LH_BASE_URL) return null;
+  const child = spawn('pnpm', ['start', '-p', String(SERVER_PORT)], {
+    stdio: 'ignore',
+    shell: true,
+  });
+  const deadline = Date.now() + 90_000;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(BASE);
+      if (res.ok) return child;
+    } catch {
+      /* not up yet */
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+  child.kill();
+  throw new Error(`server did not start on port ${SERVER_PORT} — run pnpm build first`);
+}
 
 const URLS = [
   ['home', '/'],
@@ -71,7 +98,8 @@ const SETTINGS = {
 
 mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ args: [`--remote-debugging-port=${PORT}`] });
+const server = await startServer();
+const browser = await chromium.launch({ args: [`--remote-debugging-port=${DEBUG_PORT}`] });
 const rows = [];
 let failed = false;
 
@@ -79,7 +107,7 @@ try {
   for (const [name, path] of URLS) {
     const result = await lighthouse(
       BASE + path,
-      { port: PORT, output: 'json', logLevel: 'error' },
+      { port: DEBUG_PORT, output: 'json', logLevel: 'error' },
       { extends: 'lighthouse:default', settings: SETTINGS }
     );
     if (!result?.lhr) throw new Error(`no result for ${path}`);
@@ -122,6 +150,7 @@ try {
   }
 } finally {
   await browser.close();
+  server?.kill();
 }
 
 const pad = (v, n) => String(v).padStart(n);

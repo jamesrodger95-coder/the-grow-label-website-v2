@@ -46,6 +46,18 @@ export const contactSchema = z.object({
   elapsed: z.coerce.number().int().nonnegative().optional(),
 });
 
+/**
+ * Keeps the hand-written `ContactInput` in `contact-fields.ts` tied to this
+ * schema. That type cannot simply be `z.infer` of it, because the client
+ * imports it and zod must stay out of the browser bundle — so the coupling is
+ * asserted here instead. Change a field in either place without changing the
+ * other and this stops compiling.
+ */
+type SchemaOutput = z.infer<typeof contactSchema>;
+type AssertAssignable<A extends B, B> = A;
+export type SchemaMatchesInput = AssertAssignable<SchemaOutput, ContactInput>;
+export type InputMatchesSchema = AssertAssignable<ContactInput, SchemaOutput>;
+
 export function toFieldErrors(error: z.ZodError<unknown>): FieldErrors {
   const out: FieldErrors = {};
   for (const issue of error.issues) {

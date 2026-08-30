@@ -43,3 +43,11 @@ yarn-error.log*
 # scratch
 .upload.json
 artifacts/research/
+artifacts/review/
+artifacts/review-tablet/
+# Raw Lighthouse reports are large and regenerable; the summary is kept.
+artifacts/lighthouse/*.json
+!artifacts/lighthouse/summary.json
+
+.vercel
+.env*
