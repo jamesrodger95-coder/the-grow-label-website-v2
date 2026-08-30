@@ -35,8 +35,7 @@ export default function InsightsPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 01 / 02"
-              aside="Index"
+              eyebrow="Index"
               id="index-title"
               title="Everything published"
               emphasis="so far."
@@ -82,7 +81,7 @@ export default function InsightsPage() {
           <div className="ctaband__inner">
             <Reveal>
               <p className="label label--accent" style={{ marginBottom: 24 }}>
-                § 02 / 02 · Next step
+                Next step
               </p>
               <h2 className="display d2" id="insights-cta" style={{ marginBottom: 28 }}>
                 The argument is easier <em>with your own numbers in it.</em>

@@ -17,7 +17,7 @@ import { CASE_STUDIES } from '@/content/proof';
 function CaseArt({ hue }: { hue: number }) {
   const bars = [92, 68, 55, 44];
   return (
-    <svg className="case__svg" viewBox="0 0 160 100" role="img" aria-label="">
+    <svg className="case__svg" viewBox="0 0 160 100" aria-hidden="true" focusable="false">
       <rect width="160" height="100" fill={`hsl(${hue} 34% 96%)`} />
       {[...Array(9)].map((_, i) => (
         <rect
@@ -48,7 +48,11 @@ function CaseArt({ hue }: { hue: number }) {
 
 export function CaseStudies() {
   return (
-    <section className="surface--white on-light section" aria-labelledby="cases-title">
+    <section
+      className="surface--white on-light section"
+      id="case-studies"
+      aria-labelledby="cases-title"
+    >
       <div className="shell">
         <div className="sec-head">
           <div>
@@ -116,7 +120,7 @@ export function CaseStudies() {
             Card layout, artwork and metadata are final. Titles, summaries and links are replaced
             when each study is signed off by the client it describes.
           </p>
-          <TextLink href="/methodology">What we can claim</TextLink>
+          <TextLink href="/platform#limits">What we can claim</TextLink>
         </Reveal>
       </div>
     </section>

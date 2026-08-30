@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/home/Hero';
+import { Leaks } from '@/components/home/Leaks';
+import { RecoveryPipeline } from '@/components/home/RecoveryPipeline';
 import { Results } from '@/components/home/Results';
 import { CaseStudies } from '@/components/home/CaseStudies';
 import { Testimonials } from '@/components/home/Testimonials';
@@ -12,12 +14,11 @@ import {
   ActionLink,
   CapacityColumn,
   KeyValueStrip,
-  LedgerRow,
   StageBar,
   StepList,
   TextLink,
 } from '@/components/primitives';
-import { CLOSING, DETECTION, EVIDENCE, LEAKS, SECTORS, TIME_RETURNED } from '@/content/home';
+import { CLOSING, DETECTION, EVIDENCE, SECTORS, TIME_RETURNED } from '@/content/home';
 import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
 import { READS_STRIP } from '@/content/proof';
@@ -57,42 +58,7 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- */}
       {/* Where the revenue goes                                            */}
       {/* ---------------------------------------------------------------- */}
-      <section className="surface--white on-light section" aria-labelledby="leaks-title">
-        <div className="shell">
-          <div className="sec-head">
-            <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">Where it goes</span>
-              </Reveal>
-              <RevealLines
-                as="h2"
-                id="leaks-title"
-                className="display d2"
-                lines={['A busy practice and a leaking', <em key="e">one look identical.</em>]}
-              />
-            </div>
-            <p className="sec-head__aside">Six points of loss</p>
-          </div>
-
-          <Reveal className="lead" as="p" variant="rise" style={{ marginBottom: 44 }}>
-            Every one of these is demand your practice has already paid to generate. None of them
-            shows up on a profit and loss statement, because the transaction never happened.
-          </Reveal>
-
-          <div className="ledger">
-            {LEAKS.map((leak, i) => (
-              <Reveal key={leak.index} index={i} variant="wipe">
-                <LedgerRow
-                  index={leak.index}
-                  title={leak.title}
-                  detail={leak.detail}
-                  tag={leak.module}
-                />
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Leaks />
 
       {/* ---------------------------------------------------------------- */}
       {/* Detection                                                         */}
@@ -108,33 +74,36 @@ export default function HomePage() {
                 as="h2"
                 id="detection-title"
                 className="display d2"
-                lines={[
-                  'Detection is the whole job.',
-                  <em key="e">The rest is follow-through.</em>,
-                ]}
+                lines={DETECTION.titleLines.map((line, i) =>
+                  i === 1 ? <em key={line}>{line}</em> : line
+                )}
               />
             </div>
-            <p className="sec-head__aside">Event, opportunity, action</p>
+            <p className="sec-head__aside">{DETECTION.aside}</p>
           </div>
 
-          <div className="two-col" style={{ marginBottom: 48 }}>
-            <Reveal variant="rise" className="sticky-aside">
+          <div className="detect">
+            <Reveal variant="rise" className="detect__copy">
               {DETECTION.body.map((paragraph) => (
                 <p className="body" key={paragraph.slice(0, 24)}>
                   {paragraph}
                 </p>
               ))}
-              <p style={{ marginTop: 26 }}>
+              <p className="detect__boundary small">{DETECTION.boundary}</p>
+              <p style={{ margin: 0 }}>
                 <TextLink href="/platform">See the platform architecture</TextLink>
               </p>
             </Reveal>
-            <Reveal variant="card" index={1}>
-              <KeyValueStrip items={DETECTION.reads} />
-              <p className="small" style={{ marginTop: 24, maxWidth: '56ch' }}>
-                {DETECTION.boundary}
-              </p>
+
+            <Reveal variant="card" index={1} className="detect__visual">
+              <RecoveryPipeline />
             </Reveal>
           </div>
+
+          <Reveal variant="rise" className="detect__reads">
+            <p className="label detect__readslabel">What it reads to do that</p>
+            <KeyValueStrip items={DETECTION.reads} />
+          </Reveal>
         </div>
       </section>
 
@@ -228,7 +197,7 @@ export default function HomePage() {
                 part worth a management conversation.
               </p>
               <p style={{ marginTop: 26 }}>
-                <TextLink href="/methodology">Read the measurement methodology</TextLink>
+                <TextLink href="/platform#value-stages">How a figure is promoted</TextLink>
               </p>
             </Reveal>
             <Reveal variant="card" index={1}>
@@ -309,7 +278,7 @@ export default function HomePage() {
             <Reveal variant="rise" className="sticky-aside">
               <p className="lead">{EVIDENCE.lead}</p>
               <p style={{ marginTop: 26 }}>
-                <TextLink href="/methodology">What we cannot claim</TextLink>
+                <TextLink href="/platform#limits">What we cannot claim</TextLink>
               </p>
             </Reveal>
             <Reveal variant="wipe" index={1}>
@@ -395,8 +364,8 @@ export default function HomePage() {
               </div>
               <div style={{ marginTop: 34, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-                <ActionLink href="/methodology" variant="ghost">
-                  Read the methodology
+                <ActionLink href="/platform#value-stages" variant="ghost">
+                  See how value is measured
                 </ActionLink>
               </div>
             </Reveal>

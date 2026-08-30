@@ -24,16 +24,22 @@ function Mark() {
   );
 }
 
+/**
+ * A link is current when the reader is on it or somewhere beneath it.
+ *
+ * Anchors on the homepage are never marked current: `aria-current="page"` would
+ * be a lie on any other route, and on the homepage itself it would mark two
+ * items at once.
+ */
 function isActive(pathname: string, href: string): boolean {
+  if (href.includes('#')) return false;
   if (href === '/') return pathname === '/';
-  if (href.startsWith('/modules/')) return pathname.startsWith('/modules/');
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/** Flattened drawer links, numbered once so nothing is counted during render. */
 const DRAWER_ENTRIES = NAV_GROUPS.flatMap((group) =>
   group.links.map((link) => ({ group: group.id, ...link }))
-).map((link, i) => ({ ...link, ordinal: String(i + 1).padStart(2, '0') }));
+);
 
 export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
   const pathname = usePathname();
@@ -187,7 +193,14 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
       </div>
 
       {open ? (
-        <div className="drawer on-light" id={drawerId} ref={drawerRef}>
+        <div
+          className="drawer on-light"
+          id={drawerId}
+          ref={drawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site navigation"
+        >
           <div className="drawer__inner shell">
             <nav aria-label="All pages">
               {NAV_GROUPS.map((group) => (
@@ -195,18 +208,17 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                   <div className="drawer__grouphead">
                     <span className="label">{group.label}</span>
                   </div>
-                  {DRAWER_ENTRIES.filter((entry) => entry.group === group.id).map((entry) => (
+                  {DRAWER_ENTRIES.filter((entry) => entry.group === group.id).map((entry, i) => (
                     <Link
                       key={entry.href}
                       className="drawer__link"
                       href={entry.href}
                       aria-current={isActive(pathname, entry.href) ? 'page' : undefined}
                       onClick={close}
-                      style={{ '--i': Number(entry.ordinal) } as CSSProperties}
+                      style={{ '--i': i } as CSSProperties}
                     >
-                      {entry.label}
-                      {/* Decorative ordinal: keep it out of the link name. */}
-                      <span aria-hidden="true">{entry.ordinal}</span>
+                      <span className="drawer__label">{entry.label}</span>
+                      {entry.note ? <span className="drawer__note">{entry.note}</span> : null}
                     </Link>
                   ))}
                 </div>

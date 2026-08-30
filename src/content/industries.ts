@@ -20,13 +20,25 @@ export type IndustryDefinition = {
   name: string;
   label: string;
   lead: string;
+  /**
+   * The opening block. Each sector gets its own headline, its own six signals
+   * and its own visual, because the two businesses lose money in genuinely
+   * different places and a shared template would flatten that.
+   */
+  hero: {
+    titleLines: string[];
+    lead: string;
+    /** Five losses and the one outcome they add up to. */
+    signals: { key: string; kind: 'loss' | 'recovered' }[];
+    visual: 'day' | 'list';
+    visualCaption: string;
+  };
   /** The distinct organising idea for this sector's page. */
   thesis: { title: string; emphasis: string; body: string[] };
   strip: { key: string; detail: string }[];
   workflows: Workflow[];
   /** Sector-specific closing section; deliberately different between the two. */
   feature: {
-    num: string;
     aside: string;
     title: string;
     emphasis: string;
@@ -40,8 +52,23 @@ export const INDUSTRIES: IndustryDefinition[] = [
   {
     slug: 'veterinary',
     name: 'Veterinary',
-    label: 'Sector 01 / 02',
+    label: 'Veterinary',
     lead: 'Veterinary groups lose demand at the edges of the day and in the gap between one visit and the next one that never gets booked.',
+    hero: {
+      titleLines: ['The phone does not', 'keep consulting hours.'],
+      lead: 'Owners ring when something changes at home — before opening, during theatre, after closing, across the weekend. Grow Label reads the calls, the enquiries and the return intervals your practice already generates, works the ones that were missed, and reports what came back at four separate stages.',
+      signals: [
+        { key: 'Missed calls', kind: 'loss' },
+        { key: 'Overdue care', kind: 'loss' },
+        { key: 'Dormant clients', kind: 'loss' },
+        { key: 'Cancellations', kind: 'loss' },
+        { key: 'Schedule gaps', kind: 'loss' },
+        { key: 'Recovered appointments', kind: 'recovered' },
+      ],
+      visual: 'day',
+      visualCaption:
+        'Contact arriving across a working day, against the hours the desk is actually staffed for. The shape is the problem.',
+    },
     thesis: {
       title: 'The veterinary problem is',
       emphasis: 'the shape of the day.',
@@ -116,7 +143,6 @@ export const INDUSTRIES: IndustryDefinition[] = [
       },
     ],
     feature: {
-      num: '§ 03 / 04',
       aside: 'Multi-location',
       title: 'The same six losses,',
       emphasis: 'measured the same way at every site.',
@@ -133,8 +159,23 @@ export const INDUSTRIES: IndustryDefinition[] = [
   {
     slug: 'dental',
     name: 'Dental',
-    label: 'Sector 02 / 02',
+    label: 'Dental',
     lead: 'Dental practices lose demand between acceptance and scheduling, and in a hygiene recall list that stops being worked at the same point every month.',
+    hero: {
+      titleLines: ['Your best demand', 'is already in the building.'],
+      lead: 'Treatment gets accepted and never given a date. The hygiene list gets worked until the day runs out. Grow Label reads the enquiries, the accepted plans and the recall intervals your practice already holds, works the ones nobody reached, and reports what came back at four separate stages.',
+      signals: [
+        { key: 'Missed enquiries', kind: 'loss' },
+        { key: 'Overdue hygiene recall', kind: 'loss' },
+        { key: 'Unscheduled treatment', kind: 'loss' },
+        { key: 'Cancellations', kind: 'loss' },
+        { key: 'Schedule gaps', kind: 'loss' },
+        { key: 'Recovered production', kind: 'recovered' },
+      ],
+      visual: 'list',
+      visualCaption:
+        'A recall and unscheduled-treatment list, and the line where working it stopped. Everything under that line is demand the practice already owns.',
+    },
     thesis: {
       title: 'The dental problem is',
       emphasis: 'the interval and the gap after yes.',
@@ -212,7 +253,6 @@ export const INDUSTRIES: IndustryDefinition[] = [
       },
     ],
     feature: {
-      num: '§ 03 / 04',
       aside: 'Provider view',
       title: 'Where acceptance stops',
       emphasis: 'becoming attendance.',

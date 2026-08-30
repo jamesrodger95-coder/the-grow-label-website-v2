@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
 import { STAGE_DEFINITIONS } from '@/content/methodology';
-import { VALUE_STAGES } from '@/content/site';
+import { PRIMARY_NAV, VALUE_STAGES } from '@/content/site';
 import {
   CASE_STUDIES,
   PLACEHOLDER_NOTE,
@@ -136,7 +136,7 @@ describe('unevidenced commercial claims', () => {
    * named anywhere until one is evidenced and approved.
    */
   it('names no client, and every proof slot stays a labelled placeholder', () => {
-    const patterns = [/trusted by/i, /our clients include/i, /as used by/i];
+    const patterns = [/\btrusted by\b/i, /\bour clients include\b/i, /\bas used by\b/i];
     const hits: string[] = [];
     for (const { file, text } of readAll()) {
       for (const hit of assertedHits(text, patterns)) hits.push(`${file}: ${hit}`);
@@ -168,7 +168,7 @@ describe('unevidenced commercial claims', () => {
   it('publishes no result figure', () => {
     for (const card of RESULTS.cards) {
       expect(Object.keys(card)).not.toContain('value');
-      expect(JSON.stringify(card)).not.toMatch(/[£$]s?d/);
+      expect(JSON.stringify(card)).not.toMatch(/[£$]\s?\d/);
     }
     expect(RESULTS.note.toLowerCase()).toContain('reporting period');
     expect(PLACEHOLDER_NOTE.toLowerCase()).toContain('placeholder');
@@ -177,7 +177,7 @@ describe('unevidenced commercial claims', () => {
   /** Case studies are shaped, not claimed: no outcome figure on a card. */
   it('states no outcome on a case study card', () => {
     for (const study of CASE_STUDIES) {
-      expect(`${study.title} ${study.summary}`).not.toMatch(/d+(.d+)?s*%|[£$]s?d/);
+      expect(`${study.title} ${study.summary}`).not.toMatch(/\d+(\.\d+)?\s*%|[£$]\s?\d/);
     }
   });
 
@@ -210,7 +210,7 @@ describe('value stages', () => {
     }
   });
 
-  it('are defined consistently on the methodology page', () => {
+  it('are defined consistently wherever the stages are published', () => {
     expect(STAGE_DEFINITIONS).toHaveLength(4);
     expect(STAGE_DEFINITIONS.map((s) => s.name)).toEqual([
       'Estimated value',
@@ -324,5 +324,79 @@ describe('typography constraints', () => {
       const value = (match[2] ?? '').trim();
       expect(`${role}: ${value}`).toBe(`${role}: var(--gl-font)`);
     }
+  });
+});
+
+describe('navigation', () => {
+  /**
+   * Methodology and Insights were nav items that asked the reader to guess.
+   * The methodology content now lives on the platform page, beside the
+   * reporting it governs.
+   */
+  it('offers no destination the reader has to decode', () => {
+    const labels = PRIMARY_NAV.map((link) => link.label);
+    expect(labels).not.toContain('Methodology');
+    expect(labels).not.toContain('Insights');
+    expect(labels).toEqual([
+      'Platform',
+      'Modules',
+      'Veterinary',
+      'Dental',
+      'Results',
+      'Case studies',
+      'About',
+    ]);
+  });
+
+  it('points every primary item at a route or an anchor that exists', () => {
+    const routes = new Set([
+      '/platform',
+      '/modules',
+      '/industries/veterinary',
+      '/industries/dental',
+      '/about',
+    ]);
+    const anchors = new Set(['results', 'case-studies']);
+    for (const link of PRIMARY_NAV) {
+      if (link.href.startsWith('/#')) {
+        expect(anchors.has(link.href.slice(2))).toBe(true);
+      } else {
+        expect(routes.has(link.href)).toBe(true);
+      }
+    }
+  });
+
+  /** Anchored nav items need the id they name to be rendered somewhere. */
+  it('renders the ids the anchored nav items point at', () => {
+    const homeSources = [
+      'src/components/home/Results.tsx',
+      'src/components/home/CaseStudies.tsx',
+      'src/components/home/Team.tsx',
+    ]
+      .map((file) => readFileSync(file, 'utf8'))
+      .join('\n');
+    expect(homeSources).toContain('id="results"');
+    expect(homeSources).toContain('id="case-studies"');
+    expect(homeSources).toContain('id="team"');
+  });
+});
+
+describe('template artefacts', () => {
+  /**
+   * "SECTOR 01 / 02" and "§ 03 / 06" told the reader which numbered part of a
+   * template they had landed on. Nothing on the site is a numbered sequence
+   * except the four value stages, which are numbered because the order is the
+   * meaning.
+   */
+  it('shows no section counter in any rendered string', () => {
+    const hits: string[] = [];
+    for (const { file, text } of readAll()) {
+      // Ignore code comments; only rendered strings matter.
+      const rendered = text.replace(/\{\/\*[\s\S]*?\*\/\}/g, '').replace(/\/\*[\s\S]*?\*\//g, '');
+      for (const match of rendered.matchAll(/§\s*\d+|\bSector \d+\s*\/|\d+\s*\/\s*0\d\b/gi)) {
+        hits.push(`${file}: ${match[0]}`);
+      }
+    }
+    expect(hits).toEqual([]);
   });
 });

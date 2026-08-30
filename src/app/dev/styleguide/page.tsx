@@ -65,7 +65,7 @@ export default function StyleguidePage() {
       {/* Colour ---------------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="sg-colour">
         <div className="shell">
-          <SectionHeader num="§ 01 / 06" aside="Tokens" id="sg-colour" title="Colour" />
+          <SectionHeader eyebrow="Tokens" id="sg-colour" title="Colour" />
           <p className="label" style={{ marginBottom: 20 }}>
             Surfaces
           </p>
@@ -127,7 +127,7 @@ export default function StyleguidePage() {
       {/* Typography ------------------------------------------------------- */}
       <section className="surface--black on-dark section" aria-labelledby="sg-type">
         <div className="shell">
-          <SectionHeader num="§ 02 / 06" aside="Tokens" id="sg-type" title="Typography" />
+          <SectionHeader eyebrow="Tokens" id="sg-type" title="Typography" />
           <p className="display d1" style={{ marginBottom: 24 }}>
             Display one <em>italic</em>
           </p>
@@ -174,12 +174,7 @@ export default function StyleguidePage() {
       {/* Components ------------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="sg-components">
         <div className="shell">
-          <SectionHeader
-            num="§ 03 / 06"
-            aside="Components"
-            id="sg-components"
-            title="Structural components"
-          />
+          <SectionHeader eyebrow="Components" id="sg-components" title="Structural components" />
 
           <p className="label" style={{ marginBottom: 18 }}>
             Ledger rows
@@ -258,7 +253,7 @@ export default function StyleguidePage() {
       {/* Controls --------------------------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="sg-controls">
         <div className="shell">
-          <SectionHeader num="§ 04 / 06" aside="Components" id="sg-controls" title="Controls" />
+          <SectionHeader eyebrow="Components" id="sg-controls" title="Controls" />
           <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 40 }}>
             <ActionLink href="/dev/styleguide">Primary action</ActionLink>
             <ActionLink href="/dev/styleguide" variant="ghost">
@@ -296,8 +291,7 @@ export default function StyleguidePage() {
       <section className="surface--mist on-light section" aria-labelledby="sg-surfaces">
         <div className="shell">
           <SectionHeader
-            num="§ 05 / 06"
-            aside="Composition"
+            eyebrow="Composition"
             id="sg-surfaces"
             title="Split panels and pull statements"
           />
@@ -327,7 +321,7 @@ export default function StyleguidePage() {
       {/* Spacing ---------------------------------------------------------- */}
       <section className="surface--black on-dark section" aria-labelledby="sg-space">
         <div className="shell">
-          <SectionHeader num="§ 06 / 06" aside="Tokens" id="sg-space" title="Spacing and rhythm" />
+          <SectionHeader eyebrow="Tokens" id="sg-space" title="Spacing and rhythm" />
           <div className="spec">
             {[
               ['--gl-slot', '46px', 'The schedule-slot unit the grid is tuned to'],

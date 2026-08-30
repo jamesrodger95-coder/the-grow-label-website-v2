@@ -11,7 +11,8 @@ import {
 } from '@/components/primitives';
 import { PLATFORM } from '@/content/pages';
 import { MODULES } from '@/content/modules';
-import { CTA, VALUE_STAGES } from '@/content/site';
+import { AUDIT_QUESTIONS, CANNOT_CLAIM, STAGE_DEFINITIONS } from '@/content/methodology';
+import { CTA } from '@/content/site';
 
 export const metadata: Metadata = {
   title: 'Platform',
@@ -44,8 +45,7 @@ export default function PlatformPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={PLATFORM.architecture.num}
-              aside={PLATFORM.architecture.aside}
+              eyebrow={PLATFORM.architecture.aside}
               id="architecture-title"
               title={PLATFORM.architecture.title}
               emphasis={PLATFORM.architecture.emphasis}
@@ -77,8 +77,7 @@ export default function PlatformPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 02 / 05"
-              aside="Action layer"
+              eyebrow="Action layer"
               id="modules-title"
               title="Four modules, each with"
               emphasis="a ceiling you set."
@@ -123,8 +122,7 @@ export default function PlatformPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={PLATFORM.controls.num}
-              aside={PLATFORM.controls.aside}
+              eyebrow={PLATFORM.controls.aside}
               id="controls-title"
               title={PLATFORM.controls.title}
               emphasis={PLATFORM.controls.emphasis}
@@ -146,8 +144,7 @@ export default function PlatformPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={PLATFORM.data.num}
-              aside={PLATFORM.data.aside}
+              eyebrow={PLATFORM.data.aside}
               id="data-title"
               title={PLATFORM.data.title}
               emphasis={PLATFORM.data.emphasis}
@@ -195,12 +192,15 @@ export default function PlatformPage() {
       </section>
 
       {/* § 05 — Reporting ------------------------------------------------ */}
-      <section className="surface--mist on-light section" aria-labelledby="reporting-title">
+      <section
+        className="surface--mist on-light section"
+        id="value-stages"
+        aria-labelledby="reporting-title"
+      >
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 05 / 05"
-              aside="Record layer"
+              eyebrow="How value is measured"
               id="reporting-title"
               title="Reporting that is built"
               emphasis="to be argued with."
@@ -213,13 +213,15 @@ export default function PlatformPage() {
                 that produced it. Attribution status is editable by the client, and a disputed item
                 stays visible in the record with the dispute attached.
               </p>
-              <p className="body">
+              <p className="body" style={{ marginBottom: 20 }}>
                 Restated figures are shown as restatements. The previous value, the new value, the
                 date and the reason are all retained, so a report from March still means in
                 September what it meant in March.
               </p>
-              <p style={{ marginTop: 28 }}>
-                <TextLink href="/methodology">Read the full methodology</TextLink>
+              <p className="body">
+                A figure moves to the next stage only when a system record says it has. Nothing is
+                promoted on inference, and nothing is promoted because a reasonable person would
+                assume it happened.
               </p>
             </Reveal>
             <Reveal index={1}>
@@ -228,21 +230,34 @@ export default function PlatformPage() {
                 labelledBy="reporting-title"
                 caption="Illustrative shape only. No benchmark, industry average or client figure appears anywhere on this site."
               />
-              {/* A row inside a <dl> may contain only <dt> and <dd>, so the
-                  index sits inside the term rather than as a sibling span. */}
-              <dl className="ledger" style={{ marginTop: 40 }}>
-                {VALUE_STAGES.map((stage, i) => (
-                  <div className="lrow lrow--stage" key={stage.id}>
-                    <dt className="lrow__key">
-                      <span className="lrow__idx">{`0${i + 1}`}</span>
-                      {stage.name}
-                    </dt>
-                    <dd className="lrow__val">{stage.definition}</dd>
-                    <dd className="lrow__tag">{stage.confidence}</dd>
-                  </div>
-                ))}
-              </dl>
             </Reveal>
+          </div>
+
+          {/* The definitions that used to sit on their own page. They belong
+              beside the reporting they govern, not one click away from it. */}
+          <div className="defs" style={{ marginTop: 'var(--gl-s-8)' }}>
+            {STAGE_DEFINITIONS.map((stage, i) => (
+              <Reveal className="def" key={stage.name} index={i}>
+                <div>
+                  <h3 className="def__term">{stage.name}</h3>
+                  <p className="label def__meta">{`Confidence · ${stage.confidence}`}</p>
+                  <p className="label" style={{ marginTop: 8 }}>
+                    {`Promoted by · ${stage.promotedBy}`}
+                  </p>
+                </div>
+                <div>
+                  <p className="body" style={{ marginBottom: 14 }}>
+                    {stage.body}
+                  </p>
+                  <p className="small" style={{ display: 'flex', gap: 12 }}>
+                    <span className="label label--accent" style={{ flex: 'none', paddingTop: 4 }}>
+                      Caution
+                    </span>
+                    <span>{stage.caution}</span>
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
 
           <Reveal style={{ marginTop: 'var(--gl-s-9)' }}>
@@ -253,10 +268,58 @@ export default function PlatformPage() {
               body="If an opportunity cannot be linked to a specific call, enquiry or record, it is not counted. Untraceable value is not value."
             />
           </Reveal>
+        </div>
+      </section>
 
-          <Reveal style={{ marginTop: 48 }}>
-            <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
+      {/* Limits — the argument the reporting has to survive ---------------- */}
+      <section
+        className="surface--black on-dark section"
+        id="limits"
+        aria-labelledby="limits-title"
+      >
+        <div className="shell">
+          <Reveal variant="group">
+            <SectionHeader
+              eyebrow="Limits"
+              id="limits-title"
+              title={CANNOT_CLAIM.title}
+              emphasis={CANNOT_CLAIM.emphasis}
+            />
           </Reveal>
+          <Reveal as="p" className="lead" style={{ marginBottom: 44, maxWidth: '62ch' }}>
+            {CANNOT_CLAIM.lead}
+          </Reveal>
+          <Reveal>
+            <StepList items={CANNOT_CLAIM.items} />
+          </Reveal>
+
+          <div className="two-col" style={{ marginTop: 'var(--gl-s-9)' }}>
+            <Reveal>
+              <p className="label label--accent" style={{ marginBottom: 20 }}>
+                Use this against us
+              </p>
+              <h3 className="display d3" style={{ marginBottom: 20 }}>
+                Five questions to ask <em>any provider in this category.</em>
+              </h3>
+              <p className="body">
+                Including us. If a provider cannot answer all five without changing the subject, the
+                number they are quoting is not one that will survive a board meeting.
+              </p>
+              <div style={{ marginTop: 32, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
+              </div>
+            </Reveal>
+            <Reveal index={1}>
+              <ol className="ledger">
+                {AUDIT_QUESTIONS.map((question, i) => (
+                  <li className="lrow lrow--pair" key={question}>
+                    <span className="lrow__idx">{`0${i + 1}`}</span>
+                    <span className="lrow__val">{question}</span>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </div>
         </div>
       </section>
     </>

@@ -20,7 +20,12 @@ function Portrait({ hue, name }: { hue: number; name: string }) {
     .map((w) => w[0])
     .join('');
   return (
-    <svg viewBox="0 0 100 125" role="img" aria-label="" style={{ width: '100%', height: '100%' }}>
+    <svg
+      viewBox="0 0 100 125"
+      aria-hidden="true"
+      focusable="false"
+      style={{ width: '100%', height: '100%' }}
+    >
       <rect width="100" height="125" fill={`hsl(${hue} 28% 93%)`} />
       <circle cx="50" cy="48" r="21" fill={`hsl(${hue} 28% 84%)`} />
       <path d="M14 125c5-24 17-36 36-36s31 12 36 36Z" fill={`hsl(${hue} 28% 84%)`} />
@@ -43,7 +48,7 @@ export function Team() {
   const [active, setActive] = useState<TeamMember | null>(null);
 
   return (
-    <section className="surface--white on-light section" aria-labelledby="team-title">
+    <section className="surface--white on-light section" id="team" aria-labelledby="team-title">
       <div className="shell">
         <div className="sec-head">
           <div>

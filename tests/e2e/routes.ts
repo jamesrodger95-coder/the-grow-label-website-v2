@@ -1,13 +1,13 @@
 export const ROUTES = [
   { path: '/', name: 'home', title: /revenue recovery/i },
   { path: '/platform', name: 'platform', title: /Platform/ },
+  { path: '/modules', name: 'modules-index', title: /Modules/ },
   { path: '/modules/answer', name: 'answer', title: /Answer/ },
   { path: '/modules/respond', name: 'respond', title: /Respond/ },
   { path: '/modules/retain', name: 'retain', title: /Retain/ },
   { path: '/modules/reactivate', name: 'reactivate', title: /Reactivate/ },
   { path: '/industries/veterinary', name: 'veterinary', title: /Veterinary/ },
   { path: '/industries/dental', name: 'dental', title: /Dental/ },
-  { path: '/methodology', name: 'methodology', title: /methodology/i },
   { path: '/about', name: 'about', title: /About/ },
   { path: '/insights', name: 'insights', title: /Insights/ },
   {

@@ -52,3 +52,6 @@ artifacts/lighthouse/*.json
 .vercel
 .env*
 artifacts/review-m/
+artifacts/insp/
+artifacts/insp2/
+artifacts/m390/

@@ -33,8 +33,7 @@ export default function ContactPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 01 / 02"
-              aside="What happens next"
+              eyebrow="What happens next"
               id="journey-title"
               title="Four steps, stated"
               emphasis="before the form."
@@ -82,8 +81,7 @@ export default function ContactPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 02 / 02"
-              aside="Scope"
+              eyebrow="Scope"
               id="scope-title"
               title="What an assessment"
               emphasis="does and does not cover."
@@ -120,7 +118,9 @@ export default function ContactPage() {
                 not commit either side to anything.
               </p>
               <p style={{ marginTop: 24 }}>
-                <TextLink href="/methodology">How the four value stages are defined</TextLink>
+                <TextLink href="/platform#value-stages">
+                  How the four value stages are defined
+                </TextLink>
               </p>
             </Reveal>
           </div>

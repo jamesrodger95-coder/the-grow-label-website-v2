@@ -20,8 +20,11 @@
   --gl-ink: #0c0c0e; /* near-black — headlines, primary type */
   --gl-graphite: #33333a; /* graphite — secondary type, dark panels */
   --gl-graphite-deep: #17171b; /* graphite — dark sections */
-  --gl-slate: #6c6c75; /* muted type */
-  --gl-slate-soft: #8f8f98; /* faint type, still AA at label size */
+  /* Both of these carry real text — eyebrows, asides, row indices — so both
+     are chosen to clear 4.5:1 on the *worst* light ground, which is --gl-mist,
+     not on warm white. `node scripts/contrast.mjs` prints the table. */
+  --gl-slate: #5a5a62; /* faint type — 6.55 white, 6.16 paper, 5.58 mist */
+  --gl-slate-soft: #66666e; /* ghost type — 5.45 white, 5.13 paper, 4.65 mist */
 
   /* --- The single accent -------------------------------------------------
      Restrained: a considered indigo-violet, never a gradient, never a glow. */

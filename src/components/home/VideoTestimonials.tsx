@@ -18,7 +18,7 @@ import { VIDEO_TESTIMONIALS, type VideoTestimonial } from '@/content/proof';
 
 function Thumb({ hue }: { hue: number }) {
   return (
-    <svg viewBox="0 0 160 100" className="case__svg" role="img" aria-label="">
+    <svg viewBox="0 0 160 100" className="case__svg" aria-hidden="true" focusable="false">
       <defs>
         <linearGradient id={`vg${hue}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={`hsl(${hue} 30% 93%)`} />

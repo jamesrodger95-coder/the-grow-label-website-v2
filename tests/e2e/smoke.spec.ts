@@ -30,7 +30,8 @@ test.describe('every route renders', () => {
 test('the hero states the proposition in the initial HTML', async ({ request }) => {
   const res = await request.get('/');
   const html = await res.text();
-  expect(html).toContain('Find the revenue your practice already earned');
+  expect(html).toContain('Recover the revenue');
+  expect(html).toContain('you already earned');
   expect(html).toContain('Request a revenue-recovery assessment');
   // No loader, splash or gate before the content.
   expect(html).not.toMatch(/id="?(loader|splash|preloader)/i);
@@ -63,12 +64,40 @@ test('sitemap and robots are served and consistent', async ({ request }) => {
 test('navigation reaches every primary destination', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Primary' });
-  for (const label of ['Platform', 'Veterinary', 'Dental', 'Methodology', 'Insights', 'About']) {
+  const labels = [
+    'Platform',
+    'Modules',
+    'Veterinary',
+    'Dental',
+    'Results',
+    'Case studies',
+    'About',
+  ];
+  for (const label of labels) {
     await expect(nav.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
-  await nav.getByRole('link', { name: 'Methodology', exact: true }).click();
-  await expect(page).toHaveURL(/\/methodology$/);
+  await nav.getByRole('link', { name: 'Modules', exact: true }).click();
+  await expect(page).toHaveURL(/\/modules$/);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+});
+
+/**
+ * The methodology page was folded into Platform. The old URL must still land
+ * somewhere sensible, because it was linked from every page for a while.
+ */
+test('the old methodology URL redirects into the platform page', async ({ page }) => {
+  const response = await page.goto('/methodology');
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/platform#value-stages$/);
+  await expect(page.locator('#value-stages')).toBeAttached();
+});
+
+/** The two anchored nav items must land on sections that exist. */
+test('the anchored navigation items resolve to real sections', async ({ page }) => {
+  await page.goto('/');
+  for (const id of ['results', 'case-studies']) {
+    await expect(page.locator(`#${id}`)).toBeAttached();
+  }
 });
 
 test('the current route is marked in the navigation', async ({ page }) => {

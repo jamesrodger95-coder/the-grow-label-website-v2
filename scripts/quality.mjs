@@ -14,6 +14,8 @@ const skipSlow = process.argv.includes('--fast');
 /** @type {{name: string, cmd: string, args: string[], optional?: boolean, slow?: boolean}[]} */
 const STEPS = [
   { name: 'format', cmd: 'pnpm', args: ['exec', 'prettier', '--check', '.'] },
+  // Cheap, and it has already caught a regex whose \b became a raw backspace.
+  { name: 'control-chars', cmd: 'node', args: ['scripts/control-chars.mjs'] },
   { name: 'lint', cmd: 'pnpm', args: ['exec', 'eslint', '.', '--max-warnings=0'] },
   { name: 'typecheck', cmd: 'pnpm', args: ['exec', 'tsc', '--noEmit'] },
   { name: 'test', cmd: 'pnpm', args: ['exec', 'vitest', 'run'] },

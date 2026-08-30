@@ -60,12 +60,14 @@ src/
   components/
     layout/      nav, footer, page header, legal page shell
     motion/      the only client components that exist for motion
+    home/        the homepage's own sections and signature visuals
+    modules/     the modules index timeline
     sector/      the veterinary and dental signature devices
     contact/     the assessment form
     primitives   design-system primitives, all server-rendered
   content/       every word of published copy, typed
   lib/           env, validation, rate limit, delivery adapter
-  styles/        tokens -> base -> components -> motion
+  styles/        tokens -> base -> components -> sections -> motion
 design/          the Claude Design project's source, kept in sync with styles/
 ```
 
@@ -73,17 +75,23 @@ design/          the Claude Design project's source, kept in sync with styles/
 sections; it should not contain a sentence a reader will see. This is what makes
 the content-integrity test possible.
 
-**Styles are a four-file cascade.** `tokens.css` holds every value;
-`base.css` holds primitives; `components.css` holds named components;
-`motion.css` holds the three motion verbs. `src/app/globals.css` imports all
-four and adds only route-level composition. Never introduce a fifth stylesheet
-or a CSS-in-JS layer.
+**Styles are a five-file cascade, in this order.** `tokens.css` holds every
+value; `base.css` holds primitives; `components.css` holds the named components
+that appear on every route; `sections.css` holds the ones that belong to a
+single section or page (the loss rows, the opportunity record, the module
+timeline, the two sector visuals, the proof sections); `motion.css` holds the
+motion vocabulary. `src/app/globals.css` imports all five and adds only
+route-level composition.
+
+Do not add a sixth, and do not add a CSS-in-JS layer. A new named component
+goes in `components.css` if more than one route uses it and `sections.css` if
+one does.
 
 `design/*.css` are copies of `src/styles/*.css` so the Claude Design artboards
 render exactly as production does. After changing a stylesheet, re-copy:
 
 ```bash
-cp src/styles/tokens.css src/styles/base.css src/styles/components.css design/
+cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/styles/sections.css design/
 ```
 
 ## Client-component budget
@@ -135,7 +143,15 @@ pnpm build && node scripts/restart.mjs 3112
 node scripts/capture.mjs              # all routes, all breakpoints
 node scripts/sections.mjs / 1440 1000 artifacts/review   # one route, frame by frame
 node scripts/overflow2.mjs /platform 360 800             # what is too wide, and why
+node scripts/linkcheck.mjs                               # every internal link and #anchor
+node scripts/hover-check.mjs / .leak                     # a hover state that must not reflow
 ```
+
+`scripts/control-chars.mjs` runs as part of `pnpm quality`. It exists because a
+shell heredoc silently turned a regex's `\b` into a literal backspace and its
+`\s\d` into the letters `s` and `d`, leaving three assertions that matched
+nothing and still reported green. Write source with the file tools, not by
+piping text through a shell.
 
 Inline `gridTemplateColumns` on a `.lrow` will silently defeat the responsive
 rules through specificity — use the `lrow--pair`, `lrow--pair-action`,

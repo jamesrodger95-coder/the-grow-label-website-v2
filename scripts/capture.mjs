@@ -22,7 +22,7 @@ export const ROUTES = [
   ['modules-reactivate', '/modules/reactivate'],
   ['industries-veterinary', '/industries/veterinary'],
   ['industries-dental', '/industries/dental'],
-  ['methodology', '/methodology'],
+  ['modules', '/modules'],
   ['about', '/about'],
   ['insights', '/insights'],
   ['insights-entry', '/insights/why-one-revenue-number-is-not-enough'],

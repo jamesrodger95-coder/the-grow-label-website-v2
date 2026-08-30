@@ -66,11 +66,11 @@ export function MotionLab() {
             Verb 01 — Detect
           </p>
           <div
+            className="surface--mist on-light"
             style={{
               position: 'relative',
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
-              background: 'var(--gl-mist)',
               overflow: 'hidden',
             }}
           >
@@ -104,12 +104,14 @@ export function MotionLab() {
           <p className="label label--accent" style={{ marginBottom: 12 }}>
             Wipe — rows and tables
           </p>
+          {/* A light panel inside a dark section, so it carries the light ink
+              set explicitly — otherwise the display type inherits white. */}
           <div
+            className="surface--mist on-light"
             style={{
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               overflow: 'hidden',
@@ -122,11 +124,15 @@ export function MotionLab() {
                 data-inview={playing ? 'true' : 'false'}
                 style={{ fontSize: 26, '--i': i } as CSSProperties}
               >
-                {line}
+                {/* The clip lives on the inner element, exactly as Reveal does
+                    it — an element that clips itself to zero width never
+                    intersects, so it would never receive the callback that
+                    un-clips it. */}
+                <span className="m-wipe__inner">{line}</span>
               </span>
             ))}
           </div>
-          <p className="micro">clip-path inset per line, 70ms stagger, 680ms ease-settle.</p>
+          <p className="micro">clip-path on an inner span, 55ms stagger, ease-settle.</p>
         </div>
 
         {/* Parallax and drift --------------------------------------- */}
@@ -135,11 +141,11 @@ export function MotionLab() {
             Verb 02 — Consolidate
           </p>
           <div
+            className="surface--mist on-light"
             style={{
               position: 'relative',
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
-              background: 'var(--gl-mist)',
               overflow: 'hidden',
             }}
           >
@@ -169,16 +175,16 @@ export function MotionLab() {
         </div>
 
         {/* Stage bars -------------------------------------------- */}
-        <div className="dev-panel">
+        <div className="dev-panel dev-panel--wide">
           <p className="label label--accent" style={{ marginBottom: 12 }}>
             Verb 03 — Settle
           </p>
           <div
+            className="surface--mist on-light"
             style={{
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               gap: 10,
@@ -214,11 +220,11 @@ export function MotionLab() {
             Rule draw
           </p>
           <div
+            className="surface--mist on-light"
             style={{
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               gap: 18,
@@ -242,11 +248,11 @@ export function MotionLab() {
             Control feedback
           </p>
           <div
+            className="surface--mist on-light"
             style={{
-              height: 150,
+              minHeight: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               justifyItems: 'start',

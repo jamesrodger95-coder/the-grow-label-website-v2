@@ -36,6 +36,17 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [],
   },
+  /**
+   * The methodology page was folded into Platform, where the reporting it
+   * governs actually lives. Permanent, because the content moved rather than
+   * disappeared and any existing link should follow it.
+   */
+  async redirects() {
+    return [
+      { source: '/methodology', destination: '/platform#value-stages', permanent: true },
+      { source: '/modules/index', destination: '/modules', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

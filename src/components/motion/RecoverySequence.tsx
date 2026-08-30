@@ -169,8 +169,8 @@ export function RecoverySequence() {
   const frame = FRAMES[active] ?? FRAMES[FRAMES.length - 1]!;
 
   return (
-    <div className="sequence" ref={sectionRef}>
-      <div className="sequence__stage">
+    <div className="scene" ref={sectionRef}>
+      <div className="scene__stage">
         <div className="two-col">
           <div>
             <p className="label label--accent" style={{ marginBottom: 18 }}>
@@ -251,10 +251,10 @@ export function RecoverySequence() {
           </div>
         </div>
 
-        <ol className="sequence__rail">
+        <ol className="scene__rail">
           {FRAMES.map((f, i) => (
             <li
-              className="sequence__step"
+              className="scene__step"
               key={f.step}
               data-active={i === active ? 'true' : 'false'}
               style={{ '--i': i } as CSSProperties}
@@ -262,12 +262,12 @@ export function RecoverySequence() {
               <span className="label" style={{ display: 'block', marginBottom: 8 }}>
                 {`0${i + 1}`}
               </span>
-              <span className="label sequence__stepname">{f.step}</span>
+              <span className="label scene__stepname">{f.step}</span>
             </li>
           ))}
         </ol>
       </div>
-      <div className="sequence__spacer" aria-hidden="true" />
+      <div className="scene__spacer" aria-hidden="true" />
     </div>
   );
 }

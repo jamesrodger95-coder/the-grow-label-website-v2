@@ -254,7 +254,7 @@ export const TEAM = {
       id: 'p2',
       name: 'Name to be confirmed',
       role: 'Head of Delivery',
-      intro: 'Placeholder profile. Replace with a real introduction once approved.',
+      intro: 'Placeholder profile. Two lines on who owns delivery, and what they did before this.',
       bio: [
         'Placeholder biography. This slot suits someone who owns onboarding, escalation policy and the configuration conversations with each practice.',
         'Nothing in this profile is real.',
@@ -266,7 +266,7 @@ export const TEAM = {
       id: 'p3',
       name: 'Name to be confirmed',
       role: 'Data & Measurement',
-      intro: 'Placeholder profile. Replace with a real introduction once approved.',
+      intro: 'Placeholder profile. Two lines on who defends the numbers, and how.',
       bio: [
         'Placeholder biography. The natural fit here is whoever defends the four-stage model, the attribution rules and the duplicate logic.',
         'Nothing in this profile is real.',
@@ -278,7 +278,7 @@ export const TEAM = {
       id: 'p4',
       name: 'Name to be confirmed',
       role: 'Client Operations',
-      intro: 'Placeholder profile. Replace with a real introduction once approved.',
+      intro: 'Placeholder profile. Two lines on who each practice actually speaks to.',
       bio: [
         'Placeholder biography. Day-to-day contact for practice managers, and the person who reviews what the modules did each week.',
         'Nothing in this profile is real.',

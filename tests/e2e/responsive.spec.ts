@@ -51,7 +51,12 @@ test.describe('mobile navigation', () => {
 
     const drawerNav = page.getByRole('navigation', { name: 'All pages' });
     await expect(drawerNav).toBeVisible();
-    await expect(drawerNav.getByRole('link', { name: /platform overview/i })).toBeVisible();
+    await expect(drawerNav.getByRole('link', { name: /^Platform/ })).toBeVisible();
+    // The note is part of the link's accessible name, which is the point:
+    // a destination and what it is for, not a destination and a number.
+    await expect(drawerNav.getByRole('link', { name: /^Platform/ })).toHaveAccessibleName(
+      /how the system fits together/i
+    );
 
     // Focus is inside the drawer.
     const focusedInDrawer = await page.evaluate(() => {
@@ -83,7 +88,7 @@ test.describe('mobile navigation', () => {
     await page.getByRole('button', { name: /^(menu|close)$/i }).click();
     await page
       .getByRole('navigation', { name: 'All pages' })
-      .getByRole('link', { name: 'Dental', exact: true })
+      .getByRole('link', { name: /^Dental/ })
       .click();
     await expect(page).toHaveURL(/\/industries\/dental$/);
     await expect(page.getByRole('navigation', { name: 'All pages' })).toBeHidden();
@@ -91,7 +96,7 @@ test.describe('mobile navigation', () => {
   });
 
   test('the drawer does not reopen when a route is revisited', async ({ page }) => {
-    await page.goto('/methodology');
+    await page.goto('/platform');
     await awaitHydration(page);
     const toggle = page.getByRole('button', { name: /^(menu|close)$/i });
     const drawer = page.getByRole('navigation', { name: 'All pages' });
@@ -106,7 +111,7 @@ test.describe('mobile navigation', () => {
 
     // Returning to the route it was opened on must not resurrect it.
     await page.goBack();
-    await expect(page).toHaveURL(/\/methodology$/);
+    await expect(page).toHaveURL(/\/platform$/);
     await expect(drawer).toBeHidden();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(await page.evaluate(() => document.body.style.overflow)).toBe('');

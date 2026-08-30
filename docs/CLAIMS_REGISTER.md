@@ -19,36 +19,36 @@ claim).
 These are safe because they describe how the product is built, not what it has
 achieved. They remain safe only while the product actually behaves this way.
 
-| Claim                                                                 | Where                       | Basis                       |
-| --------------------------------------------------------------------- | --------------------------- | --------------------------- |
-| Value is reported at four separate stages and never combined          | Site-wide                   | Product design decision     |
-| A figure is promoted between stages only on a system record           | `/methodology`, `/platform` | Product design decision     |
-| Every opportunity links to the source event that produced it          | `/methodology`, `/`         | Product design decision     |
-| Attribution status is client-editable and disputes stay in the record | `/methodology`              | Product design decision     |
-| Duplicate rules are written down and inspectable                      | `/methodology`              | Product design decision     |
-| Restatements retain the previous value, date and reason               | `/methodology`              | Product design decision     |
-| Each module operates inside a ceiling the client sets                 | `/platform`, `/modules/*`   | Product design decision     |
-| Named escalation triggers hand a contact to a person                  | `/modules/*`                | Product design decision     |
-| Clinical judgement, triage and advice never leave the practice        | Site-wide                   | Product design decision     |
-| Clinical records are not required and not read                        | `/platform`, `/modules/*`   | Data-scope decision         |
-| The assessment installs nothing and changes nothing                   | `/contact`                  | Commercial process decision |
-| The client keeps the assessment whether or not they proceed           | `/contact`                  | Commercial process decision |
-| This website sets no analytics, advertising or tracking cookies       | `/privacy`                  | Verifiable in the source    |
-| No client, patient or clinical data appears on this website           | Footer, `/privacy`          | Verifiable in the source    |
+| Claim                                                                 | Where                                 | Basis                       |
+| --------------------------------------------------------------------- | ------------------------------------- | --------------------------- |
+| Value is reported at four separate stages and never combined          | Site-wide                             | Product design decision     |
+| A figure is promoted between stages only on a system record           | `/platform#value-stages`, `/platform` | Product design decision     |
+| Every opportunity links to the source event that produced it          | `/platform#value-stages`, `/`         | Product design decision     |
+| Attribution status is client-editable and disputes stay in the record | `/platform#value-stages`              | Product design decision     |
+| Duplicate rules are written down and inspectable                      | `/platform#value-stages`              | Product design decision     |
+| Restatements retain the previous value, date and reason               | `/platform#value-stages`              | Product design decision     |
+| Each module operates inside a ceiling the client sets                 | `/platform`, `/modules/*`             | Product design decision     |
+| Named escalation triggers hand a contact to a person                  | `/modules/*`                          | Product design decision     |
+| Clinical judgement, triage and advice never leave the practice        | Site-wide                             | Product design decision     |
+| Clinical records are not required and not read                        | `/platform`, `/modules/*`             | Data-scope decision         |
+| The assessment installs nothing and changes nothing                   | `/contact`                            | Commercial process decision |
+| The client keeps the assessment whether or not they proceed           | `/contact`                            | Commercial process decision |
+| This website sets no analytics, advertising or tracking cookies       | `/privacy`                            | Verifiable in the source    |
+| No client, patient or clinical data appears on this website           | Footer, `/privacy`                    | Verifiable in the source    |
 
 ## Published — statements of limitation
 
 Unusually, these are claims _against_ the product. They are published
 deliberately, and softening them would damage the position the site is built on.
 
-| Statement                                                            | Where                    |
-| -------------------------------------------------------------------- | ------------------------ |
-| Recovered value is not incremental profit                            | `/methodology`           |
-| Attribution is a model and does not prove causation                  | `/methodology`           |
-| An estimate describes opportunity size, not likelihood of collection | `/methodology`           |
-| No industry benchmark applies to a specific practice                 | `/methodology`           |
-| No result is guaranteed                                              | `/methodology`, `/terms` |
-| Collected value is gross, not margin and not net of delivery cost    | `/methodology`           |
+| Statement                                                            | Where                              |
+| -------------------------------------------------------------------- | ---------------------------------- |
+| Recovered value is not incremental profit                            | `/platform#value-stages`           |
+| Attribution is a model and does not prove causation                  | `/platform#value-stages`           |
+| An estimate describes opportunity size, not likelihood of collection | `/platform#value-stages`           |
+| No industry benchmark applies to a specific practice                 | `/platform#value-stages`           |
+| No result is guaranteed                                              | `/platform#value-stages`, `/terms` |
+| Collected value is gross, not margin and not net of delivery cost    | `/platform#value-stages`           |
 
 ---
 

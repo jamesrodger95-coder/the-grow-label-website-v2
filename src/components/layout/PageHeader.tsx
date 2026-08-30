@@ -27,7 +27,7 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="phead surface--black on-dark" aria-labelledby="page-title">
+    <section className="phead surface--white on-light" aria-labelledby="page-title">
       <div className="shell">
         <div className="phead__inner">
           <div className="phead__meta">

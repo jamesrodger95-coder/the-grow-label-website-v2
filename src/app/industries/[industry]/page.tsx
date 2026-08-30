@@ -1,8 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { SectorHero } from '@/components/sector/SectorHero';
 import { Reveal } from '@/components/motion/Reveal';
-import { ActionLink, PullStatement, SectionHeader, TextLink } from '@/components/primitives';
+import {
+  ActionLink,
+  KeyValueStrip,
+  PullStatement,
+  SectionHeader,
+  TextLink,
+} from '@/components/primitives';
 import { SiteComparison } from '@/components/sector/SiteComparison';
 import { RecallRail } from '@/components/sector/RecallRail';
 import { getIndustry, INDUSTRIES } from '@/content/industries';
@@ -36,22 +42,23 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
 
   return (
     <>
-      <PageHeader
-        label={industry.label}
-        meta={`${industry.workflows.length} workflow candidates`}
-        title={industry.thesis.title}
-        emphasis={industry.thesis.emphasis}
-        lead={industry.lead}
-        strip={industry.strip}
-      />
+      <SectorHero industry={industry} />
+
+      {/* The operating facts, immediately under the opening. */}
+      <section className="surface--paper on-light" aria-label={`${industry.name} at a glance`}>
+        <div className="shell" style={{ paddingBlock: 'clamp(28px, 3.4vw, 52px)' }}>
+          <Reveal>
+            <KeyValueStrip items={industry.strip} />
+          </Reveal>
+        </div>
+      </section>
 
       {/* § 01 — The sector thesis --------------------------------------- */}
-      <section className="surface--paper on-light section" aria-labelledby="thesis-title">
+      <section className="surface--white on-light section" aria-labelledby="thesis-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 01 / 04"
-              aside="Where it goes"
+              eyebrow="Where it goes"
               id="thesis-title"
               title={
                 industry.slug === 'veterinary'
@@ -115,10 +122,9 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 02 / 04"
-              aside="Workflow candidates"
+              eyebrow="Workflow candidates"
               id="workflows-title"
-              title={`Seven ${industry.name.toLowerCase()} workflows,`}
+              title={`${industry.workflows.length} ${industry.name.toLowerCase()} workflows,`}
               emphasis="and the data each one reads."
             />
           </Reveal>
@@ -158,8 +164,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={industry.feature.num}
-              aside={industry.feature.aside}
+              eyebrow={industry.feature.aside}
               id="feature-title"
               title={industry.feature.title}
               emphasis={industry.feature.emphasis}
@@ -169,7 +174,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
             <Reveal>
               <p className="lead">{industry.feature.lead}</p>
               <p style={{ marginTop: 28 }}>
-                <TextLink href="/methodology">How each stage is defined</TextLink>
+                <TextLink href="/platform#value-stages">How each stage is defined</TextLink>
               </p>
             </Reveal>
             <Reveal index={1}>
@@ -184,8 +189,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 04 / 04"
-              aside="Boundaries"
+              eyebrow="Boundaries"
               id="boundaries-title"
               title="What this system"
               emphasis="never does."

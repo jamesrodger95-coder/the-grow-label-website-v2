@@ -298,8 +298,13 @@ body {
 /* --- Dev routes ---------------------------------------------------------- */
 .dev-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--gl-s-5);
+}
+/* The stage bar is the widest component in the system; in a 220px demo column
+   its figure column overflowed the panel and sat on the dark section behind. */
+.dev-panel--wide {
+  grid-column: 1 / -1;
 }
 .dev-swatch {
   display: grid;

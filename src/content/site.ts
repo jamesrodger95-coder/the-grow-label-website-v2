@@ -14,7 +14,7 @@ export const SITE = {
   shortDescription:
     'Revenue recovery and revenue operations for veterinary and dental organisations.',
   locale: 'en_GB',
-  themeColor: '#08080b',
+  themeColor: '#fbfaf8',
 } as const;
 
 export type NavLink = {
@@ -30,37 +30,57 @@ export type NavGroup = {
   links: NavLink[];
 };
 
-/** Primary desktop navigation. Kept to seven items so it never wraps. */
+/**
+ * Primary navigation.
+ *
+ * Ordered the way a buyer actually reads the business: what it is, what it
+ * does, who it is for, what came of it, who is behind it. Methodology and
+ * Insights are deliberately absent — methodology is not a destination, it is
+ * the argument the Platform page makes, and a nav item called "Insights" asks
+ * the reader to guess.
+ *
+ * Results and case studies live on the homepage, so they are anchors rather
+ * than invented routes.
+ */
 export const PRIMARY_NAV: NavLink[] = [
   { href: '/platform', label: 'Platform' },
-  { href: '/modules/answer', label: 'Modules' },
+  { href: '/modules', label: 'Modules' },
   { href: '/industries/veterinary', label: 'Veterinary' },
   { href: '/industries/dental', label: 'Dental' },
-  { href: '/methodology', label: 'Methodology' },
-  { href: '/insights', label: 'Insights' },
+  { href: '/#results', label: 'Results' },
+  { href: '/#case-studies', label: 'Case studies' },
   { href: '/about', label: 'About' },
 ];
 
 /** Grouped navigation for the mobile drawer and the footer. */
 export const NAV_GROUPS: NavGroup[] = [
   {
-    id: 'platform',
-    label: 'Platform',
+    id: 'product',
+    label: 'Product',
     links: [
-      { href: '/platform', label: 'Platform overview', note: 'How the system fits together' },
+      { href: '/platform', label: 'Platform', note: 'How the system fits together' },
+      { href: '/modules', label: 'Modules', note: 'The four modules in one place' },
       { href: '/modules/answer', label: 'Answer', note: 'Calls that go unanswered' },
       { href: '/modules/respond', label: 'Respond', note: 'First response on enquiries' },
       { href: '/modules/retain', label: 'Retain', note: 'Protecting a filled schedule' },
-      { href: '/modules/reactivate', label: 'Reactivate', note: 'Dormant records' },
+      { href: '/modules/reactivate', label: 'Reactivate', note: 'Records that stopped moving' },
     ],
   },
   {
     id: 'sector',
-    label: 'Sector',
+    label: 'Sectors',
     links: [
-      { href: '/industries/veterinary', label: 'Veterinary', note: 'Multi-site practice groups' },
+      { href: '/industries/veterinary', label: 'Veterinary', note: 'Practices and groups' },
       { href: '/industries/dental', label: 'Dental', note: 'Practices and dental groups' },
-      { href: '/methodology', label: 'Methodology', note: 'How value is measured' },
+    ],
+  },
+  {
+    id: 'evidence',
+    label: 'Evidence',
+    links: [
+      { href: '/#results', label: 'Results', note: 'How an outcome is reported' },
+      { href: '/#case-studies', label: 'Case studies', note: 'Engagements in progress' },
+      { href: '/#team', label: 'Team', note: 'The people who do the work' },
     ],
   },
   {
@@ -90,7 +110,7 @@ export const CTA = {
   },
   methodology: {
     label: 'How value is measured',
-    href: '/methodology',
+    href: '/platform#value-stages',
   },
 } as const;
 

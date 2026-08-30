@@ -1,140 +1,155 @@
 /* ============================================================================
    GROW LABEL — DESIGN TOKENS  (canonical source of truth)
-   Thesis: "The Capacity Ledger". Structure derives from a schedule slot unit
-   and a ruled ledger row. One accent. No rounded feature cards.
+
+   Direction: warm-white ground, near-black type, graphite detail, one
+   restrained purple that only appears where revenue is being detected,
+   recovered or verified. Light-first, precise, quiet.
+
+   One typeface. Hierarchy comes from weight, size, tracking and colour — not
+   from a second family. That is what makes it read as a system rather than a
+   collection.
    ========================================================================= */
 
 :root {
-  /* --- Surfaces: cinematic dark ------------------------------------------ */
-  --gl-void: #08080b; /* deepest — hero, footer, signature sequences */
-  --gl-ink: #0e0e13; /* standard dark section */
-  --gl-ink-raised: #16161d; /* elevated dark panel */
-  --gl-ink-sunken: #050507; /* recessed wells inside dark */
+  /* --- Ground: warm white through to near-black ------------------------- */
+  --gl-white: #fbfaf8; /* warm white — the default page */
+  --gl-paper: #f4f3f0; /* raised warm grey — alternating band */
+  --gl-mist: #eae8e3; /* light grey — recessed wells, tracks */
+  --gl-edge: #dedbd5; /* light grey — visible dividers */
 
-  /* --- Surfaces: bone light ---------------------------------------------- */
-  --gl-paper: #f6f6f3; /* lightest */
-  --gl-bone: #edede9; /* primary light section */
-  --gl-bone-deep: #e0e0db; /* light-grey band */
+  --gl-ink: #0c0c0e; /* near-black — headlines, primary type */
+  --gl-graphite: #33333a; /* graphite — secondary type, dark panels */
+  --gl-graphite-deep: #17171b; /* graphite — dark sections */
+  --gl-slate: #6c6c75; /* muted type */
+  --gl-slate-soft: #8f8f98; /* faint type, still AA at label size */
 
-  /* --- Ink --------------------------------------------------------------- */
-  --gl-on-dark: #f4f3ef;
-  --gl-on-dark-muted: rgba(244, 243, 239, 0.74);
-  --gl-on-dark-faint: rgba(244, 243, 239, 0.55);
-  --gl-on-dark-ghost: rgba(244, 243, 239, 0.16);
-  --gl-on-light: #101018;
-  --gl-on-light-muted: rgba(16, 16, 24, 0.8);
-  --gl-on-light-faint: rgba(16, 16, 24, 0.64);
-  --gl-on-light-ghost: rgba(16, 16, 24, 0.14);
+  /* --- The single accent -------------------------------------------------
+     Restrained: a considered indigo-violet, never a gradient, never a glow. */
+  --gl-purple: #4a3ac4; /* on light — 8.1:1 on warm white */
+  --gl-purple-bright: #9a8ff0; /* on dark — 7.2:1 on graphite-deep */
+  --gl-purple-ink: #2e2482; /* pressed / deep emphasis */
+  --gl-purple-wash: rgba(74, 58, 196, 0.07);
+  --gl-purple-line: rgba(74, 58, 196, 0.22);
 
-  /* --- Hairlines (the ledger rules) -------------------------------------- */
-  --gl-rule-dark: rgba(244, 243, 239, 0.13);
-  --gl-slot-open-dark: rgba(244, 243, 239, 0.26);
-  --gl-slot-open-light: rgba(16, 16, 24, 0.3);
-  --gl-rule-dark-soft: rgba(244, 243, 239, 0.07);
-  --gl-rule-light: rgba(16, 16, 24, 0.16);
-  --gl-rule-light-soft: rgba(16, 16, 24, 0.08);
+  /* --- Semantic. Used only where the colour carries the meaning. --------- */
+  --gl-verified: #1a6f56;
+  --gl-verified-wash: rgba(26, 111, 86, 0.09);
+  --gl-alert: #b3261e;
+  --gl-alert-wash: rgba(179, 38, 30, 0.08);
 
-  /* --- The single accent: signal violet ---------------------------------- */
-  --gl-signal: #9a8fe6; /* on dark  — 7.4:1 on --gl-void */
-  --gl-signal-deep: #453a96; /* on light — 7.9:1 on --gl-bone */
-  --gl-signal-core: #5a4cc0; /* brand mark */
-  --gl-signal-wash: rgba(154, 143, 230, 0.14);
-  --gl-signal-trace: rgba(154, 143, 230, 0.3);
-  --gl-signal-wash-l: rgba(69, 58, 150, 0.09);
+  /* --- Value-stage ramp: one hue, four levels of certainty --------------- */
+  --gl-stage-1: rgba(74, 58, 196, 0.24);
+  --gl-stage-2: rgba(74, 58, 196, 0.46);
+  --gl-stage-3: rgba(74, 58, 196, 0.7);
+  --gl-stage-4: #4a3ac4;
 
-  /* --- Value-stage ramp (Estimated -> Booked -> Attended -> Collected) ----
-     Four steps of one hue. Never four different colours: the point is that
-     these are the same money at four levels of certainty.                   */
-  --gl-stage-1: rgba(154, 143, 230, 0.24);
-  --gl-stage-2: rgba(154, 143, 230, 0.46);
-  --gl-stage-3: rgba(154, 143, 230, 0.7);
-  --gl-stage-4: #9a8fe6;
-  --gl-stage-1-l: rgba(69, 58, 150, 0.18);
-  --gl-stage-2-l: rgba(69, 58, 150, 0.4);
-  --gl-stage-3-l: rgba(69, 58, 150, 0.68);
-  --gl-stage-4-l: #453a96;
+  --gl-stage-1-d: rgba(154, 143, 240, 0.28);
+  --gl-stage-2-d: rgba(154, 143, 240, 0.5);
+  --gl-stage-3-d: rgba(154, 143, 240, 0.68);
+  --gl-stage-4-d: #9a8ff0;
 
-  /* --- Status ------------------------------------------------------------ */
-  --gl-alert: #e0574f;
-  --gl-alert-deep: #a52a22;
+  /* --- Typeface ----------------------------------------------------------
+     Schibsted Grotesk, variable 400–900. A grotesque with tight apertures and
+     a confident lowercase: precise at 15px, characterful at 120px. */
+  --gl-font: var(--font-schibsted), "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --gl-font-display: var(--gl-font);
+  --gl-font-sans: var(--gl-font);
+  --gl-font-mono: var(--gl-font);
 
-  /* --- Typefaces ---------------------------------------------------------
-     Display : Instrument Serif  — high-contrast editorial, roman + italic
-     Sans    : Archivo (variable) — grotesque with authority, dense UI text
-     Mono    : IBM Plex Mono     — ledger labels, section numbers, figures   */
-  --gl-font-display: var(--font-instrument-serif), "Instrument Serif", "Times New Roman", serif;
-  --gl-font-sans: var(--font-archivo), Archivo, "Helvetica Neue", Arial, sans-serif;
-  --gl-font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
-
-  /* --- Type scale (fluid) ------------------------------------------------- */
-  --gl-t-display-1: clamp(2.75rem, 7.2vw, 7rem);
-  --gl-t-display-2: clamp(2.375rem, 5.6vw, 5rem);
-  --gl-t-display-3: clamp(1.875rem, 3.6vw, 3.125rem);
-  --gl-t-display-4: clamp(1.5rem, 2.4vw, 2.125rem);
-  --gl-t-lead: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  /* --- Type scale --------------------------------------------------------
+     Display sizes carry negative tracking that tightens as they grow. */
+  --gl-t-hero: clamp(2.875rem, 8.4vw, 7.5rem);
+  --gl-t-display-1: clamp(2.75rem, 6.4vw, 6rem);
+  --gl-t-display-2: clamp(2.125rem, 4.6vw, 4rem);
+  --gl-t-display-3: clamp(1.625rem, 3vw, 2.625rem);
+  --gl-t-display-4: clamp(1.25rem, 1.9vw, 1.625rem);
+  --gl-t-lead: clamp(1.0625rem, 1.25vw, 1.3125rem);
   --gl-t-body: 1rem;
-  --gl-t-small: 0.875rem;
+  --gl-t-small: 0.9375rem;
   --gl-t-micro: 0.8125rem;
-  --gl-t-label: 0.6875rem;
-  --gl-t-figure: clamp(1.75rem, 3.4vw, 3rem);
-  --gl-t-figure-sm: clamp(1.25rem, 2vw, 1.625rem);
+  --gl-t-label: 0.75rem;
+  --gl-t-figure: clamp(2.5rem, 5.2vw, 4.25rem);
+  --gl-t-figure-sm: clamp(1.5rem, 2.4vw, 2rem);
 
-  --gl-lh-display: 0.94;
-  --gl-lh-tight: 1.12;
-  --gl-lh-snug: 1.32;
-  --gl-lh-body: 1.62;
-  --gl-tr-display: -0.03em;
-  --gl-tr-label: 0.15em;
+  --gl-tr-hero: -0.042em;
+  --gl-tr-display: -0.032em;
+  --gl-tr-tight: -0.018em;
+  --gl-tr-body: -0.006em;
+  --gl-tr-label: 0.09em;
 
-  /* --- Structure ---------------------------------------------------------
-     --gl-slot is the schedule-slot unit the whole grid is tuned to.         */
-  --gl-slot: 46px;
+  --gl-lh-hero: 0.95;
+  --gl-lh-display: 1.02;
+  --gl-lh-tight: 1.14;
+  --gl-lh-body: 1.58;
+
+  --gl-w-regular: 400;
+  --gl-w-medium: 500;
+  --gl-w-semi: 600;
+  --gl-w-bold: 700;
+
+  /* --- Structure --------------------------------------------------------- */
   --gl-s-1: 4px;
   --gl-s-2: 8px;
   --gl-s-3: 12px;
   --gl-s-4: 16px;
   --gl-s-5: 24px;
   --gl-s-6: 32px;
-  --gl-s-7: 46px;
+  --gl-s-7: 48px;
   --gl-s-8: 64px;
-  --gl-s-9: 92px;
-  --gl-s-10: 138px;
-  --gl-s-11: 184px;
+  --gl-s-9: 96px;
+  --gl-s-10: 128px;
+  --gl-s-11: 176px;
 
-  --gl-gutter: clamp(20px, 4.4vw, 64px);
-  --gl-maxw: 1440px;
-  --gl-maxw-text: 68ch;
-  --gl-measure: 58ch;
-  --gl-section-y: clamp(72px, 9vw, 152px);
+  --gl-gutter: clamp(20px, 5vw, 72px);
+  --gl-maxw: 1360px;
+  --gl-maxw-wide: 1600px;
+  --gl-maxw-text: 66ch;
+  --gl-measure: 54ch;
+  --gl-section-y: clamp(80px, 10vw, 168px);
+  --gl-nav-h: 68px;
 
-  /* --- Geometry: near-zero radius. This is a ledger, not a card deck. ----- */
-  --gl-r-0: 0px;
-  --gl-r-1: 2px;
+  /* --- Geometry ----------------------------------------------------------
+     Soft, considered radii — Apple-adjacent rather than brutalist. Not a
+     rounded-card deck: radius is used on surfaces and controls, never as
+     decoration. */
+  --gl-r-xs: 6px;
+  --gl-r-sm: 10px;
+  --gl-r-md: 16px;
+  --gl-r-lg: 24px;
+  --gl-r-xl: 32px;
   --gl-r-pill: 999px;
 
-  /* --- Motion ------------------------------------------------------------
-     Three verbs only: detect (fade in place), consolidate (migrate to grid),
-     settle (step / count into final state).                                  */
-  --gl-dur-fast: 160ms;
-  --gl-dur-base: 340ms;
-  --gl-dur-slow: 680ms;
-  --gl-dur-scene: 1100ms;
+  /* --- Elevation: light, cool, barely there ------------------------------ */
+  --gl-shadow-sm: 0 1px 2px rgba(12, 12, 14, 0.04), 0 2px 8px rgba(12, 12, 14, 0.03);
+  --gl-shadow-md: 0 2px 4px rgba(12, 12, 14, 0.04), 0 12px 32px rgba(12, 12, 14, 0.06);
+  --gl-shadow-lg: 0 4px 8px rgba(12, 12, 14, 0.05), 0 24px 64px rgba(12, 12, 14, 0.09);
+
+  /* --- Motion ------------------------------------------------------------ */
+  --gl-dur-xfast: 120ms;
+  --gl-dur-fast: 200ms;
+  --gl-dur-base: 380ms;
+  --gl-dur-slow: 700ms;
+  --gl-dur-scene: 1200ms;
+  --gl-dur-sweep: 7000ms;
+
   --gl-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --gl-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
   --gl-ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
   --gl-ease-precise: cubic-bezier(0.4, 0, 0.1, 1);
+  --gl-ease-spring: cubic-bezier(0.34, 1.42, 0.44, 1);
 
-  /* --- Focus -------------------------------------------------------------- */
   --gl-focus-w: 2px;
   --gl-focus-offset: 3px;
 
   --gl-z-nav: 100;
   --gl-z-overlay: 200;
-  --gl-z-skip: 300;
+  --gl-z-modal: 300;
+  --gl-z-skip: 400;
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --gl-dur-xfast: 1ms;
     --gl-dur-fast: 1ms;
     --gl-dur-base: 1ms;
     --gl-dur-slow: 1ms;

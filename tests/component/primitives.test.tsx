@@ -15,7 +15,7 @@ describe('SectionHeader', () => {
   it('renders one heading with the emphasis as part of its accessible name', () => {
     render(
       <SectionHeader
-        num="§ 01 / 08"
+        eyebrow="Where it goes"
         aside="Six points of loss"
         title="A busy practice and a leaking one look"
         emphasis="identical from the front desk."
@@ -23,12 +23,21 @@ describe('SectionHeader', () => {
     );
     const heading = screen.getByRole('heading', { level: 2 });
     expect(heading).toHaveTextContent('A busy practice and a leaking one look identical');
-    expect(screen.getByText('§ 01 / 08')).toBeInTheDocument();
+    expect(screen.getByText('Where it goes')).toBeInTheDocument();
   });
 
   it('can render at level 3 where the document outline requires it', () => {
-    render(<SectionHeader num="§ 02" title="Nested" headingLevel={3} />);
+    render(<SectionHeader title="Nested" headingLevel={3} />);
     expect(screen.getByRole('heading', { level: 3 })).toBeInTheDocument();
+  });
+
+  /**
+   * Section counters were template furniture: they told the reader they were on
+   * part three of five, which is not information they needed.
+   */
+  it('renders no section counter', () => {
+    const { container } = render(<SectionHeader eyebrow="Detection" title="Detection" />);
+    expect(container.textContent).not.toMatch(/§|\d+\s*\/\s*\d+/);
   });
 });
 

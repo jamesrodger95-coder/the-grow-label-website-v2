@@ -43,7 +43,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: SITE.themeColor,
-  colorScheme: 'dark',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
   // Zoom is never restricted: WCAG 2.2 requires reflow to 200%.

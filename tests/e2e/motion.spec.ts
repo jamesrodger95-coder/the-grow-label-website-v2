@@ -8,7 +8,7 @@ import { awaitHydration } from './helpers';
  */
 
 test('stage bars actually fill once scrolled into view', async ({ page }) => {
-  await page.goto('/methodology');
+  await page.goto('/platform');
   await awaitHydration(page);
 
   const bar = page.locator('.stagebar').first();
@@ -64,7 +64,7 @@ test('the recovery sequence advances through all four states on scroll', async (
   await page.goto('/');
   await awaitHydration(page);
 
-  const sequence = page.locator('.sequence');
+  const sequence = page.locator('.scene');
   await sequence.scrollIntoViewIfNeeded();
 
   const seen = new Set<string>();
@@ -79,7 +79,7 @@ test('the recovery sequence advances through all four states on scroll', async (
     await page.evaluate((y) => window.scrollTo(0, y), top + (height * step) / 12);
     await page.waitForTimeout(220);
     const active = await page
-      .locator('.sequence__step[data-active="true"] .sequence__stepname')
+      .locator('.scene__step[data-active="true"] .scene__stepname')
       .first()
       .textContent();
     if (active) seen.add(active.trim());
@@ -88,13 +88,25 @@ test('the recovery sequence advances through all four states on scroll', async (
   expect([...seen].sort()).toEqual(['Consolidate', 'Detect', 'Hold', 'Settle']);
 });
 
-test('the signal field is decorative and hidden once the hero is one column', async ({ page }) => {
+test('the hero recovery field is decorative and never announced', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
-  await expect(page.locator('.signalfield')).toHaveAttribute('aria-hidden', 'true');
-  await expect(page.locator('.signalfield__mark').first()).toBeVisible();
+  await expect(page.locator('.field__grid')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.field__tick').first()).toBeVisible();
 
+  // The field is simplified rather than removed on a phone: it still renders,
+  // but with fewer marks and no pointer tilt.
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(200);
-  await expect(page.locator('.signalfield__mark').first()).toBeHidden();
+  await expect(page.locator('.field__tick').first()).toBeVisible();
+});
+
+/**
+ * The opportunity record is server-rendered and cycles on CSS delays, so every
+ * scenario must be in the DOM whether or not JavaScript ran.
+ */
+test('the opportunity record holds every scenario in the initial HTML', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('.pipe__card')).toHaveCount(4);
+  await expect(page.locator('.pipe__card').first()).toContainText('Inbound call');
 });

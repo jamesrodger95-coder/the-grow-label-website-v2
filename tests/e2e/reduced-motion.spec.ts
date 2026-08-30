@@ -31,13 +31,13 @@ test('the recovery sequence shows its completed final state', async ({ page }) =
 
   // Frame four: the staircase, its labels and the collected marker.
   await expect(page.getByText('One of these four numbers is revenue.')).toBeVisible();
-  const rail = page.locator('.sequence__step[data-active="true"]');
+  const rail = page.locator('.scene__step[data-active="true"]');
   await expect(rail).toHaveCount(1);
   await expect(rail).toContainText('Hold');
 });
 
 test('stage bars are drawn at full width, not animating from zero', async ({ page }) => {
-  await page.goto('/methodology');
+  await page.goto('/platform');
   await page.waitForTimeout(400);
   const fills = page.locator('.stagebar__fill');
   const count = await fills.count();
@@ -57,11 +57,21 @@ test('transition durations collapse to effectively zero', async ({ page }) => {
   expect(duration).toBe('1ms');
 });
 
-test('the hero signal field stays inert', async ({ page }) => {
+test('the hero recovery field stays inert', async ({ page }) => {
   await page.goto('/');
   await page.waitForTimeout(300);
-  const marks = page.locator('.signalfield__mark');
-  await expect(marks.first()).toBeAttached();
-  // Marks are decorative and must never be announced.
-  await expect(page.locator('.signalfield')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.field__tick').first()).toBeAttached();
+  // The field is decorative and must never be announced.
+  await expect(page.locator('.field__grid')).toHaveAttribute('aria-hidden', 'true');
+});
+
+/** The record panel must settle on one scenario rather than cycling. */
+test('the opportunity record does not cycle', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForTimeout(300);
+  const animation = await page
+    .locator('.pipe__card')
+    .first()
+    .evaluate((el) => getComputedStyle(el).animationName);
+  expect(animation).toBe('none');
 });

@@ -12,15 +12,23 @@ import { Reveal } from '@/components/motion/Reveal';
 /* Section header                                                             */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The opening of a section.
+ *
+ * There is deliberately no section counter. A reader does not need to be told
+ * they are on section three of five, and a numbered spine only carries meaning
+ * where the order itself does — which, outside the four value stages, it does
+ * not. The eyebrow names the subject instead.
+ */
 export function SectionHeader({
-  num,
+  eyebrow,
   aside,
   title,
   emphasis,
   id,
   headingLevel = 2,
 }: {
-  num: string;
+  eyebrow?: string;
   aside?: string;
   title: string;
   emphasis?: string;
@@ -31,7 +39,7 @@ export function SectionHeader({
   return (
     <div className="sec-head">
       <div>
-        <span className="sec-head__num mono">{num}</span>
+        {eyebrow ? <span className="eyebrow sec-head__eyebrow">{eyebrow}</span> : null}
         <Heading className="display d2" id={id}>
           {title}
           {emphasis ? (

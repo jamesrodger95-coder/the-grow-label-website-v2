@@ -48,7 +48,7 @@ The test also greps for **asserted** claims and fails on:
 - `testimonial`, `case study`, `trusted by`, `our clients include`, `as used by`
 
 The check is **negation-aware**. Several pages exist precisely to rule these
-claims out — the methodology page has a section named _What Grow Label cannot
+claims out — the platform page has a section named _What Grow Label cannot
 credibly claim_ — so a hit only counts when the surrounding sentence, or the
 object entry containing it, carries no negation. A regression test proves both
 directions: an asserted claim fails, the same words denied do not.

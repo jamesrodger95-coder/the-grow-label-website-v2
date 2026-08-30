@@ -48,7 +48,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
   return (
     <>
       <article>
-        <header className="phead surface--black on-dark">
+        <header className="phead surface--white on-light">
           <div className="shell">
             <div className="phead__inner">
               <div className="phead__meta">

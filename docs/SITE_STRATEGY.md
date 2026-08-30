@@ -78,7 +78,7 @@ would be the wrong instrument for this buyer.
 
 ## Secondary journeys
 
-- **Sceptic** → `/methodology`, which includes a section named _What Grow Label
+- **Sceptic** → `/platform#limits`, which includes a section named _What Grow Label
   cannot credibly claim_ and five questions to ask any provider in the category,
   explicitly including Grow Label.
 - **Evaluator** → `/platform` for architecture and the data boundary, then the
@@ -105,5 +105,5 @@ this stage. The signal is the quality of what arrives through `/contact`: the
 form asks for sector and site count precisely so an unqualified enquiry is
 visible before anyone spends time on it.
 
-If enquiries arrive that have clearly read `/methodology`, the strategy is
+If enquiries arrive that have clearly read `/platform#limits`, the strategy is
 working.

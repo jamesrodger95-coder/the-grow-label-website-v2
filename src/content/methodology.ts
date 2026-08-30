@@ -141,3 +141,16 @@ export const CANNOT_CLAIM = {
     },
   ],
 };
+
+/**
+ * The five questions any buyer should put to a provider in this category,
+ * including Grow Label. They live in the content layer because they are the
+ * strongest thing on the platform page and must stay greppable.
+ */
+export const AUDIT_QUESTIONS: string[] = [
+  'Which of the four stages does your headline figure describe?',
+  'What promotes an item from one stage to the next — a record, or an inference?',
+  'What happens to a figure when the appointment behind it is later cancelled?',
+  'Can I open any number and see the source event that produced it?',
+  'How do you decide that two contacts are the same opportunity?',
+];

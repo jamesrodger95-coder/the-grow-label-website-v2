@@ -36,7 +36,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
   return (
     <>
       <PageHeader
-        label={`Module 0${mod.index} / 04`}
+        label="Module"
         title={mod.name}
         lead={mod.lead}
         aside={<ModuleRail current={mod.slug} />}
@@ -52,12 +52,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       <section className="surface--paper on-light section" aria-labelledby="problem-title">
         <div className="shell">
           <Reveal variant="group">
-            <SectionHeader
-              num="§ 01 / 06"
-              aside="The problem"
-              id="problem-title"
-              title={mod.problem.title}
-            />
+            <SectionHeader eyebrow="The problem" id="problem-title" title={mod.problem.title} />
           </Reveal>
           <div className="two-col">
             <Reveal>
@@ -94,8 +89,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 02 / 06"
-              aside="Actions and limits"
+              eyebrow="Actions and limits"
               id="actions-title"
               title="What it does, and"
               emphasis="what it will not do."
@@ -143,8 +137,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 03 / 06"
-              aside="Human escalation"
+              eyebrow="Human escalation"
               id="escalation-title"
               title="Named triggers that hand"
               emphasis="a contact to a person."
@@ -172,8 +165,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 04 / 06"
-              aside="Stages and data"
+              eyebrow="Stages and data"
               id="stages-title"
               title="Which stages it moves,"
               emphasis="and what it needs to run."
@@ -237,8 +229,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num="§ 05 / 06"
-              aside="Evidence"
+              eyebrow="Evidence"
               id="evidence-title"
               title="What you can open"
               emphasis="and inspect."
@@ -262,7 +253,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
           <div className="ctaband__inner">
             <Reveal>
               <p className="label label--accent" style={{ marginBottom: 24 }}>
-                § 06 / 06 · Commercial outcome
+                Commercial outcome
               </p>
               <h2 className="display d2" id="outcome-title" style={{ marginBottom: 28 }}>
                 What changes on the schedule <em>and in the ledger.</em>

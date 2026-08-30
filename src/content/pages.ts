@@ -2,6 +2,8 @@
  * Copy for the platform, about and insights routes, plus the contact journey.
  */
 
+import { AUDIT_QUESTIONS } from '@/content/methodology';
+
 export const PLATFORM = {
   label: 'Platform',
   title: 'One system,',
@@ -14,7 +16,6 @@ export const PLATFORM = {
     { key: 'Reports at', detail: 'Estimated · Booked · Attended · Collected' },
   ],
   architecture: {
-    num: '§ 01 / 05',
     aside: 'Architecture',
     title: 'Event, opportunity, action,',
     emphasis: 'record.',
@@ -51,7 +52,6 @@ export const PLATFORM = {
     ],
   },
   controls: {
-    num: '§ 03 / 05',
     aside: 'Controls',
     title: 'The ceiling is set by you,',
     emphasis: 'not discovered by us.',
@@ -92,7 +92,6 @@ export const PLATFORM = {
     ],
   },
   data: {
-    num: '§ 04 / 05',
     aside: 'Data',
     title: 'Scheduling and contact data.',
     emphasis: 'Not clinical records.',
@@ -118,7 +117,6 @@ export const ABOUT = {
   emphasis: 'not a marketing channel.',
   lead: 'Grow Label works on demand a practice has already generated and already paid for. That single decision determines everything else: what we measure, what we refuse to claim, and why the reporting is built to be argued with.',
   position: {
-    num: '§ 01 / 03',
     aside: 'Position',
     title: 'The cheapest demand in the business',
     emphasis: 'is the demand you already have.',
@@ -129,7 +127,6 @@ export const ABOUT = {
     ],
   },
   principles: {
-    num: '§ 02 / 03',
     aside: 'Operating principles',
     title: 'Five commitments',
     emphasis: 'that constrain what we build.',
@@ -167,7 +164,6 @@ export const ABOUT = {
     ],
   },
   who: {
-    num: '§ 03 / 03',
     aside: 'Who this is for',
     title: 'Groups where a lost hour',
     emphasis: 'has a price on it.',
@@ -230,13 +226,7 @@ export const INSIGHTS: Insight[] = [
       {
         heading: 'Questions worth asking any provider',
         paragraphs: [],
-        list: [
-          'Which of the four stages does your headline figure describe?',
-          'What promotes an item from one stage to the next — a record, or an inference?',
-          'What happens to a figure when the appointment behind it is later cancelled?',
-          'Can I open any number and see the event that produced it?',
-          'How do you decide that two contacts are the same opportunity?',
-        ],
+        list: [...AUDIT_QUESTIONS],
       },
     ],
   },
@@ -328,3 +318,99 @@ export const CONTACT = {
   dataNotice:
     'This form is for commercial enquiries only. Do not include client, patient, clinical or otherwise sensitive information in any field.',
 };
+
+/**
+ * The modules index.
+ *
+ * The four modules are not four products. They are four points on the life of
+ * one opportunity, and the page is built to say that before it says anything
+ * else — hence the timeline, which is the organising device.
+ */
+export const MODULES_PAGE = {
+  label: 'Modules',
+  title: 'Four modules.',
+  emphasis: 'One opportunity, followed all the way.',
+  lead: 'Demand does not leak in one place. It leaks at first contact, at first response, between booking and attendance, and in the records that quietly stopped moving. Each module covers one of those, and all four report into the same four value stages.',
+  strip: [
+    { key: 'Answer', detail: 'Contact that is never picked up' },
+    { key: 'Respond', detail: 'Enquiries answered after the window closes' },
+    { key: 'Retain', detail: 'Booked capacity that empties again' },
+    { key: 'Reactivate', detail: 'Records that stopped coming back' },
+  ],
+  /** The timeline the four modules are plotted against. */
+  timeline: {
+    eyebrow: 'The life of one opportunity',
+    title: 'Every module covers a different',
+    emphasis: 'way of losing the same patient.',
+    lead: 'Demand arrives. It gets a response or it does not. It becomes an appointment or it does not. It attends, or it lapses. The four modules sit over the four places it drops.',
+    stages: [
+      { key: 'Contact arrives', detail: 'A call, a form, a message, an overdue recall date.' },
+      { key: 'Response owed', detail: 'A window in which the person is still deciding.' },
+      { key: 'Appointment held', detail: 'Committed capacity with a date against it.' },
+      { key: 'Outcome recorded', detail: 'Attended and invoiced, or lapsed and forgotten.' },
+    ],
+    spans: [
+      {
+        slug: 'answer',
+        name: 'Answer',
+        from: 0,
+        to: 26,
+        caption: 'Picks up what would have rung out.',
+      },
+      {
+        slug: 'respond',
+        name: 'Respond',
+        from: 18,
+        to: 50,
+        caption: 'Replies inside the window that still converts.',
+      },
+      {
+        slug: 'retain',
+        name: 'Retain',
+        from: 46,
+        to: 82,
+        caption: 'Holds the appointment, refills it when it goes.',
+      },
+      {
+        slug: 'reactivate',
+        name: 'Reactivate',
+        from: 62,
+        to: 100,
+        caption: 'Works the records that stopped moving.',
+      },
+    ],
+  },
+  boundary: {
+    eyebrow: 'The ceiling',
+    title: 'Every module has a limit,',
+    emphasis: 'and the practice sets it.',
+    lead: 'A module can only do what a practice has explicitly approved. The ceiling is written down during setup, applies to every contact, and can be lowered at any time without a conversation.',
+    items: [
+      {
+        key: 'No clinical judgement, ever',
+        detail:
+          'No module triages, assesses, advises or diagnoses. Anything that sounds urgent goes straight to the practice’s own emergency route.',
+      },
+      {
+        key: 'Booking scope is a whitelist',
+        detail:
+          'Only the appointment types a practice has approved may be booked without a person. Everything else is routed to a named owner with the context attached.',
+      },
+      {
+        key: 'Contact rules are yours',
+        detail:
+          'Hours, response windows, attempt limits, tone and the practice’s own name in the script are all set by the practice.',
+      },
+      {
+        key: 'A refusal is permanent',
+        detail:
+          'A contact who asks not to be approached is suppressed immediately, across every module, and it is recorded against the record.',
+      },
+    ],
+  },
+  close: {
+    title: 'Start with what is actually leaking,',
+    emphasis: 'not with the module.',
+    body: 'The assessment reads your own event data and shows which of the four is losing you the most. Most groups do not begin with all four, and none should begin with the one that sounds most impressive.',
+  },
+} as const;

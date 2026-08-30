@@ -20,55 +20,164 @@ export type Leak = {
   title: string;
   detail: string;
   module: string;
+  /** The module page that owns this loss, so a row is a path and not a label. */
+  href: string;
 };
 
-export const LEAKS: Leak[] = [
+/**
+ * The six losses split at the only line that matters commercially: demand that
+ * never became a booking, and bookings that never became attendance. The two
+ * halves are worked by different modules and measured at different stages, so
+ * the grouping is structural rather than decorative.
+ */
+export type LeakGroup = {
+  id: string;
+  title: string;
+  note: string;
+  leaks: Leak[];
+};
+
+export const LEAK_GROUPS: LeakGroup[] = [
   {
-    index: '01',
-    title: 'Unanswered calls',
-    detail: 'Rung out, abandoned in the queue, or arriving outside opening hours.',
+    id: 'before',
+    title: 'Demand that never became a booking',
+    note: 'Contact the practice paid to generate, which nobody was able to work in time.',
+    leaks: [
+      {
+        index: '01',
+        title: 'Unanswered calls',
+        detail: 'Rung out, abandoned in the queue, or arriving outside opening hours.',
+        module: 'Answer',
+        href: '/modules/answer',
+      },
+      {
+        index: '02',
+        title: 'Slow first response',
+        detail:
+          'Enquiries and callback requests answered after the window in which people still book.',
+        module: 'Respond',
+        href: '/modules/respond',
+      },
+      {
+        index: '03',
+        title: 'Dormant records',
+        detail: 'Clients and patients past their expected return interval, never contacted again.',
+        module: 'Reactivate',
+        href: '/modules/reactivate',
+      },
+    ],
+  },
+  {
+    id: 'after',
+    title: 'Bookings that never became attendance',
+    note: 'Capacity that was committed, then quietly released with nothing put back into it.',
+    leaks: [
+      {
+        index: '04',
+        title: 'Late cancellations',
+        detail: 'Slots released too close to the day to be refilled by hand.',
+        module: 'Retain',
+        href: '/modules/retain',
+      },
+      {
+        index: '05',
+        title: 'Non-attendance',
+        detail: 'Booked appointments that were never confirmed and never arrived.',
+        module: 'Retain',
+        href: '/modules/retain',
+      },
+      {
+        index: '06',
+        title: 'Unused capacity',
+        detail:
+          'Rooms, chairs and clinician hours running below the schedule they were staffed for.',
+        module: 'Retain',
+        href: '/modules/retain',
+      },
+    ],
+  },
+];
+
+/** Flat view, for anything that needs the six in order. */
+export const LEAKS: Leak[] = LEAK_GROUPS.flatMap((group) => group.leaks);
+
+export const LEAKS_SECTION = {
+  eyebrow: 'Where it goes',
+  titleLines: ['A busy practice and a leaking', 'one look identical.'],
+  aside: 'Six points of loss',
+  lead: 'Every one of these is demand the practice has already paid to generate. None of them appears on a profit and loss statement, because the transaction never happened — which is exactly why they persist.',
+} as const;
+
+/**
+ * A single tracked opportunity, from the raw signal to the action taken.
+ *
+ * These are illustrations of the record shape, not client data. Nothing here
+ * states an outcome the business has achieved: the stage names are the same
+ * four the whole site uses, and no value is quoted, because a value only exists
+ * once it has been priced against a real fee schedule.
+ */
+export type PipelineStep = {
+  id: string;
+  module: string;
+  event: { channel: string; detail: string; stamp: string };
+  opportunity: { ref: string; owner: string; due: string };
+  action: { did: string; stage: string };
+};
+
+export const PIPELINE: PipelineStep[] = [
+  {
+    id: 'call',
     module: 'Answer',
+    event: {
+      channel: 'Inbound call',
+      detail: 'Eight seconds, abandoned in the queue',
+      stamp: '21:40 · Tue',
+    },
+    opportunity: { ref: 'OPP-4417', owner: 'Front desk', due: 'Within 15 minutes' },
+    action: { did: 'Call returned, appointment made', stage: 'Booked' },
   },
   {
-    index: '02',
-    title: 'Slow first response',
-    detail: 'Enquiries and callback requests answered after the window in which people still book.',
+    id: 'form',
     module: 'Respond',
+    event: {
+      channel: 'Web enquiry',
+      detail: 'New client form, no reply sent',
+      stamp: '21:47 · Tue',
+    },
+    opportunity: { ref: 'OPP-4418', owner: 'Reception', due: 'Within 5 minutes of opening' },
+    action: { did: 'First response sent, slot held', stage: 'Booked' },
   },
   {
-    index: '03',
-    title: 'Dormant records',
-    detail: 'Clients and patients past their expected return interval, never contacted again.',
+    id: 'recall',
     module: 'Reactivate',
+    event: {
+      channel: 'Recall record',
+      detail: 'Due in March, still open in September',
+      stamp: '187 days · overdue',
+    },
+    opportunity: { ref: 'OPP-4419', owner: 'Recall list', due: 'This week' },
+    action: { did: 'Contacted and scheduled', stage: 'Attended' },
   },
   {
-    index: '04',
-    title: 'Late cancellations',
-    detail: 'Slots released too close to the day to be refilled by hand.',
+    id: 'release',
     module: 'Retain',
-  },
-  {
-    index: '05',
-    title: 'Non-attendance',
-    detail: 'Booked appointments that were never confirmed and never arrived.',
-    module: 'Retain',
-  },
-  {
-    index: '06',
-    title: 'Unused capacity',
-    detail: 'Rooms, chairs and clinician hours running below the schedule they were staffed for.',
-    module: 'Retain / Reactivate',
+    event: {
+      channel: 'Schedule change',
+      detail: 'Chair released at 48 hours notice',
+      stamp: '14:05 · Thu',
+    },
+    opportunity: { ref: 'OPP-4420', owner: 'Schedule', due: 'Within 2 hours' },
+    action: { did: 'Refilled from the waiting list', stage: 'Attended' },
   },
 ];
 
 export const DETECTION = {
-  num: '§ 02 / 08',
-  aside: 'Detection',
-  title: 'Detection is the entire job.',
-  titleEmphasis: 'Everything after it is follow-through.',
+  eyebrow: 'Detection',
+  titleLines: ['Detection is the whole job.', 'The rest is follow-through.'],
+  aside: 'Event · opportunity · action',
   body: [
     'Grow Label connects to the systems a practice already runs — the phone system, the enquiry channels, the practice management system — and reads the events they emit. A call that lasted eight seconds. A form submitted at 21:40. A recall due in March that is still open in September.',
-    'Each of those becomes a tracked opportunity with an owner, a due time and a value estimate taken from your own fee schedule. Until an event is turned into a record with a deadline attached, nobody can be held to it and nothing can be measured.',
+    'On its own an event is just a line in a log. Grow Label turns each one into a tracked opportunity with an owner, a due time and a value estimated from your own fee schedule — because until something has a deadline and a name against it, nobody can be held to it and nothing can be counted.',
   ],
   reads: [
     { key: 'Contact events', detail: 'When contact happened, on which channel, and how it ended.' },
@@ -80,11 +189,10 @@ export const DETECTION = {
     { key: 'Your own prices', detail: 'The published fee schedule, used only to estimate value.' },
   ],
   boundary:
-    'Grow Label does not need clinical records to do any of this. It needs event data: when contact happened, on which channel, against which record, and what happened next.',
+    'None of this requires clinical records. It requires event data: when contact happened, on which channel, against which record, and what happened next.',
 } as const;
 
 export const TIME_RETURNED = {
-  num: '§ 06 / 08',
   aside: 'The second return',
   title: 'The second return is hours back',
   titleEmphasis: 'at the front desk.',
@@ -119,7 +227,6 @@ export const TIME_RETURNED = {
 } as const;
 
 export const EVIDENCE = {
-  num: '§ 07 / 08',
   aside: 'Evidence',
   title: 'Every figure opens into',
   titleEmphasis: 'the event that produced it.',
@@ -159,7 +266,6 @@ export const EVIDENCE = {
 } as const;
 
 export const SECTORS = {
-  num: '§ 08 / 08',
   aside: 'Two operating pictures',
   title: 'Veterinary and dental lose money',
   titleEmphasis: 'in different places.',

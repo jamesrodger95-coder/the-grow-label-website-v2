@@ -13,7 +13,11 @@ import { PLACEHOLDER_NOTE, RESULTS } from '@/content/proof';
  */
 export function Results() {
   return (
-    <section className="surface--paper on-light section" aria-labelledby="results-title">
+    <section
+      className="surface--paper on-light section"
+      id="results"
+      aria-labelledby="results-title"
+    >
       <div className="shell">
         <div className="sec-head">
           <div>
@@ -71,7 +75,7 @@ export function Results() {
           <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
             {RESULTS.note} {PLACEHOLDER_NOTE}
           </p>
-          <TextLink href="/methodology">How a stage is promoted</TextLink>
+          <TextLink href="/platform#value-stages">How a stage is promoted</TextLink>
         </Reveal>
       </div>
     </section>

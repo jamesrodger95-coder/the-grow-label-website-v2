@@ -34,14 +34,14 @@ the Vercel preview was created.
 
 Claude Design project **Grow Label Website V2** contains:
 
-| File          | Contents                                                                                                   |
-| ------------- | ---------------------------------------------------------------------------------------------------------- |
-| `index.html`  | Visual thesis, colour, typography, grid, components, motion                                                |
-| `home.html`   | Desktop homepage, mobile homepage, mobile drawer                                                           |
-| `pages.html`  | Route system, page header, module template, industries, methodology, contact, footer, responsive behaviour |
-| `motion.html` | Frame-by-frame storyboard and the full motion inventory                                                    |
-| `tokens.css`  | The token file this application ships                                                                      |
-| `styles.css`  | Base, components and artboard chrome                                                                       |
+| File          | Contents                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| `index.html`  | Visual thesis, colour, typography, grid, components, motion                                   |
+| `home.html`   | Desktop homepage, mobile homepage, mobile drawer                                              |
+| `pages.html`  | Route system, page header, module template, industries, contact, footer, responsive behaviour |
+| `motion.html` | Frame-by-frame storyboard and the full motion inventory                                       |
+| `tokens.css`  | The token file this application ships                                                         |
+| `styles.css`  | Base, components and artboard chrome                                                          |
 
 `design/*.css` in this repository are copies of `src/styles/*.css`. After
 changing a stylesheet:
@@ -61,7 +61,7 @@ motion suites.
 | `/platform`                 | Static    | Five sections                           |
 | `/modules/[module]` ×4      | SSG       | Nine-part template, module rail         |
 | `/industries/[industry]` ×2 | SSG       | Distinct signature devices per sector   |
-| `/methodology`              | Static    | Four stages, six terms, five limits     |
+| `/modules`                  | Static    | Timeline, four modules, the ceiling     |
 | `/about`                    | Static    | Position, principles, audience          |
 | `/insights`                 | Static    | Ruled index                             |
 | `/insights/[slug]` ×3       | SSG       | Long-form notes                         |

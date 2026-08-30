@@ -41,8 +41,7 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={ABOUT.position.num}
-              aside={ABOUT.position.aside}
+              eyebrow={ABOUT.position.aside}
               id="position-title"
               title={ABOUT.position.title}
               emphasis={ABOUT.position.emphasis}
@@ -73,8 +72,7 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={ABOUT.principles.num}
-              aside={ABOUT.principles.aside}
+              eyebrow={ABOUT.principles.aside}
               id="principles-title"
               title={ABOUT.principles.title}
               emphasis={ABOUT.principles.emphasis}
@@ -95,8 +93,7 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              num={ABOUT.who.num}
-              aside={ABOUT.who.aside}
+              eyebrow={ABOUT.who.aside}
               id="who-title"
               title={ABOUT.who.title}
               emphasis={ABOUT.who.emphasis}
@@ -110,8 +107,8 @@ export default function AboutPage() {
           </Reveal>
           <Reveal style={{ marginTop: 56, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
             <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-            <ActionLink href="/methodology" variant="ghost">
-              Read the methodology first
+            <ActionLink href="/platform#value-stages" variant="ghost">
+              See how value is measured
             </ActionLink>
           </Reveal>
           <Reveal as="p" style={{ marginTop: 28 }}>

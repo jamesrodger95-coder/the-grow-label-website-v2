@@ -43,31 +43,21 @@ export default function MotionLabPage() {
 
       <section className="surface--ink on-dark section" aria-labelledby="lab-verbs">
         <div className="shell">
-          <SectionHeader num="§ 01 / 03" aside="Harness" id="lab-verbs" title="The three verbs" />
+          <SectionHeader eyebrow="Harness" id="lab-verbs" title="The three verbs" />
           <MotionLab />
         </div>
       </section>
 
       <section className="surface--black on-dark section" aria-labelledby="lab-sequence">
         <div className="shell">
-          <SectionHeader
-            num="§ 02 / 03"
-            aside="Signature"
-            id="lab-sequence"
-            title="The recovery sequence"
-          />
+          <SectionHeader eyebrow="Signature" id="lab-sequence" title="The recovery sequence" />
           <RecoverySequence />
         </div>
       </section>
 
       <section className="surface--paper on-light section" aria-labelledby="lab-inventory">
         <div className="shell">
-          <SectionHeader
-            num="§ 03 / 03"
-            aside="Inventory"
-            id="lab-inventory"
-            title="Complete motion inventory"
-          />
+          <SectionHeader eyebrow="Inventory" id="lab-inventory" title="Complete motion inventory" />
           <div className="ledger">
             {INVENTORY.map(([id, name, detail]) => (
               <div className="lrow" key={id}>
