@@ -319,8 +319,10 @@ describe('typography constraints', () => {
     const tokens = readFileSync('src/styles/tokens.css', 'utf8');
     const roles = [...tokens.matchAll(/--gl-font-([\w-]+):\s*([^;]+);/g)];
     expect(roles.length).toBeGreaterThan(0);
-    for (const [, role, value] of roles) {
-      expect(`${role}: ${value.trim()}`).toBe(`${role}: var(--gl-font)`);
+    for (const match of roles) {
+      const role = match[1] ?? '';
+      const value = (match[2] ?? '').trim();
+      expect(`${role}: ${value}`).toBe(`${role}: var(--gl-font)`);
     }
   });
 });
