@@ -16,10 +16,10 @@ import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE } from '@/content/site';
 function Mark() {
   return (
     <svg className="nav__glyph" viewBox="0 0 15 15" aria-hidden="true" focusable="false">
-      <rect x="0" y="0" width="15" height="3" fill="var(--gl-signal)" opacity="0.3" />
-      <rect x="0" y="4" width="11" height="3" fill="var(--gl-signal)" opacity="0.55" />
-      <rect x="0" y="8" width="9" height="3" fill="var(--gl-signal)" opacity="0.78" />
-      <rect x="0" y="12" width="7" height="3" fill="var(--gl-signal)" />
+      <rect x="0" y="0" width="15" height="3" fill="var(--gl-purple)" opacity="0.3" />
+      <rect x="0" y="4" width="11" height="3" fill="var(--gl-purple)" opacity="0.55" />
+      <rect x="0" y="8" width="9" height="3" fill="var(--gl-purple)" opacity="0.78" />
+      <rect x="0" y="12" width="7" height="3" fill="var(--gl-purple)" />
     </svg>
   );
 }
@@ -49,6 +49,26 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     setLastPathname(pathname);
     setOpen(false);
   }
+
+  // The bar condenses once the page has moved: a light, purposeful nav state
+  // change rather than a hide-on-scroll trick that fights the reader.
+  const [condensed, setCondensed] = useState(false);
+  useEffect(() => {
+    let frame = 0;
+    const read = () => {
+      frame = 0;
+      setCondensed(window.scrollY > 12);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(read);
+    };
+    read();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const drawerId = useId();
   const toggleRef = useRef<HTMLButtonElement | null>(null);
@@ -106,7 +126,11 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
   }, [open]);
 
   return (
-    <header className="nav on-dark" data-open={open ? 'true' : 'false'}>
+    <header
+      className="nav on-light"
+      data-open={open ? 'true' : 'false'}
+      data-condensed={condensed ? 'true' : 'false'}
+    >
       <div className="shell">
         <div className="nav__bar">
           <Link className="nav__mark" href="/" aria-label={`${SITE.name} — home`} onClick={close}>
@@ -163,7 +187,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
       </div>
 
       {open ? (
-        <div className="drawer on-dark" id={drawerId} ref={drawerRef}>
+        <div className="drawer on-light" id={drawerId} ref={drawerRef}>
           <div className="drawer__inner shell">
             <nav aria-label="All pages">
               {NAV_GROUPS.map((group) => (

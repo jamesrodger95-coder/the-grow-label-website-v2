@@ -20,21 +20,20 @@ export const metadata: Metadata = {
 };
 
 const SURFACES = [
-  { token: '--gl-void', hex: '#08080B', role: 'Hero, footer, signature sequences' },
-  { token: '--gl-ink', hex: '#0E0E13', role: 'Standard dark section' },
-  { token: '--gl-ink-raised', hex: '#16161D', role: 'Elevated dark panel' },
-  { token: '--gl-ink-sunken', hex: '#050507', role: 'Recessed well' },
-  { token: '--gl-paper', hex: '#F6F6F3', role: 'Lightest surface' },
-  { token: '--gl-bone', hex: '#EDEDE9', role: 'Primary light section' },
-  { token: '--gl-bone-deep', hex: '#E0E0DB', role: 'Light-grey band' },
+  { token: '--gl-white', hex: '#FBFAF8', role: 'Warm white — the default page' },
+  { token: '--gl-paper', hex: '#F4F3F0', role: 'Raised warm grey band' },
+  { token: '--gl-mist', hex: '#EAE8E3', role: 'Light grey — wells and tracks' },
+  { token: '--gl-edge', hex: '#DEDBD5', role: 'Light grey — visible dividers' },
+  { token: '--gl-graphite-deep', hex: '#17171B', role: 'Graphite — dark sections' },
+  { token: '--gl-ink', hex: '#0C0C0E', role: 'Near-black — type and footer' },
 ];
 
 const ACCENTS = [
-  { token: '--gl-signal', hex: '#9A8FE6', role: 'On dark · 7.1:1' },
-  { token: '--gl-signal-deep', hex: '#453A96', role: 'On bone · 7.8:1' },
-  { token: '--gl-signal-core', hex: '#5A4CC0', role: 'Brand mark only' },
-  { token: '--gl-alert', hex: '#E0574F', role: 'Form errors on dark' },
-  { token: '--gl-alert-deep', hex: '#A52A22', role: 'Form errors on light' },
+  { token: '--gl-purple', hex: '#4A3AC4', role: 'On light · 8.1:1' },
+  { token: '--gl-purple-bright', hex: '#9A8FF0', role: 'On dark · 7.2:1' },
+  { token: '--gl-purple-ink', hex: '#2E2482', role: 'Pressed and deep emphasis' },
+  { token: '--gl-verified', hex: '#1A6F56', role: 'Verified — semantic only' },
+  { token: '--gl-alert', hex: '#B3261E', role: 'Form errors — semantic only' },
 ];
 
 const TYPE_SCALE = [
@@ -64,7 +63,7 @@ export default function StyleguidePage() {
       />
 
       {/* Colour ---------------------------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="sg-colour">
+      <section className="surface--paper on-light section" aria-labelledby="sg-colour">
         <div className="shell">
           <SectionHeader num="§ 01 / 06" aside="Tokens" id="sg-colour" title="Colour" />
           <p className="label" style={{ marginBottom: 20 }}>
@@ -126,7 +125,7 @@ export default function StyleguidePage() {
       </section>
 
       {/* Typography ------------------------------------------------------- */}
-      <section className="surface--void on-dark section" aria-labelledby="sg-type">
+      <section className="surface--black on-dark section" aria-labelledby="sg-type">
         <div className="shell">
           <SectionHeader num="§ 02 / 06" aside="Tokens" id="sg-type" title="Typography" />
           <p className="display d1" style={{ marginBottom: 24 }}>
@@ -294,7 +293,7 @@ export default function StyleguidePage() {
       </section>
 
       {/* Surfaces --------------------------------------------------------- */}
-      <section className="surface--deep on-light section" aria-labelledby="sg-surfaces">
+      <section className="surface--mist on-light section" aria-labelledby="sg-surfaces">
         <div className="shell">
           <SectionHeader
             num="§ 05 / 06"
@@ -308,7 +307,7 @@ export default function StyleguidePage() {
               <h3 className="display d4">Panels are separated by a hairline, never a shadow.</h3>
               <p className="small">Elevation is used almost nowhere in this system.</p>
             </div>
-            <div className="split__panel" style={{ background: 'var(--gl-bone)' }}>
+            <div className="split__panel" style={{ background: 'var(--gl-paper)' }}>
               <span className="label label--accent">Panel two</span>
               <h3 className="display d4">Corner radius is zero on structure.</h3>
               <p className="small">
@@ -326,7 +325,7 @@ export default function StyleguidePage() {
       </section>
 
       {/* Spacing ---------------------------------------------------------- */}
-      <section className="surface--void on-dark section" aria-labelledby="sg-space">
+      <section className="surface--black on-dark section" aria-labelledby="sg-space">
         <div className="shell">
           <SectionHeader num="§ 06 / 06" aside="Tokens" id="sg-space" title="Spacing and rhythm" />
           <div className="spec">

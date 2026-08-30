@@ -29,7 +29,7 @@ export default function ContactPage() {
         lead={CONTACT.lead}
       />
 
-      <section className="surface--bone on-light section" aria-labelledby="journey-title">
+      <section className="surface--paper on-light section" aria-labelledby="journey-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -78,7 +78,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="surface--void on-dark section" aria-labelledby="scope-title">
+      <section className="surface--black on-dark section" aria-labelledby="scope-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader

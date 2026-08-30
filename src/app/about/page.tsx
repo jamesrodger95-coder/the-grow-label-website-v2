@@ -37,7 +37,7 @@ export default function AboutPage() {
       />
 
       {/* § 01 — Position ------------------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="position-title">
+      <section className="surface--paper on-light section" aria-labelledby="position-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -70,7 +70,7 @@ export default function AboutPage() {
 
       {/* § 02 — Operating principles -------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="principles-title">
-        <div className="shell ledger-field">
+        <div className="shell">
           <Reveal variant="group">
             <SectionHeader
               num={ABOUT.principles.num}

@@ -48,7 +48,7 @@ export default function MotionLabPage() {
         </div>
       </section>
 
-      <section className="surface--void on-dark section" aria-labelledby="lab-sequence">
+      <section className="surface--black on-dark section" aria-labelledby="lab-sequence">
         <div className="shell">
           <SectionHeader
             num="§ 02 / 03"
@@ -60,7 +60,7 @@ export default function MotionLabPage() {
         </div>
       </section>
 
-      <section className="surface--bone on-light section" aria-labelledby="lab-inventory">
+      <section className="surface--paper on-light section" aria-labelledby="lab-inventory">
         <div className="shell">
           <SectionHeader
             num="§ 03 / 03"

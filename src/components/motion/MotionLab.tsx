@@ -60,7 +60,7 @@ export function MotionLab() {
       </div>
 
       <div className="dev-grid" key={nonce}>
-        {/* Verb 01 — Detect ------------------------------------------- */}
+        {/* Rise — prose and controls ------------------------------------------- */}
         <div className="dev-panel">
           <p className="label label--accent" style={{ marginBottom: 12 }}>
             Verb 01 — Detect
@@ -70,14 +70,14 @@ export function MotionLab() {
               position: 'relative',
               height: 150,
               marginBottom: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               overflow: 'hidden',
             }}
           >
             {MARKS.map((m, i) => (
               <span
                 key={i}
-                className="m-detect"
+                className="m-rise"
                 data-inview={playing ? 'true' : 'false'}
                 style={
                   {
@@ -86,7 +86,7 @@ export function MotionLab() {
                     top: `${m.top}%`,
                     width: m.width,
                     height: 2,
-                    background: 'var(--gl-signal)',
+                    background: 'var(--gl-purple)',
                     '--i': i,
                   } as CSSProperties
                 }
@@ -102,14 +102,14 @@ export function MotionLab() {
         {/* Verb 02 — Reveal ------------------------------------------- */}
         <div className="dev-panel">
           <p className="label label--accent" style={{ marginBottom: 12 }}>
-            Verb 01b — Display reveal
+            Wipe — rows and tables
           </p>
           <div
             style={{
               height: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               overflow: 'hidden',
@@ -118,7 +118,7 @@ export function MotionLab() {
             {['Revenue that', 'should have been', 'captured.'].map((line, i) => (
               <span
                 key={line}
-                className="m-reveal display"
+                className="m-wipe display"
                 data-inview={playing ? 'true' : 'false'}
                 style={{ fontSize: 26, '--i': i } as CSSProperties}
               >
@@ -129,7 +129,7 @@ export function MotionLab() {
           <p className="micro">clip-path inset per line, 70ms stagger, 680ms ease-settle.</p>
         </div>
 
-        {/* Verb 02 — Consolidate --------------------------------------- */}
+        {/* Parallax and drift --------------------------------------- */}
         <div className="dev-panel">
           <p className="label label--accent" style={{ marginBottom: 12 }}>
             Verb 02 — Consolidate
@@ -139,7 +139,7 @@ export function MotionLab() {
               position: 'relative',
               height: 150,
               marginBottom: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               overflow: 'hidden',
             }}
           >
@@ -153,7 +153,7 @@ export function MotionLab() {
                     top: `${14 + i * 18}%`,
                     width: playing ? 90 : m.width,
                     height: 2,
-                    background: 'var(--gl-signal)',
+                    background: 'var(--gl-purple)',
                     opacity: playing ? 0.85 : 0.35,
                     transition:
                       'left var(--gl-dur-scene) var(--gl-ease-settle), width var(--gl-dur-scene) var(--gl-ease-settle), opacity var(--gl-dur-slow) var(--gl-ease-out)',
@@ -168,7 +168,7 @@ export function MotionLab() {
           </p>
         </div>
 
-        {/* Verb 03 — Settle -------------------------------------------- */}
+        {/* Stage bars -------------------------------------------- */}
         <div className="dev-panel">
           <p className="label label--accent" style={{ marginBottom: 12 }}>
             Verb 03 — Settle
@@ -178,7 +178,7 @@ export function MotionLab() {
               height: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               gap: 10,
@@ -218,7 +218,7 @@ export function MotionLab() {
               height: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               gap: 18,
@@ -229,7 +229,7 @@ export function MotionLab() {
                 key={i}
                 className="m-rule"
                 data-inview={playing ? 'true' : 'false'}
-                style={{ height: 1, background: 'var(--gl-rule-dark)', '--i': i } as CSSProperties}
+                style={{ height: 1, background: 'var(--gl-edge)', '--i': i } as CSSProperties}
               />
             ))}
           </div>
@@ -246,7 +246,7 @@ export function MotionLab() {
               height: 150,
               marginBottom: 16,
               padding: 16,
-              background: 'var(--gl-ink-sunken)',
+              background: 'var(--gl-mist)',
               display: 'grid',
               alignContent: 'center',
               justifyItems: 'start',

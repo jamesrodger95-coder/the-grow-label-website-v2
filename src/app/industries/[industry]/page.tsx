@@ -46,7 +46,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
       />
 
       {/* § 01 — The sector thesis --------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="thesis-title">
+      <section className="surface--paper on-light section" aria-labelledby="thesis-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -112,7 +112,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
 
       {/* § 02 — Workflow candidates -------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="workflows-title">
-        <div className="shell ledger-field">
+        <div className="shell">
           <Reveal variant="group">
             <SectionHeader
               num="§ 02 / 04"
@@ -180,7 +180,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
       </section>
 
       {/* § 04 — Boundaries + CTA ------------------------------------------ */}
-      <section className="surface--void on-dark section" aria-labelledby="boundaries-title">
+      <section className="surface--black on-dark section" aria-labelledby="boundaries-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader

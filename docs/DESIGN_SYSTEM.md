@@ -4,115 +4,70 @@ Source of truth: `src/styles/tokens.css`, `base.css`, `components.css`.
 `design/*.css` are copies of those three files, so the Claude Design artboards
 render exactly as production does.
 
-## The visual thesis: the capacity ledger
+## Direction
 
-In a veterinary or dental group, lost revenue is not abstract. It is
-**whitespace in a column** — a gap in tomorrow's day sheet — and **a row never
-written** into the ledger. The call that rang out at 4:52pm. The estimate
-accepted and never scheduled. The recall that lapsed eleven months ago.
+Warm white ground, near-black type, graphite detail, and one restrained purple
+that appears only where revenue is being **detected, recovered or verified**.
+Light-first: dark sections are deliberate punctuation, not the norm.
 
-So the site is built from the two artefacts operators already read every
-morning: the **column** and the **ledger row**. Nothing here is a dashboard
-illustration; it is the same object at brand scale.
-
-Two structural devices carry it:
-
-**The column.** A slot unit generates the spatial rhythm. Filled slots are
-solid, open slots are hollow with a visible hairline, recovered slots are the
-accent at full strength. Faint vertical rules divide sections like a schedule
-grid.
-
-**The four-stage bar.** Estimated → Booked → Attended → Collected, as four
-descending segments of one hue. The signature graphic is an act of financial
-honesty rather than decoration, which is the whole brand position rendered as a
-picture.
+Apple-like in the sense that matters — precision, restraint, one typeface, real
+whitespace — without imitating Apple's layouts.
 
 ### Deliberately not
 
-No rounded feature cards. No purple gradient. No stock clinic photography. No
-glassmorphism. No shadow-based elevation. Corner radius is 0 on structure and
-2px on controls, because ledgers do not have rounded corners.
+No purple gradients. No glowing orbs. No glassmorphism beyond the two places a
+blur genuinely helps (the floating nav and a modal backdrop). No stock clinic
+photography. No repetitive grid of identical rounded cards.
 
 ## Colour
 
-Two grounds and one accent. Violet appears only where a revenue signal is being
-detected, followed or confirmed.
+| Token                            | Value                 | Role                                      |
+| -------------------------------- | --------------------- | ----------------------------------------- |
+| `--gl-white`                     | `#FBFAF8`             | Warm white — the default page             |
+| `--gl-paper`                     | `#F4F3F0`             | Raised warm grey band                     |
+| `--gl-mist`                      | `#EAE8E3`             | Light grey — wells and tracks             |
+| `--gl-edge`                      | `#DEDBD5`             | Light grey — visible dividers             |
+| `--gl-ink`                       | `#0C0C0E`             | Near-black — headlines, footer            |
+| `--gl-graphite`                  | `#33333A`             | Graphite — secondary type                 |
+| `--gl-graphite-deep`             | `#17171B`             | Graphite — dark sections                  |
+| `--gl-slate` / `--gl-slate-soft` | `#6C6C75` / `#8F8F98` | Muted and faint type                      |
+| `--gl-purple`                    | `#4A3AC4`             | The accent on light — 8.1:1 on warm white |
+| `--gl-purple-bright`             | `#9A8FF0`             | The accent on dark — 7.2:1 on graphite    |
 
-### Dark grounds
+Semantic colour is used only where the colour carries the meaning:
+`--gl-verified` (#1A6F56) for a confirmed state and `--gl-alert` (#B3261E)
+for form errors. Nothing else is coloured to look lively.
 
-| Token             | Value     | Used for                          |
-| ----------------- | --------- | --------------------------------- |
-| `--gl-void`       | `#08080B` | Hero, footer, signature sequences |
-| `--gl-ink`        | `#0E0E13` | Standard dark section             |
-| `--gl-ink-raised` | `#16161D` | Elevated dark panel               |
-| `--gl-ink-sunken` | `#050507` | Recessed wells                    |
-
-### Light grounds
-
-| Token            | Value     | Used for              |
-| ---------------- | --------- | --------------------- |
-| `--gl-paper`     | `#F6F6F3` | Lightest surface      |
-| `--gl-bone`      | `#EDEDE9` | Primary light section |
-| `--gl-bone-deep` | `#E0E0DB` | Light-grey band       |
-
-### The single accent
-
-| Token              | Value     | Contrast                    |
-| ------------------ | --------- | --------------------------- |
-| `--gl-signal`      | `#9A8FE6` | 7.1:1 on `--gl-void`        |
-| `--gl-signal-deep` | `#453A96` | 7.8:1 on `--gl-bone`        |
-| `--gl-signal-core` | `#5A4CC0` | Brand mark only             |
-| `--gl-alert`       | `#E0574F` | Form errors on dark, 5.4:1  |
-| `--gl-alert-deep`  | `#A52A22` | Form errors on light, 6.1:1 |
-
-### The value-stage ramp
-
-Estimated, Booked, Attended and Collected are **one hue at four densities**, not
-four colours. Four different colours would imply four different things; these
-are the same money at four levels of certainty. The ramp is the argument.
-
-`--gl-stage-1` … `--gl-stage-4` on dark, `--gl-stage-1-l` … `--gl-stage-4-l` on
-light. A surface class picks the right set, so a component never chooses.
-
-### Surface contract
-
-Every section carries a ground class (`.surface--void` … `.surface--deep`) and
-an ink class (`.on-dark` / `.on-light`). The ink class defines `--rule`,
-`--rule-soft`, `--muted`, `--faint`, `--accent`, `--slot-open` and the four
-stage tokens. **A component never hard-codes a colour** — it reads these, and
-therefore works on any ground.
-
-Text alphas were set from measured contrast, not by eye: muted is 0.74 on dark
-and 0.80 on light; faint is 0.55 and 0.64. Both clear 4.5:1 at label sizes.
+The four value stages remain **one hue at four densities** — the same money at
+four levels of certainty, never four different colours.
 
 ## Typography
 
-Three families, three jobs. Neither Inter nor Poppins appears anywhere.
+**One typeface: Schibsted Grotesk**, variable 400–900, latin subset, a single
+file on the critical path.
 
-| Role      | Face                          | Why                                                                                                        |
-| --------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Display   | Instrument Serif 400 + italic | High-contrast editorial serif. The italic is a semantic device: it marks the recovered half of a sentence. |
-| Interface | Archivo variable 300–700      | A grotesque with authority and a tall x-height, for dense copy.                                            |
-| Data      | IBM Plex Mono 400             | Tabular figures, section indices, eyebrows, axis labels.                                                   |
+Hierarchy comes from weight, size, tracking and colour rather than from a second
+family — the discipline Apple applies with SF, and the reason the page reads as
+one system instead of an assembly. Neither Inter, Poppins, Geist, Manrope nor DM
+Sans appears anywhere.
 
-Four files, latin subset. The two faces that paint the first screen are
-preloaded; the monospace is not.
+| Token       | Size                                  | Use                          |
+| ----------- | ------------------------------------- | ---------------------------- |
+| `d0`        | `clamp(2.875rem, 8.4vw, 7.5rem)`      | The hero. One per site.      |
+| `d1`        | `clamp(2.75rem, 6.4vw, 6rem)`         | Closing statements           |
+| `d2`        | `clamp(2.125rem, 4.6vw, 4rem)`        | Section headlines            |
+| `d3` / `d4` | `fluid`                               | Sub-sections and item titles |
+| `lead`      | `clamp(1.0625rem, 1.25vw, 1.3125rem)` | Standfirst                   |
+| `label`     | `0.75rem, 0.09em, uppercase`          | Eyebrows and axis labels     |
 
-### Scale
+Display tracking tightens as size grows, from `-0.018em` at `d4` to
+`-0.042em` at `d0` — large type needs less air between letters, not more.
 
-| Token   | Size                                  | Use                           |
-| ------- | ------------------------------------- | ----------------------------- |
-| `d1`    | `clamp(2.75rem, 7.2vw, 7rem)`         | Hero only. One per page.      |
-| `d2`    | `clamp(2.375rem, 5.6vw, 5rem)`        | Section statements.           |
-| `d3`    | `clamp(1.875rem, 3.6vw, 3.125rem)`    | Sub-sections and page heads.  |
-| `d4`    | `clamp(1.5rem, 2.4vw, 2.125rem)`      | Item titles.                  |
-| `lead`  | `clamp(1.0625rem, 1.35vw, 1.3125rem)` | Standfirst.                   |
-| `body`  | `1rem / 1.62`                         | Running copy, capped at 68ch. |
-| `label` | `0.6875rem` mono, `0.15em`            | Eyebrows, indices, axes.      |
-
-Display type sets at `-0.03em` with `0.94` leading and `text-wrap: balance`.
-Body copy uses `text-wrap: pretty`. All numerals are tabular, everywhere, so a
-figure never reflows as it changes.
+**Tabular figures are not global.** This face maps the comma and the full stop
+to figure width under `tnum` — they double as decimal separators — which
+opens a visible gap before every one of them in running prose. `font-variant-numeric`
+is therefore applied per component (`.mono`, `.figure`, `.lrow__idx`, stage
+figures), wherever numbers genuinely need to align in a column.
 
 ## Structure
 

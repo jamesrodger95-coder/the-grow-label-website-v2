@@ -51,3 +51,4 @@ artifacts/lighthouse/*.json
 
 .vercel
 .env*
+artifacts/review-m/

@@ -31,7 +31,7 @@ export default function InsightsPage() {
         lead="Written for people who have to defend a number in a management meeting. No sponsored research, no benchmark claims, and nothing that requires evidence we do not have."
       />
 
-      <section className="surface--bone on-light section" aria-labelledby="index-title">
+      <section className="surface--paper on-light section" aria-labelledby="index-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -77,7 +77,7 @@ export default function InsightsPage() {
         </div>
       </section>
 
-      <section className="ctaband surface--void on-dark" aria-labelledby="insights-cta">
+      <section className="ctaband surface--black on-dark" aria-labelledby="insights-cta">
         <div className="shell">
           <div className="ctaband__inner">
             <Reveal>

@@ -5,6 +5,14 @@ import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
 import { STAGE_DEFINITIONS } from '@/content/methodology';
 import { VALUE_STAGES } from '@/content/site';
+import {
+  CASE_STUDIES,
+  PLACEHOLDER_NOTE,
+  RESULTS,
+  TEAM,
+  TESTIMONIALS,
+  VIDEO_TESTIMONIALS,
+} from '@/content/proof';
 
 /**
  * Guards the editorial rules that the brief treats as non-negotiable. These are
@@ -121,19 +129,56 @@ describe('unevidenced commercial claims', () => {
     expect(hits).toEqual([]);
   });
 
-  it('names no client, logo, testimonial or case study', () => {
-    const patterns = [
-      /\btestimonial/i,
-      /\bcase stud(y|ies)/i,
-      /\btrusted by\b/i,
-      /\bour clients include\b/i,
-      /\bas used by\b/i,
-    ];
+  /**
+   * The site now has testimonial, case-study and team sections, so the rule is
+   * no longer "never write the word". It is that every one of those slots is an
+   * unmistakable placeholder: no real person, organisation or engagement is
+   * named anywhere until one is evidenced and approved.
+   */
+  it('names no client, and every proof slot stays a labelled placeholder', () => {
+    const patterns = [/trusted by/i, /our clients include/i, /as used by/i];
     const hits: string[] = [];
     for (const { file, text } of readAll()) {
       for (const hit of assertedHits(text, patterns)) hits.push(`${file}: ${hit}`);
     }
     expect(hits).toEqual([]);
+
+    const attributed = [...TESTIMONIALS, ...VIDEO_TESTIMONIALS];
+    expect(attributed.length).toBeGreaterThan(0);
+    for (const entry of attributed) {
+      expect(entry.name).toBe('Name to be confirmed');
+      expect(entry.org).toBe('Client organisation');
+    }
+
+    expect(TEAM.members.length).toBeGreaterThan(0);
+    for (const member of TEAM.members) {
+      expect(member.name).toBe('Name to be confirmed');
+      expect(member.intro.toLowerCase()).toContain('placeholder');
+    }
+
+    for (const quote of TESTIMONIALS) {
+      expect(quote.quote.toLowerCase()).toContain('placeholder');
+    }
+  });
+
+  /**
+   * Results carry no figure at all. The reserved slot is the point: a number
+   * added here without a reporting period would be an invented client result.
+   */
+  it('publishes no result figure', () => {
+    for (const card of RESULTS.cards) {
+      expect(Object.keys(card)).not.toContain('value');
+      expect(JSON.stringify(card)).not.toMatch(/[£$]s?d/);
+    }
+    expect(RESULTS.note.toLowerCase()).toContain('reporting period');
+    expect(PLACEHOLDER_NOTE.toLowerCase()).toContain('placeholder');
+  });
+
+  /** Case studies are shaped, not claimed: no outcome figure on a card. */
+  it('states no outcome on a case study card', () => {
+    for (const study of CASE_STUDIES) {
+      expect(`${study.title} ${study.summary}`).not.toMatch(/d+(.d+)?s*%|[£$]s?d/);
+    }
   });
 
   it('still catches an asserted claim if one is introduced', () => {
@@ -249,9 +294,33 @@ describe('industry pages', () => {
 });
 
 describe('typography constraints', () => {
-  it('does not load Inter or Poppins', () => {
-    const fonts = readFileSync('src/app/fonts.ts', 'utf8');
-    expect(fonts).not.toMatch(/\bInter\b/);
-    expect(fonts).not.toMatch(/\bPoppins\b/);
+  /**
+   * The families every AI-authored site reaches for. Naming them in a test is
+   * the only thing that reliably keeps them out.
+   */
+  it('loads none of the default-looking families', () => {
+    const sources = [
+      readFileSync('src/app/fonts.ts', 'utf8'),
+      readFileSync('src/styles/tokens.css', 'utf8'),
+    ].join('\n');
+    const banned = [/\bInter\b/, /\bPoppins\b/, /\bGeist\b/, /\bManrope\b/, /\bDM[ _]Sans\b/];
+    for (const family of banned) {
+      expect(sources).not.toMatch(family);
+    }
+  });
+
+  /**
+   * Hierarchy comes from weight, size and tracking, not from a second family.
+   * The display, sans and mono tokens still exist so component CSS reads by
+   * role rather than by family — but every one of them resolves to the same
+   * face, and a second import would break this.
+   */
+  it('resolves every type role to one family', () => {
+    const tokens = readFileSync('src/styles/tokens.css', 'utf8');
+    const roles = [...tokens.matchAll(/--gl-font-([\w-]+):\s*([^;]+);/g)];
+    expect(roles.length).toBeGreaterThan(0);
+    for (const [, role, value] of roles) {
+      expect(`${role}: ${value.trim()}`).toBe(`${role}: var(--gl-font)`);
+    }
   });
 });

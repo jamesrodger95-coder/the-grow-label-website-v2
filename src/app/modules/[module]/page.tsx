@@ -49,7 +49,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       />
 
       {/* 01 — The operational problem ----------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="problem-title">
+      <section className="surface--paper on-light section" aria-labelledby="problem-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -91,7 +91,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
 
       {/* 02 — What it does, and what it does not ------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="actions-title">
-        <div className="shell ledger-field">
+        <div className="shell">
           <Reveal variant="group">
             <SectionHeader
               num="§ 02 / 06"
@@ -168,7 +168,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       </section>
 
       {/* 04 — Stages and data --------------------------------------------- */}
-      <section className="surface--void on-dark section" aria-labelledby="stages-title">
+      <section className="surface--black on-dark section" aria-labelledby="stages-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -233,7 +233,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       </section>
 
       {/* 05 — Evidence ---------------------------------------------------- */}
-      <section className="surface--deep on-light section" aria-labelledby="evidence-title">
+      <section className="surface--mist on-light section" aria-labelledby="evidence-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -257,7 +257,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
       </section>
 
       {/* 06 — Outcome + CTA ----------------------------------------------- */}
-      <section className="ctaband surface--void on-dark" aria-labelledby="outcome-title">
+      <section className="ctaband surface--black on-dark" aria-labelledby="outcome-title">
         <div className="shell">
           <div className="ctaband__inner">
             <Reveal>

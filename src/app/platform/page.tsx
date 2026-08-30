@@ -40,7 +40,7 @@ export default function PlatformPage() {
       />
 
       {/* § 01 — Architecture -------------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="architecture-title">
+      <section className="surface--paper on-light section" aria-labelledby="architecture-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -74,7 +74,7 @@ export default function PlatformPage() {
 
       {/* § 02 — The modules in one place --------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="modules-title">
-        <div className="shell ledger-field">
+        <div className="shell">
           <Reveal variant="group">
             <SectionHeader
               num="§ 02 / 05"
@@ -142,7 +142,7 @@ export default function PlatformPage() {
       </section>
 
       {/* § 04 — Data boundary -------------------------------------------- */}
-      <section className="surface--void on-dark section" aria-labelledby="data-title">
+      <section className="surface--black on-dark section" aria-labelledby="data-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -195,7 +195,7 @@ export default function PlatformPage() {
       </section>
 
       {/* § 05 — Reporting ------------------------------------------------ */}
-      <section className="surface--deep on-light section" aria-labelledby="reporting-title">
+      <section className="surface--mist on-light section" aria-labelledby="reporting-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader

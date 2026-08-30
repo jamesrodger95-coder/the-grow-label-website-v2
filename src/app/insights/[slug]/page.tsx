@@ -48,7 +48,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
   return (
     <>
       <article>
-        <header className="phead surface--void on-dark">
+        <header className="phead surface--black on-dark">
           <div className="shell">
             <div className="phead__inner">
               <div className="phead__meta">
@@ -58,7 +58,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
                   {` · ${insight.readingTime}`}
                 </span>
               </div>
-              <Reveal variant="reveal">
+              <Reveal variant="line">
                 <h1 className="display d2 phead__title" style={{ maxWidth: '22ch' }}>
                   {insight.title}
                 </h1>
@@ -70,7 +70,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
           </div>
         </header>
 
-        <div className="surface--bone on-light section">
+        <div className="surface--paper on-light section">
           <div className="shell">
             <div className="two-col">
               <Reveal>
@@ -105,7 +105,7 @@ export default async function InsightPage({ params }: { params: Promise<Params> 
         </div>
       </article>
 
-      <section className="ctaband surface--void on-dark" aria-labelledby="insight-more">
+      <section className="ctaband surface--black on-dark" aria-labelledby="insight-more">
         <div className="shell">
           <div className="ctaband__inner">
             <Reveal>

@@ -1,6 +1,7 @@
 @import "../styles/tokens.css";
 @import "../styles/base.css";
 @import "../styles/components.css";
+@import "../styles/sections.css";
 @import "../styles/motion.css";
 
 /* ============================================================================
@@ -48,32 +49,26 @@ body {
 /* --- Key/value strip, hairline separated, never a card grid --------------- */
 .kv {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 1px;
   background: var(--rule);
-  border-block: 1px solid var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--gl-r-md);
+  overflow: hidden;
 }
 .kv__cell {
-  background: var(--cell-bg, transparent);
-  padding: var(--gl-s-5) var(--gl-s-5) var(--gl-s-5) 0;
-}
-.kv__cell + .kv__cell {
-  padding-left: var(--gl-s-5);
-}
-.surface--void .kv__cell {
-  --cell-bg: var(--gl-void);
-}
-.surface--ink .kv__cell {
-  --cell-bg: var(--gl-ink);
-}
-.surface--bone .kv__cell {
-  --cell-bg: var(--gl-bone);
+  background: var(--panel-solid, var(--gl-white));
+  padding: var(--gl-s-5);
 }
 .surface--paper .kv__cell {
-  --cell-bg: var(--gl-paper);
+  --panel-solid: var(--gl-paper);
 }
-.surface--deep .kv__cell {
-  --cell-bg: var(--gl-bone-deep);
+.surface--mist .kv__cell {
+  --panel-solid: var(--gl-mist);
+}
+.surface--ink .kv__cell,
+.surface--black .kv__cell {
+  --panel-solid: transparent;
 }
 .kv__key {
   display: block;
@@ -235,10 +230,7 @@ body {
   position: absolute;
   inset-block: 0;
   left: 0;
-  background: var(--gl-signal-wash);
-}
-.on-light .rail__zone {
-  background: var(--gl-signal-wash-l);
+  background: var(--accent-wash);
 }
 /* Where working the list stopped. */
 .rail__stop {
@@ -337,7 +329,7 @@ body {
    where the columns stack and stickiness would be meaningless. */
 .sticky-aside {
   position: sticky;
-  top: calc(68px + var(--gl-s-6));
+  top: calc(var(--gl-nav-h) + var(--gl-s-6));
 }
 @media (max-width: 900px) {
   .sticky-aside {

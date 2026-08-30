@@ -32,7 +32,7 @@ export default function MethodologyPage() {
       />
 
       {/* § 01 — The four stages ----------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="stages-title">
+      <section className="surface--paper on-light section" aria-labelledby="stages-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
@@ -96,7 +96,7 @@ export default function MethodologyPage() {
 
       {/* § 02 — Definitions ---------------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="terms-title">
-        <div className="shell ledger-field">
+        <div className="shell">
           <Reveal variant="group">
             <SectionHeader
               num="§ 02 / 04"
@@ -147,7 +147,7 @@ export default function MethodologyPage() {
       </section>
 
       {/* § 04 — Questions to ask ------------------------------------------ */}
-      <section className="ctaband surface--void on-dark" aria-labelledby="questions-title">
+      <section className="ctaband surface--black on-dark" aria-labelledby="questions-title">
         <div className="shell">
           <div className="ctaband__inner">
             <Reveal>

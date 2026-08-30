@@ -30,6 +30,17 @@ That ordering is the whole safety story:
   what moves an element from its start state to its end state. Without it the
   page simply keeps the authored final state rather than animating to nothing.
 
+### A reveal must never clip the element it observes
+
+An element clipped to `inset(0 100% 0 0)` has zero rendered width, so
+IntersectionObserver reports no intersection and the callback that would
+un-clip it never fires. The reveal waits forever on itself.
+
+Every ledger row and step list on the site was invisible because of this. The
+fix is structural, not a tuning value: `Reveal variant="wipe"` wraps its
+children in `.m-wipe__inner` and clips **that**, leaving the observed element
+at full size. Nothing else in the vocabulary may clip its own observed node.
+
 ### The failure this contract has already caught
 
 An element whose CSS keys off `[data-inview="true"]` must carry that attribute
@@ -41,20 +52,24 @@ descending width with animation on.
 
 ## Inventory
 
-| ID  | What                | Verb        | Implementation                                                                   |
-| --- | ------------------- | ----------- | -------------------------------------------------------------------------------- |
-| M01 | Hero signal field   | Detect      | Pure CSS keyframes, 400ms after paint, 90ms stagger. No JS on the critical path. |
-| M02 | Display mask reveal | Detect      | `clip-path` inset per line, IntersectionObserver, one-shot, 70ms stagger         |
-| M03 | Rule draw           | Detect      | `scaleX` from the leading edge as a hairline enters                              |
-| M04 | Ledger row cascade  | Detect      | Opacity plus a 10px rise, 45ms stagger                                           |
-| M05 | Capacity column     | Consolidate | Open slots resolve to recovered in sequence                                      |
-| M06 | Recovery sequence   | All three   | Scroll-progress driven, sticky stage, no pin library, no hijack                  |
-| M07 | Stage bar growth    | Settle      | `scaleX` from the left, 130ms stagger, 1100ms ease-settle                        |
-| M08 | Nav link rule       | Settle      | `scaleX` on hover and for the current route                                      |
-| M09 | Control wipe        | Settle      | `scaleX` pseudo-element; fires on hover **and** `:focus-visible`                 |
-| M10 | Drawer              | Settle      | Panel fade plus staggered links; focus trapped while open                        |
-| M11 | Cursor proximity    | Detect      | Fine pointers only. One rAF-throttled listener writing `--lift`.                 |
-| M12 | Route transition    | Settle      | 180ms view transition; never delays navigation or the LCP element                |
+| ID  | What                       | Verb        | Implementation                                                                                                                                                                  |
+| --- | -------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M01 | Recovery field             | Detect      | The hero signature. Pure CSS: a 14x8 tick grid whose columns carry `animation-delay`, a sweep gradient crossing it, four stage bars filling behind. No JS on the critical path. |
+| M02 | Headline lines             | Detect      | `RevealLines` — each line its own `overflow:hidden` mask, rising 106%, 85ms stagger. Line breaks are authored, never measured.                                                  |
+| M03 | Rise                       | Detect      | The workhorse for prose and controls. 14px, opacity, 60ms stagger.                                                                                                              |
+| M04 | Card settle                | Settle      | Panels arrive at `scale(.985)` and settle, so they read as objects rather than text.                                                                                            |
+| M05 | Wipe                       | Detect      | Ledger rows and step lists revealed by a left-to-right `clip-path`, 55ms stagger. The clip is on an inner span — see below.                                                     |
+| M06 | Rule draw                  | Detect      | `scaleX` from the leading edge as a hairline enters.                                                                                                                            |
+| M07 | Pinned value scene         | All three   | A sticky stage over a 170vh spacer; scroll progress promotes one of four stages. No pin library, no scroll hijack.                                                              |
+| M08 | Stage bar growth           | Settle      | `scaleX` from the left, 130ms stagger, ease-settle.                                                                                                                             |
+| M09 | Parallax                   | Settle      | rAF-throttled, IntersectionObserver-gated, desktop-only. Writes `--py`; transform only, so it stays on the compositor.                                                          |
+| M10 | Opposing testimonial rails | Consolidate | Two CSS marquees running in opposite directions, paused on hover, focus and by the pause control. Collapses to a swipeable track on mobile and under reduced motion.            |
+| M11 | Marquee strip              | Detect      | A single slow reading rail under the hero. Duplicated content, `translate3d`, pauses on hover.                                                                                  |
+| M12 | Card hover                 | Settle      | Case studies, video cards and profiles lift on a fine pointer only, with the media scaling inside a fixed frame.                                                                |
+| M13 | Nav condense               | Settle      | The floating pill tightens its padding and deepens its shadow past the hero.                                                                                                    |
+| M14 | Control wipe               | Settle      | `scaleX` pseudo-element; fires on hover **and** `:focus-visible`.                                                                                                               |
+| M15 | Drawer / modal             | Settle      | Panel fade plus staggered links; focus trapped, Escape closes, scroll locked.                                                                                                   |
+| M16 | Route transition           | Settle      | 200ms view transition; never delays navigation or the LCP element.                                                                                                              |
 
 ## The signature sequence
 

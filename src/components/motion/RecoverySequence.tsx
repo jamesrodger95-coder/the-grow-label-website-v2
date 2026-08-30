@@ -200,7 +200,7 @@ export function RecoverySequence() {
                   height={mark.h}
                   rx={1}
                   opacity={mark.o}
-                  fill={mark.stage ? `var(--gl-stage-${mark.stage})` : 'var(--gl-signal)'}
+                  fill={mark.stage ? `var(--gl-stage-${mark.stage})` : 'var(--gl-purple)'}
                   style={{ transitionDelay: `${i * 45}ms` }}
                 />
               ))}
@@ -210,7 +210,7 @@ export function RecoverySequence() {
                 className="seqart__labels"
                 opacity={showStaircase ? 1 : 0}
                 aria-hidden="true"
-                fill="var(--gl-on-dark-muted)"
+                fill="var(--gl-slate)"
               >
                 {STAGE_LABELS.map((label, i) => (
                   <text key={label} x={50} y={BAR_Y(i) + 8.4} textAnchor="end">
@@ -229,7 +229,7 @@ export function RecoverySequence() {
                   y1={BAR_Y(0) - 4}
                   x2={COLLECTED_EDGE}
                   y2={BAR_Y(3) + 16}
-                  stroke="var(--gl-signal)"
+                  stroke="var(--gl-purple)"
                   strokeWidth="0.7"
                   strokeDasharray="2 3"
                   opacity="0.85"
@@ -238,7 +238,7 @@ export function RecoverySequence() {
                   className="seqart__marker"
                   x={COLLECTED_EDGE + 4}
                   y={BAR_Y(3) + 20}
-                  fill="var(--gl-signal)"
+                  fill="var(--gl-purple)"
                 >
                   Money in the account
                 </text>

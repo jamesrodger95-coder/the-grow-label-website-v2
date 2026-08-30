@@ -1,22 +1,26 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Reveal } from '@/components/motion/Reveal';
-import { SignalField } from '@/components/motion/SignalField';
+import { Hero } from '@/components/home/Hero';
+import { Results } from '@/components/home/Results';
+import { CaseStudies } from '@/components/home/CaseStudies';
+import { Testimonials } from '@/components/home/Testimonials';
+import { VideoTestimonials } from '@/components/home/VideoTestimonials';
+import { Team } from '@/components/home/Team';
+import { Reveal, RevealLines } from '@/components/motion/Reveal';
+import { Parallax } from '@/components/motion/Parallax';
 import { RecoverySequence } from '@/components/motion/RecoverySequence';
 import {
   ActionLink,
   CapacityColumn,
   KeyValueStrip,
   LedgerRow,
-  SectionHeader,
   StageBar,
   StepList,
   TextLink,
-  type SlotState,
 } from '@/components/primitives';
-import { CLOSING, DETECTION, EVIDENCE, HERO, LEAKS, SECTORS, TIME_RETURNED } from '@/content/home';
+import { CLOSING, DETECTION, EVIDENCE, LEAKS, SECTORS, TIME_RETURNED } from '@/content/home';
 import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
+import { READS_STRIP } from '@/content/proof';
 import { CTA, SITE, VALUE_STAGES } from '@/content/site';
 
 export const metadata: Metadata = {
@@ -25,98 +29,59 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 };
 
-const HERO_SLOTS: SlotState[] = [
-  'filled',
-  'filled',
-  'open',
-  'filled',
-  'open',
-  'open',
-  'filled',
-  'recovered',
-  'open',
-  'filled',
-  'open',
-  'recovered',
-  'open',
-  'filled',
-];
-
 const STAGE_ROWS = [
   { name: 'Estimated', width: 100, figure: 'Modelled' },
   { name: 'Booked', width: 74, figure: 'PMS record' },
-  { name: 'Attended', width: 62, figure: 'PMS record' },
-  { name: 'Collected', width: 55, figure: 'Ledger' },
+  { name: 'Attended', width: 61, figure: 'PMS record' },
+  { name: 'Collected', width: 52, figure: 'Ledger' },
 ];
 
 export default function HomePage() {
   return (
     <>
-      {/* ---------------------------------------------------------------- */}
-      {/* Hero — the proposition, in HTML, immediately.                     */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="hero on-dark" aria-labelledby="hero-title">
-        <SignalField />
-        <div className="shell">
-          <div className="hero__inner">
-            <div>
-              <p className="hero__eyebrow">
-                <i aria-hidden="true" />
-                <span className="label label--strong">{HERO.eyebrow}</span>
-              </p>
-              <h1 className="display d1 hero__title" id="hero-title">
-                {HERO.titleLead} <em>{HERO.titleEmphasis}</em>
-              </h1>
-              <p className="lead hero__lead">{HERO.lead}</p>
-              <div className="hero__actions">
-                <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-                <ActionLink href={CTA.methodology.href} variant="ghost">
-                  {CTA.methodology.label}
-                </ActionLink>
-              </div>
-              <div className="hero__note">
-                {MODULES.map((m) => (
-                  <Link className="label" key={m.slug} href={`/modules/${m.slug}`}>
-                    {m.name}
-                  </Link>
-                ))}
-                <span className="label label--accent">Four modules · one recovery system</span>
-              </div>
-            </div>
+      <Hero />
 
-            <div className="hero__aside">
-              <CapacityColumn
-                slots={HERO_SLOTS}
-                label={HERO.columnLabel}
-                openLabel="6 open"
-                note={HERO.columnNote}
-              />
-            </div>
+      {/* A quiet band naming what the platform actually reads. */}
+      <div className="surface--white on-light">
+        <div className="strip" aria-hidden="true">
+          <div className="strip__track">
+            {[...READS_STRIP, ...READS_STRIP].map((item, i) => (
+              <span className="strip__item" key={i}>
+                {item}
+              </span>
+            ))}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* ---------------------------------------------------------------- */}
-      {/* § 01 — Where the revenue goes                                     */}
+      {/* Where the revenue goes                                            */}
       {/* ---------------------------------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="leaks-title">
+      <section className="surface--white on-light section" aria-labelledby="leaks-title">
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num="§ 01 / 08"
-              aside="Six points of loss"
-              id="leaks-title"
-              title="A busy practice and a leaking one look"
-              emphasis="identical from the front desk."
-            />
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">Where it goes</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="leaks-title"
+                className="display d2"
+                lines={['A busy practice and a leaking', <em key="e">one look identical.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Six points of loss</p>
+          </div>
+
+          <Reveal className="lead" as="p" variant="rise" style={{ marginBottom: 44 }}>
+            Every one of these is demand your practice has already paid to generate. None of them
+            shows up on a profit and loss statement, because the transaction never happened.
           </Reveal>
-          <Reveal className="lead" as="p" style={{ marginBottom: 48 }}>
-            Each of these is demand the practice has already paid to generate. None of them appears
-            as a line on a profit and loss statement, because the transaction never happened.
-          </Reveal>
+
           <div className="ledger">
             {LEAKS.map((leak, i) => (
-              <Reveal key={leak.index} index={i}>
+              <Reveal key={leak.index} index={i} variant="wipe">
                 <LedgerRow
                   index={leak.index}
                   title={leak.title}
@@ -130,34 +95,43 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* § 02 — Detection                                                  */}
+      {/* Detection                                                         */}
       {/* ---------------------------------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="detection-title">
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num={DETECTION.num}
-              aside={DETECTION.aside}
-              id="detection-title"
-              title={DETECTION.title}
-              emphasis={DETECTION.titleEmphasis}
-            />
-          </Reveal>
-          <div className="two-col" style={{ marginBottom: 56 }}>
-            <Reveal>
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">Detection</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="detection-title"
+                className="display d2"
+                lines={[
+                  'Detection is the whole job.',
+                  <em key="e">The rest is follow-through.</em>,
+                ]}
+              />
+            </div>
+            <p className="sec-head__aside">Event, opportunity, action</p>
+          </div>
+
+          <div className="two-col" style={{ marginBottom: 48 }}>
+            <Reveal variant="rise" className="sticky-aside">
               {DETECTION.body.map((paragraph) => (
                 <p className="body" key={paragraph.slice(0, 24)}>
                   {paragraph}
                 </p>
               ))}
-            </Reveal>
-            <Reveal index={1}>
-              <KeyValueStrip items={DETECTION.reads} />
-              <p className="small" style={{ marginTop: 24, maxWidth: '58ch' }}>
-                {DETECTION.boundary}
-              </p>
-              <p style={{ marginTop: 20 }}>
+              <p style={{ marginTop: 26 }}>
                 <TextLink href="/platform">See the platform architecture</TextLink>
+              </p>
+            </Reveal>
+            <Reveal variant="card" index={1}>
+              <KeyValueStrip items={DETECTION.reads} />
+              <p className="small" style={{ marginTop: 24, maxWidth: '56ch' }}>
+                {DETECTION.boundary}
               </p>
             </Reveal>
           </div>
@@ -165,22 +139,28 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* § 03 — The four modules                                           */}
+      {/* The four modules                                                  */}
       {/* ---------------------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="modules-title">
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num="§ 03 / 08"
-              aside="The recovery system"
-              id="modules-title"
-              title="Four modules, four points"
-              emphasis="in the same recovery system."
-            />
-          </Reveal>
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">The recovery system</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="modules-title"
+                className="display d2"
+                lines={['Four modules, four points', <em key="e">in the same system.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Answer · Respond · Retain · Reactivate</p>
+          </div>
+
           <div>
             {MODULES.map((module, i) => (
-              <Reveal key={module.slug} index={i} className="modblock">
+              <Reveal key={module.slug} index={i} variant="card" className="modblock">
                 <div>
                   <div className="modblock__name">
                     <span className="modblock__kicker">{`0${module.index}`}</span>
@@ -191,13 +171,13 @@ export default function HomePage() {
 
                 <div className="modblock__cols">
                   <dl className="modblock__col">
-                    <dt>Monitors</dt>
+                    <dt>Watches</dt>
                     {module.monitors.slice(0, 3).map((item) => (
                       <dd key={item.key}>{item.key}</dd>
                     ))}
                   </dl>
                   <dl className="modblock__col">
-                    <dt>Acts on</dt>
+                    <dt>Does</dt>
                     {module.actions.slice(0, 3).map((item) => (
                       <dd key={item.key}>{item.key}</dd>
                     ))}
@@ -215,46 +195,49 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* § 04 — The four value stages (signature sequence)                 */}
+      {/* The four value stages — the pinned signature scene                */}
       {/* ---------------------------------------------------------------- */}
       <section
-        className="surface--void on-dark section"
+        className="surface--black on-dark section"
         id="value-stages"
         aria-labelledby="stages-title"
       >
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num="§ 04 / 08"
-              aside="Value stages"
-              id="stages-title"
-              title="One number is a claim."
-              emphasis="Four numbers are an account."
-            />
-          </Reveal>
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">Value stages</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="stages-title"
+                className="display d2"
+                lines={['One number is a claim.', <em key="e">Four numbers are an account.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Scroll to follow</p>
+          </div>
 
           <RecoverySequence />
 
           <div className="two-col" style={{ marginTop: 'var(--gl-s-9)' }}>
-            <Reveal>
+            <Reveal variant="rise" className="sticky-aside">
               <p className="body" style={{ marginBottom: 20 }}>
-                Most recovery reporting quotes a single revenue figure. Grow Label never does,
-                because the four questions underneath that figure have four different answers, and
-                the gaps between them are the only part worth a management conversation.
+                Most recovery reporting quotes one figure. We never do, because the four questions
+                underneath it have four different answers — and the gaps between them are the only
+                part worth a management conversation.
               </p>
-              <p style={{ marginTop: 28 }}>
+              <p style={{ marginTop: 26 }}>
                 <TextLink href="/methodology">Read the measurement methodology</TextLink>
               </p>
             </Reveal>
-            <Reveal index={1}>
+            <Reveal variant="card" index={1}>
               <StageBar
                 rows={STAGE_ROWS}
                 labelledBy="stages-title"
-                caption="Proportions shown are illustrative of the shape of the staircase, not a benchmark. Real figures come from a client’s own systems."
+                caption="Illustrative of the shape of the staircase, not a benchmark. Real figures come from a client’s own systems."
               />
-              {/* A row inside a <dl> may contain only <dt> and <dd>, so the
-                  index sits inside the term rather than as a sibling span. */}
-              <dl className="ledger" style={{ marginTop: 40 }}>
+              <dl className="ledger" style={{ marginTop: 36 }}>
                 {VALUE_STAGES.map((stage, i) => (
                   <div className="lrow lrow--stage" key={stage.id}>
                     <dt className="lrow__key">
@@ -271,79 +254,101 @@ export default function HomePage() {
         </div>
       </section>
 
+      <Results />
+
       {/* ---------------------------------------------------------------- */}
-      {/* § 05 — Returned time                                              */}
+      {/* Returned time                                                     */}
       {/* ---------------------------------------------------------------- */}
-      <section className="surface--bone on-light section" aria-labelledby="time-title">
+      <section className="surface--white on-light section" aria-labelledby="time-title">
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num={TIME_RETURNED.num}
-              aside={TIME_RETURNED.aside}
-              id="time-title"
-              title={TIME_RETURNED.title}
-              emphasis={TIME_RETURNED.titleEmphasis}
-            />
-          </Reveal>
-          <Reveal as="p" className="lead" style={{ marginBottom: 44 }}>
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">{TIME_RETURNED.aside}</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="time-title"
+                className="display d2"
+                lines={['The second return is hours', <em key="e">back at the front desk.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Five recurring jobs</p>
+          </div>
+          <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
             {TIME_RETURNED.lead}
           </Reveal>
-          <Reveal>
+          <Reveal variant="wipe">
             <StepList items={TIME_RETURNED.items} />
           </Reveal>
         </div>
       </section>
 
+      <CaseStudies />
+
       {/* ---------------------------------------------------------------- */}
-      {/* § 06 — Evidence                                                   */}
+      {/* Evidence                                                          */}
       {/* ---------------------------------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="evidence-title">
-        <div className="shell ledger-field">
-          <Reveal variant="group">
-            <SectionHeader
-              num={EVIDENCE.num}
-              aside={EVIDENCE.aside}
-              id="evidence-title"
-              title={EVIDENCE.title}
-              emphasis={EVIDENCE.titleEmphasis}
-            />
-          </Reveal>
+        <div className="shell">
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">{EVIDENCE.aside}</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="evidence-title"
+                className="display d2"
+                lines={['Every figure opens into', <em key="e">the event that produced it.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Five properties of the record</p>
+          </div>
           <div className="two-col">
-            <Reveal className="sticky-aside">
+            <Reveal variant="rise" className="sticky-aside">
               <p className="lead">{EVIDENCE.lead}</p>
-              <p style={{ marginTop: 28 }}>
+              <p style={{ marginTop: 26 }}>
                 <TextLink href="/methodology">What we cannot claim</TextLink>
               </p>
             </Reveal>
-            <Reveal index={1}>
+            <Reveal variant="wipe" index={1}>
               <StepList items={EVIDENCE.items} />
             </Reveal>
           </div>
         </div>
       </section>
 
+      <Testimonials />
+      <VideoTestimonials />
+
       {/* ---------------------------------------------------------------- */}
-      {/* § 07 — Two sectors                                                */}
+      {/* Two sectors                                                       */}
       {/* ---------------------------------------------------------------- */}
-      <section className="surface--deep on-light section" aria-labelledby="sectors-title">
+      <section className="surface--white on-light section" aria-labelledby="sectors-title">
         <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              num={SECTORS.num}
-              aside={SECTORS.aside}
-              id="sectors-title"
-              title={SECTORS.title}
-              emphasis={SECTORS.titleEmphasis}
-            />
-          </Reveal>
-          <Reveal as="p" className="lead" style={{ marginBottom: 44 }}>
+          <div className="sec-head">
+            <div>
+              <Reveal variant="rise">
+                <span className="eyebrow sec-head__eyebrow">{SECTORS.aside}</span>
+              </Reveal>
+              <RevealLines
+                as="h2"
+                id="sectors-title"
+                className="display d2"
+                lines={['Veterinary and dental lose', <em key="e">money in different places.</em>]}
+              />
+            </div>
+            <p className="sec-head__aside">Two products, not one page</p>
+          </div>
+          <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
             {SECTORS.lead}
           </Reveal>
           <div className="split">
             {INDUSTRIES.map((industry, i) => (
-              <Reveal key={industry.slug} index={i} className="split__panel">
-                <span className="label label--accent">{industry.name}</span>
-                <h3 className="display d4">
+              <Reveal key={industry.slug} index={i} variant="card" className="split__panel">
+                <span className="eyebrow">{industry.name}</span>
+                <h3 className="display d3">
                   {industry.thesis.title} <em>{industry.thesis.emphasis}</em>
                 </h3>
                 <p className="small">{industry.lead}</p>
@@ -353,9 +358,9 @@ export default function HomePage() {
                   ))}
                 </ul>
                 <div style={{ marginTop: 'auto', paddingTop: 8 }}>
-                  <TextLink
-                    href={`/industries/${industry.slug}`}
-                  >{`${industry.name} workflows`}</TextLink>
+                  <TextLink href={`/industries/${industry.slug}`}>
+                    {`${industry.name} workflows`}
+                  </TextLink>
                 </div>
               </Reveal>
             ))}
@@ -363,52 +368,64 @@ export default function HomePage() {
         </div>
       </section>
 
+      <Team />
+
       {/* ---------------------------------------------------------------- */}
-      {/* § 08 — The ask                                                    */}
+      {/* The ask                                                           */}
       {/* ---------------------------------------------------------------- */}
-      <section className="ctaband surface--void on-dark" aria-labelledby="closing-title">
+      <section className="ctaband surface--black on-dark" aria-labelledby="closing-title">
         <div className="shell">
           <div className="ctaband__inner">
-            <Reveal>
-              <p className="label label--accent" style={{ marginBottom: 24 }}>
-                § 08 / 08 · Next step
-              </p>
-              <h2 className="display d2" id="closing-title" style={{ marginBottom: 28 }}>
-                {CLOSING.title} <em>{CLOSING.titleEmphasis}</em>
-              </h2>
-              {CLOSING.body.map((paragraph) => (
-                <p className="body" key={paragraph.slice(0, 24)}>
-                  {paragraph}
-                </p>
-              ))}
-              <div style={{ marginTop: 36 }}>
+            <Reveal variant="rise">
+              <span className="eyebrow" style={{ marginBottom: 22 }}>
+                Next step
+              </span>
+              <RevealLines
+                as="h2"
+                id="closing-title"
+                className="display d1"
+                lines={['Start with an assessment,', <em key="e">not a contract.</em>]}
+              />
+              <div style={{ marginTop: 26 }}>
+                {CLOSING.body.map((paragraph) => (
+                  <p className="body" key={paragraph.slice(0, 24)}>
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <div style={{ marginTop: 34, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
+                <ActionLink href="/methodology" variant="ghost">
+                  Read the methodology
+                </ActionLink>
               </div>
             </Reveal>
-            <Reveal index={1}>
-              <ul className="ticks" style={{ marginBottom: 32 }}>
-                {CLOSING.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-              <CapacityColumn
-                slots={[
-                  'filled',
-                  'recovered',
-                  'filled',
-                  'recovered',
-                  'filled',
-                  'filled',
-                  'recovered',
-                  'filled',
-                  'filled',
-                  'recovered',
-                ]}
-                label="After recovery"
-                openLabel="0 open"
-                note="The same room, the same week, with the gaps worked while they were still fillable."
-              />
-            </Reveal>
+            <Parallax distance={34}>
+              <Reveal variant="card" index={1}>
+                <ul className="ticks" style={{ marginBottom: 30 }}>
+                  {CLOSING.points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+                <CapacityColumn
+                  slots={[
+                    'filled',
+                    'recovered',
+                    'filled',
+                    'recovered',
+                    'filled',
+                    'filled',
+                    'recovered',
+                    'filled',
+                    'filled',
+                    'recovered',
+                  ]}
+                  label="After recovery"
+                  openLabel="0 open"
+                  note="The same room, the same week, with the gaps worked while they were still fillable."
+                />
+              </Reveal>
+            </Parallax>
           </div>
         </div>
       </section>

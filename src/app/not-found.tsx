@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <section className="surface--void on-dark">
+    <section className="surface--black on-dark">
       <div className="shell nf">
         <p className="label label--accent" style={{ marginBottom: 24 }}>
           Error 404
@@ -28,7 +28,7 @@ export default function NotFound() {
 
         <div className="kv" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))' }}>
           {NAV_GROUPS.map((group) => (
-            <div className="kv__cell" key={group.id} style={{ background: 'var(--gl-void)' }}>
+            <div className="kv__cell" key={group.id} style={{ background: 'var(--gl-ink)' }}>
               <p className="label kv__key">{group.label}</p>
               <ul style={{ display: 'grid', gap: 8 }}>
                 {group.links.map((link) => (

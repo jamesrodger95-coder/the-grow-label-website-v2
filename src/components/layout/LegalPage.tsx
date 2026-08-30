@@ -37,7 +37,7 @@ export function LegalPage({
         lead={lead}
       />
 
-      <section className="surface--bone on-light section">
+      <section className="surface--paper on-light section">
         <div className="shell">
           <div className="two-col">
             <Reveal>

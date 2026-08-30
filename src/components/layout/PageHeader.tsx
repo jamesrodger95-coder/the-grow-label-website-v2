@@ -27,7 +27,7 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <section className="phead surface--void on-dark" aria-labelledby="page-title">
+    <section className="phead surface--black on-dark" aria-labelledby="page-title">
       <div className="shell">
         <div className="phead__inner">
           <div className="phead__meta">
@@ -37,7 +37,7 @@ export function PageHeader({
 
           <div className={aside ? 'phead__body phead__body--split' : 'phead__body'}>
             <div>
-              <Reveal variant="reveal">
+              <Reveal variant="line">
                 <h1 className="display d2 phead__title" id="page-title">
                   {title}
                   {emphasis ? (
