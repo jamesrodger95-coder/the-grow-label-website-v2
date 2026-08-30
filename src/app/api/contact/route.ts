@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { contactSchema, toFieldErrors, type ContactResult } from '@/lib/contact-schema';
+import type { ContactResult } from '@/lib/contact-fields';
+import { contactSchema, toFieldErrors } from '@/lib/contact-schema';
 import { clientKey, rateLimit } from '@/lib/rate-limit';
 import { deliver } from '@/lib/delivery';
 import { deliveryMode } from '@/lib/env';

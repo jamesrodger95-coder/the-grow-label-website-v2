@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import {
   SECTORS,
   SECTOR_LABELS,
@@ -8,7 +8,7 @@ import {
   SITE_LABELS,
   type ContactResult,
   type FieldErrors,
-} from '@/lib/contact-schema';
+} from '@/lib/contact-fields';
 
 /**
  * Assessment request form.
@@ -20,14 +20,26 @@ import {
 
 type Status = 'idle' | 'submitting' | 'success' | 'error' | 'unconfigured';
 
-export function AssessmentForm({ configured, dataNotice }: { configured: boolean; dataNotice: string }) {
+export function AssessmentForm({
+  configured,
+  dataNotice,
+}: {
+  configured: boolean;
+  dataNotice: string;
+}) {
   const formId = useId();
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
   const [reference, setReference] = useState('');
   const [errors, setErrors] = useState<FieldErrors>({});
-  const mountedAt = useRef<number>(Date.now());
+  // Set from an effect rather than during render: Date.now() is impure, and
+  // the value is only meaningful once the form is actually on screen.
+  const mountedAt = useRef<number>(0);
   const statusRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
 
   const fid = (name: string) => `${formId}-${name}`;
   const eid = (name: string) => `${formId}-${name}-error`;
@@ -47,7 +59,7 @@ export function AssessmentForm({ configured, dataNotice }: { configured: boolean
       sites: String(data.get('sites') ?? ''),
       message: String(data.get('message') ?? ''),
       website: String(data.get('website') ?? ''),
-      elapsed: Date.now() - mountedAt.current,
+      elapsed: mountedAt.current === 0 ? 0 : Date.now() - mountedAt.current,
     };
 
     setStatus('submitting');

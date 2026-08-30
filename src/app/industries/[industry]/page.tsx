@@ -16,11 +16,7 @@ export function generateStaticParams(): Params[] {
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { industry: slug } = await params;
   const industry = getIndustry(slug);
   if (!industry) return { title: 'Sector not found' };
@@ -149,9 +145,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
                     </span>
                     <span className="lrow__val">{workflow.reads}</span>
                   </span>
-                  <span className="lrow__tag accent">
-                    {workflow.module}
-                  </span>
+                  <span className="lrow__tag accent">{workflow.module}</span>
                 </div>
               </Reveal>
             ))}

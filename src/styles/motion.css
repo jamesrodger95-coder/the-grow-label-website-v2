@@ -13,7 +13,7 @@
    VERB 01 — DETECT
    Content appears where it already is: a short rise plus opacity.
    ------------------------------------------------------------------------ */
-[data-motion='on'] .m-detect {
+[data-motion="on"] .m-detect {
   opacity: 0;
   transform: translate3d(0, 10px, 0);
   transition:
@@ -22,32 +22,32 @@
   transition-delay: calc(var(--i, 0) * 45ms);
   will-change: opacity, transform;
 }
-[data-motion='on'] .m-detect[data-inview='true'] {
+[data-motion="on"] .m-detect[data-inview="true"] {
   opacity: 1;
   transform: none;
   will-change: auto;
 }
 
 /* Display type reveals from behind a clipping edge rather than fading. */
-[data-motion='on'] .m-reveal {
+[data-motion="on"] .m-reveal {
   clip-path: inset(0 0 108% 0);
   transition: clip-path var(--gl-dur-slow) var(--gl-ease-settle);
   transition-delay: calc(var(--i, 0) * 70ms);
   will-change: clip-path;
 }
-[data-motion='on'] .m-reveal[data-inview='true'] {
+[data-motion="on"] .m-reveal[data-inview="true"] {
   clip-path: inset(-25% -8% -25% -8%);
   will-change: auto;
 }
 
 /* A hairline draws in from its leading edge. */
-[data-motion='on'] .m-rule {
+[data-motion="on"] .m-rule {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--gl-dur-slow) var(--gl-ease-out);
   transition-delay: calc(var(--i, 0) * 45ms);
 }
-[data-motion='on'] .m-rule[data-inview='true'] {
+[data-motion="on"] .m-rule[data-inview="true"] {
   transform: scaleX(1);
 }
 
@@ -56,28 +56,30 @@
    Scattered marks migrate onto the column grid.
    ------------------------------------------------------------------------ */
 .signalfield__mark {
-  /* Cursor proximity (--lift, 0–1) brightens and extends a mark very slightly. */
-  transform: translate3d(var(--dx, 0px), 0, 0);
+  /* Entrance is pure CSS: the hero paints complete with no JavaScript on the
+     critical path. Cursor proximity (--lift, 0-1) is layered on afterwards by
+     PointerSignals, and simply never arrives on touch or reduced motion. */
   transform-origin: left center;
   scale: calc(1 + var(--lift, 0) * 0.14) 1;
-  opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
-}
-[data-motion='on'] .signalfield__mark {
-  opacity: 0;
+  animation: gl-signal-in var(--gl-dur-scene) var(--gl-ease-settle) both;
+  animation-delay: calc(400ms + var(--i, 0) * 90ms);
   transition:
-    opacity var(--gl-dur-slow) var(--gl-ease-out),
-    scale var(--gl-dur-base) var(--gl-ease-out),
-    transform var(--gl-dur-scene) var(--gl-ease-settle);
-  transition-delay: calc(400ms + var(--i, 0) * 90ms);
+    opacity var(--gl-dur-base) var(--gl-ease-out),
+    scale var(--gl-dur-base) var(--gl-ease-out);
 }
-[data-motion='on'] .signalfield[data-inview='true'] .signalfield__mark {
-  opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
-  transition-delay:
-    calc(400ms + var(--i, 0) * 90ms), 0ms, calc(400ms + var(--i, 0) * 90ms);
+@keyframes gl-signal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--dx, 0px), 0, 0);
+  }
+  to {
+    opacity: calc(var(--o, 0.24) + var(--lift, 0) * 0.55);
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Capacity slots resolve from open to recovered, in order. */
-[data-motion='on'] .capslot {
+[data-motion="on"] .capslot {
   transition:
     background-color var(--gl-dur-base) var(--gl-ease-out),
     box-shadow var(--gl-dur-base) var(--gl-ease-out);
@@ -88,14 +90,14 @@
    VERB 03 — SETTLE
    Value bars step out through the four stages.
    ------------------------------------------------------------------------ */
-[data-motion='on'] .stagebar__fill {
+[data-motion="on"] .stagebar__fill {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--gl-dur-scene) var(--gl-ease-settle);
   transition-delay: calc(var(--i, 0) * 130ms);
   will-change: transform;
 }
-[data-motion='on'] .stagebar[data-inview='true'] .stagebar__fill {
+[data-motion="on"] .stagebar[data-inview="true"] .stagebar__fill {
   transform: scaleX(1);
   will-change: auto;
 }
@@ -127,7 +129,7 @@
     transform var(--gl-dur-slow) var(--gl-ease-out);
   pointer-events: none;
 }
-.sequence__frame[data-active='true'] {
+.sequence__frame[data-active="true"] {
   opacity: 1;
   transform: none;
   pointer-events: auto;
@@ -138,7 +140,7 @@
   transform: none;
   pointer-events: auto;
 }
-[data-motion='on'] .sequence__frame:last-child:not([data-active='true']) {
+[data-motion="on"] .sequence__frame:last-child:not([data-active="true"]) {
   opacity: 0;
   transform: translate3d(0, 12px, 0);
   pointer-events: none;
@@ -162,7 +164,7 @@
   padding-left: 16px;
 }
 .sequence__step::before {
-  content: '';
+  content: "";
   position: absolute;
   inset-inline: 0;
   top: 0;
@@ -172,10 +174,10 @@
   transform-origin: left;
   transition: transform var(--gl-dur-base) var(--gl-ease-precise);
 }
-.sequence__step[data-active='true']::before {
+.sequence__step[data-active="true"]::before {
   transform: scaleX(1);
 }
-.sequence__step[data-active='true'] .sequence__stepname {
+.sequence__step[data-active="true"] .sequence__stepname {
   color: var(--gl-on-dark);
 }
 .sequence__stepname {
@@ -269,19 +271,22 @@
    Reduced motion — final states, immediately. Nothing is merely disabled.
    ------------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  [data-motion='on'] .m-detect,
-  [data-motion='on'] .m-reveal,
-  [data-motion='on'] .m-rule,
-  [data-motion='on'] .stagebar__fill,
-  [data-motion='on'] .signalfield__mark {
+  [data-motion="on"] .m-detect,
+  [data-motion="on"] .m-reveal,
+  [data-motion="on"] .m-rule,
+  [data-motion="on"] .stagebar__fill {
     opacity: 1;
     transform: none;
     clip-path: none;
     transition-duration: 1ms;
     transition-delay: 0ms;
   }
-  [data-motion='on'] .signalfield__mark {
+  /* The marks are present at their authored strength, with no drift or delay. */
+  .signalfield__mark {
+    animation: none;
     opacity: var(--o, 0.24);
+    transform: none;
+    scale: 1;
   }
   .drawer,
   .drawer__link {

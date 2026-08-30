@@ -109,7 +109,11 @@ export default function StyleguidePage() {
               <div key={name}>
                 <span
                   style={
-                    { display: 'block', height: 60, background: `var(--stage-${i + 1})` } as CSSProperties
+                    {
+                      display: 'block',
+                      height: 60,
+                      background: `var(--stage-${i + 1})`,
+                    } as CSSProperties
                   }
                 />
                 <span className="label" style={{ display: 'block', marginTop: 10 }}>
@@ -142,8 +146,8 @@ export default function StyleguidePage() {
             heading.
           </p>
           <p className="body" style={{ marginBottom: 20 }}>
-            Body copy. Archivo at 380 weight, 1.62 line height, capped at 68 characters. Numerals are
-            tabular throughout: 1,204 · 0.42 · £248,610.
+            Body copy. Archivo at 380 weight, 1.62 line height, capped at 68 characters. Numerals
+            are tabular throughout: 1,204 · 0.42 · £248,610.
           </p>
           <p className="small" style={{ marginBottom: 12 }}>
             Small copy, used inside ledger rows and step lists.
@@ -241,7 +245,11 @@ export default function StyleguidePage() {
           </p>
           <StepList
             items={[
-              { index: '01', title: 'First step', detail: 'Numbered only where order carries meaning.' },
+              {
+                index: '01',
+                title: 'First step',
+                detail: 'Numbered only where order carries meaning.',
+              },
               { index: '02', title: 'Second step', detail: 'Hairline separated, never boxed.' },
             ]}
           />
@@ -303,7 +311,9 @@ export default function StyleguidePage() {
             <div className="split__panel" style={{ background: 'var(--gl-bone)' }}>
               <span className="label label--accent">Panel two</span>
               <h3 className="display d4">Corner radius is zero on structure.</h3>
-              <p className="small">Only interactive controls get 2px, and only for the hit target.</p>
+              <p className="small">
+                Only interactive controls get 2px, and only for the hit target.
+              </p>
             </div>
           </div>
           <PullStatement

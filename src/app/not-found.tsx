@@ -26,10 +26,7 @@ export default function NotFound() {
           <ActionLink href="/">Back to the homepage</ActionLink>
         </div>
 
-        <div
-          className="kv"
-          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))' }}
-        >
+        <div className="kv" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))' }}>
           {NAV_GROUPS.map((group) => (
             <div className="kv__cell" key={group.id} style={{ background: 'var(--gl-void)' }}>
               <p className="label kv__key">{group.label}</p>

@@ -92,7 +92,10 @@ function contextAround(text: string, index: number): string {
 function assertedHits(text: string, patterns: RegExp[]): string[] {
   const found: string[] = [];
   for (const pattern of patterns) {
-    const rx = new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`);
+    const rx = new RegExp(
+      pattern.source,
+      pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`
+    );
     for (const match of text.matchAll(rx)) {
       if (match.index === undefined) continue;
       if (NEGATIONS.test(contextAround(text, match.index))) continue;
@@ -188,31 +191,31 @@ describe('value stages', () => {
 describe('module definitions', () => {
   it('cover every required part of the module page template', () => {
     expect(MODULES).toHaveLength(4);
-    for (const module of MODULES) {
-      expect(module.problem.body.length).toBeGreaterThan(0);
-      expect(module.monitors.length).toBeGreaterThan(2);
-      expect(module.actions.length).toBeGreaterThan(2);
-      expect(module.clientControls.length).toBeGreaterThan(2);
-      expect(module.escalation.length).toBeGreaterThan(2);
-      expect(module.stages).toHaveLength(4);
-      expect(module.dataRequired.length).toBeGreaterThan(1);
-      expect(module.dataNotRequired.length).toBeGreaterThan(0);
-      expect(module.evidence.length).toBeGreaterThan(1);
-      expect(module.outcome.length).toBeGreaterThan(0);
-      expect(module.cta.href).toBe('/contact');
+    for (const mod of MODULES) {
+      expect(mod.problem.body.length).toBeGreaterThan(0);
+      expect(mod.monitors.length).toBeGreaterThan(2);
+      expect(mod.actions.length).toBeGreaterThan(2);
+      expect(mod.clientControls.length).toBeGreaterThan(2);
+      expect(mod.escalation.length).toBeGreaterThan(2);
+      expect(mod.stages).toHaveLength(4);
+      expect(mod.dataRequired.length).toBeGreaterThan(1);
+      expect(mod.dataNotRequired.length).toBeGreaterThan(0);
+      expect(mod.evidence.length).toBeGreaterThan(1);
+      expect(mod.outcome.length).toBeGreaterThan(0);
+      expect(mod.cta.href).toBe('/contact');
     }
   });
 
   it('maps every module against all four value stages', () => {
     const names = VALUE_STAGES.map((s) => s.name);
-    for (const module of MODULES) {
-      expect(module.stages.map((s) => s.stage)).toEqual(names);
+    for (const mod of MODULES) {
+      expect(mod.stages.map((s) => s.stage)).toEqual(names);
     }
   });
 
   it('states a data boundary that excludes clinical records', () => {
-    for (const module of MODULES) {
-      const excluded = module.dataNotRequired.join(' ').toLowerCase();
+    for (const mod of MODULES) {
+      const excluded = mod.dataNotRequired.join(' ').toLowerCase();
       expect(excluded).toMatch(/clinical|treatment|notes|record/);
     }
   });

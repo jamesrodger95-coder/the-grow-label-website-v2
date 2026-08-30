@@ -585,7 +585,8 @@ textarea.field__control {
 }
 select.field__control {
   appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+  background-image:
+    linear-gradient(45deg, transparent 50%, currentColor 50%),
     linear-gradient(135deg, currentColor 50%, transparent 50%);
   background-position:
     calc(100% - 20px) calc(50% + 1px),
@@ -868,11 +869,11 @@ select.field__control {
   line-height: 1.45;
   color: var(--faint);
 }
-.rail-index__item[aria-current='page'] {
+.rail-index__item[aria-current="page"] {
   background: var(--rule-soft);
 }
-.rail-index__item[aria-current='page'] .rail-index__num,
-.rail-index__item[aria-current='page'] .rail-index__name {
+.rail-index__item[aria-current="page"] .rail-index__num,
+.rail-index__item[aria-current="page"] .rail-index__name {
   color: var(--accent);
 }
 .rail-index__foot {

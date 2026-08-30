@@ -1,0 +1,134 @@
+[
+  {
+    "name": "home",
+    "path": "/",
+    "scores": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2688,
+      "cls": 0,
+      "tbt": 57,
+      "bytes": 318293,
+      "scriptBytes": 152202
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2688ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "platform",
+    "path": "/platform",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2521,
+      "cls": 0,
+      "tbt": 58,
+      "bytes": 266443,
+      "scriptBytes": 152202
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2521ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "module",
+    "path": "/modules/answer",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2516,
+      "cls": 0,
+      "tbt": 54,
+      "bytes": 301679,
+      "scriptBytes": 152202
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2516ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "veterinary",
+    "path": "/industries/veterinary",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2510,
+      "cls": 0,
+      "tbt": 45,
+      "bytes": 264482,
+      "scriptBytes": 152202
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2510ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "methodology",
+    "path": "/methodology",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2513,
+      "cls": 0,
+      "tbt": 51,
+      "bytes": 265467,
+      "scriptBytes": 152202
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2513ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "contact",
+    "path": "/contact",
+    "scores": {
+      "performance": 97,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2520,
+      "cls": 0,
+      "tbt": 56,
+      "bytes": 263885,
+      "scriptBytes": 154205
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2520ms over the 2500ms target"
+    ]
+  }
+]

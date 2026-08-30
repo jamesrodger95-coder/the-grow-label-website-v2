@@ -25,7 +25,9 @@ test.describe('no horizontal overflow at any breakpoint', () => {
           return { scroll: el.scrollWidth, client: el.clientWidth, wide };
         });
         if (result) {
-          offenders.push(`${route.path} ${result.scroll}>${result.client} :: ${result.wide.join(', ')}`);
+          offenders.push(
+            `${route.path} ${result.scroll}>${result.client} :: ${result.wide.join(', ')}`
+          );
         }
       }
 
@@ -100,7 +102,10 @@ test.describe('mobile navigation', () => {
       const box = await el.boundingBox();
       if (!box) continue;
       const name = await el.innerText();
-      expect(Math.min(box.width, box.height), `target "${name.slice(0, 24)}"`).toBeGreaterThanOrEqual(24);
+      expect(
+        Math.min(box.width, box.height),
+        `target "${name.slice(0, 24)}"`
+      ).toBeGreaterThanOrEqual(24);
     }
 
     // Primary calls to action are held to the more generous 44px.

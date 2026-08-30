@@ -1,15 +1,17 @@
-'use client';
-
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { usePrefersReducedMotion } from './useInView';
+import type { CSSProperties } from 'react';
+import { PointerSignals } from './PointerSignals';
 
 /**
  * The hero's scattered revenue signals.
  *
- * Purely decorative (aria-hidden) and cheap: seven absolutely positioned
- * hairlines whose entrance is a CSS transition. On desktop with a fine pointer
- * the marks nearest the cursor lift slightly — one rAF-throttled pointermove
- * listener, transform and opacity only, torn down on unmount.
+ * Server-rendered and decorative. The entrance is a pure CSS animation, so the
+ * hero paints complete with no JavaScript on the critical path; the only client
+ * code is the small pointer-proximity enhancement, which does nothing until it
+ * loads and nothing at all on touch or under reduced motion.
+ *
+ * Positions sit in the corridor between the headline and the capacity column,
+ * so the marks never collide with either. Widths and opacities vary because the
+ * point is that real signals arrive at different strengths.
  */
 
 type Mark = {
@@ -18,15 +20,10 @@ type Mark = {
   top: number;
   width: number;
   opacity: number;
-  /** Horizontal offset the mark starts from before it consolidates. */
+  /** Horizontal offset the mark travels from as it consolidates. */
   drift: number;
 };
 
-/**
- * Positions sit in the corridor between the headline and the capacity column,
- * so the marks never collide with either. Widths and opacities vary because
- * the point is that real signals arrive at different strengths.
- */
 const MARKS: Mark[] = [
   { left: 51, top: 14, width: 46, opacity: 0.3, drift: -30 },
   { left: 60, top: 24, width: 62, opacity: 0.44, drift: 34 },
@@ -39,63 +36,8 @@ const MARKS: Mark[] = [
 ];
 
 export function SignalField() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [active, setActive] = useState(false);
-  const reduced = usePrefersReducedMotion();
-
-  // Reveal on mount (the hero is above the fold, so there is nothing to observe).
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setActive(true));
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  // Cursor proximity — fine pointers only, and never under reduced motion.
-  useEffect(() => {
-    const host = ref.current;
-    if (!host || reduced) return;
-    if (!window.matchMedia('(pointer: fine)').matches) return;
-
-    const marks = Array.from(host.querySelectorAll<HTMLElement>('[data-mark]'));
-    let frame = 0;
-    let pending: { x: number; y: number } | null = null;
-
-    const apply = () => {
-      frame = 0;
-      const point = pending;
-      if (!point) return;
-      const box = host.getBoundingClientRect();
-      for (const mark of marks) {
-        const m = mark.getBoundingClientRect();
-        const dx = m.left + m.width / 2 - point.x;
-        const dy = m.top + m.height / 2 - point.y;
-        const distance = Math.hypot(dx, dy);
-        const reach = Math.max(220, box.width * 0.18);
-        const proximity = Math.max(0, 1 - distance / reach);
-        mark.style.setProperty('--lift', proximity.toFixed(3));
-      }
-    };
-
-    const onMove = (event: PointerEvent) => {
-      pending = { x: event.clientX, y: event.clientY };
-      if (!frame) frame = requestAnimationFrame(apply);
-    };
-
-    const onLeave = () => {
-      for (const mark of marks) mark.style.setProperty('--lift', '0');
-    };
-
-    window.addEventListener('pointermove', onMove, { passive: true });
-    document.addEventListener('pointerleave', onLeave);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerleave', onLeave);
-      if (frame) cancelAnimationFrame(frame);
-      onLeave();
-    };
-  }, [reduced]);
-
   return (
-    <div className="signalfield" ref={ref} data-inview={active ? 'true' : 'false'} aria-hidden="true">
+    <div className="signalfield" aria-hidden="true">
       <div className="signalfield__grid" />
       {MARKS.map((mark, i) => (
         <span
@@ -108,12 +50,13 @@ export function SignalField() {
               top: `${mark.top}%`,
               width: mark.width,
               '--o': mark.opacity,
-              '--dx': active || reduced ? '0px' : `${mark.drift}px`,
+              '--dx': `${mark.drift}px`,
               '--i': i,
             } as CSSProperties
           }
         />
       ))}
+      <PointerSignals />
     </div>
   );
 }

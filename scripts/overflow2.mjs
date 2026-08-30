@@ -12,7 +12,9 @@ const rows = await p.evaluate(() => {
     if (el.scrollWidth > el.clientWidth + 1 && el.clientWidth > 0) {
       const cs = getComputedStyle(el);
       const cls = typeof el.className === 'string' ? el.className.trim() : '';
-      out.push(`${el.tagName.toLowerCase()}.${cls.slice(0,60)} scrollW=${el.scrollWidth} clientW=${el.clientWidth} ovx=${cs.overflowX} disp=${cs.display} :: "${(el.textContent||'').trim().slice(0,50)}"`);
+      out.push(
+        `${el.tagName.toLowerCase()}.${cls.slice(0, 60)} scrollW=${el.scrollWidth} clientW=${el.clientWidth} ovx=${cs.overflowX} disp=${cs.display} :: "${(el.textContent || '').trim().slice(0, 50)}"`
+      );
     }
   }
   return out;

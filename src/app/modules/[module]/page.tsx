@@ -3,55 +3,46 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
-import {
-  ActionLink,
-  SectionHeader,
-  StepList,
-  TextLink,
-} from '@/components/primitives';
+import { ActionLink, SectionHeader, StepList, TextLink } from '@/components/primitives';
 import { ModuleRail } from '@/components/layout/ModuleRail';
 import { getModule, MODULES, MODULE_SLUGS } from '@/content/modules';
 
 type Params = { module: string };
 
 export function generateStaticParams(): Params[] {
-  return MODULE_SLUGS.map((module) => ({ module }));
+  return MODULE_SLUGS.map((slug) => ({ module: slug }));
 }
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { module: slug } = await params;
-  const module = getModule(slug);
-  if (!module) return { title: 'Module not found' };
+  const mod = getModule(slug);
+  if (!mod) return { title: 'Module not found' };
   return {
-    title: module.name,
-    description: module.lead,
-    alternates: { canonical: `/modules/${module.slug}` },
+    title: mod.name,
+    description: mod.lead,
+    alternates: { canonical: `/modules/${mod.slug}` },
   };
 }
 
 export default async function ModulePage({ params }: { params: Promise<Params> }) {
   const { module: slug } = await params;
-  const module = getModule(slug);
-  if (!module) notFound();
+  const mod = getModule(slug);
+  if (!mod) notFound();
 
-  const others = MODULES.filter((m) => m.slug !== module.slug);
+  const others = MODULES.filter((m) => m.slug !== mod.slug);
 
   return (
     <>
       <PageHeader
-        label={`Module 0${module.index} / 04`}
-        title={module.name}
-        lead={module.lead}
-        aside={<ModuleRail current={module.slug} />}
+        label={`Module 0${mod.index} / 04`}
+        title={mod.name}
+        lead={mod.lead}
+        aside={<ModuleRail current={mod.slug} />}
         strip={[
-          { key: 'Monitors', detail: module.monitors.map((m) => m.key).join(' · ') },
-          { key: 'Acts on', detail: module.actions.map((a) => a.key).join(' · ') },
+          { key: 'Monitors', detail: mod.monitors.map((m) => m.key).join(' · ') },
+          { key: 'Acts on', detail: mod.actions.map((a) => a.key).join(' · ') },
           { key: 'Stays with you', detail: 'Clinical judgement, pricing, suppression, tone' },
           { key: 'Reports at', detail: 'Estimated → Booked → Attended → Collected' },
         ]}
@@ -65,12 +56,12 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               num="§ 01 / 06"
               aside="The problem"
               id="problem-title"
-              title={module.problem.title}
+              title={mod.problem.title}
             />
           </Reveal>
           <div className="two-col">
             <Reveal>
-              {module.problem.body.map((paragraph) => (
+              {mod.problem.body.map((paragraph) => (
                 <p className="body" key={paragraph.slice(0, 24)}>
                   {paragraph}
                 </p>
@@ -81,7 +72,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 What this module monitors
               </p>
               <div className="ledger">
-                {module.monitors.map((item, i) => (
+                {mod.monitors.map((item, i) => (
                   <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
@@ -116,7 +107,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 Actions taken
               </p>
               <div className="ledger">
-                {module.actions.map((item, i) => (
+                {mod.actions.map((item, i) => (
                   <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
@@ -134,7 +125,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 What your team still controls
               </p>
               <ul className="ticks">
-                {module.clientControls.map((item) => (
+                {mod.clientControls.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
@@ -165,7 +156,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 <span className="label">Trigger</span>
                 <span className="label">What happens</span>
               </div>
-              {module.escalation.map((row) => (
+              {mod.escalation.map((row) => (
                 <div className="ladder__row" key={row.trigger}>
                   <p className="ladder__trigger">{row.trigger}</p>
                   <p className="ladder__handover">{row.handover}</p>
@@ -194,7 +185,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 Relevant revenue stages
               </p>
               <div className="matrix">
-                {module.stages.map((row) => (
+                {mod.stages.map((row) => (
                   <div className="matrix__row" key={row.stage}>
                     <span className="lrow__key">{row.stage}</span>
                     <span
@@ -216,7 +207,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 Operational data required
               </p>
               <div className="ledger">
-                {module.dataRequired.map((item, i) => (
+                {mod.dataRequired.map((item, i) => (
                   <div className="lrow lrow--pair" key={item.key}>
                     <span className="lrow__idx">{`0${i + 1}`}</span>
                     <span>
@@ -232,7 +223,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 Explicitly not required
               </p>
               <ul className="ticks">
-                {module.dataNotRequired.map((item) => (
+                {mod.dataNotRequired.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
@@ -255,7 +246,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
           </Reveal>
           <Reveal>
             <StepList
-              items={module.evidence.map((e, i) => ({
+              items={mod.evidence.map((e, i) => ({
                 index: `0${i + 1}`,
                 title: e.key,
                 detail: e.detail,
@@ -276,15 +267,13 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               <h2 className="display d2" id="outcome-title" style={{ marginBottom: 28 }}>
                 What changes on the schedule <em>and in the ledger.</em>
               </h2>
-              {module.outcome.map((paragraph) => (
+              {mod.outcome.map((paragraph) => (
                 <p className="body" key={paragraph.slice(0, 24)}>
                   {paragraph}
                 </p>
               ))}
               <div style={{ marginTop: 36 }}>
-                <ActionLink href={module.cta.href}>
-                  {`${module.cta.label} for ${module.name}`}
-                </ActionLink>
+                <ActionLink href={mod.cta.href}>{`${mod.cta.label} for ${mod.name}`}</ActionLink>
               </div>
             </Reveal>
             <Reveal index={1}>

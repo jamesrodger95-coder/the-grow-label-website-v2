@@ -6,40 +6,40 @@
 
 :root {
   /* --- Surfaces: cinematic dark ------------------------------------------ */
-  --gl-void:        #08080b;   /* deepest — hero, footer, signature sequences */
-  --gl-ink:         #0e0e13;   /* standard dark section */
-  --gl-ink-raised:  #16161d;   /* elevated dark panel */
-  --gl-ink-sunken:  #050507;   /* recessed wells inside dark */
+  --gl-void: #08080b; /* deepest — hero, footer, signature sequences */
+  --gl-ink: #0e0e13; /* standard dark section */
+  --gl-ink-raised: #16161d; /* elevated dark panel */
+  --gl-ink-sunken: #050507; /* recessed wells inside dark */
 
   /* --- Surfaces: bone light ---------------------------------------------- */
-  --gl-paper:       #f6f6f3;   /* lightest */
-  --gl-bone:        #edede9;   /* primary light section */
-  --gl-bone-deep:   #e0e0db;   /* light-grey band */
+  --gl-paper: #f6f6f3; /* lightest */
+  --gl-bone: #edede9; /* primary light section */
+  --gl-bone-deep: #e0e0db; /* light-grey band */
 
   /* --- Ink --------------------------------------------------------------- */
-  --gl-on-dark:            #f4f3ef;
-  --gl-on-dark-muted:      rgba(244, 243, 239, 0.74);
-  --gl-on-dark-faint:      rgba(244, 243, 239, 0.55);
-  --gl-on-dark-ghost:      rgba(244, 243, 239, 0.16);
-  --gl-on-light:           #101018;
-  --gl-on-light-muted:     rgba(16, 16, 24, 0.80);
-  --gl-on-light-faint:     rgba(16, 16, 24, 0.64);
-  --gl-on-light-ghost:     rgba(16, 16, 24, 0.14);
+  --gl-on-dark: #f4f3ef;
+  --gl-on-dark-muted: rgba(244, 243, 239, 0.74);
+  --gl-on-dark-faint: rgba(244, 243, 239, 0.55);
+  --gl-on-dark-ghost: rgba(244, 243, 239, 0.16);
+  --gl-on-light: #101018;
+  --gl-on-light-muted: rgba(16, 16, 24, 0.8);
+  --gl-on-light-faint: rgba(16, 16, 24, 0.64);
+  --gl-on-light-ghost: rgba(16, 16, 24, 0.14);
 
   /* --- Hairlines (the ledger rules) -------------------------------------- */
-  --gl-rule-dark:      rgba(244, 243, 239, 0.13);
+  --gl-rule-dark: rgba(244, 243, 239, 0.13);
   --gl-slot-open-dark: rgba(244, 243, 239, 0.26);
-  --gl-slot-open-light: rgba(16, 16, 24, 0.30);
+  --gl-slot-open-light: rgba(16, 16, 24, 0.3);
   --gl-rule-dark-soft: rgba(244, 243, 239, 0.07);
-  --gl-rule-light:     rgba(16, 16, 24, 0.16);
-  --gl-rule-light-soft:rgba(16, 16, 24, 0.08);
+  --gl-rule-light: rgba(16, 16, 24, 0.16);
+  --gl-rule-light-soft: rgba(16, 16, 24, 0.08);
 
   /* --- The single accent: signal violet ---------------------------------- */
-  --gl-signal:        #9a8fe6;  /* on dark  — 7.4:1 on --gl-void */
-  --gl-signal-deep:   #453a96;  /* on light — 7.9:1 on --gl-bone */
-  --gl-signal-core:   #5a4cc0;  /* brand mark */
-  --gl-signal-wash:   rgba(154, 143, 230, 0.14);
-  --gl-signal-trace:  rgba(154, 143, 230, 0.30);
+  --gl-signal: #9a8fe6; /* on dark  — 7.4:1 on --gl-void */
+  --gl-signal-deep: #453a96; /* on light — 7.9:1 on --gl-bone */
+  --gl-signal-core: #5a4cc0; /* brand mark */
+  --gl-signal-wash: rgba(154, 143, 230, 0.14);
+  --gl-signal-trace: rgba(154, 143, 230, 0.3);
   --gl-signal-wash-l: rgba(69, 58, 150, 0.09);
 
   /* --- Value-stage ramp (Estimated -> Booked -> Attended -> Collected) ----
@@ -47,15 +47,15 @@
      these are the same money at four levels of certainty.                   */
   --gl-stage-1: rgba(154, 143, 230, 0.24);
   --gl-stage-2: rgba(154, 143, 230, 0.46);
-  --gl-stage-3: rgba(154, 143, 230, 0.70);
+  --gl-stage-3: rgba(154, 143, 230, 0.7);
   --gl-stage-4: #9a8fe6;
   --gl-stage-1-l: rgba(69, 58, 150, 0.18);
-  --gl-stage-2-l: rgba(69, 58, 150, 0.40);
+  --gl-stage-2-l: rgba(69, 58, 150, 0.4);
   --gl-stage-3-l: rgba(69, 58, 150, 0.68);
   --gl-stage-4-l: #453a96;
 
   /* --- Status ------------------------------------------------------------ */
-  --gl-alert:      #e0574f;
+  --gl-alert: #e0574f;
   --gl-alert-deep: #a52a22;
 
   /* --- Typefaces ---------------------------------------------------------
@@ -63,28 +63,28 @@
      Sans    : Archivo (variable) — grotesque with authority, dense UI text
      Mono    : IBM Plex Mono     — ledger labels, section numbers, figures   */
   --gl-font-display: var(--font-instrument-serif), "Instrument Serif", "Times New Roman", serif;
-  --gl-font-sans:    var(--font-archivo), Archivo, "Helvetica Neue", Arial, sans-serif;
-  --gl-font-mono:    var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  --gl-font-sans: var(--font-archivo), Archivo, "Helvetica Neue", Arial, sans-serif;
+  --gl-font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
 
   /* --- Type scale (fluid) ------------------------------------------------- */
   --gl-t-display-1: clamp(2.75rem, 7.2vw, 7rem);
   --gl-t-display-2: clamp(2.375rem, 5.6vw, 5rem);
   --gl-t-display-3: clamp(1.875rem, 3.6vw, 3.125rem);
   --gl-t-display-4: clamp(1.5rem, 2.4vw, 2.125rem);
-  --gl-t-lead:      clamp(1.0625rem, 1.35vw, 1.3125rem);
-  --gl-t-body:      1rem;
-  --gl-t-small:     0.875rem;
-  --gl-t-micro:     0.8125rem;
-  --gl-t-label:     0.6875rem;
-  --gl-t-figure:    clamp(1.75rem, 3.4vw, 3rem);
+  --gl-t-lead: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  --gl-t-body: 1rem;
+  --gl-t-small: 0.875rem;
+  --gl-t-micro: 0.8125rem;
+  --gl-t-label: 0.6875rem;
+  --gl-t-figure: clamp(1.75rem, 3.4vw, 3rem);
   --gl-t-figure-sm: clamp(1.25rem, 2vw, 1.625rem);
 
   --gl-lh-display: 0.94;
-  --gl-lh-tight:   1.12;
-  --gl-lh-snug:    1.32;
-  --gl-lh-body:    1.62;
+  --gl-lh-tight: 1.12;
+  --gl-lh-snug: 1.32;
+  --gl-lh-body: 1.62;
   --gl-tr-display: -0.03em;
-  --gl-tr-label:   0.15em;
+  --gl-tr-label: 0.15em;
 
   /* --- Structure ---------------------------------------------------------
      --gl-slot is the schedule-slot unit the whole grid is tuned to.         */
@@ -115,13 +115,13 @@
   /* --- Motion ------------------------------------------------------------
      Three verbs only: detect (fade in place), consolidate (migrate to grid),
      settle (step / count into final state).                                  */
-  --gl-dur-fast:  160ms;
-  --gl-dur-base:  340ms;
-  --gl-dur-slow:  680ms;
+  --gl-dur-fast: 160ms;
+  --gl-dur-base: 340ms;
+  --gl-dur-slow: 680ms;
   --gl-dur-scene: 1100ms;
-  --gl-ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
-  --gl-ease-inout:   cubic-bezier(0.65, 0, 0.35, 1);
-  --gl-ease-settle:  cubic-bezier(0.16, 1, 0.3, 1);
+  --gl-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --gl-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --gl-ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
   --gl-ease-precise: cubic-bezier(0.4, 0, 0.1, 1);
 
   /* --- Focus -------------------------------------------------------------- */

@@ -21,11 +21,7 @@ const dateFormat = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'UTC',
 });
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<Params>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const insight = getInsight(slug);
   if (!insight) return { title: 'Note not found' };

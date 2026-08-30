@@ -55,7 +55,8 @@ export const MODULES: ModuleDefinition[] = [
     monitors: [
       {
         key: 'Inbound call events',
-        detail: 'Time, duration, direction and outcome for every inbound call on the practice line.',
+        detail:
+          'Time, duration, direction and outcome for every inbound call on the practice line.',
       },
       {
         key: 'Queue abandonment',
@@ -103,7 +104,8 @@ export const MODULES: ModuleDefinition[] = [
     escalation: [
       {
         trigger: 'Any mention of an urgent or emergency situation.',
-        handover: 'Immediate transfer to the practice’s stated emergency route. No triage is given.',
+        handover:
+          'Immediate transfer to the practice’s stated emergency route. No triage is given.',
       },
       {
         trigger: 'A complaint, or a caller who asks to speak to a manager.',
@@ -124,7 +126,11 @@ export const MODULES: ModuleDefinition[] = [
         role: 'Influences',
         note: 'Detects the opportunity and prices it from your fee schedule.',
       },
-      { stage: 'Booked', role: 'Influences', note: 'Creates the appointment record where approved.' },
+      {
+        stage: 'Booked',
+        role: 'Influences',
+        note: 'Creates the appointment record where approved.',
+      },
       {
         stage: 'Attended',
         role: 'Observes',
@@ -253,13 +259,20 @@ export const MODULES: ModuleDefinition[] = [
       },
     ],
     stages: [
-      { stage: 'Estimated', role: 'Influences', note: 'Prices the enquiry from your fee schedule.' },
+      {
+        stage: 'Estimated',
+        role: 'Influences',
+        note: 'Prices the enquiry from your fee schedule.',
+      },
       { stage: 'Booked', role: 'Influences', note: 'Creates the appointment where approved.' },
       { stage: 'Attended', role: 'Observes', note: 'Reads attendance from your system.' },
       { stage: 'Collected', role: 'Observes', note: 'Reads payment from your ledger.' },
     ],
     dataRequired: [
-      { key: 'Enquiry channels', detail: 'Access to the form, inbox or message queue you receive.' },
+      {
+        key: 'Enquiry channels',
+        detail: 'Access to the form, inbox or message queue you receive.',
+      },
       { key: 'Appointment availability', detail: 'Read access to the diary for approved types.' },
       { key: 'Response policy', detail: 'Your target windows and your approved reply templates.' },
     ],

@@ -132,7 +132,9 @@ for (const [vpName, width, height] of viewports) {
 
       const issues = [];
       if (diag.overflowX)
-        issues.push(`H-OVERFLOW ${diag.scrollWidth}>${diag.clientWidth} :: ${diag.wide.join(' | ')}`);
+        issues.push(
+          `H-OVERFLOW ${diag.scrollWidth}>${diag.clientWidth} :: ${diag.wide.join(' | ')}`
+        );
       if (diag.h1s !== 1) issues.push(`H1-COUNT ${diag.h1s}`);
       if (diag.skips.length) issues.push(`HEADING-SKIP ${diag.skips.join(',')}`);
       if (errors.length) issues.push(`CONSOLE ${[...new Set(errors)].slice(0, 3).join(' | ')}`);

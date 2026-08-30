@@ -30,28 +30,36 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/** Flattened drawer links, numbered once so nothing is counted during render. */
+const DRAWER_ENTRIES = NAV_GROUPS.flatMap((group) =>
+  group.links.map((link) => ({ group: group.id, ...link }))
+).map((link, i) => ({ ...link, ordinal: String(i + 1).padStart(2, '0') }));
+
 export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  // The drawer is open *for a particular route*. Navigating changes `pathname`,
+  // which closes it during render — no effect, and no stale-open flash.
+  const [openFor, setOpenFor] = useState<string | null>(null);
+  const open = openFor === pathname;
+
   const drawerId = useId();
   const toggleRef = useRef<HTMLButtonElement | null>(null);
   const drawerRef = useRef<HTMLDivElement | null>(null);
 
-  const close = useCallback(() => setOpen(false), []);
-
-  // Close on route change and return focus to the control that opened it.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+  const close = useCallback(() => setOpenFor(null), []);
+  const toggle = useCallback(
+    () => setOpenFor((current) => (current === pathname ? null : pathname)),
+    [pathname]
+  );
 
   // Focus management, escape handling and scroll lock while the drawer is open.
   useEffect(() => {
     if (!open) return;
     const drawer = drawerRef.current;
-    const previouslyFocused = document.activeElement as HTMLElement | null;
+    const toggleButton = toggleRef.current;
+    const previouslyFocused = document.activeElement;
 
-    const firstLink = drawer?.querySelector<HTMLElement>('a, button');
-    firstLink?.focus();
+    drawer?.querySelector<HTMLElement>('a, button')?.focus();
 
     const { overflow } = document.body.style;
     document.body.style.overflow = 'hidden';
@@ -59,7 +67,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        setOpen(false);
+        setOpenFor(null);
         return;
       }
       if (event.key !== 'Tab' || !drawer) return;
@@ -67,18 +75,16 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
       const focusable = Array.from(
         drawer.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
       ).filter((el) => el.offsetParent !== null);
-      const toggle = toggleRef.current;
-      const cycle = toggle ? [toggle, ...focusable] : focusable;
+      const cycle = toggleButton ? [toggleButton, ...focusable] : focusable;
       if (cycle.length === 0) return;
 
       const first = cycle[0]!;
       const last = cycle[cycle.length - 1]!;
-      const activeEl = document.activeElement;
 
-      if (event.shiftKey && activeEl === first) {
+      if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && activeEl === last) {
+      } else if (!event.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }
@@ -88,11 +94,11 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = overflow;
-      if (previouslyFocused === toggleRef.current) toggleRef.current?.focus();
+      // Only pull focus back if it was the toggle that opened the drawer;
+      // a route change moves focus itself and must not be fought.
+      if (previouslyFocused === toggleButton) toggleButton?.focus();
     };
   }, [open]);
-
-  let drawerIndex = 0;
 
   return (
     <header className="nav on-dark" data-open={open ? 'true' : 'false'}>
@@ -139,7 +145,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
               className="nav__toggle"
               aria-expanded={open}
               aria-controls={drawerId}
-              onClick={() => setOpen((v) => !v)}
+              onClick={toggle}
             >
               {open ? 'Close' : 'Menu'}
               <span className="nav__burger" aria-hidden="true">
@@ -160,23 +166,20 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                   <div className="drawer__grouphead">
                     <span className="label">{group.label}</span>
                   </div>
-                  {group.links.map((link) => {
-                    drawerIndex += 1;
-                    return (
-                      <Link
-                        key={link.href}
-                        className="drawer__link"
-                        href={link.href}
-                        aria-current={isActive(pathname, link.href) ? 'page' : undefined}
-                        onClick={close}
-                        style={{ '--i': drawerIndex } as CSSProperties}
-                      >
-                        {link.label}
-                        {/* Decorative ordinal: keep it out of the link name. */}
-                        <span aria-hidden="true">{String(drawerIndex).padStart(2, '0')}</span>
-                      </Link>
-                    );
-                  })}
+                  {DRAWER_ENTRIES.filter((entry) => entry.group === group.id).map((entry) => (
+                    <Link
+                      key={entry.href}
+                      className="drawer__link"
+                      href={entry.href}
+                      aria-current={isActive(pathname, entry.href) ? 'page' : undefined}
+                      onClick={close}
+                      style={{ '--i': Number(entry.ordinal) } as CSSProperties}
+                    >
+                      {entry.label}
+                      {/* Decorative ordinal: keep it out of the link name. */}
+                      <span aria-hidden="true">{entry.ordinal}</span>
+                    </Link>
+                  ))}
                 </div>
               ))}
             </nav>

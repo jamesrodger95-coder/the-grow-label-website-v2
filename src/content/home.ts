@@ -32,8 +32,7 @@ export const LEAKS: Leak[] = [
   {
     index: '02',
     title: 'Slow first response',
-    detail:
-      'Enquiries and callback requests answered after the window in which people still book.',
+    detail: 'Enquiries and callback requests answered after the window in which people still book.',
     module: 'Respond',
   },
   {
@@ -57,8 +56,7 @@ export const LEAKS: Leak[] = [
   {
     index: '06',
     title: 'Unused capacity',
-    detail:
-      'Rooms, chairs and clinician hours running below the schedule they were staffed for.',
+    detail: 'Rooms, chairs and clinician hours running below the schedule they were staffed for.',
     module: 'Retain / Reactivate',
   },
 ];
@@ -74,7 +72,10 @@ export const DETECTION = {
   ],
   reads: [
     { key: 'Contact events', detail: 'When contact happened, on which channel, and how it ended.' },
-    { key: 'Schedule state', detail: 'What is booked, what is open, and what has just been released.' },
+    {
+      key: 'Schedule state',
+      detail: 'What is booked, what is open, and what has just been released.',
+    },
     { key: 'Interval data', detail: 'Recalls, plan status and expected return dates.' },
     { key: 'Your own prices', detail: 'The published fee schedule, used only to estimate value.' },
   ],

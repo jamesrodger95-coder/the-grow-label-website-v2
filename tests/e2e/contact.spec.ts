@@ -14,7 +14,14 @@ test('the endpoint reports its configuration honestly', async ({ request }) => {
 
 test('a malformed body is rejected with field errors, not accepted', async ({ request }) => {
   const res = await request.post('/api/contact', {
-    data: { name: '', email: 'nope', organisation: '', sector: 'veterinary', sites: '1', message: 'x' },
+    data: {
+      name: '',
+      email: 'nope',
+      organisation: '',
+      sector: 'veterinary',
+      sites: '1',
+      message: 'x',
+    },
   });
   expect([400, 429]).toContain(res.status());
   if (res.status() === 400) {

@@ -1,7 +1,7 @@
-@import '../styles/tokens.css';
-@import '../styles/base.css';
-@import '../styles/components.css';
-@import '../styles/motion.css';
+@import "../styles/tokens.css";
+@import "../styles/base.css";
+@import "../styles/components.css";
+@import "../styles/motion.css";
 
 /* ============================================================================
    APPLICATION-LEVEL COMPOSITION
@@ -93,7 +93,7 @@ body {
   color: var(--muted);
 }
 .ticks li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0.66em;

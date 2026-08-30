@@ -56,7 +56,9 @@ export function SiteFooter() {
           <span className="micro">
             &copy; {year} {SITE.name}
           </span>
-          <span className="micro">No client, patient or clinical data appears on this website.</span>
+          <span className="micro">
+            No client, patient or clinical data appears on this website.
+          </span>
           <nav aria-label="Legal" style={{ display: 'flex', gap: 20 }}>
             <Link className="micro" href="/privacy">
               Privacy

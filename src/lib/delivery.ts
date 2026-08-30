@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { deliveryMode, serverEnv, type DeliveryMode } from './env';
-import { SECTOR_LABELS, SITE_LABELS, type ContactInput } from './contact-schema';
+import { SECTOR_LABELS, SITE_LABELS, type ContactInput } from './contact-fields';
 
 /**
  * Delivery provider adapter.

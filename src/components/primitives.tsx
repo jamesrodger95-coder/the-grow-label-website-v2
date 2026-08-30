@@ -117,13 +117,7 @@ export function LedgerRow({
       <span className="lrow__idx">{index}</span>
       <span className="lrow__key">{title}</span>
       <span className="lrow__val">{detail}</span>
-      {tag ? (
-        <span className="lrow__tag">
-          {tag}
-        </span>
-      ) : (
-        <span aria-hidden="true" />
-      )}
+      {tag ? <span className="lrow__tag">{tag}</span> : <span aria-hidden="true" />}
     </div>
   );
 }
@@ -201,7 +195,6 @@ export function CapacityColumn({
         {slots.map((state, i) => (
           <span
             // Slots are positional and never reordered.
-            // eslint-disable-next-line react/no-array-index-key
             key={i}
             className={
               state === 'open'

@@ -76,7 +76,8 @@ export const PLATFORM = {
       {
         index: '04',
         title: 'Escalation triggers',
-        detail: 'The named conditions that hand a contact to a person, with a response expectation.',
+        detail:
+          'The named conditions that hand a contact to a person, with a response expectation.',
       },
       {
         index: '05',

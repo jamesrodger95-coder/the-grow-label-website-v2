@@ -110,7 +110,8 @@ export const INDUSTRIES: IndustryDefinition[] = [
         title: 'Appointment backfill',
         problem:
           'Consult and theatre capacity released too close to the day for anyone to refill it by hand.',
-        reads: 'Released slots inside the actionable horizon, and the waiting demand that matches them.',
+        reads:
+          'Released slots inside the actionable horizon, and the waiting demand that matches them.',
         module: 'Retain',
       },
     ],
@@ -145,7 +146,10 @@ export const INDUSTRIES: IndustryDefinition[] = [
     strip: [
       { key: 'Operating shape', detail: 'Chair-time utilisation across providers and sites' },
       { key: 'Primary loss', detail: 'Accepted treatment never scheduled; recall adherence' },
-      { key: 'Group question', detail: 'Which providers and locations convert acceptance to attendance' },
+      {
+        key: 'Group question',
+        detail: 'Which providers and locations convert acceptance to attendance',
+      },
       { key: 'Modules in scope', detail: 'Answer · Respond · Retain · Reactivate' },
     ],
     workflows: [
@@ -194,7 +198,8 @@ export const INDUSTRIES: IndustryDefinition[] = [
         title: 'Short-notice cancellation recovery',
         problem:
           'A cancelled chair inside twenty-four hours, where the manual refill competes with everything else at the desk.',
-        reads: 'Cancellation events with notice period, and the waiting demand that matches the slot.',
+        reads:
+          'Cancellation events with notice period, and the waiting demand that matches the slot.',
         module: 'Retain',
       },
       {

@@ -1,13 +1,10 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { FlatCompat } from '@eslint/eslintrc';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
 import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const compat = new FlatCompat({ baseDirectory: __dirname });
-
+// eslint-config-next ships a native flat config, so no eslintrc compat shim is
+// needed — routing it through FlatCompat under ESLint 9 throws on a circular
+// plugin reference.
 export default tseslint.config(
   {
     ignores: [
@@ -23,7 +20,7 @@ export default tseslint.config(
       '.lighthouseci/**',
     ],
   },
-  ...compat.extends('next/core-web-vitals'),
+  ...nextCoreWebVitals,
   ...tseslint.configs.recommended,
   {
     files: ['**/*.{ts,tsx}'],
@@ -49,7 +46,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ['scripts/**/*.mjs', '*.config.{ts,mjs,js}', 'tests/**/*.ts'],
+    files: ['scripts/**/*.mjs', '*.config.{ts,mjs,cjs,js}', 'tests/**/*.{ts,tsx}'],
     rules: { 'no-console': 'off' },
   },
   prettier

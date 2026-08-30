@@ -1,12 +1,16 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 /**
  * One-shot viewport observer.
  *
  * Disconnects as soon as the element has been seen, so nothing keeps observing
  * or running work for content that has already animated.
+ *
+ * IntersectionObserver support is not checked here: MotionProvider only enables
+ * motion when it is available, so without it every element simply stays in its
+ * authored final state and this hook's result is never consulted.
  */
 export function useInView<T extends HTMLElement>(rootMargin = '0px 0px -12% 0px') {
   const ref = useRef<T | null>(null);
@@ -14,12 +18,7 @@ export function useInView<T extends HTMLElement>(rootMargin = '0px 0px -12% 0px'
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-
-    if (typeof IntersectionObserver === 'undefined') {
-      setInView(true);
-      return;
-    }
+    if (!el || typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -41,17 +40,37 @@ export function useInView<T extends HTMLElement>(rootMargin = '0px 0px -12% 0px'
   return { ref, inView } as const;
 }
 
-/** Reads the reduced-motion preference and keeps it current. */
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+
+function subscribeToReducedMotion(onChange: () => void): () => void {
+  if (typeof window === 'undefined' || !window.matchMedia) return () => {};
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+
+function getReducedMotion(): boolean {
+  if (typeof window === 'undefined' || !window.matchMedia) return false;
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
+}
+
+/**
+ * Reads the reduced-motion preference and stays current with it.
+ *
+ * `useSyncExternalStore` is the right shape for a media query: it subscribes
+ * without an effect, so there is no synchronous setState on mount and no extra
+ * render pass, and the server snapshot keeps hydration consistent.
+ */
 export function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
+  return useSyncExternalStore(subscribeToReducedMotion, getReducedMotion, () => false);
+}
 
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setReduced(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  return reduced;
+/** True once the component has mounted on the client. */
+export function useHasMounted(): boolean {
+  const subscribe = useCallback(() => () => {}, []);
+  return useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 }

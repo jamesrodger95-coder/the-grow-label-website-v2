@@ -8,9 +8,7 @@ const buf = readFileSync(src);
 const b64 = buf.toString('base64');
 const b = await chromium.launch();
 const p = await b.newPage();
-await p.setContent(
-  `<img id="i" src="data:image/png;base64,${b64}" style="display:block">`
-);
+await p.setContent(`<img id="i" src="data:image/png;base64,${b64}" style="display:block">`);
 await p.waitForFunction(() => {
   const i = document.getElementById('i');
   return i && i.complete && i.naturalWidth > 0;
