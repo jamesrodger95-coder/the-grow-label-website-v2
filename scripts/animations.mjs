@@ -31,15 +31,20 @@ const info = await page.evaluate(() => {
   }
   return {
     total: running.length,
+    paused: running.filter((a) => a.playState === 'paused').length,
+    // The number that actually matters: animations burning frames for content
+    // nobody can see.
+    runningOffScreen: running.filter((a) => !a.onScreen && a.playState === 'running').length,
     infinite: running.filter((a) => a.infinite).length,
     infiniteOffScreen: running.filter((a) => a.infinite && !a.onScreen).length,
     byName,
   };
 });
 
-console.log(`total running animations: ${info.total}`);
+console.log(`animations: ${info.total} total, ${info.paused} paused`);
+console.log(`STILL RUNNING WHILE OFF SCREEN: ${info.runningOffScreen}`);
 console.log(
-  `infinite: ${info.infinite}   of which currently OFF SCREEN: ${info.infiniteOffScreen}`
+  `infinite: ${info.infinite}   of which currently off screen: ${info.infiniteOffScreen}`
 );
 for (const [k, v] of Object.entries(info.byName).sort((a, b) => b[1].count - a[1].count)) {
   console.log(`  ${String(v.count).padStart(3)}  (${v.offScreen} off-screen)  ${k}`);

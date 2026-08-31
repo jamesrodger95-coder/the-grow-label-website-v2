@@ -347,7 +347,10 @@
   width: max-content;
   animation: gl-rail var(--rail-dur, 68s) linear infinite;
   animation-direction: var(--rail-dir, normal);
-  will-change: transform;
+  /* No permanent will-change. A layer held for the life of the page costs
+     compositor memory whether or not the element is moving, and this marquee
+     spends most of its life off screen. The animation itself is enough of a
+     hint for the compositor. */
 }
 .rails[data-paused="true"] .rail-row {
   animation-play-state: paused;

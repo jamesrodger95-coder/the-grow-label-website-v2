@@ -116,5 +116,39 @@ export function MotionProvider() {
     return () => observer.disconnect();
   }, []);
 
+  /**
+   * The same pause, applied to EVERY section rather than to hand-marked
+   * containers.
+   *
+   * Marking containers individually missed most of them: an audit found 36
+   * infinite CSS animations still running off screen, in marquees, in the hero
+   * field and in the twelve card previews on the modules index, because none
+   * of those had been marked. Observing the sections themselves catches
+   * everything, including anything added later, and costs one observer.
+   */
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const sections = document.querySelectorAll<HTMLElement>(
+      'section, .ctaband, .foot, .hero, header'
+    );
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const el = entry.target as HTMLElement;
+          // `on` is never written here: an unset attribute already means
+          // running, and writing one costs a style invalidation per section
+          // per scroll.
+          if (entry.isIntersecting) el.removeAttribute('data-ambient-off');
+          else el.setAttribute('data-ambient-off', '');
+        }
+      },
+      { rootMargin: '15% 0px 15% 0px' }
+    );
+    for (const el of sections) observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return null;
 }

@@ -457,22 +457,38 @@
   color: var(--gl-slate);
 }
 .field__dot {
+  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--gl-verified);
-  box-shadow: 0 0 0 0 var(--gl-verified-wash);
+}
+/* The expanding ring used to be an animated box-shadow, which is a paint
+   property: every frame of a permanent loop repainted it. It is now a ring
+   drawn once on a pseudo-element and scaled, so the whole thing is transform
+   and opacity and never leaves the compositor. Same size, same timing. */
+.field__dot::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9px rgba(26, 111, 86, 0.32);
+  transform: scale(0.02);
+  opacity: 1;
   animation: gl-pulse 2.6s var(--gl-ease) infinite;
 }
 @keyframes gl-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(26, 111, 86, 0.32);
+    transform: scale(0.02);
+    opacity: 1;
   }
   70% {
-    box-shadow: 0 0 0 9px rgba(26, 111, 86, 0);
+    transform: scale(1);
+    opacity: 0;
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(26, 111, 86, 0);
+    transform: scale(0.02);
+    opacity: 0;
   }
 }
 .field__count {

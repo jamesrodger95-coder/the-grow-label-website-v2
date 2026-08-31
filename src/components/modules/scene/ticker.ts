@@ -86,9 +86,28 @@ function frame(now: number) {
     active += 1;
   }
 
-  /* ---- PASS 2: write. Layout is not read again this frame. ------------- */
+  /* ---- PASS 2: write. Layout is not read again this frame. -------------
+
+     Only ONE scroll-linked scene draws per frame. If two are on screen at
+     once, the one nearest the middle of the viewport wins and the other holds
+     its last frame until it takes over. A reader can only follow one scrubbing
+     diagram at a time, so drawing the second is work nobody sees. */
+  let leader: SceneEntry | null = null;
+  if (active > 1) {
+    let best = Infinity;
+    for (const scene of scenes) {
+      if (!scene.visible) continue;
+      const distance = Math.abs(scene.p - 0.5);
+      if (distance < best) {
+        best = distance;
+        leader = scene;
+      }
+    }
+  }
+
   for (const scene of scenes) {
     if (!scene.visible) continue;
+    if (leader && scene !== leader) continue;
     if (!scene.started) scene.started = now;
 
     // A settled, non-ambient scene has nothing left to say. Draw the final

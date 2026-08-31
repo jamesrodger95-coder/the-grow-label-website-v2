@@ -43,6 +43,9 @@
   transform: translate3d(0, 106%, 0);
   transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
   transition-delay: calc(var(--i, 0) * var(--gl-stagger));
+  /* will-change is set only while the line is waiting to run, and dropped the
+     moment it has. A hint held permanently is a compositor layer held
+     permanently. */
   will-change: transform;
 }
 [data-motion="on"] .m-line[data-inview="true"] > * {
@@ -107,6 +110,7 @@
 }
 [data-motion="on"] .stagebar[data-inview="true"] .stagebar__fill {
   transform: scaleX(1);
+  /* Dropped as soon as the bar has drawn. */
   will-change: auto;
 }
 
@@ -352,6 +356,7 @@
    IntersectionObserver over every `[data-ambient]` container and flips this
    attribute; the whole cost of an off-screen loop then goes away.
    ========================================================================= */
-[data-ambient="off"] * {
+[data-ambient="off"] *,
+[data-ambient-off] * {
   animation-play-state: paused !important;
 }
