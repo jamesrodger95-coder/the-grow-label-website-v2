@@ -1,0 +1,87 @@
+{
+  "route": "/",
+  "throttle": "4x",
+  "frames": {
+    "frames": 748,
+    "median": 116.6,
+    "p95": 216.7,
+    "p99": 300,
+    "worst": 1000,
+    "dropped": 716,
+    "bad": 716,
+    "rafCalls": 151,
+    "rafOwners": [
+      [
+        "n",
+        149
+      ],
+      [
+        "()=>{t=requestAnimationFrame(()=>{e.dataset.motion=\"on\"})}",
+        1
+      ],
+      [
+        "()=>{e.dataset.motion=\"on\"}",
+        1
+      ]
+    ],
+    "willChange": 6,
+    "io": {
+      "instances": 4,
+      "targets": 115
+    },
+    "listeners": {
+      "pointermove": 5,
+      "resize": 2,
+      "scroll": 2,
+      "wheel": 4
+    }
+  },
+  "totals": {
+    "scriptingMs": 25182.1,
+    "renderingMs": 39034.5,
+    "paintingMs": 9954.4
+  },
+  "longTasksOver50": 580,
+  "longTaskList": [
+    895.5,
+    781.2,
+    436.2,
+    371.7,
+    316.3,
+    289.6,
+    281.8,
+    276.2
+  ],
+  "forcedLayouts": [
+    {
+      "site": "n @ 3m4rh662e2nk5.js:1",
+      "count": 151,
+      "ms": 8873.226999999999
+    }
+  ],
+  "topFunctions": [
+    "n @ 3m4rh662e2nk5.js: 9276.0ms",
+    "fF @ 2et9jj4_1yq3t.js: 1183.5ms",
+    "O @ 2et9jj4_1yq3t.js: 916.5ms",
+    "tick @ : 407.7ms",
+    "fD @ 2et9jj4_1yq3t.js: 297.8ms",
+    "M @ 3su0lep30ox0j.js: 203.3ms",
+    "IntersectionObserver.rootMargin @ 3m4rh662e2nk5.js: 43.8ms",
+    "IntersectionObserver.rootMargin @ 3su0lep30ox0j.js: 35.8ms"
+  ],
+  "topTraceEvents": [
+    "RunTask: 102098.7ms",
+    "UpdateLayoutTree: 38713.2ms",
+    "FunctionCall: 12421.6ms",
+    "FireAnimationFrame: 9879.4ms",
+    "Paint: 9372.1ms",
+    "Layerize: 5264.5ms",
+    "Commit: 3878.6ms",
+    "PrePaint: 3717.1ms"
+  ],
+  "layers": {
+    "count": 0,
+    "memoryMB": 0
+  },
+  "rafCallsWhileOffScreen": 0
+}

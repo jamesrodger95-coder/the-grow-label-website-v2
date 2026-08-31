@@ -179,6 +179,10 @@
   --gl-dur-orchestrated: 700ms;
   /* The one exception: an ambient loop, which is not a response to anything. */
   --gl-dur-ambient: 7000ms;
+  /* The hero detect sweep. It runs once, so it is an entrance and wants an
+     entrance duration: on the ambient 7s it was still animating 196 elements
+     ten seconds after load, straight through the reader first scroll. */
+  --gl-dur-sweep-in: 1600ms;
 
   /* One curve. `--gl-ease` is used by every transition on this site that is
      not a micro state change; consistency of easing across every animated
@@ -228,6 +232,7 @@
     --gl-dur-standard: 1ms;
     --gl-dur-orchestrated: 1ms;
     --gl-dur-ambient: 1ms;
+    --gl-dur-sweep-in: 1ms;
     --gl-stagger: 0ms;
     --gl-rise: 0px;
   }

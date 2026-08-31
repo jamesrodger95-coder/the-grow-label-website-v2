@@ -1,0 +1,105 @@
+{
+  "route": "/",
+  "throttle": "4x",
+  "frames": {
+    "frames": 716,
+    "median": 116.7,
+    "p95": 233.3,
+    "p99": 399.9,
+    "worst": 983.3,
+    "dropped": 699,
+    "bad": 699,
+    "rafCalls": 473,
+    "rafOwners": [
+      [
+        "t",
+        317
+      ],
+      [
+        "p",
+        97
+      ],
+      [
+        "m",
+        57
+      ],
+      [
+        "()=>{t=requestAnimationFrame(()=>{e.dataset.motion=\"on\"})}",
+        1
+      ],
+      [
+        "()=>{e.dataset.motion=\"on\"}",
+        1
+      ]
+    ],
+    "willChange": 6,
+    "io": {
+      "instances": 66,
+      "targets": 114
+    },
+    "listeners": {
+      "pointermove": 5,
+      "resize": 2,
+      "scroll": 3,
+      "wheel": 4
+    }
+  },
+  "totals": {
+    "scriptingMs": 51348.4,
+    "renderingMs": 39402.3,
+    "paintingMs": 9203.4
+  },
+  "longTasksOver50": 561,
+  "longTaskList": [
+    949.4,
+    658.3,
+    550.1,
+    459.4,
+    422.6,
+    419.8,
+    317.7,
+    312.7
+  ],
+  "forcedLayouts": [
+    {
+      "site": "t @ 3u7qo1ev_slx-.js:3",
+      "count": 360,
+      "ms": 16701.627999999993
+    },
+    {
+      "site": "m @ 13x7f5aekif7w.js:1",
+      "count": 59,
+      "ms": 2760.542000000001
+    },
+    {
+      "site": "p @ 13x7f5aekif7w.js:1",
+      "count": 24,
+      "ms": 1713.6889999999999
+    }
+  ],
+  "topFunctions": [
+    "t @ 3u7qo1ev_slx-.js: 17163.0ms",
+    "m @ 13x7f5aekif7w.js: 2916.0ms",
+    "p @ 13x7f5aekif7w.js: 1819.4ms",
+    "fF @ 2et9jj4_1yq3t.js: 1340.2ms",
+    "O @ 2et9jj4_1yq3t.js: 869.1ms",
+    "fD @ 2et9jj4_1yq3t.js: 411.3ms",
+    "tick @ : 321.6ms",
+    "r @ 3u7qo1ev_slx-.js: 217.9ms"
+  ],
+  "topTraceEvents": [
+    "RunTask: 104051.5ms",
+    "UpdateLayoutTree: 39182.0ms",
+    "FunctionCall: 25343.2ms",
+    "FireAnimationFrame: 22532.6ms",
+    "Paint: 8728.4ms",
+    "Layerize: 5416.1ms",
+    "Commit: 4131.1ms",
+    "PrePaint: 3747.7ms"
+  ],
+  "layers": {
+    "count": 0,
+    "memoryMB": 0
+  },
+  "rafCallsWhileOffScreen": 5
+}

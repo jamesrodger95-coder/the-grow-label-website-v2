@@ -31,11 +31,20 @@ for (const route of ROUTES) {
     // Scroll the page so every reveal and scene has run.
     await page.addStyleTag({ content: 'html{scroll-behavior:auto !important}' });
     await page.evaluate(async () => {
-      const step = window.innerHeight * 0.7;
-      for (let y = 0; y < document.body.scrollHeight; y += step) {
+      // Re-read scrollHeight each step. Sections use content-visibility: auto,
+      // so the document starts shorter than it ends up and a loop bounded by
+      // the initial height stops before the last few sections exist.
+      const step = window.innerHeight * 0.6;
+      let y = 0;
+      let guard = 0;
+      while (y < document.body.scrollHeight - window.innerHeight && guard < 400) {
         window.scrollTo({ top: y, behavior: 'instant' });
-        await new Promise((r) => setTimeout(r, 45));
+        await new Promise((r) => setTimeout(r, 60));
+        y += step;
+        guard += 1;
       }
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' });
+      await new Promise((r) => setTimeout(r, 400));
       window.scrollTo({ top: 0, behavior: 'instant' });
       await new Promise((r) => setTimeout(r, 250));
     });
@@ -104,7 +113,12 @@ for (const route of ROUTES) {
         const bold = parseInt(cs.fontWeight, 10) >= 700;
         const large = size >= 24 || (size >= 18.66 && bold);
         const need = large ? 3 : 4.5;
-        const got = ratio(fg.rgb, bgOf(el));
+        // Composite the foreground over its background before comparing.
+        // Text colours on this site are frequently rgba() over a dark ground,
+        // and comparing the unblended colour overstates the contrast.
+        const bg = bgOf(el);
+        const blended = fg.rgb.map((v, i) => v * fg.a + bg[i] * (1 - fg.a));
+        const got = ratio(blended, bg);
         if (got < need) {
           out.push(
             `contrast ${got.toFixed(2)} < ${need} :: ${el.tagName.toLowerCase()}.${el.className?.toString().split(' ')[0] ?? ''} :: "${el.textContent.trim().slice(0, 40)}"`

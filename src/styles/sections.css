@@ -188,7 +188,7 @@
   transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
   transition-delay: calc(var(--i, 0) * var(--gl-stagger));
 }
-[data-motion="on"] [data-inview="true"] .result__barfill {
+[data-motion="on"] .result[data-inview="true"] .result__barfill {
   transform: scaleX(1);
 }
 .result__basis {
@@ -2364,8 +2364,11 @@
   letter-spacing: var(--gl-tr-label);
   color: var(--gl-purple-ondark);
 }
+/* 0.52, not 0.45. Composited over the panel this measured 4.41:1, just under
+   AA for body text. The sweep had been ignoring foreground alpha and so had
+   been reporting it as a pass. */
 .ingest__note {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.52);
 }
 .ingest__body {
   display: grid;
@@ -3019,7 +3022,7 @@
   transform-origin: left;
   transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
 }
-[data-motion="on"] [data-inview="true"] .mtl__axis {
+[data-motion="on"] .m-card[data-inview="true"] .mtl__axis {
   transform: scaleX(1);
 }
 
@@ -3030,7 +3033,7 @@
   /* Sequenced after the axis has drawn, then one span at a time. */
   transition-delay: calc(420ms + var(--i, 0) * 130ms);
 }
-[data-motion="on"] [data-inview="true"] .mtl__span {
+[data-motion="on"] .m-card[data-inview="true"] .mtl__span {
   transform: scaleX(1);
 }
 
@@ -3041,8 +3044,8 @@
   transition: opacity var(--gl-dur-standard) var(--gl-ease);
   transition-delay: calc(510ms + var(--i, 0) * 130ms);
 }
-[data-motion="on"] [data-inview="true"] .mtl__spanname,
-[data-motion="on"] [data-inview="true"] .mtl__spancaption {
+[data-motion="on"] .m-card[data-inview="true"] .mtl__spanname,
+[data-motion="on"] .m-card[data-inview="true"] .mtl__spancaption {
   opacity: 1;
 }
 
@@ -3058,3 +3061,32 @@
     transition: none;
   }
 }
+
+/* ==========================================================================
+   content-visibility: auto WAS TRIED TWICE HERE AND REMOVED BOTH TIMES.
+   Recorded so it is not tried a third time.
+
+   The intent was sound: skip style, layout and paint for off-screen sections,
+   and with them the CSS animations inside, which do not stop just because
+   they have been scrolled away. It measured well on the load metrics, taking
+   Lighthouse total blocking time from 484ms to 198ms.
+
+   It broke two things that matter more.
+
+   1. Scroll scenes. While the scenes still read getBoundingClientRect() every
+      frame, answering that read forced the browser to lay out the very
+      sections this rule was skipping, once per frame. Rendering went from
+      38.0s to 59.7s at 4x throttling. Caching document offsets fixed that
+      half.
+
+   2. Entrances, in Safari. An element inside a skipped subtree has no box to
+      intersect, so the IntersectionObserver that drives entrance animations
+      never fired for it. A cross-browser run found 9 of the homepage's 52
+      reveals, and 4 of a module page's 23, permanently stuck at opacity 0 in
+      WebKit. Removing the rule cleared every one of them.
+
+   Content that never appears is a worse failure than a slower page, so the
+   rule is gone. The animation half of the problem is solved instead by the
+   [data-ambient] observer in MotionProvider, which pauses off-screen loops
+   without hiding anything.
+   ========================================================================= */

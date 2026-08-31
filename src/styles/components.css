@@ -5,6 +5,18 @@
 /* ==========================================================================
    GLOBAL NAV — a floating pill that condenses on scroll
    ========================================================================= */
+/* The sentinel the nav condense state is derived from. One pixel, at the very
+   top of the document, never seen. It exists so the nav can know the page has
+   moved without any script reading scroll position. */
+.nav__sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
 .nav {
   position: sticky;
   top: 0;
@@ -481,40 +493,70 @@
   align-content: center;
 }
 .field__tick {
+  position: relative;
   height: 3px;
   border-radius: 2px;
   background: var(--gl-mist);
   transform-origin: left center;
-  /* Each tick resolves as the sweep reaches its column. */
-  animation: gl-detect var(--gl-dur-ambient) var(--gl-ease) infinite;
-  animation-delay: calc(var(--c, 0) * (var(--gl-dur-ambient) / 34));
+  /* Each tick resolves as the sweep reaches its column.
+
+     The tick animates TRANSFORM only. An earlier version animated
+     `background` from grey to purple, which is not a compositor property: 98
+     of these run at once in the hero, so every frame repainted all 98, for
+     the life of the page. The colour change now lives on the overlay below
+     as an opacity animation, which the compositor can run without paint. */
+  /* ONCE, then it stops. See the note on the keyframes below. */
+  animation: gl-detect-scale var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
+  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
+}
+.field__tick::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--gl-purple);
+  opacity: 0;
+  animation: gl-detect-fill var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
+  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
+}
+.field__tick--miss::after {
+  animation: none;
+  opacity: 0;
 }
 .field__tick--miss {
   animation: none;
   background: var(--gl-mist);
 }
-@keyframes gl-detect {
+/* The detect sweep runs ONCE and settles into the detected state.
+
+   It used to loop forever. Ninety-eight ticks, each with its own infinite
+   animation, ran for the entire life of the page, on screen or not, and they
+   were the single largest contributor to style recalculation: a throttled
+   homepage scroll recalculated styles across 178,000 elements with them
+   running and 34,000 without.
+
+   Running once is also the better design. The panel is showing that signals
+   have been detected, and a perpetual loop in the hero is exactly the
+   scattered ambient motion the rest of this system exists to avoid. It sweeps
+   in as the page loads, and then the field simply holds what it found. */
+@keyframes gl-detect-scale {
   0%,
   4% {
-    background: var(--gl-mist);
     transform: scaleX(0.72);
-    opacity: 0.9;
   }
-  10% {
-    background: var(--gl-purple);
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  62% {
-    background: var(--gl-purple);
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  74%,
+  10%,
   100% {
-    background: var(--gl-mist);
-    transform: scaleX(0.72);
-    opacity: 0.9;
+    transform: scaleX(1);
+  }
+}
+@keyframes gl-detect-fill {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  10%,
+  100% {
+    opacity: 1;
   }
 }
 

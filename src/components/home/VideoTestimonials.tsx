@@ -71,8 +71,13 @@ export function VideoTestimonials() {
               className="vcard"
               key={video.id}
               onClick={() => setActive(video)}
-              aria-label={`Play testimonial from ${video.name}, ${video.role}`}
+              /* No aria-label. An aria-label REPLACES the visible text in the
+                 accessible name, and the visible text here is the duration,
+                 the name and the role, none of which appeared in the label.
+                 A visually hidden prefix prepends the verb instead, so the
+                 name contains everything a reader can see. */
             >
+              <span className="gl-sr">Play testimonial from </span>
               <span className="vcard__thumb">
                 <span className="vcard__thumbinner">
                   <Thumb hue={video.hue} />

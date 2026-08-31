@@ -39,7 +39,7 @@ export default function HomePage() {
 
       {/* A quiet band naming what the platform actually reads. */}
       <div className="surface--white on-light">
-        <div className="strip" aria-hidden="true">
+        <div className="strip" data-ambient="on" aria-hidden="true">
           <div className="strip__track">
             {[...READS_STRIP, ...READS_STRIP].map((item, i) => (
               <span className="strip__item" key={i}>

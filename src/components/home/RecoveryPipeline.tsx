@@ -20,7 +20,7 @@ import { PIPELINE } from '@/content/home';
  */
 export function RecoveryPipeline() {
   return (
-    <div className="pipe">
+    <div className="pipe" data-ambient="on">
       <div className="pipe__bar">
         <span className="pipe__live">
           <span className="pipe__dot" aria-hidden="true" />

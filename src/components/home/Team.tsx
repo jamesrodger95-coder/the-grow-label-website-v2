@@ -82,8 +82,10 @@ export function Team() {
               className="person"
               key={member.id}
               onClick={() => setActive(member)}
-              aria-label={`Read the profile for ${member.name}, ${member.role}`}
+              /* See the note in VideoTestimonials: the accessible name has to
+                 contain the visible text, not replace it. */
             >
+              <span className="gl-sr">Read the profile for </span>
               <span className="person__photo">
                 <span className="person__photoinner">
                   <Portrait hue={member.hue} name={member.name} />

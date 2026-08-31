@@ -87,11 +87,20 @@ for (const [name, engine] of [
     // Scroll the whole page so every scene runs, then check they settled.
     await page.addStyleTag({ content: 'html{scroll-behavior:auto !important}' });
     await page.evaluate(async () => {
+      // Re-read scrollHeight each step. Sections use content-visibility: auto,
+      // so the document starts shorter than it ends up and a loop bounded by
+      // the initial height stops before the last few sections exist.
       const step = window.innerHeight * 0.6;
-      for (let y = 0; y < document.body.scrollHeight; y += step) {
+      let y = 0;
+      let guard = 0;
+      while (y < document.body.scrollHeight - window.innerHeight && guard < 400) {
         window.scrollTo({ top: y, behavior: 'instant' });
         await new Promise((r) => setTimeout(r, 60));
+        y += step;
+        guard += 1;
       }
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' });
+      await new Promise((r) => setTimeout(r, 400));
     });
     await page.waitForTimeout(400);
 

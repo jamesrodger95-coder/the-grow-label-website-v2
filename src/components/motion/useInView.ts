@@ -3,10 +3,48 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 /**
- * One-shot viewport observer.
+ * ONE SHARED OBSERVER PER ROOT MARGIN, not one per element.
  *
- * Disconnects as soon as the element has been seen, so nothing keeps observing
- * or running work for content that has already animated.
+ * The homepage renders enough `Reveal`s to have created 66 separate
+ * IntersectionObserver instances covering 114 targets. Each instance carries
+ * its own callback, its own registration in the browser's intersection
+ * bookkeeping, and its own slice of the work the compositor does after every
+ * scroll. They all wanted the same question answered about different elements.
+ *
+ * This keeps one observer per distinct root margin and hands each element a
+ * callback through a WeakMap. Registration is one `observe` call; the element
+ * is unobserved the moment it has been seen, because these are one-shot
+ * entrance animations and nothing needs watching afterwards.
+ */
+type Cb = () => void;
+
+const registries = new Map<string, { io: IntersectionObserver; targets: WeakMap<Element, Cb> }>();
+
+function registryFor(rootMargin: string) {
+  let entry = registries.get(rootMargin);
+  if (entry) return entry;
+  const targets = new WeakMap<Element, Cb>();
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const cb = targets.get(e.target);
+        if (cb) {
+          targets.delete(e.target);
+          io.unobserve(e.target);
+          cb();
+        }
+      }
+    },
+    { rootMargin, threshold: 0.01 }
+  );
+  entry = { io, targets };
+  registries.set(rootMargin, entry);
+  return entry;
+}
+
+/**
+ * One-shot viewport observer.
  *
  * IntersectionObserver support is not checked here: MotionProvider only enables
  * motion when it is available, so without it every element simply stays in its
@@ -20,21 +58,14 @@ export function useInView<T extends HTMLElement>(rootMargin = '0px 0px -12% 0px'
     const el = ref.current;
     if (!el || typeof IntersectionObserver === 'undefined') return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setInView(true);
-            observer.disconnect();
-            break;
-          }
-        }
-      },
-      { rootMargin, threshold: 0.01 }
-    );
+    const { io, targets } = registryFor(rootMargin);
+    targets.set(el, () => setInView(true));
+    io.observe(el);
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      targets.delete(el);
+      io.unobserve(el);
+    };
   }, [rootMargin]);
 
   return { ref, inView } as const;

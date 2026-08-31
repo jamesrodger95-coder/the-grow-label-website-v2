@@ -1,0 +1,59 @@
+{
+  "route": "/modules",
+  "throttle": "1x",
+  "frames": {
+    "frames": 293,
+    "median": 16.7,
+    "p95": 16.8,
+    "p99": 33.4,
+    "worst": 50,
+    "dropped": 9,
+    "bad": 9,
+    "rafCalls": 0,
+    "rafOwners": [],
+    "willChange": 0,
+    "io": {
+      "instances": 3,
+      "targets": 54
+    },
+    "listeners": {
+      "pointermove": 4,
+      "resize": 2,
+      "scroll": 2,
+      "wheel": 4
+    }
+  },
+  "totals": {
+    "scriptingMs": 220.9,
+    "renderingMs": 132.4,
+    "paintingMs": 337.5
+  },
+  "longTasksOver50": 0,
+  "longTaskList": [],
+  "forcedLayouts": [],
+  "topFunctions": [
+    "tick @ : 33.5ms",
+    "O @ 2et9jj4_1yq3t.js: 27.6ms",
+    "fD @ 2et9jj4_1yq3t.js: 19.7ms",
+    "fF @ 2et9jj4_1yq3t.js: 12.4ms",
+    "M @ 3su0lep30ox0j.js: 10.4ms",
+    "IntersectionObserver.rootMargin @ 3su0lep30ox0j.js: 8.6ms",
+    "IntersectionObserver.rootMargin @ 0ee-gloc_-glt.js: 1.4ms",
+    "IntersectionObserver.threshold @ 0-08zi3dhu09-.js: 0.1ms"
+  ],
+  "topTraceEvents": [
+    "RunTask: 3232.7ms",
+    "RasterTask: 285.6ms",
+    "UpdateLayoutTree: 126.1ms",
+    "PrePaint: 123.3ms",
+    "FunctionCall: 114.8ms",
+    "Commit: 103.6ms",
+    "EventDispatch: 58.3ms",
+    "Paint: 50.6ms"
+  ],
+  "layers": {
+    "count": 0,
+    "memoryMB": 0
+  },
+  "rafCallsWhileOffScreen": 0
+}

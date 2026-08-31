@@ -3,22 +3,25 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 96,
+      "performance": 84,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2644,
-      "cls": 0.001,
-      "tbt": 89,
-      "bytes": 333455,
-      "scriptBytes": 168551
+      "lcp": 2716,
+      "cls": 0,
+      "tbt": 474,
+      "bytes": 333414,
+      "scriptBytes": 168203
     },
-    "problems": [],
+    "problems": [
+      "performance 84 < 90",
+      "total-blocking-time 474 > 400"
+    ],
     "notes": [
-      "LCP 2644ms over the 2500ms target"
+      "LCP 2716ms over the 2500ms target"
     ]
   },
   {
@@ -32,16 +35,14 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2508,
+      "lcp": 2409,
       "cls": 0,
-      "tbt": 42,
-      "bytes": 264499,
-      "scriptBytes": 163589
+      "tbt": 84,
+      "bytes": 262953,
+      "scriptBytes": 161590
     },
     "problems": [],
-    "notes": [
-      "LCP 2508ms over the 2500ms target"
-    ]
+    "notes": []
   },
   {
     "name": "module",
@@ -54,15 +55,13 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2559,
+      "lcp": 2071,
       "cls": 0,
-      "tbt": 40,
-      "bytes": 318043,
-      "scriptBytes": 168551
+      "tbt": 151,
+      "bytes": 318633,
+      "scriptBytes": 168203
     },
     "problems": [],
-    "notes": [
-      "LCP 2559ms over the 2500ms target"
-    ]
+    "notes": []
   }
 ]

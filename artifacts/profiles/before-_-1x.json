@@ -1,0 +1,94 @@
+{
+  "route": "/",
+  "throttle": "1x",
+  "frames": {
+    "frames": 1149,
+    "median": 16.7,
+    "p95": 33.4,
+    "p99": 50,
+    "worst": 83.3,
+    "dropped": 160,
+    "bad": 160,
+    "rafCalls": 512,
+    "rafOwners": [
+      [
+        "t",
+        323
+      ],
+      [
+        "p",
+        112
+      ],
+      [
+        "m",
+        77
+      ]
+    ],
+    "willChange": 6,
+    "io": {
+      "instances": 66,
+      "targets": 114
+    },
+    "listeners": {
+      "pointermove": 5,
+      "resize": 2,
+      "scroll": 3,
+      "wheel": 4
+    }
+  },
+  "totals": {
+    "scriptingMs": 4597.1,
+    "renderingMs": 3915.9,
+    "paintingMs": 1862.8
+  },
+  "longTasksOver50": 5,
+  "longTaskList": [
+    78.7,
+    67.9,
+    59,
+    53.6,
+    50.6
+  ],
+  "forcedLayouts": [
+    {
+      "site": "t @ 3u7qo1ev_slx-.js:3",
+      "count": 371,
+      "ms": 1349.6979999999996
+    },
+    {
+      "site": "m @ 13x7f5aekif7w.js:1",
+      "count": 82,
+      "ms": 365.73400000000004
+    },
+    {
+      "site": "p @ 13x7f5aekif7w.js:1",
+      "count": 27,
+      "ms": 151.30100000000002
+    }
+  ],
+  "topFunctions": [
+    "t @ 3u7qo1ev_slx-.js: 1404.1ms",
+    "m @ 13x7f5aekif7w.js: 392.4ms",
+    "p @ 13x7f5aekif7w.js: 160.5ms",
+    "tick @ : 94.2ms",
+    "fD @ 2et9jj4_1yq3t.js: 60.2ms",
+    "r @ 3u7qo1ev_slx-.js: 45.8ms",
+    "O @ 2et9jj4_1yq3t.js: 45.1ms",
+    "fF @ 2et9jj4_1yq3t.js: 38.7ms"
+  ],
+  "topTraceEvents": [
+    "RunTask: 18228.3ms",
+    "UpdateLayoutTree: 3870.8ms",
+    "FunctionCall: 2252.6ms",
+    "FireAnimationFrame: 2102.8ms",
+    "Paint: 1053.2ms",
+    "Commit: 881.8ms",
+    "V8.GC_MC_BACKGROUND_SWEEPING: 831.3ms",
+    "RasterTask: 808.0ms"
+  ],
+  "layers": {
+    "count": 0,
+    "memoryMB": 0
+  },
+  "rafCallsWhileOffScreen": 6
+}

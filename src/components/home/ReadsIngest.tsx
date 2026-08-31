@@ -31,7 +31,7 @@ const LANE_MARKS = [7, 7, 6, 3];
 
 export function ReadsIngest() {
   return (
-    <div className="ingest">
+    <div className="ingest" data-ambient="on">
       <div className="ingest__head">
         <span className="ingest__label">What it reads to do that</span>
         <span className="ingest__note micro">Read continuously, never stored as clinical data</span>

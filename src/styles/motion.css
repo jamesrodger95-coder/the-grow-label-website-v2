@@ -343,3 +343,15 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* ==========================================================================
+   AMBIENT LOOPS PAUSE WHEN THEY ARE NOT ON SCREEN.
+
+   A CSS animation keeps its element in the style-recalculation set for the
+   life of the page, whether or not anyone can see it. MotionProvider runs one
+   IntersectionObserver over every `[data-ambient]` container and flips this
+   attribute; the whole cost of an off-screen loop then goes away.
+   ========================================================================= */
+[data-ambient="off"] * {
+  animation-play-state: paused !important;
+}
