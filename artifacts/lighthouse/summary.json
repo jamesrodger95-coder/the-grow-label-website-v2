@@ -3,27 +3,27 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 95,
+      "performance": 96,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2756,
-      "cls": 0,
-      "tbt": 121,
-      "bytes": 319593,
-      "scriptBytes": 152351
+      "lcp": 2644,
+      "cls": 0.001,
+      "tbt": 89,
+      "bytes": 333455,
+      "scriptBytes": 168551
     },
     "problems": [],
     "notes": [
-      "LCP 2756ms over the 2500ms target"
+      "LCP 2644ms over the 2500ms target"
     ]
   },
   {
-    "name": "platform",
-    "path": "/platform",
+    "name": "modules",
+    "path": "/modules",
     "scores": {
       "performance": 97,
       "accessibility": 100,
@@ -32,15 +32,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2546,
+      "lcp": 2508,
       "cls": 0,
-      "tbt": 81,
-      "bytes": 266655,
-      "scriptBytes": 152351
+      "tbt": 42,
+      "bytes": 264499,
+      "scriptBytes": 163589
     },
     "problems": [],
     "notes": [
-      "LCP 2546ms over the 2500ms target"
+      "LCP 2508ms over the 2500ms target"
     ]
   },
   {
@@ -54,81 +54,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2520,
+      "lcp": 2559,
       "cls": 0,
-      "tbt": 54,
-      "bytes": 300554,
-      "scriptBytes": 152351
+      "tbt": 40,
+      "bytes": 318043,
+      "scriptBytes": 168551
     },
     "problems": [],
     "notes": [
-      "LCP 2520ms over the 2500ms target"
-    ]
-  },
-  {
-    "name": "veterinary",
-    "path": "/industries/veterinary",
-    "scores": {
-      "performance": 97,
-      "accessibility": 100,
-      "best-practices": 100,
-      "seo": 100,
-      "agentic-browsing": 100
-    },
-    "metrics": {
-      "lcp": 2570,
-      "cls": 0,
-      "tbt": 90,
-      "bytes": 264695,
-      "scriptBytes": 152351
-    },
-    "problems": [],
-    "notes": [
-      "LCP 2570ms over the 2500ms target"
-    ]
-  },
-  {
-    "name": "methodology",
-    "path": "/methodology",
-    "scores": {
-      "performance": 97,
-      "accessibility": 100,
-      "best-practices": 100,
-      "seo": 100,
-      "agentic-browsing": 100
-    },
-    "metrics": {
-      "lcp": 2529,
-      "cls": 0,
-      "tbt": 58,
-      "bytes": 265685,
-      "scriptBytes": 152351
-    },
-    "problems": [],
-    "notes": [
-      "LCP 2529ms over the 2500ms target"
-    ]
-  },
-  {
-    "name": "contact",
-    "path": "/contact",
-    "scores": {
-      "performance": 97,
-      "accessibility": 100,
-      "best-practices": 100,
-      "seo": 100,
-      "agentic-browsing": 100
-    },
-    "metrics": {
-      "lcp": 2549,
-      "cls": 0,
-      "tbt": 69,
-      "bytes": 264094,
-      "scriptBytes": 154351
-    },
-    "problems": [],
-    "notes": [
-      "LCP 2549ms over the 2500ms target"
+      "LCP 2559ms over the 2500ms target"
     ]
   }
 ]

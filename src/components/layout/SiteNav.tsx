@@ -129,7 +129,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
     >
       <div className="shell">
         <div className="nav__bar">
-          <Link className="logo" href="/" aria-label={`${SITE.name} — home`} onClick={close}>
+          <Link className="logo" href="/" aria-label={`${SITE.name} home`} onClick={close}>
             <Logo />
           </Link>
 

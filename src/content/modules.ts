@@ -22,7 +22,33 @@ export type ModuleDefinition = {
   problem: {
     title: string;
     body: string[];
+    /**
+     * The figure that makes the problem concrete. It is deliberately a number
+     * the reader can produce from their own systems in an afternoon, not a
+     * published benchmark: this site does not assert third-party statistics,
+     * and a figure an owner can check beats one they have to take on trust.
+     */
+    figure?: { value: string; label: string; basis: string };
   };
+  /**
+   * What the module does, in the language an operations manager would use in
+   * a handover. No architecture, no capability nouns.
+   */
+  operation?: string[];
+  /** What it plugs into: the systems of record, and the channels it works. */
+  connects?: {
+    systems: { key: string; detail: string }[];
+    channels: { key: string; detail: string }[];
+    note: string;
+  };
+  /** What appears on the practice's dashboard because this module ran. */
+  dashboard?: { key: string; detail: string }[];
+  /**
+   * Stated plainly, because a clear boundary builds more trust than a claim.
+   * Separate from `dataNotRequired`, which is about inputs rather than
+   * behaviour.
+   */
+  doesNot?: { key: string; detail: string }[];
   monitors: { key: string; detail: string }[];
   actions: { key: string; detail: string }[];
   /** Decisions that never leave the practice. */
@@ -43,15 +69,91 @@ export const MODULES: ModuleDefinition[] = [
     name: 'Answer',
     index: 1,
     summary: 'Coverage for the calls that would otherwise go unanswered.',
-    position: 'First contact — before an opportunity has a record anywhere.',
+    position: 'First contact, before an opportunity has a record anywhere.',
     lead: 'Coverage for the calls that would otherwise go unanswered: the ones in the queue, the ones after hours, and the ones during the twenty minutes when everybody is in surgery.',
     problem: {
       title: 'A call that rings out leaves no trace in any system you report on.',
       body: [
-        'Front-desk teams are interrupt-driven. A phone that rings while three people are at the desk and a clinician is asking for a room does not get answered, and the practice management system records nothing at all — no enquiry, no lead, no lost opportunity. The only evidence is a line in the telephony log that nobody reads.',
+        'Front-desk teams are interrupt-driven. A phone that rings while three people are at the desk and a clinician is asking for a room does not get answered, and the practice management system records nothing at all: no enquiry, no lead, no lost opportunity. The only evidence is a line in the telephony log that nobody reads.',
         'The pattern is predictable rather than random. Call volume peaks against the same shift boundaries every week, and the calls that go unanswered cluster there. Because the loss is invisible in the systems that generate the management report, it is usually described as a staffing problem rather than a revenue one.',
+        'It is worth knowing the size of it before deciding whether it matters. Your telephony provider can export last month by hour and by outcome, and the unanswered column is the one to read. Most owners have never seen that column, and it is the only part of the practice where demand arrives, finds nobody, and leaves no record that it was ever there.',
       ],
+      figure: {
+        value: '0',
+        label: 'Records created in your practice management system by a call that rang out',
+        basis:
+          'True of every practice management system we have worked with. It is the reason the loss does not appear in a management report.',
+      },
     },
+    operation: [
+      'Answer picks up the calls your desk cannot get to. When a call rings past your threshold, arrives outside opening hours, or lands while every line is already busy, it is answered rather than left to ring.',
+      'The caller is asked what they need and who they are. If the request is one you have approved for booking, the appointment is made in your system while the caller is still on the line. If it is anything else, the details and the reason for the call are captured, and the contact is queued for your team with the context already attached.',
+      'Every call produces a record either way. That is the operational change: the front desk stops starting each morning by guessing what it missed, and starts with a list.',
+    ],
+    connects: {
+      systems: [
+        {
+          key: 'Your phone system',
+          detail:
+            'Call events, timings and outcomes. Answer sits behind your existing number and overflow rules; nobody is asked to change how they dial.',
+        },
+        {
+          key: 'Your practice management system',
+          detail:
+            'Availability and appointment creation. Answer reads the diary to know what can be offered, and writes an appointment when one is booked.',
+        },
+      ],
+      channels: [
+        { key: 'Inbound voice', detail: 'The practice line, in queue and out of hours.' },
+        { key: 'Voicemail', detail: 'Messages transcribed and raised as contacts to return.' },
+        { key: 'SMS follow-up', detail: 'A confirmation or a callback offer, where you allow it.' },
+      ],
+      note: 'Answer works with the phone system and diary you already run. Where a system has no write access, it captures the contact and hands the booking to your team instead of holding it.',
+    },
+    dashboard: [
+      {
+        key: 'Calls answered that would have rung out',
+        detail:
+          'Counted against the telephony event, with the recording and transcript attached to each one.',
+      },
+      {
+        key: 'What each caller wanted',
+        detail:
+          'Grouped by reason, so the pattern in your missed calls is legible rather than anecdotal.',
+      },
+      {
+        key: 'Appointments booked from those calls',
+        detail:
+          'Only where an appointment exists in your practice management system. This is the Booked stage, and it moves on a record rather than on an outcome we inferred.',
+      },
+      {
+        key: 'The hours the loss actually sits in',
+        detail:
+          'Your own week, by day and half hour. Usually the argument for a rota change as much as for anything else.',
+      },
+    ],
+    doesNot: [
+      {
+        key: 'It does not give clinical advice',
+        detail:
+          'No triage, no assessment, no opinion on whether an animal or a patient should be seen. A caller describing a symptom is routed to a person, immediately.',
+      },
+      {
+        key: 'It does not decide what it may book',
+        detail:
+          'Appointment types, durations and clinicians are a list you set. Anything not on that list is captured and handed over, never improvised.',
+      },
+      {
+        key: 'It does not pretend to be a person',
+        detail:
+          'Callers are told what they are speaking to at the start of the call. A caller who asks for a human gets one, or a call back inside the window you set.',
+      },
+      {
+        key: 'It does not replace your front desk',
+        detail:
+          'It takes the calls that were already going unanswered. Calls your team picks up are calls your team picks up.',
+      },
+    ],
     monitors: [
       {
         key: 'Inbound call events',
@@ -183,15 +285,92 @@ export const MODULES: ModuleDefinition[] = [
     name: 'Respond',
     index: 2,
     summary: 'First response on every enquiry, inside the window that still converts.',
-    position: 'First response — after contact, before the opportunity goes cold.',
-    lead: 'A first response on every written enquiry, inside the window in which people are still deciding — including the enquiries that arrive at nine in the evening and on a Sunday.',
+    position: 'First response, after contact and before the opportunity goes cold.',
+    lead: 'A first response on every written enquiry, inside the window in which people are still deciding, including the enquiries that arrive at nine in the evening and on a Sunday.',
     problem: {
       title: 'An enquiry answered on Tuesday was decided on Sunday.',
       body: [
-        'Written enquiries — web forms, messages, callback requests — arrive whenever the person happens to be thinking about it, which is rarely during a shift. They then sit in a shared inbox until somebody has a quiet ten minutes, and the person who sent them has usually contacted somebody else in the meantime.',
+        'Written enquiries arrive by web form, by message and by callback request, whenever the person happens to be thinking about it. That is rarely during a shift. They then sit in a shared inbox until somebody has a quiet ten minutes, and the person who sent them has usually contacted somebody else in the meantime.',
         'The failure is not that nobody replies. It is that the reply arrives after the decision. Response latency is measurable, it varies enormously between sites in the same group, and almost nobody reports on it, because the inbox is not part of the practice management system.',
       ],
+      figure: {
+        value: '5 min',
+        label:
+          'The window an enquiry is still warm in, before the person who sent it starts contacting somebody else',
+        basis:
+          'Take your own inbox and measure the gap between the timestamp on an enquiry and the timestamp on its first reply. Do it for a fortnight and take the median, not the average, because the average is flattered by the quick ones.',
+      },
     },
+    operation: [
+      'Respond answers written enquiries as they arrive, at whatever hour they arrive. It acknowledges the person, answers what it has been given approved answers to, and asks the one or two questions your team would have asked anyway.',
+      'Where the enquiry is for something on your approved list, it offers times and books one. Where it is not, it collects the detail and hands a complete thread to your team, so the first thing anybody reads is a conversation rather than a form.',
+      'The measurable change is the gap between an enquiry arriving and a reply going out. That gap becomes a number you can see per site, per channel and per hour of the day, which is usually the first time a group can compare its practices on it.',
+    ],
+    connects: {
+      systems: [
+        {
+          key: 'Your website and forms',
+          detail:
+            'Enquiry submissions, including the fields you already collect. No change to your form is required for Respond to read it.',
+        },
+        {
+          key: 'Your practice management system',
+          detail:
+            'Availability, and appointment creation for the types you have approved. Where write access is not available, Respond proposes and your team confirms.',
+        },
+      ],
+      channels: [
+        { key: 'Web enquiry forms', detail: 'Including out of hours and at weekends.' },
+        { key: 'Messages', detail: 'The messaging channels you already publish, in one thread.' },
+        { key: 'Email', detail: 'Replies from your practice address, in your own wording.' },
+        { key: 'SMS', detail: 'Where the enquirer gave a mobile number and consented to it.' },
+      ],
+      note: 'Respond replies on the channel the person used, because a web enquiry answered by telephone two days later is the failure this module exists to remove.',
+    },
+    dashboard: [
+      {
+        key: 'Time to first response',
+        detail:
+          'Median and spread, by channel and by hour. The single number most groups have never had for their written enquiries.',
+      },
+      {
+        key: 'Enquiries answered inside the window',
+        detail:
+          'Counted against the arrival timestamp, not against when somebody opened the inbox.',
+      },
+      {
+        key: 'Appointments booked from an enquiry',
+        detail:
+          'Only where the appointment exists in your practice management system. Booked is a record, never an intention.',
+      },
+      {
+        key: 'What people are actually asking for',
+        detail:
+          'Enquiries grouped by request, which tends to say more about demand than any survey the practice has run.',
+      },
+    ],
+    doesNot: [
+      {
+        key: 'It does not assess urgency',
+        detail:
+          'No triage and no clinical opinion. An enquiry that describes a symptom is escalated to a person rather than answered.',
+      },
+      {
+        key: 'It does not quote outside your fee schedule',
+        detail:
+          'Prices come from the schedule you publish to it, or the question is handed over. It never estimates a cost.',
+      },
+      {
+        key: 'It does not chase indefinitely',
+        detail:
+          'A fixed number of follow-ups on approved channels, then the thread is closed with a recorded reason. A list worked without a stop rule becomes a campaign.',
+      },
+      {
+        key: 'It does not write in a voice you have not approved',
+        detail:
+          'Tone, wording and the answers it is allowed to give are configured with your team and are yours to change.',
+      },
+    ],
     monitors: [
       {
         key: 'Enquiry intake',
@@ -306,7 +485,7 @@ export const MODULES: ModuleDefinition[] = [
     name: 'Retain',
     index: 3,
     summary: 'Protecting the schedule you have already filled.',
-    position: 'Between booking and attendance — where filled capacity quietly empties.',
+    position: 'Between booking and attendance, where filled capacity quietly empties.',
     lead: 'Protecting appointments that are already booked: confirming them, recovering the ones that cancel, and refilling the gaps that open inside the working horizon.',
     problem: {
       title: 'A booked appointment is not a kept appointment.',
@@ -314,7 +493,82 @@ export const MODULES: ModuleDefinition[] = [
         'Between booking and attendance, a schedule loses volume in three ways: appointments that are cancelled with too little notice to refill by hand, appointments where nobody arrives, and slots released by clinical changes on the day. Each one is a room, a chair and a clinician already paid for.',
         'Refilling a short-notice gap is a manual job that competes with everything else happening at the desk at the same time. It usually loses, and the gap stays open. The cost is real, it recurs daily, and it does not appear anywhere as a line item.',
       ],
+      figure: {
+        value: '1 chair',
+        label:
+          'What an unfilled short-notice gap costs, for the length of the appointment that was in it',
+        basis:
+          'The room, the clinician and the nurse are all rostered and paid whether or not somebody is in the chair. Your own hourly cost of a surgery is the figure to put against it.',
+      },
     },
+    operation: [
+      'Retain works the space between a booking and the appointment happening. It confirms ahead on the channel each person actually replies on, and it keeps asking, within the limits you set, until it gets an answer rather than assuming silence means yes.',
+      'When somebody cancels or a slot is released on the day, the gap is offered straight away to the people most likely to take it: the waiting list, patients whose appointment is further out than they wanted, and records already overdue.',
+      'The job it removes from the desk is the one that always loses. Refilling a Thursday afternoon gap on Thursday morning is entirely possible and almost never happens, because whoever would do it is on the phone.',
+    ],
+    connects: {
+      systems: [
+        {
+          key: 'Your practice management system',
+          detail:
+            'The diary, appointment status and cancellations. Retain reads what is booked and writes back confirmations and refills for the types you allow.',
+        },
+        {
+          key: 'Your waiting list',
+          detail:
+            'Wherever it currently lives, including a spreadsheet. A gap can only be offered to somebody the system knows is waiting.',
+        },
+      ],
+      channels: [
+        { key: 'SMS', detail: 'Confirmations and short-notice offers, where consent exists.' },
+        { key: 'Email', detail: 'Longer confirmations and pre-appointment instructions.' },
+        { key: 'Voice', detail: 'A call for the gaps that are worth a call, inside your hours.' },
+      ],
+      note: 'Retain never contacts somebody who has asked not to be contacted, and suppression lists are read before every send rather than at set-up.',
+    },
+    dashboard: [
+      {
+        key: 'Appointments confirmed ahead',
+        detail: 'With the channel each confirmation came back on, and how many attempts it took.',
+      },
+      {
+        key: 'Gaps that opened, and what happened to them',
+        detail:
+          'Every released slot, how long it stayed open, and whether it was refilled or ran empty. Including the ones nobody filled.',
+      },
+      {
+        key: 'Attended, against booked',
+        detail:
+          'The gap between these two is the number this module is judged on, and it comes from attendance status in your system.',
+      },
+      {
+        key: 'Where non-attendance concentrates',
+        detail:
+          'By appointment type, clinician and day. Usually a rota conversation rather than a patient one.',
+      },
+    ],
+    doesNot: [
+      {
+        key: 'It does not overbook',
+        detail:
+          'A slot is offered to one person at a time. Retain will not double-book a room to protect a utilisation figure.',
+      },
+      {
+        key: 'It does not decide who is clinically suitable',
+        detail:
+          'Offers go to the people your rules say are eligible for that appointment type. Clinical suitability is a judgement it never makes.',
+      },
+      {
+        key: 'It does not charge or waive fees',
+        detail:
+          'Cancellation policy, deposits and any charge for non-attendance stay entirely with the practice.',
+      },
+      {
+        key: 'It does not pester',
+        detail:
+          'A capped number of contacts per appointment across channels you approve, with a quiet period you set. The cap is a ceiling, not a target.',
+      },
+    ],
     monitors: [
       {
         key: 'Confirmation state',
@@ -358,7 +612,7 @@ export const MODULES: ModuleDefinition[] = [
       {
         key: 'Record the outcome',
         detail:
-          'Whether a gap was refilled, by whom, and how long it stayed open — held against the original slot.',
+          'Whether a gap was refilled, by whom, and how long it stayed open, all held against the original slot.',
       },
     ],
     clientControls: [
@@ -431,7 +685,7 @@ export const MODULES: ModuleDefinition[] = [
       {
         key: 'Attribution status',
         detail:
-          'Whether a refilled slot is attributed, assisted or disputed — and who changed the status.',
+          'Whether a refilled slot is attributed, assisted or disputed, and who changed the status.',
       },
     ],
     outcome: [
@@ -445,15 +699,92 @@ export const MODULES: ModuleDefinition[] = [
     name: 'Reactivate',
     index: 4,
     summary: 'Bringing dormant records back into the schedule.',
-    position: 'The back book — demand that already exists in your own database.',
+    position: 'The back book: demand that already exists in your own database.',
     lead: 'Working the records that stopped coming back: overdue recalls, lapsed plans, and treatment that was accepted and never given a date.',
     problem: {
       title: 'The largest list of prospects a practice has is the list it already owns.',
       body: [
         'Every practice carries a back book: records past their expected return interval, recalls that lapsed, plans that stopped being paid, and treatment that was discussed, agreed and never scheduled. It is the cheapest demand in the business and it is almost never worked, because working it is an unglamorous list job with no deadline attached to it.',
-        'When it is worked, it is worked in bursts — a quiet January, a new hire with spare capacity — and then it stops. The result is that the same list gets partially contacted several times and never systematically.',
+        'When it is worked, it is worked in bursts, in a quiet January or when a new hire has spare capacity, and then it stops. The result is that the same list gets partially contacted several times and never systematically.',
       ],
+      figure: {
+        value: '0',
+        label: 'Marketing spend needed to reach somebody who is already in your database',
+        basis:
+          'These records were acquired once and paid for once. Working them competes with acquiring new demand, and it is the cheaper of the two by the whole cost of acquisition.',
+      },
     },
+    operation: [
+      'Reactivate takes the records that stopped coming back and works them in a defined order: how overdue they are, what they are worth, and any rule you set about who should be approached first.',
+      'Each record gets a fixed number of attempts on channels you have approved, and then it is closed with a reason. Closed means closed. The record is not quietly returned to the top of the list three months later, which is what makes a back book feel like a campaign to the people in it.',
+      'The order matters more than the effort. A record three months overdue and a record three years overdue are not the same job, and working them in the order the export happened to produce is why most back-book pushes stall.',
+    ],
+    connects: {
+      systems: [
+        {
+          key: 'Your practice management system',
+          detail:
+            'Recall due dates, plan status and last-seen dates. Status only, never the clinical record behind it.',
+        },
+        {
+          key: 'Your suppression and consent records',
+          detail:
+            'Read before every contact. A record that has opted out is never approached, regardless of how overdue it is.',
+        },
+      ],
+      channels: [
+        {
+          key: 'SMS',
+          detail: 'The first approach for most overdue recalls, where consent exists.',
+        },
+        { key: 'Email', detail: 'Longer explanations, and anything with a form or a link.' },
+        { key: 'Voice', detail: 'Reserved for higher-value records, inside your hours.' },
+      ],
+      note: 'Reactivate works from your own database. It does not buy, rent or enrich lists, and no contact is added from outside your systems.',
+    },
+    dashboard: [
+      {
+        key: 'The back book, segmented',
+        detail:
+          'How many records sit at each overdue interval, which is usually the first time anybody has seen its shape.',
+      },
+      {
+        key: 'Records worked, and how far they got',
+        detail: 'Attempts made, replies received, and where each record was closed.',
+      },
+      {
+        key: 'Returns by interval',
+        detail:
+          'What came back from three months against what came back from two years. The argument for working the list in order, in your own numbers.',
+      },
+      {
+        key: 'Closed with a reason',
+        detail:
+          'Every record set down deliberately, with the reason recorded. A back book that has been worked properly gets smaller.',
+      },
+    ],
+    doesNot: [
+      {
+        key: 'It does not buy or enrich data',
+        detail:
+          'Every record worked came from your own systems. No third-party list is purchased, appended or matched.',
+      },
+      {
+        key: 'It does not recall on clinical grounds',
+        detail:
+          'It works intervals and statuses that already exist in your system. Deciding when somebody is due is a clinical decision your practice has already made.',
+      },
+      {
+        key: 'It does not run without a stop rule',
+        detail:
+          'Attempts are capped and closures are recorded. There is no configuration in which a record is contacted indefinitely.',
+      },
+      {
+        key: 'It does not discount to win a return',
+        detail:
+          'Any offer, and whether there is one at all, is set by the practice. Reactivate never invents an incentive.',
+      },
+    ],
     monitors: [
       {
         key: 'Overdue recalls',
@@ -477,7 +808,7 @@ export const MODULES: ModuleDefinition[] = [
       {
         key: 'Sequence the list',
         detail:
-          'Contacts are worked in a defined order — by overdue interval, by value, or by a rule you set — not by whoever is at the top of a spreadsheet.',
+          'Contacts are worked in a defined order you set, by overdue interval or by value, not by whoever sits at the top of a spreadsheet.',
       },
       {
         key: 'Contact to a stop rule',
@@ -542,7 +873,7 @@ export const MODULES: ModuleDefinition[] = [
       },
       {
         key: 'Treatment plan status',
-        detail: 'Whether an agreed plan has an appointment attached — status only, not content.',
+        detail: 'Whether an agreed plan has an appointment attached. Status only, not content.',
       },
     ],
     dataNotRequired: [

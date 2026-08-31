@@ -10,7 +10,7 @@
   top: 0;
   z-index: var(--gl-z-nav);
   padding-top: 14px;
-  transition: padding-top var(--gl-dur-base) var(--gl-ease-out);
+  transition: padding-top var(--gl-dur-standard) var(--gl-ease);
 }
 .nav[data-condensed="true"] {
   padding-top: 8px;
@@ -35,8 +35,8 @@
   -webkit-backdrop-filter: saturate(150%) blur(18px);
   box-shadow: inset 0 0 0 1px transparent;
   transition:
-    box-shadow var(--gl-dur-base) var(--gl-ease-out),
-    background var(--gl-dur-base) var(--gl-ease-out);
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    background var(--gl-dur-standard) var(--gl-ease);
 }
 .nav[data-condensed="true"] .nav__bar {
   background: color-mix(in srgb, var(--gl-white) 88%, transparent);
@@ -96,8 +96,8 @@
   color: var(--gl-graphite);
   white-space: nowrap;
   transition:
-    color var(--gl-dur-fast) var(--gl-ease-out),
-    background var(--gl-dur-fast) var(--gl-ease-out);
+    color var(--gl-dur-micro) var(--gl-ease),
+    background var(--gl-dur-micro) var(--gl-ease);
 }
 .nav__link:hover {
   color: var(--gl-ink);
@@ -138,6 +138,10 @@
   color: var(--gl-ink);
   background: rgba(12, 12, 14, 0.05);
 }
+.nav__toggle:focus-visible {
+  outline: var(--gl-focus-w) solid var(--gl-purple-600);
+  outline-offset: var(--gl-focus-offset);
+}
 .nav__burger {
   display: grid;
   gap: 4px;
@@ -148,7 +152,7 @@
   height: 1.5px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform var(--gl-dur-base) var(--gl-ease-spring);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 [data-open="true"] .nav__burger i:first-child {
   transform: translateY(2.75px) rotate(45deg);
@@ -206,7 +210,7 @@
   margin-inline: -14px;
   border-bottom: 1px solid rgba(12, 12, 14, 0.06);
   border-radius: var(--gl-r-sm);
-  transition: background var(--gl-dur-fast) var(--gl-ease-out);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
 .drawer__label {
   font-size: 1.375rem;
@@ -224,7 +228,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--gl-slate-soft);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .drawer__link:hover,
 .drawer__link:focus-visible {
@@ -281,7 +285,7 @@
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   gap: clamp(32px, 4vw, 72px);
-  align-items: end;
+  align-items: start;
 }
 .hero__copy {
   max-width: 30rem;
@@ -306,31 +310,96 @@
   padding-top: var(--gl-s-5);
   border-top: 1px solid var(--gl-edge);
 }
-.hero__module {
-  padding: 6px 12px;
+/* --------------------------------------------------------------------------
+   MODULE BUTTON — the purple control.
+
+   Every route into a module uses this one class: the hero chips, the module
+   switcher at the foot of a module page, and the modules index. Purple is the
+   signal colour, so the four things that do the recovering are the four
+   things that carry it.
+
+   Measured: 700 on 50 is 10.37, white on 500 is 7.80, white on 600 is 9.51.
+   Only the border sits below AA, and it carries no text.
+   ----------------------------------------------------------------------- */
+.modbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--gl-purple-200);
   border-radius: var(--gl-r-pill);
-  background: rgba(12, 12, 14, 0.045);
+  background: var(--gl-purple-50);
+  color: var(--gl-purple-700);
   font-size: var(--gl-t-micro);
   font-weight: var(--gl-w-medium);
-  color: var(--gl-graphite);
+  letter-spacing: var(--gl-tr-body);
+  /* Colour and border only. A hover lift here would be the fourth different
+     hover behaviour on the page; the RESPONSE verb is colour, not travel. */
   transition:
-    background var(--gl-dur-fast) var(--gl-ease-out),
-    color var(--gl-dur-fast) var(--gl-ease-out),
-    transform var(--gl-dur-fast) var(--gl-ease-out);
+    background var(--gl-dur-micro) var(--gl-ease-micro),
+    border-color var(--gl-dur-micro) var(--gl-ease-micro),
+    color var(--gl-dur-micro) var(--gl-ease-micro);
 }
-.hero__module:hover {
-  background: var(--gl-purple);
+.modbtn:hover {
+  background: var(--gl-purple-600);
+  border-color: var(--gl-purple-600);
   color: var(--gl-white);
-  transform: translateY(-1px);
 }
+.modbtn:active {
+  background: var(--gl-purple-700);
+  border-color: var(--gl-purple-700);
+  color: var(--gl-white);
+}
+.modbtn:focus-visible {
+  outline: var(--gl-focus-w) solid var(--gl-purple-600);
+  outline-offset: var(--gl-focus-offset);
+}
+.modbtn[aria-current="page"],
+.modbtn[data-active="true"] {
+  background: var(--gl-purple-600);
+  border-color: var(--gl-purple-600);
+  color: var(--gl-white);
+}
+.modbtn[aria-disabled="true"],
+.modbtn:disabled {
+  background: var(--gl-mist);
+  border-color: var(--gl-edge);
+  color: var(--gl-slate-soft);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* On a dark ground the ramp inverts: light purple type, transparent fill. */
+.on-dark .modbtn {
+  background: rgba(171, 159, 238, 0.1);
+  border-color: var(--gl-purple-ondark-muted);
+  color: var(--gl-purple-ondark);
+}
+.on-dark .modbtn:hover {
+  background: var(--gl-purple-ondark);
+  border-color: var(--gl-purple-ondark);
+  color: var(--gl-graphite-deep);
+}
+.on-dark .modbtn:active {
+  background: var(--gl-purple-ondark-hover);
+  border-color: var(--gl-purple-ondark-hover);
+  color: var(--gl-graphite-deep);
+}
+.on-dark .modbtn:focus-visible {
+  outline-color: var(--gl-purple-ondark);
+}
+.on-dark .modbtn[aria-current="page"],
+.on-dark .modbtn[data-active="true"] {
+  background: var(--gl-purple-ondark);
+  border-color: var(--gl-purple-ondark);
+  color: var(--gl-graphite-deep);
+}
+
 .hero__note {
+  padding: 7px 2px;
   color: var(--gl-slate-soft);
-  background: transparent;
-}
-.hero__note:hover {
-  background: transparent;
-  color: var(--gl-slate-soft);
-  transform: none;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-regular);
 }
 
 @media (max-width: 1024px) {
@@ -357,9 +426,6 @@
     var(--gl-shadow-lg);
   overflow: hidden;
   isolation: isolate;
-  /* Parallax: the panel drifts a little slower than the page. */
-  transform: translate3d(0, var(--field-y, 0px), 0);
-  will-change: transform;
 }
 .field__head {
   display: flex;
@@ -376,7 +442,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--gl-slate);
 }
 .field__dot {
@@ -385,7 +450,7 @@
   border-radius: 50%;
   background: var(--gl-verified);
   box-shadow: 0 0 0 0 var(--gl-verified-wash);
-  animation: gl-pulse 2.6s var(--gl-ease-out) infinite;
+  animation: gl-pulse 2.6s var(--gl-ease) infinite;
 }
 @keyframes gl-pulse {
   0% {
@@ -421,8 +486,8 @@
   background: var(--gl-mist);
   transform-origin: left center;
   /* Each tick resolves as the sweep reaches its column. */
-  animation: gl-detect var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
-  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep) / 34));
+  animation: gl-detect var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--c, 0) * (var(--gl-dur-ambient) / 34));
 }
 .field__tick--miss {
   animation: none;
@@ -468,7 +533,7 @@
     rgba(74, 58, 196, 0.32) 92%,
     rgba(74, 58, 196, 0.55) 100%
   );
-  animation: gl-sweep var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
+  animation: gl-sweep var(--gl-dur-ambient) var(--gl-ease) infinite;
 }
 @keyframes gl-sweep {
   0% {
@@ -509,7 +574,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--gl-slate);
 }
 .field__stagetrack {
@@ -527,7 +591,7 @@
   border-radius: var(--gl-r-pill);
   background: var(--c);
   transform-origin: left;
-  animation: gl-stagefill var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
+  animation: gl-stagefill var(--gl-dur-ambient) var(--gl-ease) infinite;
   animation-delay: calc(var(--i) * 180ms);
 }
 @keyframes gl-stagefill {
@@ -682,8 +746,8 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .modblock + .modblock {
   margin-top: 12px;
@@ -726,7 +790,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
   padding-bottom: 8px;
   margin-bottom: 10px;
@@ -775,8 +838,8 @@
   flex-direction: column;
   gap: 18px;
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .split__panel:hover {
   transform: translateY(-2px);
@@ -873,7 +936,7 @@
   gap: clamp(16px, 3vw, 48px);
   padding-block: clamp(22px, 2.6vw, 32px);
   border-bottom: 1px solid var(--rule);
-  transition: background var(--gl-dur-base) var(--gl-ease-out);
+  transition: background var(--gl-dur-standard) var(--gl-ease);
 }
 .entry:hover {
   background: var(--rule-soft);
@@ -919,8 +982,8 @@
   border: 1px solid var(--rule);
   border-radius: var(--gl-r-sm);
   transition:
-    border-color var(--gl-dur-fast) var(--gl-ease-out),
-    box-shadow var(--gl-dur-fast) var(--gl-ease-out);
+    border-color var(--gl-dur-micro) var(--gl-ease),
+    box-shadow var(--gl-dur-micro) var(--gl-ease);
 }
 .field__control::placeholder {
   color: var(--ghost);
@@ -1028,7 +1091,7 @@ select.field__control {
   padding: 14px 12px 14px 0;
   border-bottom: 1px solid var(--rule);
   border-radius: var(--gl-r-sm);
-  transition: background var(--gl-dur-fast) var(--gl-ease-out);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
 .rail-index__item:hover {
   background: var(--rule-soft);
@@ -1157,7 +1220,7 @@ select.field__control {
   color: rgba(251, 250, 248, 0.7);
   font-size: var(--gl-t-small);
   line-height: 1.4;
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .foot__nav a:hover {
   color: var(--gl-white);
@@ -1173,7 +1236,7 @@ select.field__control {
 }
 .foot__base a {
   color: rgba(251, 250, 248, 0.7);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .foot__base a:hover {
   color: var(--gl-white);

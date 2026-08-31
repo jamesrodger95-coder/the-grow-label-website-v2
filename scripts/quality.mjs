@@ -16,6 +16,11 @@ const STEPS = [
   { name: 'format', cmd: 'pnpm', args: ['exec', 'prettier', '--check', '.'] },
   // Cheap, and it has already caught a regex whose \b became a raw backspace.
   { name: 'control-chars', cmd: 'node', args: ['scripts/control-chars.mjs'] },
+  // Fails if any duration or easing is used that is not one of the three
+  // durations and one curve. The motion system is enforced by this, not by
+  // review: it took one pass to collapse five curves and six durations, and
+  // it would take one careless transition to start the drift again.
+  { name: 'motion-system', cmd: 'node', args: ['scripts/motion-inventory.mjs'] },
   { name: 'lint', cmd: 'pnpm', args: ['exec', 'eslint', '.', '--max-warnings=0'] },
   { name: 'typecheck', cmd: 'pnpm', args: ['exec', 'tsc', '--noEmit'] },
   { name: 'test', cmd: 'pnpm', args: ['exec', 'vitest', 'run'] },

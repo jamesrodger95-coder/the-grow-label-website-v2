@@ -3,21 +3,16 @@ import { Hero } from '@/components/home/Hero';
 import { Leaks } from '@/components/home/Leaks';
 import { RecoveryPipeline } from '@/components/home/RecoveryPipeline';
 import { Results } from '@/components/home/Results';
+import { ReadsIngest } from '@/components/home/ReadsIngest';
+import { DeskBoard } from '@/components/home/DeskBoard';
+import { ProvenanceChain } from '@/components/home/ProvenanceChain';
 import { CaseStudies } from '@/components/home/CaseStudies';
 import { Testimonials } from '@/components/home/Testimonials';
 import { VideoTestimonials } from '@/components/home/VideoTestimonials';
 import { Team } from '@/components/home/Team';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
-import { Parallax } from '@/components/motion/Parallax';
 import { RecoverySequence } from '@/components/motion/RecoverySequence';
-import {
-  ActionLink,
-  CapacityColumn,
-  KeyValueStrip,
-  StageBar,
-  StepList,
-  TextLink,
-} from '@/components/primitives';
+import { ActionLink, CapacityColumn, StageBar, StepList, TextLink } from '@/components/primitives';
 import { CLOSING, DETECTION, EVIDENCE, SECTORS, TIME_RETURNED } from '@/content/home';
 import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
@@ -25,7 +20,7 @@ import { READS_STRIP } from '@/content/proof';
 import { CTA, SITE, VALUE_STAGES } from '@/content/site';
 
 export const metadata: Metadata = {
-  title: `${SITE.name} — revenue recovery for veterinary and dental groups`,
+  title: `${SITE.name}: revenue recovery for veterinary and dental groups`,
   description: SITE.description,
   alternates: { canonical: '/' },
 };
@@ -100,9 +95,12 @@ export default function HomePage() {
             </Reveal>
           </div>
 
+          {/* Four lanes feeding one record, replacing the four-up card grid
+              that used to sit here. Full width on purpose: the two visuals
+              either side of it are right-hand panels, and breaking the column
+              rhythm once is what stops the page reading as a template. */}
           <Reveal variant="rise" className="detect__reads">
-            <p className="label detect__readslabel">What it reads to do that</p>
-            <KeyValueStrip items={DETECTION.reads} />
+            <ReadsIngest />
           </Reveal>
         </div>
       </section>
@@ -192,8 +190,8 @@ export default function HomePage() {
           <div className="two-col" style={{ marginTop: 'var(--gl-s-9)' }}>
             <Reveal variant="rise" className="sticky-aside">
               <p className="body" style={{ marginBottom: 20 }}>
-                Most recovery reporting quotes one figure. We never do, because the four questions
-                underneath it have four different answers — and the gaps between them are the only
+                Most recovery reporting quotes one figure. We never do. The four questions
+                underneath it have four different answers, and the gaps between them are the only
                 part worth a management conversation.
               </p>
               <p style={{ marginTop: 26 }}>
@@ -244,12 +242,20 @@ export default function HomePage() {
             </div>
             <p className="sec-head__aside">Five recurring jobs</p>
           </div>
-          <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
-            {TIME_RETURNED.lead}
-          </Reveal>
-          <Reveal variant="wipe">
-            <StepList items={TIME_RETURNED.items} />
-          </Reveal>
+          {/* Visual on the LEFT here. The detection panel above and the
+              evidence chain below are both right-hand, so this is the beat
+              that keeps the page from marching down one side. */}
+          <div className="two-col two-col--flip">
+            <Reveal variant="rise" className="two-col__visual">
+              <DeskBoard />
+            </Reveal>
+            <Reveal variant="rise" index={1}>
+              <p className="lead" style={{ marginBottom: 32 }}>
+                {TIME_RETURNED.lead}
+              </p>
+              <StepList items={TIME_RETURNED.items} />
+            </Reveal>
+          </div>
         </div>
       </section>
 
@@ -274,15 +280,26 @@ export default function HomePage() {
             </div>
             <p className="sec-head__aside">Five properties of the record</p>
           </div>
-          <div className="two-col">
-            <Reveal variant="rise" className="sticky-aside">
-              <p className="lead">{EVIDENCE.lead}</p>
+          {/* Even columns. The default `two-col` gives the left column an aside
+              width, and the five-property list was being squeezed into a
+              measure it could not hold once the chain took the right-hand
+              side. */}
+          <div className="two-col two-col--even">
+            <Reveal variant="rise">
+              <p className="lead" style={{ marginBottom: 32 }}>
+                {EVIDENCE.lead}
+              </p>
+              <StepList items={EVIDENCE.items} />
               <p style={{ marginTop: 26 }}>
                 <TextLink href="/platform#limits">What we cannot claim</TextLink>
               </p>
             </Reveal>
-            <Reveal variant="wipe" index={1}>
-              <StepList items={EVIDENCE.items} />
+            {/* The quiet variant, on the right. No chrome bar and no motion of
+                its own: the pipeline two sections above already shows an event
+                becoming a record, and a second full instrument making the same
+                shape would cost the first one its authority. */}
+            <Reveal variant="rise" index={1}>
+              <ProvenanceChain />
             </Reveal>
           </div>
         </div>
@@ -369,32 +386,33 @@ export default function HomePage() {
                 </ActionLink>
               </div>
             </Reveal>
-            <Parallax distance={34}>
-              <Reveal variant="card" index={1}>
-                <ul className="ticks" style={{ marginBottom: 30 }}>
-                  {CLOSING.points.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
-                <CapacityColumn
-                  slots={[
-                    'filled',
-                    'recovered',
-                    'filled',
-                    'recovered',
-                    'filled',
-                    'filled',
-                    'recovered',
-                    'filled',
-                    'filled',
-                    'recovered',
-                  ]}
-                  label="After recovery"
-                  openLabel="0 open"
-                  note="The same room, the same week, with the gaps worked while they were still fillable."
-                />
-              </Reveal>
-            </Parallax>
+            {/* No parallax here. A drift is a fifth motion verb on a site
+                that has four, it carried no meaning, and it was the only use
+                of it anywhere. */}
+            <Reveal variant="card" index={1}>
+              <ul className="ticks" style={{ marginBottom: 30 }}>
+                {CLOSING.points.map((point) => (
+                  <li key={point}>{point}</li>
+                ))}
+              </ul>
+              <CapacityColumn
+                slots={[
+                  'filled',
+                  'recovered',
+                  'filled',
+                  'recovered',
+                  'filled',
+                  'filled',
+                  'recovered',
+                  'filled',
+                  'filled',
+                  'recovered',
+                ]}
+                label="After recovery"
+                openLabel="0 open"
+                note="The same room, the same week, with the gaps worked while they were still fillable."
+              />
+            </Reveal>
           </div>
         </div>
       </section>

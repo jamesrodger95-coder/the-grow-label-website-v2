@@ -56,7 +56,7 @@ export const INDUSTRIES: IndustryDefinition[] = [
     lead: 'Veterinary groups lose demand at the edges of the day and in the gap between one visit and the next one that never gets booked.',
     hero: {
       titleLines: ['The phone does not', 'keep consulting hours.'],
-      lead: 'Owners ring when something changes at home — before opening, during theatre, after closing, across the weekend. Grow Label reads the calls, the enquiries and the return intervals your practice already generates, works the ones that were missed, and reports what came back at four separate stages.',
+      lead: 'Owners ring when something changes at home: before opening, during theatre, after closing, across the weekend. Grow Label reads the calls, the enquiries and the return intervals your practice already generates, works the ones that were missed, and reports what came back at four separate stages.',
       signals: [
         { key: 'Missed calls', kind: 'loss' },
         { key: 'Overdue care', kind: 'loss' },
@@ -73,7 +73,7 @@ export const INDUSTRIES: IndustryDefinition[] = [
       title: 'The veterinary problem is',
       emphasis: 'the shape of the day.',
       body: [
-        'Consulting runs in blocks, surgery takes the middle of the day, and the phone does not observe either. Owners call when something changes at home — early morning, evening, and across the weekend — which is precisely when the desk is thinnest or closed.',
+        'Consulting runs in blocks, surgery takes the middle of the day, and the phone does not observe either. Owners call when something changes at home, in the early morning, in the evening and across the weekend. That is precisely when the desk is thinnest or closed.',
         'The second pattern is interval-based. A client comes in once, the follow-up is discussed rather than booked, and the record quietly ages past the point where anyone would notice. Multiply that across a group and the back book becomes the largest addressable list the business owns.',
       ],
     },
@@ -113,7 +113,7 @@ export const INDUSTRIES: IndustryDefinition[] = [
         title: 'Wellness plan and vaccination intervals',
         problem:
           'Interval-driven appointments that lapse silently, and plans that stop being paid without a recorded reason.',
-        reads: 'Plan status and due dates. Status only — never the clinical record behind it.',
+        reads: 'Plan status and due dates. Status only, never the clinical record behind it.',
         module: 'Reactivate',
       },
       {
@@ -180,7 +180,7 @@ export const INDUSTRIES: IndustryDefinition[] = [
       title: 'The dental problem is',
       emphasis: 'the interval and the gap after yes.',
       body: [
-        'Dentistry is unusual in that a large amount of demand is already qualified and already agreed. Treatment is discussed, the patient accepts, and then the appointment is not made before they leave. The plan sits in the system as an accepted, unscheduled item — the highest-intent demand in the practice, and the least worked.',
+        'Dentistry is unusual in that a large amount of demand is already qualified and already agreed. Treatment is discussed, the patient accepts, and then the appointment is not made before they leave. The plan sits in the system as an accepted, unscheduled item. It is the highest-intent demand in the practice and the least worked.',
         'The second pattern is the recall. Hygiene runs on fixed intervals, the list is generated reliably, and it is worked as far down as the day allows. Where the list stops is where the revenue stops, and that line moves depending on how busy reception was.',
       ],
     },
@@ -206,7 +206,7 @@ export const INDUSTRIES: IndustryDefinition[] = [
         index: '02',
         title: 'Enquiry response time',
         problem:
-          'Web and message enquiries — often for higher-value treatment — answered a day after the patient decided.',
+          'Web and message enquiries, often for higher-value treatment, answered a day after the patient decided.',
         reads: 'Arrival and first-reply timestamps per channel, per site, per hour.',
         module: 'Respond',
       },

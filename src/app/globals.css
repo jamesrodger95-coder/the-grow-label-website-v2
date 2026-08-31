@@ -139,7 +139,6 @@ body {
   font-family: var(--gl-font-mono);
   font-size: var(--gl-t-label);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
 }
 .matrix__role--influences {
   color: var(--accent);

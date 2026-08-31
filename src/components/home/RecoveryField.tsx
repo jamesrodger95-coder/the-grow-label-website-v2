@@ -100,8 +100,8 @@ export function RecoveryField() {
         {
           '--cols': cols,
           transform:
-            'perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translate3d(0, var(--field-y, 0px), 0)',
-          transition: 'transform 500ms cubic-bezier(0.22, 1, 0.36, 1)',
+            'perspective(1400px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg))',
+          transition: 'transform var(--gl-dur-orchestrated) var(--gl-ease)',
         } as CSSProperties
       }
     >
@@ -153,8 +153,8 @@ export function RecoveryField() {
 
       <p className="gl-sr">
         An animated diagram: contact events are detected across a field, then value is reported at
-        four separate stages — estimated, booked, attended and collected — each smaller than the one
-        above it.
+        four separate stages, estimated then booked then attended then collected, each smaller than
+        the one above it.
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import { TextLink } from '@/components/primitives';
+import { StageIcon } from './StageIcon';
 import { PLACEHOLDER_NOTE, RESULTS } from '@/content/proof';
 
 /**
@@ -11,6 +12,17 @@ import { PLACEHOLDER_NOTE, RESULTS } from '@/content/proof';
  * will sit, so the section is honest at a glance and needs no rebuild when real
  * figures are approved.
  */
+/**
+ * The icon ramp: four opaque steps of the one hue, lightest at Estimated and
+ * darkest at Collected, so the mark alone says how much is known.
+ */
+const ICON_TONE = [
+  'var(--gl-purple-400)',
+  'var(--gl-purple-500)',
+  'var(--gl-purple-600)',
+  'var(--gl-purple-700)',
+];
+
 export function Results() {
   return (
     <section
@@ -42,14 +54,28 @@ export function Results() {
 
         <div className="results">
           {RESULTS.cards.map((card, i) => (
-            <Reveal className="result" key={card.stage} variant="card" index={i}>
+            <Reveal
+              className="result"
+              key={card.stage}
+              variant="card"
+              index={i}
+              style={{ '--i': i, '--c': card.tone, '--ico': ICON_TONE[i] } as CSSProperties}
+            >
+              {/* 01 — the mark. Carries the stage colour, so the four icons
+                  read as one ramp before a word has been read. */}
+              <span className="result__icon">
+                <StageIcon stage={card.stage} />
+              </span>
+
+              {/* 02 — the label */}
               <div className="result__stage">
                 <span className="label label--strong">{card.stage}</span>
                 <span className="placeholder-tag">TBC</span>
               </div>
 
-              {/* A reserved slot rather than a stray dash: it reads as a
-                  figure that has not been supplied, not as a broken element. */}
+              {/* 03 — the metric. A reserved slot rather than a stray dash: it
+                  reads as a figure that has not been supplied, not as a broken
+                  element. */}
               <p className="result__figure">
                 <span className="result__slot" aria-hidden="true" />
                 <span className="gl-sr">{`${card.stage} value, to be confirmed`}</span>
@@ -62,10 +88,9 @@ export function Results() {
                 />
               </div>
 
-              <p className="result__basis" style={{ '--c': card.tone } as CSSProperties}>
-                {card.basis}
-              </p>
-              <p className="micro">{card.hint}</p>
+              {/* 04 — the explanation: what promotes a figure to this stage */}
+              <p className="result__basis">{card.basis}</p>
+              <p className="result__hint micro">{card.hint}</p>
             </Reveal>
           ))}
         </div>

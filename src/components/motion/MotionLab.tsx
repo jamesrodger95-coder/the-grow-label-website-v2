@@ -162,7 +162,7 @@ export function MotionLab() {
                     background: 'var(--gl-purple)',
                     opacity: playing ? 0.85 : 0.35,
                     transition:
-                      'left var(--gl-dur-scene) var(--gl-ease-settle), width var(--gl-dur-scene) var(--gl-ease-settle), opacity var(--gl-dur-slow) var(--gl-ease-out)',
+                      'transform var(--gl-dur-orchestrated) var(--gl-ease), opacity var(--gl-dur-standard) var(--gl-ease)',
                     transitionDelay: `${i * 60}ms`,
                   } as CSSProperties
                 }

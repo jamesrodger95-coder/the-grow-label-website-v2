@@ -10,8 +10,8 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: `${SITE.name} — revenue recovery for veterinary and dental groups`,
-    template: `%s — ${SITE.name}`,
+    default: `${SITE.name}: revenue recovery for veterinary and dental groups`,
+    template: `%s · ${SITE.name}`,
   },
   description: SITE.description,
   applicationName: SITE.name,
@@ -25,12 +25,12 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     locale: SITE.locale,
     url: '/',
-    title: `${SITE.name} — revenue recovery for veterinary and dental groups`,
+    title: `${SITE.name}: revenue recovery for veterinary and dental groups`,
     description: SITE.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE.name} — revenue recovery for veterinary and dental groups`,
+    title: `${SITE.name}: revenue recovery for veterinary and dental groups`,
     description: SITE.description,
   },
   robots: {

@@ -78,7 +78,13 @@ export function VideoTestimonials() {
                   <Thumb hue={video.hue} />
                 </span>
                 <span className="vcard__play" aria-hidden="true">
-                  <svg width="17" height="19" viewBox="0 0 17 19">
+                  <svg
+                    width="17"
+                    height="19"
+                    viewBox="0 0 17 19"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
                     <path d="M17 9.5 0 19V0z" fill="currentColor" />
                   </svg>
                 </span>

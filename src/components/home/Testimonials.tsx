@@ -25,7 +25,7 @@ function Avatar({ hue, name }: { hue: number; name: string }) {
     .join('');
   return (
     <span className="quote__avatar" aria-hidden="true">
-      <svg viewBox="0 0 48 48" width="42" height="42">
+      <svg viewBox="0 0 48 48" width="42" height="42" aria-hidden="true" focusable="false">
         <rect width="48" height="48" fill={`hsl(${hue} 32% 92%)`} />
         <text
           x="24"

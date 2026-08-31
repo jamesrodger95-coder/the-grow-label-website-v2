@@ -5,6 +5,8 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
 import { ActionLink, SectionHeader, StepList, TextLink } from '@/components/primitives';
 import { ModuleRail } from '@/components/layout/ModuleRail';
+import { ModuleScene } from '@/components/modules/scene';
+import { ModuleSwitcher } from '@/components/modules/ModuleSwitcher';
 import { getModule, MODULES, MODULE_SLUGS } from '@/content/modules';
 
 type Params = { module: string };
@@ -48,7 +50,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         ]}
       />
 
-      {/* 01 — The operational problem ----------------------------------- */}
+      {/* 01 — The operational problem, and the scene that shows it ------- */}
       <section className="surface--paper on-light section" aria-labelledby="problem-title">
         <div className="shell">
           <Reveal variant="group">
@@ -61,28 +63,63 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                   {paragraph}
                 </p>
               ))}
+              {mod.problem.figure ? (
+                <div className="proofnum">
+                  <p className="proofnum__value">{mod.problem.figure.value}</p>
+                  <p className="proofnum__label">{mod.problem.figure.label}</p>
+                  <p className="proofnum__basis micro">{mod.problem.figure.basis}</p>
+                </div>
+              ) : null}
             </Reveal>
             <Reveal index={1}>
-              <p className="label" style={{ marginBottom: 18 }}>
-                What this module monitors
-              </p>
-              <div className="ledger">
-                {mod.monitors.map((item, i) => (
-                  <div className="lrow lrow--pair" key={item.key}>
-                    <span className="lrow__idx">{`0${i + 1}`}</span>
-                    <span>
-                      <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
-                        {item.key}
-                      </span>
-                      <span className="lrow__val">{item.detail}</span>
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <ModuleScene slug={mod.slug} />
             </Reveal>
           </div>
         </div>
       </section>
+
+      {/* 01b — What it does, in operational language ---------------------- */}
+      {mod.operation ? (
+        <section className="surface--white on-light section" aria-labelledby="operation-title">
+          <div className="shell">
+            <Reveal variant="group">
+              <SectionHeader
+                eyebrow="What it does"
+                id="operation-title"
+                title="What changes at the desk"
+                emphasis="on the first Monday."
+              />
+            </Reveal>
+            <div className="two-col">
+              <Reveal>
+                {mod.operation.map((paragraph) => (
+                  <p className="body" key={paragraph.slice(0, 24)}>
+                    {paragraph}
+                  </p>
+                ))}
+              </Reveal>
+              <Reveal index={1}>
+                <p className="label" style={{ marginBottom: 18 }}>
+                  What this module monitors
+                </p>
+                <div className="ledger">
+                  {mod.monitors.map((item, i) => (
+                    <div className="lrow lrow--pair" key={item.key}>
+                      <span className="lrow__idx">{`0${i + 1}`}</span>
+                      <span>
+                        <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
+                          {item.key}
+                        </span>
+                        <span className="lrow__val">{item.detail}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* 02 — What it does, and what it does not ------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="actions-title">
@@ -131,6 +168,88 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
           </div>
         </div>
       </section>
+
+      {/* 02b — What it connects to ---------------------------------------- */}
+      {mod.connects ? (
+        <section className="surface--white on-light section" aria-labelledby="connects-title">
+          <div className="shell">
+            <Reveal variant="group">
+              <SectionHeader
+                eyebrow="What it connects to"
+                id="connects-title"
+                title="The systems you already run,"
+                emphasis="and the channels it works."
+              />
+            </Reveal>
+            <div className="two-col--even two-col">
+              <Reveal>
+                <p className="label" style={{ marginBottom: 18 }}>
+                  Systems of record
+                </p>
+                <div className="ledger">
+                  {mod.connects.systems.map((item, i) => (
+                    <div className="lrow lrow--pair" key={item.key}>
+                      <span className="lrow__idx">{`0${i + 1}`}</span>
+                      <span>
+                        <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
+                          {item.key}
+                        </span>
+                        <span className="lrow__val">{item.detail}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+              <Reveal index={1}>
+                <p className="label" style={{ marginBottom: 18 }}>
+                  Channels it works
+                </p>
+                <div className="ledger">
+                  {mod.connects.channels.map((item, i) => (
+                    <div className="lrow lrow--pair" key={item.key}>
+                      <span className="lrow__idx">{`0${i + 1}`}</span>
+                      <span>
+                        <span className="lrow__key" style={{ display: 'block', marginBottom: 4 }}>
+                          {item.key}
+                        </span>
+                        <span className="lrow__val">{item.detail}</span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="small" style={{ marginTop: 28, maxWidth: '48ch' }}>
+                  {mod.connects.note}
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* 02c — What the practice sees ------------------------------------- */}
+      {mod.dashboard ? (
+        <section className="surface--paper on-light section" aria-labelledby="dashboard-title">
+          <div className="shell">
+            <Reveal variant="group">
+              <SectionHeader
+                eyebrow="On the dashboard"
+                id="dashboard-title"
+                title="What you can see"
+                emphasis="on Monday morning."
+              />
+            </Reveal>
+            <Reveal>
+              <StepList
+                items={mod.dashboard.map((item, i) => ({
+                  index: `0${i + 1}`,
+                  title: item.key,
+                  detail: item.detail,
+                }))}
+              />
+            </Reveal>
+          </div>
+        </section>
+      ) : null}
 
       {/* 03 — Escalation -------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="escalation-title">
@@ -224,6 +343,30 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
         </div>
       </section>
 
+      {/* 04b — What it does not do ---------------------------------------- */}
+      {mod.doesNot ? (
+        <section className="surface--white on-light section" aria-labelledby="doesnot-title">
+          <div className="shell">
+            <Reveal variant="group">
+              <SectionHeader
+                eyebrow="Boundaries"
+                id="doesnot-title"
+                title={`What ${mod.name} does not do,`}
+                emphasis="stated plainly."
+              />
+            </Reveal>
+            <div className="boundaries">
+              {mod.doesNot.map((item, i) => (
+                <Reveal key={item.key} index={i} className="boundary">
+                  <p className="boundary__key">{item.key}</p>
+                  <p className="boundary__detail small">{item.detail}</p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* 05 — Evidence ---------------------------------------------------- */}
       <section className="surface--mist on-light section" aria-labelledby="evidence-title">
         <div className="shell">
@@ -296,6 +439,10 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
               </p>
             </Reveal>
           </div>
+
+          <Reveal index={2} style={{ marginTop: 'var(--gl-s-9)' }}>
+            <ModuleSwitcher current={mod.slug} />
+          </Reveal>
         </div>
       </section>
     </>

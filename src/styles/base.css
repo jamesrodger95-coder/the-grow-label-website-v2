@@ -108,10 +108,9 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   border-radius: var(--gl-r-pill);
   transform: translateY(calc(-100% - var(--gl-s-6)));
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .gl-skip:focus-visible {
   transform: translateY(0);
@@ -294,7 +293,6 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   line-height: 1.2;
   color: var(--faint);
 }
@@ -313,7 +311,6 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--accent);
 }
 .eyebrow::before {
@@ -358,7 +355,6 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
   text-align: right;
   white-space: nowrap;
@@ -395,9 +391,9 @@ select {
   isolation: isolate;
   white-space: nowrap;
   transition:
-    transform var(--gl-dur-fast) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out),
-    color var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-micro) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    color var(--gl-dur-standard) var(--gl-ease);
 }
 .btn::before {
   content: "";
@@ -406,7 +402,7 @@ select {
   z-index: -1;
   background: var(--gl-purple);
   transform: translateY(101%);
-  transition: transform var(--gl-dur-base) var(--gl-ease-settle);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .btn:hover,
 .btn:focus-visible {
@@ -422,7 +418,7 @@ select {
 }
 .btn__arrow {
   display: inline-block;
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .btn:hover .btn__arrow {
   transform: translateX(3px);
@@ -493,14 +489,14 @@ select {
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .tlink:hover::after,
 .tlink:focus-visible::after {
   transform: scaleX(1);
 }
 .tlink span[aria-hidden] {
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .tlink:hover span[aria-hidden] {
   transform: translateX(3px);
@@ -519,7 +515,7 @@ select {
   gap: var(--gl-s-5);
   padding-block: var(--gl-s-5);
   border-bottom: 1px solid var(--rule);
-  transition: background var(--gl-dur-base) var(--gl-ease-out);
+  transition: background var(--gl-dur-standard) var(--gl-ease);
 }
 .lrow__idx {
   font-size: var(--gl-t-micro);
@@ -541,7 +537,6 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--faint);
   text-align: right;
   text-wrap: balance;
@@ -633,7 +628,6 @@ select {
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--muted);
 }
 .stagebar__track {

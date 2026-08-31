@@ -37,7 +37,7 @@ export const PRIVACY: LegalSection[] = [
   {
     heading: 'How a submission is handled',
     paragraphs: [
-      'A submission is passed to the configured delivery provider — an internal webhook or a transactional email provider — so that a person can read and reply to it. It is not stored in a database by this website.',
+      'A submission is passed to the configured delivery provider, either an internal webhook or a transactional email provider, so that a person can read and reply to it. It is not stored in a database by this website.',
       'If no delivery provider is configured on a given deployment, the form is switched off and tells you so. It never accepts details it cannot deliver.',
     ],
   },
@@ -105,7 +105,7 @@ export const TERMS: LegalSection[] = [
   {
     heading: 'Intellectual property',
     paragraphs: [
-      'The text, design, code and diagrams on this site belong to Grow Label unless stated otherwise. The measurement definitions may be quoted with attribution — we would rather they were used than not.',
+      'The text, design, code and diagrams on this site belong to Grow Label unless stated otherwise. The measurement definitions may be quoted with attribution. We would rather they were used than not.',
     ],
   },
   {

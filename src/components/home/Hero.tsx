@@ -39,20 +39,20 @@ export function Hero() {
                 {HERO.lead}
               </Reveal>
 
+              {/* One action. The route to how value is measured is carried by
+                  the value-stages section, the closing band and the platform
+                  page; a second button here only competed with the first. */}
               <Reveal className="hero__actions" variant="rise" index={5}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-                <ActionLink href={CTA.methodology.href} variant="ghost">
-                  {CTA.methodology.label}
-                </ActionLink>
               </Reveal>
 
               <Reveal className="hero__modules" variant="rise" index={6}>
                 {MODULES.map((m) => (
-                  <Link className="hero__module" key={m.slug} href={`/modules/${m.slug}`}>
+                  <Link className="modbtn" key={m.slug} href={`/modules/${m.slug}`}>
                     {m.name}
                   </Link>
                 ))}
-                <span className="hero__module hero__note">{HERO.modulesNote}</span>
+                <span className="hero__note">{HERO.modulesNote}</span>
               </Reveal>
             </div>
 

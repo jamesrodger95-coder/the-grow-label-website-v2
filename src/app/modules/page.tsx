@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
+import type { CSSProperties } from 'react';
+import Link from 'next/link';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ModuleTimeline } from '@/components/modules/ModuleTimeline';
+import { ModulePreview } from '@/components/modules/ModulePreview';
 import { Reveal } from '@/components/motion/Reveal';
 import {
   ActionLink,
@@ -68,59 +71,66 @@ export default function ModulesPage() {
             />
           </Reveal>
 
-          <div className="mods">
-            {MODULES.map((mod, i) => (
-              <Reveal className="mod" key={mod.slug} variant="card" index={i}>
-                <div className="mod__head">
-                  <span className="mod__index">{`0${mod.index}`}</span>
-                  <div>
-                    <h3 className="mod__name" id={mod.slug}>
-                      {mod.name}
-                    </h3>
-                    <p className="mod__position">{mod.position}</p>
-                  </div>
-                </div>
+          {/* Four cards, one identity each.
 
-                <p className="mod__lead">{mod.lead}</p>
+              The variation is tone and weight inside the one purple, not four
+              hues picked at random: Answer is the lightest because it is the
+              earliest and least certain point in the system, Reactivate the
+              deepest. That is the same ramp the value stages use, so the cards
+              inherit a meaning the reader has already been taught rather than
+              carrying a decoration.
 
-                <div className="mod__cols">
-                  <div className="mod__col">
-                    <p className="label mod__collabel">Watches</p>
-                    <ul className="mod__list">
-                      {mod.monitors.slice(0, 3).map((item) => (
-                        <li key={item.key}>{item.key}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="mod__col">
-                    <p className="label mod__collabel">Does</p>
-                    <ul className="mod__list">
-                      {mod.actions.slice(0, 3).map((item) => (
-                        <li key={item.key}>{item.key}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="mod__col">
-                    <p className="label mod__collabel">Value stages</p>
-                    <ul className="mod__list mod__list--stages">
-                      {mod.stages.map((stage) => (
-                        <li key={stage.stage} data-role={stage.role}>
-                          <span className="mod__stagename">{stage.stage}</span>
-                          <span className="mod__stagerole">{stage.role}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+              The whole card is the link. A nested link inside a clickable card
+              gives keyboard users two stops for one destination and screen
+              readers an ambiguous one, so the anchor wraps everything and the
+              focus ring is drawn on the card. */}
+          <div className="modcards">
+            {MODULES.map((mod, i) => {
+              const moves = mod.stages
+                .filter((stage) => stage.role === 'Influences')
+                .map((stage) => stage.stage);
+              const movesLabel =
+                moves.length > 1
+                  ? `${moves.slice(0, -1).join(', ')} and ${moves[moves.length - 1]}`
+                  : (moves[0] ?? '');
+              return (
+                <Reveal
+                  key={mod.slug}
+                  variant="card"
+                  index={i}
+                  style={{ '--i': i } as CSSProperties}
+                >
+                  <Link className="modcard" href={`/modules/${mod.slug}`} data-module={mod.slug}>
+                    <ModulePreview slug={mod.slug} />
 
-                <div className="mod__foot">
-                  <p className="micro mod__ceiling">{mod.clientControls[0]}</p>
-                  <ActionLink href={`/modules/${mod.slug}`} variant="ghost">
-                    {`How ${mod.name} works`}
-                  </ActionLink>
-                </div>
-              </Reveal>
-            ))}
+                    <span className="modcard__head">
+                      <span className="modcard__index">{`0${mod.index}`}</span>
+                      <span className="modcard__name">{mod.name}</span>
+                    </span>
+
+                    {/* The one-line job it does. */}
+                    <span className="modcard__job">{mod.summary}</span>
+
+                    {/* The metric it moves. Which of the four value stages this
+                        module can actually influence, as opposed to observe. */}
+                    <span className="modcard__metric">
+                      <span className="modcard__metriclabel">Moves</span>
+                      <span className="modcard__metricvalue">{movesLabel}</span>
+                    </span>
+
+                    {/* Revealed on hover and on focus. Supplementary rather than
+                        essential, because there is no hover on a phone, where
+                        it is shown outright instead. */}
+                    <span className="modcard__reveal">{mod.position}</span>
+
+                    <span className="modcard__link">
+                      {`How ${mod.name} works`}
+                      <span aria-hidden="true">&nbsp;&rarr;</span>
+                    </span>
+                  </Link>
+                </Reveal>
+              );
+            })}
           </div>
         </div>
       </section>

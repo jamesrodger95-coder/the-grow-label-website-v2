@@ -39,7 +39,7 @@ export const PLATFORM = {
         index: '03',
         title: 'Action layer',
         detail:
-          'The four modules. Each one acts inside a ceiling you define — which appointment types, which channels, how many attempts, and which triggers hand the contact to a person.',
+          'The four modules. Each one acts inside a ceiling you define: which appointment types, which channels, how many attempts, and which triggers hand the contact to a person.',
         artefact: 'An action log, including every escalation and stop.',
       },
       {
@@ -99,7 +99,7 @@ export const PLATFORM = {
     required: [
       { key: 'Contact events', detail: 'Time, channel, direction and outcome.' },
       { key: 'Appointment book', detail: 'Bookings, cancellations, statuses, released capacity.' },
-      { key: 'Interval data', detail: 'Recall due dates and plan status — status only.' },
+      { key: 'Interval data', detail: 'Recall due dates and plan status. Status only.' },
       { key: 'Fee schedule', detail: 'Your own published prices, used to estimate value.' },
       { key: 'Consent state', detail: 'Contact permissions and suppression flags.' },
     ],
@@ -122,7 +122,7 @@ export const ABOUT = {
     emphasis: 'is the demand you already have.',
     body: [
       'Acquisition is competitive, expensive and slow to prove. Meanwhile every practice carries a back book of records past their interval, a list of accepted treatment with no date attached, and a telephony log full of calls that produced nothing. That demand is already qualified and already paid for.',
-      'Working it is unglamorous. It is list work, follow-up work and schedule work — exactly the jobs that lose to whatever is urgent at the front desk. It gets done in bursts and then stops, which is why the same opportunities are recovered twice and missed three times.',
+      'Working it is unglamorous. It is list work, follow-up work and schedule work, which are exactly the jobs that lose to whatever is urgent at the front desk. It gets done in bursts and then stops, which is why the same opportunities are recovered twice and missed three times.',
       'Grow Label exists to make that work continuous, bounded and measurable, and to report what it produced in terms a finance director will accept.',
     ],
   },
@@ -274,7 +274,7 @@ export const INSIGHTS: Insight[] = [
       {
         heading: 'Bounded contact, not campaigns',
         paragraphs: [
-          'A list worked without a stop rule turns into a campaign, and campaigns are how practices annoy the people they most want back. The alternative is a fixed number of attempts across approved channels, followed by a close with a recorded reason — so a record is either brought back or set down deliberately.',
+          'A list worked without a stop rule turns into a campaign, and campaigns are how practices annoy the people they most want back. The alternative is a fixed number of attempts across approved channels, followed by a close with a recorded reason, so a record is either brought back or set down deliberately.',
           'The measurable outcome is not just bookings. It is that suppression is honoured, contact volume per record is capped, and the list has a defensible position at the end of every month.',
         ],
       },

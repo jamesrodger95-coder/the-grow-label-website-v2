@@ -21,7 +21,7 @@ export const PLACEHOLDER_NOTE =
 export const RESULTS = {
   eyebrow: 'Results',
   titleLines: ['Reported at four stages,', 'never as one number.'],
-  lead: 'This is the shape every Grow Label report takes. When a client result is published here, it arrives in exactly this frame — the same four stages, each with the evidence that promoted it.',
+  lead: 'This is the shape every Grow Label report takes. When a client result is published here, it arrives in exactly this frame: the same four stages, each with the evidence that promoted it.',
   cards: [
     {
       stage: 'Estimated',
@@ -75,7 +75,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     sector: 'Veterinary · multi-site',
     title: 'After-hours demand across a practice group',
     summary:
-      'What happens to contact that arrives before opening, after closing and across the weekend — and what changes when it is answered.',
+      'What happens to contact that arrives before opening, after closing and across the weekend, and what changes when it is answered.',
     chips: ['Answer', 'Respond', 'Multi-location'],
     hue: 248,
   },

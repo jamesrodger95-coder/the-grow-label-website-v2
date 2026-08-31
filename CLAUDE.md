@@ -102,18 +102,40 @@ Client components exist only where there is genuine interaction:
 - `Reveal` — the single entry point for entrance motion
 - `RecoverySequence` — the scroll-driven signature sequence
 - `MotionProvider` — enables motion after first paint
-- `PointerSignals` — cursor proximity, nothing else
 - `AssessmentForm` — the form
+- the four module scenes, which all share `modules/scene/useScene`
 
-Adding a seventh needs a reason. In particular, **do not import
+`PointerSignals`, `SignalField` and `Parallax` were removed. The first two were
+never mounted anywhere, and parallax was a fifth motion verb used exactly once
+with no meaning attached to it.
+
+Adding another needs a reason. In particular, **do not import
 `lib/contact-schema` from a client component** — it pulls zod into the browser
 bundle. Use `lib/contact-fields`, which has no dependencies.
 
 ## Motion
 
-Three verbs, and nothing else: **detect** (appear in place), **consolidate**
-(migrate onto the grid), **settle** (step into the final state). If a proposed
-effect is not one of the three, it does not ship. `docs/MOTION_SYSTEM.md` has
+Four verbs, and nothing else:
+
+1. **consolidation** — the signature. Scattered marks migrate onto a grid,
+   driven directly by scroll position, never by a trigger. Four placements.
+2. **rise** — the one entrance. Opacity plus `--gl-rise` of upward travel.
+   `m-card` and `m-wipe` resolve to it; there is no scale-in and no clip-wipe.
+3. **draw** — rules and bars grow from their leading edge. Never content.
+4. **response** — hover, focus, press, expand, tab-switch. 180ms, colour.
+   Never a lift, never a shadow bloom.
+
+One curve (`--gl-ease`) and three durations (180 / 320 / 700ms).
+`scripts/motion-inventory.mjs` runs inside `pnpm quality` and fails on any
+duration or easing outside that set, so the system is enforced rather than
+reviewed. If a proposed effect is not one of the four verbs, it does not ship.
+
+**Scroll-linked scenes** all use `modules/scene/useScene`. It runs one rAF loop
+while the element is on screen and reads the element's own rect at paint time;
+there is no scroll listener anywhere on the site. Draw callbacks may write
+`transform` and `opacity` only, and must never call `setState` per frame. A
+scene inside a `position: sticky` parent needs `contain: paint` on the drawing,
+or the whole sticky layer repaints on every frame. `docs/MOTION_SYSTEM.md` has
 the full inventory; `/dev/motion-lab` is a live harness.
 
 The gotcha that has already bitten once: elements whose CSS keys off

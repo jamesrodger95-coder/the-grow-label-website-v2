@@ -95,7 +95,7 @@ export const TERMS: Term[] = [
   {
     term: 'Corrections and restatements',
     meta: 'Prior figure retained',
-    body: 'When a figure changes after it has been reported — a cancelled appointment, a refunded payment, a disputed attribution — the change is shown as a restatement. The previous value, the new value, the date and the reason are all retained. Reports are not silently rewritten.',
+    body: 'A figure sometimes changes after it has been reported, because an appointment was cancelled, a payment was refunded or an attribution was disputed. The change is shown as a restatement. The previous value, the new value, the date and the reason are all retained. Reports are not silently rewritten.',
   },
   {
     term: 'Reporting period and cut-off',
@@ -149,7 +149,7 @@ export const CANNOT_CLAIM = {
  */
 export const AUDIT_QUESTIONS: string[] = [
   'Which of the four stages does your headline figure describe?',
-  'What promotes an item from one stage to the next — a record, or an inference?',
+  'What promotes an item from one stage to the next: a record, or an inference?',
   'What happens to a figure when the appointment behind it is later cancelled?',
   'Can I open any number and see the source event that produced it?',
   'How do you decide that two contacts are the same opportunity?',

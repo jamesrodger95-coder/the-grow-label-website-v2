@@ -6,8 +6,26 @@
    `data-motion="on"` on the root. A blocked or failed bundle leaves a complete,
    correct page, and nothing above the fold waits on JavaScript.
 
-   The vocabulary is deliberately varied — a single fade-up everywhere is what
-   makes a site feel templated. Each variant belongs to a kind of content.
+   THE VOCABULARY IS DELIBERATELY SMALL. Four things move on this site, and
+   nothing else does:
+
+     1. CONSOLIDATION  the signature. Scattered marks migrate onto a grid,
+                       driven directly by scroll position, never by a trigger.
+                       Four placements, listed in docs/MOTION_SYSTEM.md.
+     2. RISE           the one entrance. Opacity plus --gl-rise of upward
+                       travel. Display headlines use the same travel behind a
+                       clipping mask (`m-line`); everything else uses `m-rise`.
+                       There is no scale-in, no clip-wipe and no fade-only.
+     3. DRAW           hairlines and bars grow from their leading edge. Only
+                       ever a rule or a track. Never content.
+     4. RESPONSE       hover, focus, press, expand, tab-switch. 180ms, colour
+                       and 1-2px of travel. Never a lift, never a shadow bloom.
+
+   What never moves, on purpose: the nav, the footer, legal pages, body copy
+   already in view, any number, and anything a reader is trying to read.
+
+   One curve (--gl-ease) and three durations. If an effect needs a fifth
+   behaviour or a second curve, it does not ship.
    ========================================================================= */
 
 /* --------------------------------------------------------------------------
@@ -23,8 +41,8 @@
 }
 [data-motion="on"] .m-line > * {
   transform: translate3d(0, 106%, 0);
-  transition: transform var(--gl-dur-slow) var(--gl-ease-settle);
-  transition-delay: calc(var(--i, 0) * 85ms);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
   will-change: transform;
 }
 [data-motion="on"] .m-line[data-inview="true"] > * {
@@ -33,57 +51,35 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. RISE — the workhorse for prose and controls. Short, quick, low travel.
+   2. RISE — THE ONE ENTRANCE.
+
+      Every non-headline element that enters uses exactly this: opacity, plus
+      --gl-rise of upward travel, on --gl-ease. `m-card` and `m-wipe` are
+      retained as call sites so components need not all change at once, but
+      they resolve to the same treatment. A panel does not get a scale-in and
+      a row does not get a clip-wipe; the variety those bought was the thing
+      that made the page read as assembled rather than authored.
    ----------------------------------------------------------------------- */
-[data-motion="on"] .m-rise {
+[data-motion="on"] .m-rise,
+[data-motion="on"] .m-card,
+[data-motion="on"] .m-wipe {
   opacity: 0;
-  transform: translate3d(0, 14px, 0);
+  transform: translate3d(0, var(--gl-rise), 0);
   transition:
-    opacity var(--gl-dur-base) var(--gl-ease-out),
-    transform var(--gl-dur-slow) var(--gl-ease-out);
-  transition-delay: calc(var(--i, 0) * 60ms);
+    opacity var(--gl-dur-standard) var(--gl-ease),
+    transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
 }
-[data-motion="on"] .m-rise[data-inview="true"] {
+[data-motion="on"] .m-rise[data-inview="true"],
+[data-motion="on"] .m-card[data-inview="true"],
+[data-motion="on"] .m-wipe[data-inview="true"] {
   opacity: 1;
   transform: none;
 }
-
-/* --------------------------------------------------------------------------
-   3. CARD — panels arrive with a touch of scale, so they read as objects
-      settling rather than text fading.
-   ----------------------------------------------------------------------- */
-[data-motion="on"] .m-card {
-  opacity: 0;
-  transform: translate3d(0, 26px, 0) scale(0.985);
-  transition:
-    opacity var(--gl-dur-base) var(--gl-ease-out),
-    transform var(--gl-dur-slow) var(--gl-ease-settle);
-  transition-delay: calc(var(--i, 0) * 80ms);
-  will-change: transform;
-}
-[data-motion="on"] .m-card[data-inview="true"] {
-  opacity: 1;
-  transform: none;
-  will-change: auto;
-}
-
-/* --------------------------------------------------------------------------
-   4. WIPE — content revealed by a clip, left to right. For rows and tables,
-      where a rise would make the whole block jump.
-   ----------------------------------------------------------------------- */
-/* The clip sits on an inner element, never on the observed one. An element
-   clipped to zero width reports no intersection, so a self-clipping reveal
-   never receives the callback that would un-clip it. */
+/* `m-wipe` used to clip an inner element. The wrapper is still emitted by
+   `Reveal`, so it keeps a block box and nothing else. */
 .m-wipe__inner {
   display: block;
-}
-[data-motion="on"] .m-wipe__inner {
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path var(--gl-dur-slow) var(--gl-ease-settle);
-  transition-delay: calc(var(--i, 0) * 55ms);
-}
-[data-motion="on"] .m-wipe[data-inview="true"] .m-wipe__inner {
-  clip-path: inset(0 -2% 0 0);
 }
 
 /* --------------------------------------------------------------------------
@@ -92,8 +88,8 @@
 [data-motion="on"] .m-rule {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--gl-dur-slow) var(--gl-ease-out);
-  transition-delay: calc(var(--i, 0) * 45ms);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
 }
 [data-motion="on"] .m-rule[data-inview="true"] {
   transform: scaleX(1);
@@ -105,22 +101,13 @@
 [data-motion="on"] .stagebar__fill {
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--gl-dur-scene) var(--gl-ease-settle);
-  transition-delay: calc(var(--i, 0) * 130ms);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
   will-change: transform;
 }
 [data-motion="on"] .stagebar[data-inview="true"] .stagebar__fill {
   transform: scaleX(1);
   will-change: auto;
-}
-
-/* --------------------------------------------------------------------------
-   7. PARALLAX — a drift set from a scroll-progress custom property. Only ever
-      transform, so it stays on the compositor.
-   ----------------------------------------------------------------------- */
-.m-parallax {
-  transform: translate3d(0, var(--py, 0px), 0);
-  will-change: transform;
 }
 
 /* --------------------------------------------------------------------------
@@ -176,14 +163,14 @@
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform var(--gl-dur-base) var(--gl-ease-precise);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .scene__step[data-active="true"]::after {
   transform: scaleX(1);
 }
 .scene__stepname {
   color: var(--ghost);
-  transition: color var(--gl-dur-base) var(--gl-ease-out);
+  transition: color var(--gl-dur-standard) var(--gl-ease);
 }
 .scene__step[data-active="true"] .scene__stepname {
   color: var(--fg);
@@ -201,39 +188,57 @@
   height: auto;
   aspect-ratio: 260 / 92;
   max-height: 320px;
+  /* The drawing lives inside a position: sticky stage that also holds the copy
+     and the step rail. Without containment, changing a mark invalidated the
+     raster of that whole sticky layer and the section repainted the lot on
+     every frame: 25 dropped frames and two long tasks over 80ms, against 4
+     drops and no long tasks for the module scenes, which do more work per
+     frame but are not inside a sticky parent.
+
+     Paint containment tells the compositor nothing inside this element can
+     paint outside it, so a mark moving dirties the SVG and nothing else. */
+  contain: paint;
 }
 .seqart text {
   font-family: var(--gl-font);
   font-size: 5.2px;
   font-weight: 500;
   letter-spacing: 0.16px;
-  text-transform: uppercase;
 }
 .seqart__labels {
-  transition: opacity var(--gl-dur-slow) var(--gl-ease-out);
-  transition-delay: 220ms;
+  /* Written per frame from the scene's progress, so no transition and no
+     delay: the old 220ms delay was one of four competing durations that made
+     frames land in the middle of unrelated curves. */
 }
 .seqart__marker {
   font-size: 4.8px;
 }
-.seqart rect {
-  transition:
-    x var(--gl-dur-scene) var(--gl-ease-settle),
-    y var(--gl-dur-scene) var(--gl-ease-settle),
-    width var(--gl-dur-scene) var(--gl-ease-settle),
-    height var(--gl-dur-scene) var(--gl-ease-settle),
-    opacity var(--gl-dur-slow) var(--gl-ease-out),
-    fill var(--gl-dur-slow) var(--gl-ease-out);
+/* NO TRANSITION HERE, deliberately.
+
+   The marks are driven directly from scroll progress by RecoverySequence,
+   which writes a transform and an opacity every frame. A transition on a
+   scroll-linked value makes the drawing lag the scrollbar by its own
+   duration, and the previous version of this rule transitioned x, y, width
+   and height, none of which are compositor properties: every frame forced a
+   geometry recalculation and a repaint on the main thread.
+
+   Each mark is a 1x1 rect, positioned and sized by one transform. */
+.seqart__mark {
+  transform-box: fill-box;
+  transform-origin: 0 0;
+  /* No will-change. Eight permanently promoted layers inside one small SVG
+     cost more in raster memory and layer management than they save, and the
+     paint containment above is what actually fixed the repaint. */
 }
 
 /* --------------------------------------------------------------------------
    9. NAVIGATION AND OVERLAYS
    ----------------------------------------------------------------------- */
 .drawer {
-  animation: gl-drawer-in var(--gl-dur-base) var(--gl-ease-out) both;
+  animation: gl-drawer-in var(--gl-dur-standard) var(--gl-ease) both;
 }
 .drawer__link {
-  animation: gl-link-in var(--gl-dur-base) var(--gl-ease-settle) both;
+  animation: gl-link-in var(--gl-dur-standard) var(--gl-ease) both;
   animation-delay: calc(50ms + var(--i, 0) * 28ms);
 }
 @keyframes gl-drawer-in {
@@ -261,8 +266,8 @@
 }
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 200ms;
-  animation-timing-function: var(--gl-ease-out);
+  animation-duration: var(--gl-dur-micro);
+  animation-timing-function: var(--gl-ease);
 }
 
 /* --------------------------------------------------------------------------
@@ -285,9 +290,6 @@
   [data-motion="on"] .stagebar__fill {
     transform: scaleX(1);
   }
-  .m-parallax {
-    transform: none;
-  }
   .result__barfill {
     transform: scaleX(1);
     transition: none;
@@ -298,5 +300,46 @@
   }
   @view-transition {
     navigation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   THE STATIC SEQUENCE — what prefers-reduced-motion gets.
+
+   Not the animated scene with its motion removed: a stacked list of all four
+   steps, in order, beside a finished staircase. Nothing is hidden, nothing is
+   unreachable, and the whole argument is readable without scrolling through a
+   tall sticky section that no longer does anything.
+   ----------------------------------------------------------------------- */
+.scene--static {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: start;
+}
+.scene__list {
+  display: grid;
+  gap: var(--gl-s-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.scene__listitem {
+  padding-top: var(--gl-s-4);
+  border-top: 1px solid var(--rule);
+}
+.scene__listitem .label {
+  margin-bottom: 10px;
+}
+.scene__listitem h3 {
+  margin: 0 0 8px;
+}
+.scene__listitem p {
+  margin: 0;
+  max-width: 46ch;
+}
+@media (max-width: 900px) {
+  .scene--static {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

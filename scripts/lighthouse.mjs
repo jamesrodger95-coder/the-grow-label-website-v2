@@ -45,11 +45,8 @@ async function startServer() {
 
 const URLS = [
   ['home', '/'],
-  ['platform', '/platform'],
+  ['modules', '/modules'],
   ['module', '/modules/answer'],
-  ['veterinary', '/industries/veterinary'],
-  ['methodology', '/methodology'],
-  ['contact', '/contact'],
 ];
 
 const BUDGETS = {

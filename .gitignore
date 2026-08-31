@@ -45,6 +45,11 @@ yarn-error.log*
 artifacts/research/
 artifacts/review/
 artifacts/review-tablet/
+# Every capture harness writes PNGs under artifacts/. They are large, they are
+# regenerable from a build, and they are review material rather than source.
+artifacts/**/*.png
+artifacts/*.png
+
 # Raw Lighthouse reports are large and regenerable; the summary is kept.
 artifacts/lighthouse/*.json
 !artifacts/lighthouse/summary.json

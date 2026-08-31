@@ -5,10 +5,10 @@
  */
 
 export const HERO = {
-  eyebrow: 'Revenue recovery for veterinary & dental groups',
+  eyebrow: 'Revenue recovery for veterinary and dental groups',
   /** Line breaks are a design decision, so the headline is authored as lines. */
   titleLines: ['Recover the revenue', 'you already earned.'],
-  lead: 'Grow Label watches every call, enquiry, recall and open treatment plan your practice generates — then works the ones that were missed and reports what came back at four separate stages, so the number survives a board meeting.',
+  lead: 'Grow Label watches every call, enquiry, recall and open treatment plan your practice generates. It works the ones that were missed and reports what came back at four separate stages, so the number survives a board meeting.',
   modulesNote: 'Four modules, one recovery system',
   columnLabel: 'A working day',
   columnNote:
@@ -105,7 +105,7 @@ export const LEAKS_SECTION = {
   eyebrow: 'Where it goes',
   titleLines: ['A busy practice and a leaking', 'one look identical.'],
   aside: 'Six points of loss',
-  lead: 'Every one of these is demand the practice has already paid to generate. None of them appears on a profit and loss statement, because the transaction never happened — which is exactly why they persist.',
+  lead: 'Every one of these is demand the practice has already paid to generate. None of them appears on a profit and loss statement, because the transaction never happened. That is exactly why they persist.',
 } as const;
 
 /**
@@ -176,8 +176,8 @@ export const DETECTION = {
   titleLines: ['Detection is the whole job.', 'The rest is follow-through.'],
   aside: 'Event · opportunity · action',
   body: [
-    'Grow Label connects to the systems a practice already runs — the phone system, the enquiry channels, the practice management system — and reads the events they emit. A call that lasted eight seconds. A form submitted at 21:40. A recall due in March that is still open in September.',
-    'On its own an event is just a line in a log. Grow Label turns each one into a tracked opportunity with an owner, a due time and a value estimated from your own fee schedule — because until something has a deadline and a name against it, nobody can be held to it and nothing can be counted.',
+    'Grow Label connects to the systems a practice already runs: the phone system, the enquiry channels and the practice management system. It reads the events they emit. A call that lasted eight seconds. A form submitted at 21:40. A recall due in March that is still open in September.',
+    'On its own an event is just a line in a log. Grow Label turns each one into a tracked opportunity with an owner, a due time and a value estimated from your own fee schedule. Until something has a deadline and a name against it, nobody can be held to it and nothing can be counted.',
   ],
   reads: [
     { key: 'Contact events', detail: 'When contact happened, on which channel, and how it ended.' },
