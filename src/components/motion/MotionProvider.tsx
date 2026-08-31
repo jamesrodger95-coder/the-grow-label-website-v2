@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 /**
@@ -14,6 +15,21 @@ import { useEffect } from 'react';
  * page keeps the authored final state rather than animating to nothing.
  */
 export function MotionProvider() {
+  /**
+   * Re-register on every route change.
+   *
+   * This provider lives in the root layout, which SURVIVES a client-side
+   * navigation. The observers below were registered once on mount, so after
+   * clicking any link the new page's elements were never observed: their
+   * entrance state stayed at data-inview="false" and they sat at opacity 0
+   * permanently. Two to four elements per page were invisible while on screen.
+   *
+   * It only showed up on soft navigation. Loading the same URL directly
+   * remounted the provider and worked, which is why a crawl and a per-route
+   * screenshot pass both missed it.
+   */
+  const pathname = usePathname();
+
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;
 
@@ -32,6 +48,7 @@ export function MotionProvider() {
       if (second) cancelAnimationFrame(second);
       delete root.dataset.motion;
     };
+    // Once per load, not per route: the attribute is on <html>, which persists.
   }, []);
 
   /**
@@ -83,7 +100,7 @@ export function MotionProvider() {
     );
     for (const el of rest) observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   /**
    * Pause ambient loops that are nowhere near the viewport.
@@ -114,7 +131,7 @@ export function MotionProvider() {
     );
     for (const el of targets) observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   /**
    * The same pause, applied to EVERY section rather than to hand-marked
@@ -148,7 +165,7 @@ export function MotionProvider() {
     );
     for (const el of sections) observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
 
   return null;
 }
