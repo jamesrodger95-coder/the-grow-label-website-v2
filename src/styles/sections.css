@@ -3480,3 +3480,323 @@
    [data-ambient] observer in MotionProvider, which pauses off-screen loops
    without hiding anything.
    ========================================================================= */
+
+/* ==========================================================================
+   RELAY — the modules page opening device.
+
+   One rail, four stations, one pulse. Every beat derives its delay from the
+   station's own index and the one looping duration, so there is no timing
+   value typed in anywhere and the four always light in order.
+
+   Authored lit. The loop is applied under [data-motion="on"] only, so a
+   blocked bundle leaves four finished stations rather than four empty ones.
+   ========================================================================= */
+.relay {
+  position: relative;
+  margin-top: clamp(36px, 4vw, 60px);
+}
+
+/* --- The rail ------------------------------------------------------------ */
+.relay__rail {
+  position: relative;
+  height: 1px;
+  margin-bottom: 26px;
+  overflow: visible;
+}
+.relay__line {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--gl-purple-200),
+    var(--gl-edge) 30%,
+    var(--gl-edge) 70%,
+    var(--gl-purple-200)
+  );
+}
+/* The travelling pulse. Transform and opacity only, so it never leaves the
+   compositor however long it loops. */
+.relay__pulse {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 22%;
+  height: 3px;
+  border-radius: var(--gl-r-pill);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gl-purple-300) 40%,
+    var(--gl-purple) 78%,
+    var(--gl-purple-400)
+  );
+  opacity: 0;
+}
+[data-motion="on"] .relay__pulse {
+  animation: gl-relay-pulse var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes gl-relay-pulse {
+  0% {
+    transform: translateX(-110%);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  82% {
+    transform: translateX(465%);
+    opacity: 1;
+  }
+  92%,
+  100% {
+    transform: translateX(465%);
+    opacity: 0;
+  }
+}
+
+/* --- The four stations --------------------------------------------------- */
+.relay__stations {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The node sits on the rail above its panel. Authored filled. */
+.station__node {
+  position: absolute;
+  top: calc(-26px - 5px);
+  left: 22px;
+  display: grid;
+  place-items: center;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gl-white);
+  box-shadow: 0 0 0 1px var(--gl-purple-300);
+}
+.station__nodedot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gl-purple);
+}
+[data-motion="on"] .station__node {
+  animation: gl-relay-node var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-relay-node {
+  0%,
+  4% {
+    box-shadow: 0 0 0 1px var(--gl-edge);
+  }
+  12%,
+  70% {
+    box-shadow: 0 0 0 1px var(--gl-purple-300);
+  }
+  86%,
+  100% {
+    box-shadow: 0 0 0 1px var(--gl-edge);
+  }
+}
+[data-motion="on"] .station__nodedot {
+  animation: gl-relay-dot var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-relay-dot {
+  0%,
+  4% {
+    transform: scale(0.35);
+    opacity: 0.35;
+  }
+  12%,
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  86%,
+  100% {
+    transform: scale(0.35);
+    opacity: 0.35;
+  }
+}
+
+/* --- The panel ----------------------------------------------------------- */
+.station__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  height: 100%;
+  padding: 16px 18px 15px;
+  border-radius: var(--gl-r-lg);
+  background: var(--gl-white);
+  box-shadow: inset 0 0 0 1px var(--gl-edge);
+  overflow: hidden;
+  transition:
+    background var(--gl-dur-micro) var(--gl-ease),
+    box-shadow var(--gl-dur-micro) var(--gl-ease);
+}
+/* The wash that follows the pulse. A separate layer fading, not a background
+   the browser has to re-rasterise four times a loop. */
+.station__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, var(--gl-purple-50), transparent 72%);
+  opacity: 0;
+  pointer-events: none;
+}
+[data-motion="on"] .station__panel::before {
+  animation: gl-relay-wash var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-relay-wash {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  12%,
+  60% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0;
+  }
+}
+.station__panel:hover,
+.station__panel:focus-visible {
+  background: var(--gl-purple-quiet);
+  box-shadow:
+    inset 0 0 0 1px var(--gl-purple-200),
+    var(--gl-shadow-purple);
+}
+
+.station__when {
+  position: relative;
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-slate-soft);
+}
+.station__head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+}
+.station__idx {
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-purple);
+  font-variant-numeric: tabular-nums;
+}
+.station__name {
+  font-size: clamp(1.25rem, 1.6vw, 1.625rem);
+  font-weight: var(--gl-w-semi);
+  letter-spacing: var(--gl-tr-tight);
+  line-height: 1.05;
+  color: var(--gl-ink);
+}
+/* The reduced scene from the module's own page.
+
+   `ModulePreview` paints its active marks in `currentColor`, so the colour has
+   to be handed to it — without this they inherit near-black ink and the four
+   previews render as grey diagrams with black marks in them.
+
+   The ramp is the one the cards further down the page use: Answer lightest
+   because it is the earliest and least certain point in the system, Reactivate
+   deepest. Same tokens, so the two devices cannot drift apart. */
+.station__panel[data-module="answer"] {
+  --tone: var(--gl-purple-400);
+}
+.station__panel[data-module="respond"] {
+  --tone: var(--gl-purple-500);
+}
+.station__panel[data-module="retain"] {
+  --tone: var(--gl-purple-600);
+}
+.station__panel[data-module="reactivate"] {
+  --tone: var(--gl-purple-700);
+}
+.station__art {
+  position: relative;
+  display: block;
+  margin: 14px 0 12px;
+  padding: 10px 12px;
+  border-radius: var(--gl-r-sm);
+  background: var(--gl-paper);
+  color: var(--tone);
+}
+.station__idx {
+  color: var(--tone);
+}
+.station__covers {
+  position: relative;
+  font-size: var(--gl-t-micro);
+  line-height: 1.45;
+  color: var(--gl-slate);
+}
+.station__go {
+  position: relative;
+  margin-top: auto;
+  padding-top: 13px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-purple);
+  white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+  /* Two up. The rail still reads across the top of the first row, which is
+     enough to say "a sequence" without drawing a line to nothing. */
+  .relay__stations {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .station:nth-child(n + 3) .station__node {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .relay__stations {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .relay__rail {
+    display: none;
+  }
+  .station__node {
+    display: none;
+  }
+  .station__panel {
+    padding: 15px 16px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The authored state: every station lit, no pulse. */
+  [data-motion="on"] .relay__pulse {
+    animation: none;
+    opacity: 0;
+  }
+  [data-motion="on"] .station__node,
+  [data-motion="on"] .station__nodedot,
+  [data-motion="on"] .station__panel::before {
+    animation: none;
+  }
+  [data-motion="on"] .station__panel::before {
+    opacity: 1;
+  }
+}

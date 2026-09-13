@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { ModuleTimeline } from '@/components/modules/ModuleTimeline';
 import { ModulePreview } from '@/components/modules/ModulePreview';
+import { ModulesHero } from '@/components/modules/ModulesHero';
 import { Reveal } from '@/components/motion/Reveal';
 import {
   ActionLink,
@@ -26,12 +27,15 @@ export const metadata: Metadata = {
 export default function ModulesPage() {
   return (
     <>
+      {/* The relay replaces the four-item key/value strip that used to close
+          this header. Four modules covering four points in a sequence is a
+          shape, and a list is the one form that cannot show a shape. */}
       <PageHeader
         label={MODULES_PAGE.label}
         title={MODULES_PAGE.title}
         emphasis={MODULES_PAGE.emphasis}
         lead={MODULES_PAGE.lead}
-        strip={MODULES_PAGE.strip}
+        feature={<ModulesHero />}
       />
 
       {/* The organising device: one opportunity, four places it drops. ----- */}

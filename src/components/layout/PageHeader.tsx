@@ -14,6 +14,7 @@ export function PageHeader({
   lead,
   strip,
   aside,
+  feature,
   children,
 }: {
   label: string;
@@ -24,6 +25,13 @@ export function PageHeader({
   strip?: readonly { key: string; detail: string }[];
   /** Optional companion content, shown beside the title on wide viewports. */
   aside?: React.ReactNode;
+  /**
+   * Full-width content closing the header, in the place `strip` occupies.
+   * For a page whose opening deserves a device rather than a list — the
+   * modules relay is the one that needed it. Mutually exclusive with `strip`
+   * in practice; if both are passed, both render, strip first.
+   */
+  feature?: React.ReactNode;
   children?: React.ReactNode;
 }) {
   return (
@@ -61,6 +69,8 @@ export function PageHeader({
               <KeyValueStrip items={strip} />
             </Reveal>
           ) : null}
+
+          {feature ? <Reveal index={3}>{feature}</Reveal> : null}
         </div>
       </div>
     </section>
