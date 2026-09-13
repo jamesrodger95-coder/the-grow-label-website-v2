@@ -206,8 +206,14 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
             aria-label="Site navigation"
           >
             <div className="drawer__inner shell">
+              {/* Legal is filtered out here, exactly as it is in the footer.
+                  Privacy and Terms were rendering as a fifth group of two
+                  60px drawer links at the bottom of a long scroll — the same
+                  weight as Platform and Modules, for two documents nobody
+                  opens the menu to find. They live in the footer fine print
+                  instead, which is where a reader looks for them. */}
               <nav aria-label="All pages">
-                {NAV_GROUPS.map((group) => (
+                {NAV_GROUPS.filter((group) => group.id !== 'legal').map((group) => (
                   <div className="drawer__group" key={group.id}>
                     <div className="drawer__grouphead">
                       <span className="label">{group.label}</span>

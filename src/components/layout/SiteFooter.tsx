@@ -55,15 +55,21 @@ export function SiteFooter() {
           <span className="micro">
             No client, patient or clinical data appears on this website.
           </span>
-          <nav aria-label="Legal" style={{ display: 'flex', gap: 20 }}>
-            <Link className="micro" href="/privacy">
-              Privacy
-            </Link>
-            <Link className="micro" href="/terms">
-              Terms
-            </Link>
-          </nav>
         </div>
+
+        {/* Fine print. The last thing on the page, deliberately quiet: these
+            are documents a reader goes looking for rather than ones the site
+            offers. Small is the point — but still legible, still a real tap
+            target, and still the same on both grounds, because a legal
+            document that cannot be reached is a different problem from one
+            that is not advertised. */}
+        <nav className="foot__fine" aria-label="Legal">
+          <Link href="/privacy">Privacy</Link>
+          <span className="foot__finesep" aria-hidden="true">
+            &middot;
+          </span>
+          <Link href="/terms">Terms</Link>
+        </nav>
       </div>
     </footer>
   );

@@ -1469,8 +1469,51 @@ select.field__control {
   gap: var(--gl-s-2) var(--gl-s-6);
   justify-content: space-between;
   align-items: center;
-  padding-block: var(--gl-s-4);
+  padding-block: var(--gl-s-4) var(--gl-s-3);
   border-top: 1px solid rgba(251, 250, 248, 0.13);
+}
+
+/* The fine print: Privacy and Terms, last thing on the page.
+ *
+ * Deliberately the smallest control on the site. It sits below the copyright
+ * row rather than beside it, so it reads as a footnote rather than as
+ * navigation, and it is identical on both breakpoints — the same two links in
+ * the same place, which is the one thing a reader hunting for a policy needs.
+ *
+ * Small, not hidden. 11px with the tap target padded out to 30px and the type
+ * held at a legible weight: a legal document that cannot be reached is a
+ * different problem from one that is not advertised, and only the second one
+ * was asked for.
+ */
+.foot__fine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-block: 0 var(--gl-s-4);
+}
+.foot__fine a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 8px;
+  border-radius: var(--gl-r-pill);
+  font-size: 0.6875rem;
+  font-weight: var(--gl-w-medium);
+  letter-spacing: 0.02em;
+  color: rgba(251, 250, 248, 0.46);
+  transition:
+    color var(--gl-dur-micro) var(--gl-ease),
+    background var(--gl-dur-micro) var(--gl-ease);
+}
+.foot__fine a:hover,
+.foot__fine a:focus-visible {
+  color: var(--gl-white);
+  background: rgba(251, 250, 248, 0.08);
+}
+.foot__finesep {
+  font-size: 0.6875rem;
+  color: rgba(251, 250, 248, 0.28);
 }
 .foot__base a {
   color: rgba(251, 250, 248, 0.7);
