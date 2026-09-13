@@ -98,14 +98,41 @@ test('the recovery sequence advances through all four states on scroll', async (
 test('the hero recovery field is decorative and never announced', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
-  await expect(page.locator('.field__grid')).toHaveAttribute('aria-hidden', 'true');
-  await expect(page.locator('.field__tick').first()).toBeVisible();
+  await expect(page.locator('.sched')).toHaveAttribute('aria-hidden', 'true');
+  await expect(page.locator('.appt').first()).toBeVisible();
+  // Four providers at full width.
+  await expect(page.locator('.sched__lane')).toHaveCount(4);
 
   // The field is simplified rather than removed on a phone: it still renders,
-  // but with fewer marks and no pointer tilt.
+  // but with two providers and no pointer tilt. The switch is a ResizeObserver
+  // on the panel itself, so give it a frame to land.
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.waitForTimeout(200);
-  await expect(page.locator('.field__tick').first()).toBeVisible();
+  await page.waitForTimeout(300);
+  await expect(page.locator('.appt').first()).toBeVisible();
+  await expect(page.locator('.sched__lane')).toHaveCount(2);
+});
+
+/**
+ * Rule 4, on the one panel most likely to break it. The three recovered
+ * appointments are the payload of the hero visual, and they are painted in
+ * their final state until MotionProvider hands them to the animation — so a
+ * blocked bundle leaves a complete schedule, not three empty outlines.
+ */
+test('the recovered appointments are painted before any script runs', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('/');
+
+  const recovered = page.locator('.appt--rec');
+  await expect(recovered).toHaveCount(3);
+  for (let i = 0; i < 3; i++) {
+    await expect(recovered.nth(i)).toBeVisible();
+    expect(await recovered.nth(i).evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+  }
+  // ...and the count agrees with what is on the board.
+  await expect(page.locator('.field__count')).toContainText('6 recovered');
+
+  await context.close();
 });
 
 /**

@@ -61,10 +61,24 @@ test('transition durations collapse to effectively zero', async ({ page }) => {
 
 test('the hero recovery field stays inert', async ({ page }) => {
   await page.goto('/');
-  await page.waitForTimeout(300);
-  await expect(page.locator('.field__tick').first()).toBeAttached();
-  // The field is decorative and must never be announced.
-  await expect(page.locator('.field__grid')).toHaveAttribute('aria-hidden', 'true');
+  await page.waitForTimeout(400);
+  await expect(page.locator('.appt').first()).toBeAttached();
+  // The schedule is decorative and must never be announced.
+  await expect(page.locator('.sched')).toHaveAttribute('aria-hidden', 'true');
+
+  // The three recoveries are simply there, not arriving: full opacity, no
+  // transform left to run, and the count already at its finished total.
+  const recovered = page.locator('.appt--rec');
+  await expect(recovered).toHaveCount(3);
+  for (let i = 0; i < 3; i++) {
+    const style = await recovered.nth(i).evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { opacity: s.opacity, transform: s.transform };
+    });
+    expect(style.opacity).toBe('1');
+    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(style.transform);
+  }
+  await expect(page.locator('.field__count')).toContainText('6 recovered');
 });
 
 /** The record panel must settle on one scenario rather than cycling. */

@@ -447,169 +447,265 @@
   padding: 16px 20px;
   border-bottom: 1px solid var(--gl-edge);
 }
-.field__live {
+
+/* --- The day schedule ----------------------------------------------------
+   Replaces the mark grid, the tick field and the sweep.
+
+   The head gains a nav cluster, so it now reads as the top of a real day view
+   rather than as a status strip. The schedule itself is one absolutely
+   positioned grid: hour rules and appointment blocks are placed by minute
+   offset from 8:00, at 12px per quarter hour, which is why the component can
+   hand every block a `--top` and an `--h` and the CSS never has to know what
+   time anything is.
+
+   Purple appears exactly once in here, on a recovered appointment. Every other
+   state — confirmed, unconfirmed, cancelled — is distinguished by treatment
+   (fill, dashed rule, dotted rule and strike), never by a second accent hue. */
+.field__nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.field__navbtn {
+  width: 18px;
+  height: 18px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--gl-edge);
+  border-radius: var(--gl-r-xs);
+  color: var(--gl-slate-soft);
+  font-size: 12px;
+  margin-right: -8px;
+}
+.field__navbtn + .field__navbtn {
+  margin-right: 0;
+}
+.field__date {
+  font-size: 13px;
+  font-weight: var(--gl-w-semi);
+  white-space: nowrap;
+}
+.field__view {
+  font-size: 12px;
+  color: var(--gl-slate-soft);
+  white-space: nowrap;
+}
+.field__count {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: var(--gl-t-label);
-  font-weight: var(--gl-w-medium);
-  letter-spacing: var(--gl-tr-label);
-  color: var(--gl-slate);
+  gap: 6px;
+  white-space: nowrap;
+  padding: 4px 10px 4px 8px;
+  border-radius: var(--gl-r-pill);
+  background: var(--gl-purple-50);
+  color: var(--gl-purple-700);
+  font-size: 11.5px;
+  font-weight: var(--gl-w-semi);
+  font-variant-numeric: tabular-nums;
 }
 .field__dot {
-  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--gl-verified);
+  background: var(--gl-purple);
+  flex: none;
 }
-/* The expanding ring used to be an animated box-shadow, which is a paint
-   property: every frame of a permanent loop repainted it. It is now a ring
-   drawn once on a pseudo-element and scaled, so the whole thing is transform
-   and opacity and never leaves the compositor. Same size, same timing. */
-.field__dot::after {
-  content: "";
+
+.sched {
+  background: var(--gl-paper);
+}
+.sched__cols {
+  display: flex;
+  height: 24px;
+  border-bottom: 1px solid var(--gl-edge);
+  font-size: 10.5px;
+  color: var(--gl-slate);
+}
+.sched__gutter {
+  width: 42px;
+  flex: none;
+}
+.sched__col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  border-left: 1px solid var(--gl-edge);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sched__col b {
+  font-weight: var(--gl-w-semi);
+  color: var(--gl-ink);
+}
+
+.sched__grid {
+  position: relative;
+  height: var(--view-h);
+  overflow: hidden;
+}
+.sched__hour {
   position: absolute;
-  inset: -1px;
-  border-radius: 50%;
-  box-shadow: 0 0 0 9px rgba(26, 111, 86, 0.32);
-  transform: scale(0.02);
-  opacity: 1;
-  animation: gl-pulse 2.6s var(--gl-ease) infinite;
-}
-@keyframes gl-pulse {
-  0% {
-    transform: scale(0.02);
-    opacity: 1;
-  }
-  70% {
-    transform: scale(1);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(0.02);
-    opacity: 0;
-  }
-}
-.field__count {
-  font-size: var(--gl-t-micro);
-  font-weight: var(--gl-w-medium);
-  color: var(--gl-graphite);
+  left: 0;
+  width: 36px;
+  top: max(2px, calc(var(--y) - 5px));
+  font-size: 9.5px;
+  line-height: 10px;
+  text-align: right;
+  color: var(--gl-slate-soft);
   font-variant-numeric: tabular-nums;
 }
-
-/* The grid of opportunities. */
-.field__grid {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 14), 1fr);
-  gap: 7px;
-  padding: 22px 20px;
-  min-height: 232px;
-  align-content: center;
-}
-.field__tick {
-  position: relative;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--gl-mist);
-  transform-origin: left center;
-  /* Each tick resolves as the sweep reaches its column.
-
-     The tick animates TRANSFORM only. An earlier version animated
-     `background` from grey to purple, which is not a compositor property: 98
-     of these run at once in the hero, so every frame repainted all 98, for
-     the life of the page. The colour change now lives on the overlay below
-     as an opacity animation, which the compositor can run without paint. */
-  /* ONCE, then it stops. See the note on the keyframes below. */
-  animation: gl-detect-scale var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
-  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
-}
-.field__tick::after {
+.sched__hour::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--gl-purple);
-  opacity: 0;
-  animation: gl-detect-fill var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
-  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
+  left: 42px;
+  right: -9999px;
+  top: 5px;
+  height: 1px;
+  background: var(--gl-edge);
 }
-.field__tick--miss::after {
-  animation: none;
-  opacity: 0;
-}
-.field__tick--miss {
-  animation: none;
+/* Half-hour rules read; quarter-hour rules are a texture, so they sit one
+   step lighter rather than at a lower opacity — an opacity here would show
+   through the appointment blocks that overlap them. */
+.sched__rule {
+  position: absolute;
+  left: 42px;
+  right: 0;
+  top: var(--y);
+  height: 1px;
   background: var(--gl-mist);
 }
-/* The detect sweep runs ONCE and settles into the detected state.
-
-   It used to loop forever. Ninety-eight ticks, each with its own infinite
-   animation, ran for the entire life of the page, on screen or not, and they
-   were the single largest contributor to style recalculation: a throttled
-   homepage scroll recalculated styles across 178,000 elements with them
-   running and 34,000 without.
-
-   Running once is also the better design. The panel is showing that signals
-   have been detected, and a perpetual loop in the hero is exactly the
-   scattered ambient motion the rest of this system exists to avoid. It sweeps
-   in as the page loads, and then the field simply holds what it found. */
-@keyframes gl-detect-scale {
-  0%,
-  4% {
-    transform: scaleX(0.72);
-  }
-  10%,
-  100% {
-    transform: scaleX(1);
-  }
+.sched__rule--q {
+  background: var(--gl-paper);
 }
-@keyframes gl-detect-fill {
-  0%,
-  4% {
-    opacity: 0;
-  }
-  10%,
-  100% {
-    opacity: 1;
-  }
-}
-
-/* The sweep itself. */
-.field__sweep {
+.sched__lanes {
   position: absolute;
-  inset-block: 0;
-  left: 0;
-  width: 26%;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(74, 58, 196, 0.05) 45%,
-    rgba(74, 58, 196, 0.11) 70%,
-    rgba(74, 58, 196, 0.32) 92%,
-    rgba(74, 58, 196, 0.55) 100%
-  );
-  animation: gl-sweep var(--gl-dur-ambient) var(--gl-ease) infinite;
+  inset: 0 0 0 42px;
+  display: flex;
 }
-@keyframes gl-sweep {
-  0% {
-    transform: translateX(-105%);
-    opacity: 0;
-  }
-  6% {
-    opacity: 1;
-  }
-  66% {
-    transform: translateX(400%);
-    opacity: 1;
-  }
-  74%,
-  100% {
-    transform: translateX(400%);
-    opacity: 0;
-  }
+.sched__lane {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border-left: 1px solid var(--gl-edge);
+}
+
+.sched__now {
+  position: absolute;
+  left: 36px;
+  right: 0;
+  top: var(--y);
+  height: 1px;
+  background: var(--gl-ink);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.sched__now::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gl-ink);
+}
+
+/* Appointment blocks. States differ by treatment, not colour. */
+.appt {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: var(--top);
+  height: var(--h);
+  border-radius: var(--gl-r-xs);
+  padding: 3px 6px;
+  font-size: 10px;
+  line-height: 11px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--gl-ink);
+}
+.appt b {
+  font-weight: var(--gl-w-semi);
+}
+.appt--short {
+  padding: 0 6px;
+  flex-wrap: nowrap;
+  font-size: 9.5px;
+  line-height: calc(var(--h) - 2px);
+}
+.appt--conf {
+  background: var(--gl-mist);
+}
+.appt--unconf {
+  background: var(--gl-white);
+  border: 1px dashed var(--gl-edge);
+  color: var(--gl-graphite);
+}
+.appt--canc {
+  border: 1px dotted var(--gl-edge);
+  color: var(--gl-slate-soft);
+  text-decoration: line-through;
+}
+/* The empty slot a recovery lands in. Visible only while the block above it
+   is still transparent, which is the whole point of it. */
+.appt--ghost {
+  border: 1px dashed var(--gl-purple-200);
+}
+.appt--rec {
+  background: var(--gl-purple);
+  color: var(--gl-white);
+  transform-origin: top;
+}
+.appt__tag {
+  position: absolute;
+  left: 6px;
+  bottom: 4px;
+  font-style: normal;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: var(--gl-w-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(251, 250, 248, 0.22);
+  border-radius: 3px;
+  padding: 2px 4px;
+}
+.appt--short .appt__tag {
+  display: none;
+}
+
+/* Motion is opted into, not opted out of.
+
+   The recovered blocks above are painted in their FINAL state. Only once
+   MotionProvider has set `data-motion="on"` — after first paint, and only if
+   the bundle ran — are they pulled back to transparent so the transition has
+   somewhere to travel from. A blocked bundle leaves a complete schedule with
+   all three recoveries in it, which is rule 4 of this codebase and the reason
+   this is inverted rather than written the obvious way round. */
+[data-motion="on"] .appt--rec {
+  opacity: 0;
+  transform: scaleY(0.55);
+  transition:
+    opacity var(--gl-dur-orchestrated) var(--gl-ease) calc(var(--i) * 220ms),
+    transform var(--gl-dur-orchestrated) var(--gl-ease) calc(var(--i) * 220ms);
+}
+[data-motion="on"] .field.is-live .appt--rec {
+  opacity: 1;
+  transform: none;
+}
+[data-motion="on"] .field.is-instant .appt--rec {
+  transition: none;
+  opacity: 1;
+  transform: none;
 }
 
 /* The verified read-out under the grid. */
@@ -680,14 +776,12 @@
   color: var(--gl-slate-soft);
 }
 
-/* Mobile: the concept survives, the cost does not. Fewer ticks, no sweep
-   gradient animation, shorter panel. */
+/* Mobile: the concept survives, the cost does not. The component drops to two
+   providers on its own (a ResizeObserver on the panel, not the viewport), so
+   what is left here is chrome. */
 @media (max-width: 640px) {
-  .field__grid {
-    --cols: 9;
-    min-height: 150px;
-    padding: 16px 14px;
-    gap: 6px;
+  .field__view {
+    display: none;
   }
   .field__stage {
     grid-template-columns: 5.25rem minmax(0, 1fr) 2.5rem;
@@ -701,29 +795,24 @@
   .field__foot {
     padding-inline: 14px;
   }
+  .sched__col {
+    padding: 0 6px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .field__tick,
-  .field__sweep,
-  .field__stagefill,
-  .field__dot {
-    animation: none;
-  }
-  /* The authored end state: detected, aligned, verified. */
-  .field__tick {
-    background: var(--gl-purple);
-    transform: scaleX(1);
-  }
-  .field__tick--miss {
-    background: var(--gl-mist);
-    transform: scaleX(0.72);
-  }
-  .field__sweep {
-    opacity: 0;
-  }
   .field__stagefill {
+    animation: none;
     transform: scaleX(1);
+  }
+  /* The authored end state: the day, with its three recoveries in it.
+     Written with the same `[data-motion="on"]` prefix as the rule it has to
+     beat — a bare `.appt--rec` here loses on specificity and the blocks stay
+     transparent. */
+  [data-motion="on"] .appt--rec {
+    transition: none;
+    opacity: 1;
+    transform: none;
   }
 }
 
