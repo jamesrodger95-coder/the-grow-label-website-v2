@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import { TextLink } from '@/components/primitives';
 import { CASES_SECTION } from '@/content/proof';
-import { CASE_STUDIES, ILLUSTRATIVE, type CaseStudy } from '@/content/illustrative';
+import { CASE_STUDIES, type CaseStudy } from '@/content/illustrative';
 
 /**
  * Case studies.
@@ -64,9 +64,6 @@ export function CaseStudies() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <Reveal variant="rise">
-              <span className="eyebrow sec-head__eyebrow">{CASES_SECTION.eyebrow}</span>
-            </Reveal>
             <RevealLines
               as="h2"
               id="cases-title"
@@ -76,19 +73,10 @@ export function CaseStudies() {
               )}
             />
           </div>
-          <p className="sec-head__aside">{CASES_SECTION.aside}</p>
         </div>
 
         <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 28 }}>
           {CASES_SECTION.lead}
-        </Reveal>
-
-        <Reveal className="results__note" variant="rise" style={{ marginTop: 0, marginBottom: 36 }}>
-          <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-          <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
-            {ILLUSTRATIVE.notice}
-          </p>
-          <TextLink href="/platform#limits">What we can and cannot claim</TextLink>
         </Reveal>
 
         <div className="cases">
@@ -96,9 +84,6 @@ export function CaseStudies() {
             <Reveal key={study.slug} variant="card" index={i % 3}>
               <Link className="case" href={`/case-studies/${study.slug}`}>
                 <span className="case__art">
-                  {study.illustrative ? (
-                    <span className="case__badge placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-                  ) : null}
                   <span className="case__artinner">
                     <CaseArt hue={study.hue} widths={stageWidths(study)} />
                   </span>

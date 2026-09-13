@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
-import { ActionLink, SectionHeader, TextLink } from '@/components/primitives';
-import { CASE_STUDIES, ILLUSTRATIVE } from '@/content/illustrative';
+import { ActionLink, SectionHeader } from '@/components/primitives';
+import { CASE_STUDIES } from '@/content/illustrative';
 import { CTA } from '@/content/site';
 
 export const metadata: Metadata = {
@@ -41,15 +41,6 @@ export default function CaseStudiesIndexPage() {
               title="Everything written up"
               emphasis="so far."
             />
-          </Reveal>
-
-          <Reveal className="results__note" style={{ marginTop: 0, marginBottom: 40 }}>
-            <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-            <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
-              {ILLUSTRATIVE.notice} Every study below is labelled on its own page, on every figure
-              it carries.
-            </p>
-            <TextLink href="/platform#limits">What we can and cannot claim</TextLink>
           </Reveal>
 
           {SECTORS.map((sector) => (

@@ -278,32 +278,41 @@
   background: radial-gradient(circle at 60% 40%, var(--gl-purple-wash), transparent 62%);
   pointer-events: none;
 }
+/* Sized to land inside one screen on a laptop. The hero used to run to about
+   905px under a 70px nav, which overflowed a 900px viewport and every 800px
+   one — so the panel was always cut off and the page always opened mid-scroll.
+   The block padding is now tied to viewport height rather than width, which is
+   the dimension that was actually running out. */
 .hero__inner {
   position: relative;
   z-index: 1;
-  padding-block: clamp(40px, 5vw, 80px) clamp(48px, 6vw, 96px);
+  padding-block: clamp(18px, 3.4vh, 48px) clamp(18px, 3.4vh, 58px);
 }
 /* The headline takes the full measure so it can be genuinely large, then the
    supporting copy and the signature panel sit beneath it side by side. */
 .hero__title {
-  margin-bottom: clamp(28px, 3.4vw, 52px);
+  margin-bottom: clamp(14px, 2.2vh, 34px);
   max-width: 15ch;
 }
 .hero__eyebrow {
   display: block;
-  margin-bottom: clamp(18px, 2vw, 28px);
+  margin-bottom: clamp(12px, 1.6vh, 22px);
 }
+/* The panel takes more of the row and sits hard against the right edge: it is
+   the thing worth looking at, and the copy column had more width than its
+   30rem measure could use.  lifts the panel out of the
+   dead space it used to leave under the shorter copy column. */
 .hero__base {
   display: grid;
-  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-  gap: clamp(32px, 4vw, 72px);
-  align-items: start;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  gap: clamp(28px, 3.4vw, 56px);
+  align-items: center;
 }
 .hero__copy {
   max-width: 30rem;
 }
 .hero__lead {
-  margin-bottom: clamp(24px, 2.6vw, 34px);
+  margin-bottom: clamp(18px, 2.2vh, 32px);
   font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
   line-height: 1.5;
   color: var(--gl-graphite);
@@ -313,7 +322,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
-  margin-bottom: clamp(26px, 3vw, 36px);
+  margin-bottom: clamp(18px, 2.4vh, 34px);
 }
 .hero__modules {
   display: flex;
@@ -710,13 +719,13 @@
 
 /* The verified read-out under the grid. */
 .field__foot {
-  padding: 16px 20px 20px;
+  padding: 13px 20px 16px;
   border-top: 1px solid var(--gl-edge);
   background: var(--gl-white);
 }
 .field__stages {
   display: grid;
-  gap: 9px;
+  gap: 7px;
 }
 .field__stage {
   display: grid;
@@ -770,7 +779,7 @@
   font-variant-numeric: tabular-nums;
 }
 .field__note {
-  margin-top: 14px;
+  margin-top: 11px;
   font-size: 0.75rem;
   line-height: 1.45;
   color: var(--gl-slate-soft);

@@ -14,7 +14,7 @@ import {
 import { SiteComparison } from '@/components/sector/SiteComparison';
 import { RecallRail } from '@/components/sector/RecallRail';
 import { getIndustry, INDUSTRIES } from '@/content/industries';
-import { CASE_STUDIES, ILLUSTRATIVE } from '@/content/illustrative';
+import { CASE_STUDIES } from '@/content/illustrative';
 import { SECTOR_FAQ } from '@/content/faq';
 import { CTA } from '@/content/site';
 
@@ -201,14 +201,6 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
               title={`Three ${industry.name.toLowerCase()} write-ups,`}
               emphasis="reported at four stages."
             />
-          </Reveal>
-
-          <Reveal className="results__note" style={{ marginTop: 0, marginBottom: 36 }}>
-            <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-            <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
-              {ILLUSTRATIVE.notice}
-            </p>
-            <TextLink href="/platform#limits">What we can and cannot claim</TextLink>
           </Reveal>
 
           <div className="entries">

@@ -67,14 +67,10 @@ export function Team() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <Reveal variant="rise">
-              <span className="eyebrow sec-head__eyebrow">{TEAM.eyebrow}</span>
-            </Reveal>
             <h2 className="display d2" id="team-title">
               {TEAM.titleLines[0]} <em>{TEAM.titleLines[1]}</em>
             </h2>
           </div>
-          <p className="sec-head__aside">{TEAM.aside}</p>
         </div>
 
         <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 32 }}>

@@ -19,9 +19,6 @@ export function Leaks() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <Reveal variant="rise">
-              <span className="eyebrow sec-head__eyebrow">{LEAKS_SECTION.eyebrow}</span>
-            </Reveal>
             <RevealLines
               as="h2"
               id="leaks-title"
@@ -31,7 +28,6 @@ export function Leaks() {
               )}
             />
           </div>
-          <p className="sec-head__aside">{LEAKS_SECTION.aside}</p>
         </div>
 
         <Reveal className="lead leaks__lead" as="p" variant="rise">

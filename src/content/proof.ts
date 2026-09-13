@@ -47,23 +47,20 @@ export const QUOTES_SECTION = {
 } as const;
 
 export const VIDEO_SECTION = {
-  eyebrow: 'On camera',
   title: 'Three clients,',
   emphasis: 'on what changed.',
+  note: 'See what some of our clients have to say.',
   /**
-   * Accurate, and checked: `preload="none"` means the recordings themselves
-   * fetch nothing until play, and the still on each card is a 30 KB frame
-   * pulled from the video it belongs to. Do not restore the older wording
-   * ("Nothing loads until you press play") without re-measuring — it was
-   * written against a player that turned out to fetch 10 MB on page load.
+   * The typicality line, under the cards rather than over them.
+   *
+   * Three real clients are named above three real recovery figures. Published
+   * without a line saying they are not a rate anyone else should expect, that
+   * is a results claim rather than a testimonial — which is the one thing this
+   * site has never made. It reads quietly at the foot of the section instead
+   * of competing with the heading, but it does have to be there, and a test
+   * fails the build if it goes missing.
    */
-  aside: 'Each plays in the card, no download until you press play',
-  /**
-   * The one sentence this section owes a reader. Three named outcomes are
-   * three named outcomes; saying so here is what stops the figures above the
-   * players being read as a rate anyone else should expect.
-   */
-  note: 'Each figure below is that client’s own reported recovery over the period stated on the card. Nothing here is an average, and no result is typical.',
+  foot: 'Each figure is that client’s own reported recovery over the period shown on their card. No result is typical and none of these is an average.',
 } as const;
 
 /* -------------------------------------------------------------------------- */

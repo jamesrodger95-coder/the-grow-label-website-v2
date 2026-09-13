@@ -146,7 +146,7 @@ export default function StyleguidePage() {
           </p>
           <p className="body" style={{ marginBottom: 20 }}>
             Body copy. Archivo at 380 weight, 1.62 line height, capped at 68 characters. Numerals
-            are tabular throughout: 1,204 · 0.42 · £248,610.
+            are tabular throughout: 1,204 · 0.42 · $248,610.
           </p>
           <p className="small" style={{ marginBottom: 12 }}>
             Small copy, used inside ledger rows and step lists.
@@ -155,7 +155,7 @@ export default function StyleguidePage() {
             Micro copy, used for captions and provenance notes.
           </p>
           <p className="figure" style={{ marginBottom: 32 }}>
-            £248,610
+            $248,610
           </p>
 
           <div className="spec">

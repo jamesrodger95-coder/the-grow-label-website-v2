@@ -40,19 +40,20 @@ function posterFor(videoPath: string): string | undefined {
 
 export function VideoTestimonials() {
   return (
-    <section className="surface--paper on-light section" aria-labelledby="videos-title">
+    <section
+      className="surface--white on-light section section--tight-b"
+      aria-labelledby="videos-title"
+    >
       <div className="shell">
         <div className="sec-head">
           <div>
-            <span className="eyebrow sec-head__eyebrow">{VIDEO_SECTION.eyebrow}</span>
             <h2 className="display d2" id="videos-title">
               {VIDEO_SECTION.title} <em>{VIDEO_SECTION.emphasis}</em>
             </h2>
           </div>
-          <p className="sec-head__aside">{VIDEO_SECTION.aside}</p>
         </div>
 
-        <p className="small videos__note">{VIDEO_SECTION.note}</p>
+        <p className="lead videos__note">{VIDEO_SECTION.note}</p>
 
         <div className="videos">
           {VIDEO_TESTIMONIALS.map((video) => (
@@ -64,6 +65,8 @@ export function VideoTestimonials() {
             />
           ))}
         </div>
+
+        <p className="micro videos__foot">{VIDEO_SECTION.foot}</p>
       </div>
     </section>
   );

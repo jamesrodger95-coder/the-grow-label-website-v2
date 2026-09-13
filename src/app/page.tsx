@@ -61,9 +61,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">Detection</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="detection-title"
@@ -73,7 +70,6 @@ export default function HomePage() {
                 )}
               />
             </div>
-            <p className="sec-head__aside">{DETECTION.aside}</p>
           </div>
 
           <div className="detect">
@@ -123,9 +119,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">The recovery system</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="modules-title"
@@ -133,7 +126,6 @@ export default function HomePage() {
                 lines={['Four modules, four points', <em key="e">in the same system.</em>]}
               />
             </div>
-            <p className="sec-head__aside">Answer · Respond · Retain · Reactivate</p>
           </div>
 
           <div>
@@ -183,9 +175,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">Value stages</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="stages-title"
@@ -193,7 +182,6 @@ export default function HomePage() {
                 lines={['One number is a claim.', <em key="e">Four numbers are an account.</em>]}
               />
             </div>
-            <p className="sec-head__aside">Scroll to follow</p>
           </div>
 
           <RecoverySequence />
@@ -247,9 +235,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">{TIME_RETURNED.aside}</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="time-title"
@@ -257,7 +242,6 @@ export default function HomePage() {
                 lines={['The second return is hours', <em key="e">back at the front desk.</em>]}
               />
             </div>
-            <p className="sec-head__aside">Five recurring jobs</p>
           </div>
           {/* Visual on the LEFT here. The detection panel above and the
               evidence chain below are both right-hand, so this is the beat
@@ -296,9 +280,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">{EVIDENCE.aside}</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="evidence-title"
@@ -306,7 +287,6 @@ export default function HomePage() {
                 lines={['Every figure opens into', <em key="e">the event that produced it.</em>]}
               />
             </div>
-            <p className="sec-head__aside">Five properties of the record</p>
           </div>
           {/* Even columns. The default `two-col` gives the left column an aside
               width, and the five-property list was being squeezed into a
@@ -340,9 +320,6 @@ export default function HomePage() {
         <div className="shell">
           <div className="sec-head">
             <div>
-              <Reveal variant="rise">
-                <span className="eyebrow sec-head__eyebrow">{SECTORS.aside}</span>
-              </Reveal>
               <RevealLines
                 as="h2"
                 id="sectors-title"
@@ -350,7 +327,6 @@ export default function HomePage() {
                 lines={['Veterinary and dental lose', <em key="e">money in different places.</em>]}
               />
             </div>
-            <p className="sec-head__aside">Two products, not one page</p>
           </div>
           <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
             {SECTORS.lead}

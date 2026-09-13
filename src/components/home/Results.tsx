@@ -5,10 +5,8 @@ import { TextLink } from '@/components/primitives';
 import { StageIcon } from './StageIcon';
 import { RESULTS } from '@/content/proof';
 import {
-  ILLUSTRATIVE,
   ILLUSTRATIVE_ENGAGEMENT,
   ILLUSTRATIVE_METRICS,
-  ILLUSTRATIVE_RESULTS_NOTE,
   ILLUSTRATIVE_STAGES,
 } from '@/content/illustrative';
 
@@ -42,9 +40,6 @@ export function Results() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <Reveal variant="rise">
-              <span className="eyebrow sec-head__eyebrow">{RESULTS.eyebrow}</span>
-            </Reveal>
             <RevealLines
               as="h2"
               id="results-title"
@@ -54,7 +49,6 @@ export function Results() {
               )}
             />
           </div>
-          <p className="sec-head__aside">{RESULTS.aside}</p>
         </div>
 
         <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 32 }}>
@@ -142,14 +136,11 @@ export function Results() {
           ))}
         </div>
 
-        {/* The section's one disclosure, at the foot of the figures rather than
-            at the head of them. A reader who has the numbers in front of them
-            is the reader this sentence is for. */}
-        <Reveal className="results__note" variant="rise">
-          <span className="placeholder-tag">{ILLUSTRATIVE.tag}</span>
-          <p className="micro" style={{ flex: '1 1 26rem', margin: 0 }}>
-            {ILLUSTRATIVE_RESULTS_NOTE}
-          </p>
+        {/* One route onward, and nothing else. The disclosure row that used to
+            close this section read as a caveat on the figures rather than as a
+            note about them; what a reader wants at the foot of a results table
+            is the method, which is where this goes. */}
+        <Reveal className="results__more" variant="rise">
           <TextLink href="/platform#value-stages">How a stage is promoted</TextLink>
         </Reveal>
       </div>

@@ -166,7 +166,7 @@
   letter-spacing: -0.04em;
   line-height: 1.1;
   /* No tabular-nums: this face gives the comma a full digit advance in that
-     mode, setting "£486,200" as "£486 , 200" at display size. Nothing here is
+     mode, setting "$486,200" as "$486 , 200" at display size. Nothing here is
      aligned column-wise, so there is nothing to trade it for. */
   color: var(--fg);
 }
@@ -237,6 +237,13 @@
   flex-wrap: wrap;
   align-items: baseline;
   gap: 10px 18px;
+  margin-top: var(--gl-s-6);
+  padding-top: var(--gl-s-4);
+  border-top: 1px solid var(--rule);
+}
+/* What is left at the foot of the results table once the disclosure row has
+   gone: one route into the method, on the same hairline the row sat on. */
+.results__more {
   margin-top: var(--gl-s-6);
   padding-top: var(--gl-s-4);
   border-top: 1px solid var(--rule);
@@ -485,7 +492,7 @@
   letter-spacing: -0.03em;
   line-height: 1.1;
   /* No tabular-nums. The face gives the comma a full digit advance in that
-     mode, which sets "£486,200" as "£486 , 200" at display size. */
+     mode, which sets "$486,200" as "$486 , 200" at display size. */
 }
 .cs-metric__label {
   margin: 0;
@@ -716,6 +723,12 @@
 .videos__note {
   max-width: 62ch;
   margin: 0 0 32px;
+}
+/* The typicality line. Quiet, and the last thing in the section. */
+.videos__foot {
+  max-width: 78ch;
+  margin: 22px 0 0;
+  color: var(--faint);
 }
 
 /* A figure, not a control. The card no longer lifts or opens anything — the
@@ -2574,24 +2587,26 @@
 /* ==========================================================================
    INGEST — "what it reads to do that".
 
-   Four lanes feeding one record. The marks travel on `transform` only, and
-   the keyframes are declared once rather than per lane, so the whole diagram
-   costs one composited layer per mark and no JavaScript at all.
+   Four streams converging on one record. The convergence is a drawn SVG, not
+   four parallel rules that stop: the previous version implied the join and a
+   reader could not see it. Marks travel on `transform` only, with the
+   keyframes declared once rather than per lane, so the whole diagram costs one
+   composited layer per mark and no JavaScript at all.
    ========================================================================= */
 .ingest {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--gl-r-lg);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   overflow: hidden;
 }
 .ingest__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 16px 22px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 10px 20px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
 }
 .ingest__label {
   font-size: var(--gl-t-label);
@@ -2599,156 +2614,234 @@
   letter-spacing: var(--gl-tr-label);
   color: var(--gl-purple-ondark);
 }
-/* 0.52, not 0.45. Composited over the panel this measured 4.41:1, just under
-   AA for body text. The sweep had been ignoring foreground alpha and so had
-   been reporting it as a pass. */
 .ingest__note {
-  color: rgba(255, 255, 255, 0.52);
+  color: rgba(251, 250, 248, 0.5);
 }
+
+/* Three columns: the streams, the join, the record. The join is a fixed narrow
+   track because a bend that stretches reads as a different bend at every
+   width; the streams take the space instead. */
 .ingest__body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) 76px minmax(0, 0.8fr);
   align-items: center;
-  gap: clamp(16px, 3vw, 40px);
-  padding: 22px;
+  gap: 0;
+  padding: 18px 20px 16px;
 }
 .ingest__lanes {
   display: grid;
-  gap: 14px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
+
+/* --- One stream ---------------------------------------------------------- */
+/* No fixed row height. The detail line wraps to two at this column width, and
+   a 40px row simply overlapped the label below it. */
 .lane {
   display: grid;
-  grid-template-columns: minmax(0, 20rem) minmax(90px, 1fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(12px, 2vw, 28px);
+  gap: 6px 18px;
+  padding-block: 11px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.lane:last-child {
+  border-bottom: 0;
 }
 .lane__key {
-  margin: 0 0 3px;
+  margin: 0;
   font-size: var(--gl-t-small);
   font-weight: var(--gl-w-medium);
-  letter-spacing: var(--gl-tr-tight);
+  line-height: 1.2;
   color: var(--gl-white);
 }
 .lane__detail {
-  margin: 0;
+  margin: 2px 0 0;
   font-size: var(--gl-t-micro);
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.35;
+  color: rgba(251, 250, 248, 0.52);
+}
+/* The sample event, in the shape it arrives in. This is what turns a label
+   into something a reader can picture, and it is why the lane is no longer
+   600px of empty rule. */
+.lane__feed {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+.lane__sample {
+  font-family: var(--gl-font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.01em;
+  color: rgba(251, 250, 248, 0.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .lane__tape {
   position: relative;
-  height: 18px;
-  overflow: hidden;
+  display: block;
+  height: 3px;
 }
 .lane__rule {
   position: absolute;
   inset-inline: 0;
-  top: 50%;
+  top: 1px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.13);
 }
 .lane__mark {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
-  width: 14px;
+  width: 16px;
   height: 3px;
-  margin-top: -1.5px;
   border-radius: 2px;
   background: var(--gl-purple-ondark);
-  opacity: 0.85;
-  /* Authored end state: spread along the lane. The animation only moves the
-     marks along the axis they already occupy, so a blocked bundle or a
-     reduced-motion preference leaves a legible tape, not a bare rule. */
-  transform: translateX(calc(var(--m) * 26px));
+  opacity: 0.9;
+  /* Authored at rest, spread across the rule. Motion is opted into below, so
+     a blocked bundle leaves four evenly loaded tapes rather than four marks
+     stacked on the left edge. */
+  transform: translateX(calc(var(--m) * 34px));
 }
 .lane__mark--ref {
-  width: 8px;
-  opacity: 0.4;
+  background: rgba(251, 250, 248, 0.3);
 }
 [data-motion="on"] .lane__mark {
-  animation: gl-lane-run var(--gl-dur-ambient) linear infinite;
-  animation-delay: calc(var(--m) * -1000ms + var(--lane) * -260ms);
+  animation: gl-lane var(--gl-dur-ambient) linear infinite;
+  animation-delay: calc(var(--m) * (var(--gl-dur-ambient) / -6) - var(--lane) * 240ms);
 }
-@keyframes gl-lane-run {
-  from {
-    transform: translateX(-20px);
+@keyframes gl-lane {
+  0% {
+    transform: translateX(0);
     opacity: 0;
   }
-  12% {
-    opacity: 0.85;
+  8% {
+    opacity: 0.9;
   }
   88% {
-    opacity: 0.85;
+    opacity: 0.9;
   }
-  to {
-    transform: translateX(190px);
+  100% {
+    transform: translateX(calc(100% + 220px));
     opacity: 0;
   }
 }
-.ingest__out {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* Stretched, so the brace spans the whole stack of lanes rather than just
-     the height of the record. The convergence is the point of the drawing. */
-  align-self: stretch;
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="on"] .lane__mark {
+    animation: none;
+    transform: translateX(calc(var(--m) * 34px));
+    opacity: 0.9;
+  }
 }
-.ingest__brace {
-  width: 10px;
+
+/* --- The convergence ----------------------------------------------------- */
+/* Stretches to whatever the four streams add up to, so the bends always meet
+   the lane centres.  on the element is what makes
+   the fixed viewBox follow. */
+.ingest__join {
+  display: block;
+  width: 76px;
+  height: 100%;
   align-self: stretch;
-  border: 1px solid var(--gl-purple-ondark-muted);
-  border-right: 0;
-  border-radius: var(--gl-r-xs) 0 0 var(--gl-r-xs);
+  overflow: visible;
+}
+.ingest__joinpath {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.17);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.ingest__joinpath--ref {
+  stroke-dasharray: 3 4;
+}
+
+/* --- The record the four produce ----------------------------------------- */
+.ingest__out {
+  min-width: 0;
 }
 .ingest__record {
-  display: grid;
-  gap: 6px;
-  min-width: 140px;
-  padding: 14px 16px;
   border: 1px solid var(--gl-purple-ondark-muted);
-  border-radius: var(--gl-r-sm);
-  background: rgba(171, 159, 238, 0.08);
+  border-radius: var(--gl-r-md);
+  background: rgba(154, 143, 240, 0.08);
+  padding: 13px 15px 14px;
 }
-.ingest__recordlabel {
-  margin-bottom: 4px;
+.ingest__recordhead {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 11px;
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
   color: var(--gl-purple-ondark);
 }
-.ingest__recordrow {
-  display: block;
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255, 255, 255, 0.22);
+.ingest__recorddot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--gl-purple-ondark);
 }
-.ingest__recordrow--short {
-  width: 62%;
-}
-.ingest__foot {
-  padding: 0 22px 18px;
+.ingest__fields {
+  display: grid;
+  gap: 7px;
   margin: 0;
-  max-width: 78ch;
-  color: rgba(255, 255, 255, 0.5);
+}
+.ingest__fields > div {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+.ingest__fields > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.ingest__fields dt {
+  font-size: var(--gl-t-micro);
+  color: rgba(251, 250, 248, 0.6);
+}
+.ingest__fields dd {
+  margin: 0;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-white);
+}
+
+.ingest__foot {
+  padding: 0 20px 16px;
+  max-width: 74ch;
+  color: rgba(251, 250, 248, 0.5);
 }
 
 @media (max-width: 900px) {
+  /* The join stops being a bend and becomes a stack: four streams above, the
+     record below. A 76px bend at this width is a squiggle, not a diagram. */
   .ingest__body {
     grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 16px 16px 14px;
+  }
+  .ingest__join {
+    display: none;
   }
   .lane {
     grid-template-columns: minmax(0, 1fr);
-    gap: 8px;
+    height: auto;
+    padding-block: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   }
-  .ingest__out {
-    justify-content: flex-start;
+  .lane:last-child {
+    border-bottom: 0;
   }
-  .ingest__brace {
-    min-height: 56px;
+  .ingest__head,
+  .ingest__foot {
+    padding-inline: 16px;
   }
 }
 
@@ -2762,12 +2855,38 @@
   background: var(--gl-white);
 }
 .board__head {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 12px;
-  padding-bottom: 12px;
-  margin-bottom: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-bottom: 11px;
   border-bottom: 1px solid var(--gl-edge);
+}
+.board__title {
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-ink);
+}
+.board__count {
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-slate-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* The two owners, on the same grid as a job row so the headings sit over the
+   columns they name rather than over halves of the panel. */
+.board__cols {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px 0 6px;
+}
+.board__col--from {
+  grid-column: 2;
+}
+.board__col--to {
+  grid-column: 3;
 }
 .board__col {
   font-size: var(--gl-t-label);
@@ -2793,7 +2912,7 @@
   grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   gap: 10px;
-  padding: 9px 0;
+  padding: 7px 0;
 }
 .job__cell {
   grid-column: 3;
@@ -2805,13 +2924,45 @@
   font-variant-numeric: tabular-nums;
   color: var(--gl-slate-soft);
 }
-.job__track {
+/* Where the job used to sit. Same idiom as the hero panel: a dashed outline
+   is where something was, the filled chip is where it is now.
+
+   The dashed leader that used to run the width of the row is gone. It passed
+   straight through this pill, so the ghost read as an input field with dashes
+   in it rather than as a vacated slot. */
+.job__ghost {
+  position: relative;
+  grid-column: 2;
+  height: 26px;
+  border: 1px dashed var(--gl-edge);
+  border-radius: var(--gl-r-pill);
+  background: var(--gl-white);
+}
+/* The vacated slot, said twice: an empty outline, and a rule through it. */
+.job__ghost::before {
+  content: "";
   position: absolute;
-  left: 26px;
-  right: 0;
+  left: 12px;
+  right: 12px;
   top: 50%;
   height: 1px;
-  background: repeating-linear-gradient(to right, var(--gl-edge) 0 4px, transparent 4px 8px);
+  background: var(--gl-edge);
+}
+/* The crossing, in the gutter between the two owners. Small, and the only
+   purple on the left half of the board. */
+.job__ghost::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid var(--gl-purple-400);
+  border-right: 1.5px solid var(--gl-purple-400);
+  transform: translateY(-50%) rotate(45deg);
+}
+.job__track {
+  display: none;
 }
 .job__chip {
   position: relative;
@@ -2869,11 +3020,15 @@
     animation: none;
   }
   .job__track,
-  .board__head .board__col--from {
+  .job__ghost,
+  .board__cols .board__col--from {
     display: none;
   }
-  .board__head {
-    grid-template-columns: minmax(0, 1fr);
+  .board__cols {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .board__col--to {
+    grid-column: 2;
   }
 }
 

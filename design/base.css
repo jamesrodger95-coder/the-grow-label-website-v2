@@ -213,6 +213,12 @@ select {
 .section--flush-top {
   padding-block-start: 0;
 }
+/* For a section whose own content already ends in a lot of air — a grid of
+   cards on a light ground, where the last row of captions leaves whitespace
+   below it. The section rhythm assumes content that ends on a hard edge. */
+.section--tight-b {
+  padding-block-end: clamp(40px, 4vw, 72px);
+}
 
 .grid12 {
   display: grid;

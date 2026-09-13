@@ -102,7 +102,6 @@ export function Testimonials() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <span className="eyebrow sec-head__eyebrow">{QUOTES_SECTION.eyebrow}</span>
             <h2 className="display d2" id="quotes-title">
               {QUOTES_SECTION.title} <em>{QUOTES_SECTION.emphasis}</em>
             </h2>

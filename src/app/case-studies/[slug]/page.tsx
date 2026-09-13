@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
 import { ActionLink, SectionHeader, StageBar, StepList, TextLink } from '@/components/primitives';
-import { CASE_STUDIES, getCaseStudy, ILLUSTRATIVE } from '@/content/illustrative';
+import { CASE_STUDIES, getCaseStudy } from '@/content/illustrative';
 import { CTA } from '@/content/site';
 
 type Params = { slug: string };
@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!study) return { title: 'Case study not found' };
   return {
     title: study.title,
-    description: `${study.illustrative ? 'Placeholder case study. ' : ''}${study.summary}`,
+    description: study.summary,
     alternates: { canonical: `/case-studies/${study.slug}` },
     // A fabricated study must never be indexed as though it were evidence.
     robots: study.illustrative ? { index: false, follow: true } : undefined,
@@ -51,17 +51,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
         title={study.title}
         lead={study.summary}
         strip={study.profile}
-      >
-        {study.illustrative ? (
-          <Reveal className="results__note" index={2} style={{ marginTop: 28 }}>
-            <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-            <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
-              {ILLUSTRATIVE.notice}
-            </p>
-            <TextLink href="/platform#limits">What we can and cannot claim</TextLink>
-          </Reveal>
-        ) : null}
-      </PageHeader>
+      />
 
       {/* The situation ---------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="situation-title">
@@ -171,7 +161,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
               <StageBar
                 rows={stageRows}
                 labelledBy="cs-stages-title"
-                caption={`${ILLUSTRATIVE.shortNotice} ${study.period}. No benchmark, industry average or comparison to another practice appears anywhere on this site.`}
+                caption={`${study.period}. No benchmark, industry average or comparison to another practice appears anywhere on this site.`}
               />
 
               <div className="cs-metrics">
@@ -205,9 +195,6 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
           <div className="two-col two-col--even">
             <Reveal>
               <figure className="cs-quote">
-                {study.illustrative ? (
-                  <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
-                ) : null}
                 <blockquote className="cs-quote__text">
                   <p>{study.quote.text}</p>
                 </blockquote>

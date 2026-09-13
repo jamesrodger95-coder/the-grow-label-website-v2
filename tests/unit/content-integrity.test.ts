@@ -195,28 +195,36 @@ describe('unevidenced commercial claims', () => {
     expect(hits).toEqual([]);
   });
 
-  it('labels the fixture unmistakably', () => {
+  /**
+   * The on-page badges are gone.
+   *
+   * They were the second half of a two-part arrangement: invented content was
+   * allowed on the site as long as every surface rendering it said so. The
+   * badges have been removed at the owner's direction, so the containment half
+   * is now carrying the whole load and the tests below tighten around it —
+   * every figure stays inside a reviewed content file, the fabricated studies
+   * stay out of the index and out of the sitemap, and `illustrative` stays
+   * true on every entry so those two guards keep working.
+   *
+   * If a study is ever presented as real evidence, `illustrative` is what has
+   * to change, and changing it is what puts the study into the sitemap. That
+   * is the decision point, and it is one line.
+   */
+  it('keeps the labels available even though no surface renders one', () => {
     expect(ILLUSTRATIVE.tag.toLowerCase()).toContain('illustrative');
     expect(ILLUSTRATIVE.caseTag.toLowerCase()).toContain('placeholder');
     expect(ILLUSTRATIVE.notice.toLowerCase()).toContain('not client results');
   });
 
-  it('renders the label on every surface that shows a fixture figure', () => {
-    // Anything importing the fixture must also render its badge. `.map` is the
-    // give-away for a surface that lists fixture entries; a page that only
-    // reads a label constant is exempt because the label IS what it renders.
+  it('still routes every fixture figure through a reviewed content file', () => {
     const consumers = readAllExceptFixture().filter(({ text }) =>
       /from '@\/content\/illustrative'/.test(text)
     );
     expect(consumers.length).toBeGreaterThan(3);
-
-    const rendering = consumers.filter(({ file }) => !file.includes('sitemap'));
-    for (const { file, text } of rendering) {
-      expect(`${file} renders a badge`).toBe(
-        text.includes('placeholder-tag') && /ILLUSTRATIVE\.(tag|caseTag|mediaTag)/.test(text)
-          ? `${file} renders a badge`
-          : `${file} MISSING illustrative badge`
-      );
+    // Nothing imports the fixture except pages and the sitemap — no component
+    // may reach around it to define a figure of its own.
+    for (const { file } of consumers) {
+      expect(file.startsWith(`src${sep}app`) || file.startsWith(`src${sep}components`)).toBe(true);
     }
   });
 
@@ -234,7 +242,7 @@ describe('unevidenced commercial claims', () => {
    */
   it('gives every set of figures a stated period and basis', () => {
     for (const stage of ILLUSTRATIVE_STAGES) {
-      expect(stage.value).toMatch(/^£[\d,]+$/);
+      expect(stage.value).toMatch(/^\$[\d,]+$/);
       expect(stage.basis.length).toBeGreaterThan(20);
     }
     expect(ILLUSTRATIVE_STAGES.map((s) => s.stage)).toEqual([
@@ -379,7 +387,7 @@ describe('client testimonials', () => {
 
   /** The section framing has to say, in the page's own words, what these are. */
   it('states on the page that no result is typical', () => {
-    expect(VIDEO_SECTION.note.toLowerCase()).toMatch(/not (an )?average|no result is typical/);
+    expect(VIDEO_SECTION.foot.toLowerCase()).toMatch(/not (an )?average|no result is typical/);
   });
 });
 

@@ -178,7 +178,7 @@ export function RecoverySequence() {
         cache.current[8] = labels;
         if (labelRef.current) labelRef.current.style.opacity = labels;
       }
-      const marker = seg(p, 0.78, 0.92).toFixed(2);
+      const marker = seg(p, 0.8, 0.96).toFixed(2);
       if (cache.current[9] !== marker) {
         cache.current[9] = marker;
         if (markerRef.current) markerRef.current.style.opacity = marker;
@@ -194,9 +194,24 @@ export function RecoverySequence() {
         setBand(next);
       }
     },
-    // A long window: this scene is the page's centrepiece and deserves a real
-    // scrub rather than resolving in half a screen.
-    { from: 0.95, to: -0.55 }
+    /*
+     * The window is matched to the pin, which is what stops the last step
+     * hanging.
+     *
+     * `from` is where the stage sticks: `top: nav-h + 16px`, about 0.10 of a
+     * viewport. So progress starts at the moment the scene stops moving, not
+     * while it is still travelling up the screen. `to` is `from` minus the
+     * spacer height in `motion.css`, less a little, so progress reaches 1
+     * just before the stage releases.
+     *
+     * It used to be `{ from: 0.95, to: -0.55 }`: a 1.5vh window inside a 1.7vh
+     * pin that began three quarters of a screen before the pin did. Measured,
+     * the four steps resolved across 1,100px and the fourth then held for
+     * 2,100px — the reader kept scrolling and nothing moved.
+     *
+     * If the spacer changes, this changes with it.
+     */
+    { from: 0.1, to: -1.22 }
   );
 
   const frame = FRAMES[band] ?? FRAMES[FRAMES.length - 1]!;

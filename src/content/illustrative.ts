@@ -99,7 +99,7 @@ export const ILLUSTRATIVE_ENGAGEMENT = {
 export const ILLUSTRATIVE_STAGES: StageFigure[] = [
   {
     stage: 'Estimated',
-    value: '£486,200',
+    value: '$486,200',
     width: '100%',
     basis: 'Modelled from the group’s own fee schedule',
     hint: 'Opportunity detected',
@@ -107,7 +107,7 @@ export const ILLUSTRATIVE_STAGES: StageFigure[] = [
   },
   {
     stage: 'Booked',
-    value: '£312,400',
+    value: '$312,400',
     width: '64%',
     basis: 'Appointment records in the practice management system',
     hint: 'A date exists',
@@ -115,7 +115,7 @@ export const ILLUSTRATIVE_STAGES: StageFigure[] = [
   },
   {
     stage: 'Attended',
-    value: '£268,900',
+    value: '$268,900',
     width: '55%',
     basis: 'Attendance status in the practice management system',
     hint: 'The appointment happened',
@@ -123,7 +123,7 @@ export const ILLUSTRATIVE_STAGES: StageFigure[] = [
   },
   {
     stage: 'Collected',
-    value: '£221,700',
+    value: '$221,700',
     width: '46%',
     basis: 'Payments recorded against the group ledger',
     hint: 'The only figure that is revenue',
@@ -261,7 +261,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     hue: 248,
     headline: [
       { value: '3,184', label: 'calls answered that would have rung out' },
-      { value: '£312,400', label: 'booked value from recovered contact' },
+      { value: '$312,400', label: 'booked value from recovered contact' },
     ],
     profile: [
       { key: 'Shape', detail: 'Six sites, one shared number, overflow routed by site' },
@@ -311,10 +311,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     stages: [
-      { stage: 'Estimated', value: '£486,200', basis: 'Modelled from the group’s fee schedule' },
-      { stage: 'Booked', value: '£312,400', basis: 'Appointment records linked to a source call' },
-      { stage: 'Attended', value: '£268,900', basis: 'Attendance status in the practice system' },
-      { stage: 'Collected', value: '£221,700', basis: 'Payments against the group ledger' },
+      { stage: 'Estimated', value: '$486,200', basis: 'Modelled from the group’s fee schedule' },
+      { stage: 'Booked', value: '$312,400', basis: 'Appointment records linked to a source call' },
+      { stage: 'Attended', value: '$268,900', basis: 'Attendance status in the practice system' },
+      { stage: 'Collected', value: '$221,700', basis: 'Payments against the group ledger' },
     ],
     metrics: [
       {
@@ -412,10 +412,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     stages: [
-      { stage: 'Estimated', value: '£164,900', basis: 'Modelled from the practice fee schedule' },
-      { stage: 'Booked', value: '£98,300', basis: 'Appointments linked to a worked record' },
-      { stage: 'Attended', value: '£81,600', basis: 'Attendance status in the practice system' },
-      { stage: 'Collected', value: '£70,400', basis: 'Payments against the practice ledger' },
+      { stage: 'Estimated', value: '$164,900', basis: 'Modelled from the practice fee schedule' },
+      { stage: 'Booked', value: '$98,300', basis: 'Appointments linked to a worked record' },
+      { stage: 'Attended', value: '$81,600', basis: 'Attendance status in the practice system' },
+      { stage: 'Collected', value: '$70,400', basis: 'Payments against the practice ledger' },
     ],
     metrics: [
       {
@@ -516,10 +516,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     stages: [
-      { stage: 'Estimated', value: '£207,500', basis: 'Modelled from the group’s fee schedule' },
-      { stage: 'Booked', value: '£141,800', basis: 'Refilled appointments linked to a release' },
-      { stage: 'Attended', value: '£124,300', basis: 'Attendance status in the practice system' },
-      { stage: 'Collected', value: '£109,600', basis: 'Payments against the group ledger' },
+      { stage: 'Estimated', value: '$207,500', basis: 'Modelled from the group’s fee schedule' },
+      { stage: 'Booked', value: '$141,800', basis: 'Refilled appointments linked to a release' },
+      { stage: 'Attended', value: '$124,300', basis: 'Attendance status in the practice system' },
+      { stage: 'Collected', value: '$109,600', basis: 'Payments against the group ledger' },
     ],
     metrics: [
       {
@@ -569,7 +569,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     period: 'Nine months, modelled',
     hue: 268,
     headline: [
-      { value: '£184,600', label: 'accepted and unscheduled at the start' },
+      { value: '$184,600', label: 'accepted and unscheduled at the start' },
       { value: '419', label: 'plans given a date' },
     ],
     profile: [
@@ -619,12 +619,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     stages: [
       {
         stage: 'Estimated',
-        value: '£184,600',
+        value: '$184,600',
         basis: 'Accepted plan value from the practice’s own pricing',
       },
-      { stage: 'Booked', value: '£126,900', basis: 'Plans with an appointment attached' },
-      { stage: 'Attended', value: '£104,200', basis: 'Attendance status in the practice system' },
-      { stage: 'Collected', value: '£92,800', basis: 'Payments against the practice ledger' },
+      { stage: 'Booked', value: '$126,900', basis: 'Plans with an appointment attached' },
+      { stage: 'Attended', value: '$104,200', basis: 'Attendance status in the practice system' },
+      { stage: 'Collected', value: '$92,800', basis: 'Payments against the practice ledger' },
     ],
     metrics: [
       {
@@ -675,7 +675,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     hue: 240,
     headline: [
       { value: '88%', label: 'recall list depth reached per cycle' },
-      { value: '£118,400', label: 'collected value from recall work' },
+      { value: '$118,400', label: 'collected value from recall work' },
     ],
     profile: [
       { key: 'Shape', detail: 'Four practices under one group recall policy' },
@@ -724,16 +724,16 @@ export const CASE_STUDIES: CaseStudy[] = [
     stages: [
       {
         stage: 'Estimated',
-        value: '£241,300',
+        value: '$241,300',
         basis: 'Modelled from the group’s published prices',
       },
       {
         stage: 'Booked',
-        value: '£157,200',
+        value: '$157,200',
         basis: 'Hygiene appointments linked to a worked record',
       },
-      { stage: 'Attended', value: '£133,900', basis: 'Attendance status in each practice system' },
-      { stage: 'Collected', value: '£118,400', basis: 'Payments against the practice ledgers' },
+      { stage: 'Attended', value: '$133,900', basis: 'Attendance status in each practice system' },
+      { stage: 'Collected', value: '$118,400', basis: 'Payments against the practice ledgers' },
     ],
     metrics: [
       {
@@ -784,7 +784,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     hue: 254,
     headline: [
       { value: '9 min', label: 'median first response, from 6h 40m' },
-      { value: '£96,300', label: 'collected value from recovered enquiries' },
+      { value: '$96,300', label: 'collected value from recovered enquiries' },
     ],
     profile: [
       { key: 'Shape', detail: 'Two sites, mixed private and plan patients' },
@@ -831,10 +831,10 @@ export const CASE_STUDIES: CaseStudy[] = [
       },
     ],
     stages: [
-      { stage: 'Estimated', value: '£198,700', basis: 'Modelled from the practice fee schedule' },
-      { stage: 'Booked', value: '£124,500', basis: 'Appointments linked to a source enquiry' },
-      { stage: 'Attended', value: '£107,100', basis: 'Attendance status in the practice system' },
-      { stage: 'Collected', value: '£96,300', basis: 'Payments against the practice ledger' },
+      { stage: 'Estimated', value: '$198,700', basis: 'Modelled from the practice fee schedule' },
+      { stage: 'Booked', value: '$124,500', basis: 'Appointments linked to a source enquiry' },
+      { stage: 'Attended', value: '$107,100', basis: 'Attendance status in the practice system' },
+      { stage: 'Collected', value: '$96,300', basis: 'Payments against the practice ledger' },
     ],
     metrics: [
       {
