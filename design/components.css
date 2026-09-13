@@ -894,6 +894,7 @@
    MODULE BLOCK
    ========================================================================= */
 .modblock {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.35fr) minmax(0, 0.75fr);
   gap: clamp(20px, 3vw, 48px);
@@ -901,18 +902,63 @@
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
-  transition:
-    transform var(--gl-dur-standard) var(--gl-ease),
-    box-shadow var(--gl-dur-standard) var(--gl-ease);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
 .modblock + .modblock {
   margin-top: 12px;
 }
-.modblock:hover {
-  transform: translateY(-2px);
+
+/* The hover glow.
+ *
+ * The block used to lift 2px and take a neutral grey shadow — a lift and a
+ * bloom, both of which the response verb rules out, and the lift also fought
+ * the entrance transform these blocks already carry as `m-card`.
+ *
+ * The glow is drawn once, at full size, on a pseudo-element that only fades.
+ * That is the distinction that matters: a shadow which GROWS on hover is a
+ * bloom, and a shadow which is always the same size and changes opacity is a
+ * colour response. It also means the whole thing is one compositor-friendly
+ * opacity transition rather than a shadow the browser has to re-rasterise.
+ *
+ * `:focus-within` is not optional here. The block is a div, so a pointer gets
+ * the glow and a keyboard would get nothing — but there is a link inside it,
+ * and tabbing to that link should light the same block.
+ */
+.modblock::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
   box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--shadow);
+    inset 0 0 0 1px var(--gl-purple-300),
+    0 0 0 1px var(--gl-purple-200),
+    0 4px 18px rgba(74, 58, 196, 0.2),
+    0 0 46px rgba(74, 58, 196, 0.14);
+  transition: opacity var(--gl-dur-micro) var(--gl-ease);
+}
+.modblock:hover,
+.modblock:focus-within {
+  background: var(--gl-purple-quiet);
+}
+.modblock:hover::after,
+.modblock:focus-within::after {
+  opacity: 1;
+}
+/* On the dark ground the same glow in the light half of the ramp, and a wash
+   that lifts the panel rather than darkening it. The light-ground purples go
+   to mud on near-black. */
+.on-dark .modblock::after {
+  box-shadow:
+    inset 0 0 0 1px var(--gl-purple-ondark-muted),
+    0 0 0 1px rgba(154, 143, 240, 0.22),
+    0 4px 20px rgba(154, 143, 240, 0.16),
+    0 0 52px rgba(154, 143, 240, 0.12);
+}
+.on-dark .modblock:hover,
+.on-dark .modblock:focus-within {
+  background: rgba(154, 143, 240, 0.07);
 }
 .modblock__name {
   display: flex;
