@@ -12,25 +12,26 @@ export function SiteFooter() {
     <footer className="foot on-dark surface--black">
       <div className="shell">
         <div className="foot__grid">
-          <div>
-            <p className="logo logo--on-dark" style={{ marginBottom: 16 }}>
+          <div className="foot__brand">
+            <p className="logo logo--on-dark">
               <Logo tone="light" />
             </p>
-            <p className="micro" style={{ maxWidth: '34ch' }}>
+            <p className="micro" style={{ maxWidth: '32ch' }}>
               {SITE.shortDescription}
             </p>
+            {/* Deliberately not a `tlink`. The footer is the one region of the
+                site with no motion in it at all — no entrance, no drawn
+                underline — so the only thing that changes here is colour. */}
             {booking ? (
-              <p style={{ marginTop: 20 }}>
-                <a className="tlink" href={booking} rel="noopener noreferrer" target="_blank">
-                  Book a call <span aria-hidden="true">&rarr;</span>
-                </a>
-              </p>
+              <a className="foot__cta" href={booking} rel="noopener noreferrer" target="_blank">
+                Book a call <span aria-hidden="true">&rarr;</span>
+              </a>
             ) : null}
           </div>
 
           {NAV_GROUPS.filter((g) => g.id !== 'legal').map((group) => (
             <nav className="foot__nav" key={group.id} aria-label={group.label}>
-              <p className="label" style={{ marginBottom: 10 }}>
+              <p className="label" style={{ marginBottom: 6 }}>
                 {group.label}
               </p>
               {group.links.map((link) => (

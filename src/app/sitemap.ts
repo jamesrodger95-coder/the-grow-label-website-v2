@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { MODULE_SLUGS } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
 import { INSIGHTS } from '@/content/pages';
+import { CASE_STUDIES } from '@/content/illustrative';
 import { siteUrl } from '@/lib/env';
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -13,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/platform`, priority: 0.9, changeFrequency: 'monthly' },
     { url: `${base}/modules`, priority: 0.9, changeFrequency: 'monthly' },
     { url: `${base}/contact`, priority: 0.9, changeFrequency: 'yearly' },
+    { url: `${base}/case-studies`, priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/about`, priority: 0.7, changeFrequency: 'yearly' },
     { url: `${base}/insights`, priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/privacy`, priority: 0.3, changeFrequency: 'yearly' },
@@ -27,6 +29,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${base}/industries/${industry.slug}`,
       priority: 0.8,
       changeFrequency: 'monthly',
+    });
+  }
+  // Placeholder studies are noindex, so they are deliberately not listed here.
+  // Each one joins the sitemap when its `illustrative` flag is cleared.
+  for (const study of CASE_STUDIES.filter((s) => !s.illustrative)) {
+    entries.push({
+      url: `${base}/case-studies/${study.slug}`,
+      priority: 0.7,
+      changeFrequency: 'yearly',
     });
   }
   for (const insight of INSIGHTS) {

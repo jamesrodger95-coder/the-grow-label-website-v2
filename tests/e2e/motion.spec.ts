@@ -70,13 +70,20 @@ test('the recovery sequence advances through all four states on scroll', async (
   const seen = new Set<string>();
   // boundingBox() is viewport-relative; the scroll target must be a document
   // offset, so read the rect and the current scroll position together.
-  const { top, height } = await sequence.evaluate((el) => {
+  const { top, height, viewport } = await sequence.evaluate((el) => {
     const rect = el.getBoundingClientRect();
-    return { top: rect.top + window.scrollY, height: rect.height };
+    return { top: rect.top + window.scrollY, height: rect.height, viewport: window.innerHeight };
   });
 
+  // The scene's window opens while it is still below the fold (useScene runs
+  // `from: 0.95`), so a sweep that starts with the scene's top at the top of
+  // the viewport begins half way through the sequence and never sees Detect or
+  // Consolidate. Start a full viewport earlier, where the scene enters.
+  const start = Math.max(0, top - viewport);
+  const span = height + viewport;
+
   for (let step = 0; step <= 12; step++) {
-    await page.evaluate((y) => window.scrollTo(0, y), top + (height * step) / 12);
+    await page.evaluate((y) => window.scrollTo(0, y), start + (span * step) / 12);
     await page.waitForTimeout(220);
     const active = await page
       .locator('.scene__step[data-active="true"] .scene__stepname')

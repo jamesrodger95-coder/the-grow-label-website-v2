@@ -1,17 +1,26 @@
 import type { CSSProperties } from 'react';
+import Link from 'next/link';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import { TextLink } from '@/components/primitives';
 import { StageIcon } from './StageIcon';
-import { PLACEHOLDER_NOTE, RESULTS } from '@/content/proof';
+import { RESULTS } from '@/content/proof';
+import {
+  ILLUSTRATIVE,
+  ILLUSTRATIVE_ENGAGEMENT,
+  ILLUSTRATIVE_METRICS,
+  ILLUSTRATIVE_RESULTS_NOTE,
+  ILLUSTRATIVE_STAGES,
+} from '@/content/illustrative';
 
 /**
  * Results.
  *
- * Shows the frame a verified outcome arrives in rather than inventing one. The
- * figures are deliberately absent — each card carries a dash where a number
- * will sit, so the section is honest at a glance and needs no rebuild when real
- * figures are approved.
+ * A worked example of the reporting frame: one engagement, four stages, and
+ * the operational detail the money came from. Every figure is imported from
+ * `content/illustrative.ts` and every surface that shows one carries the
+ * illustrative badge, so nothing here can be mistaken for client evidence.
  */
+
 /**
  * The icon ramp: four opaque steps of the one hue, lightest at Estimated and
  * darkest at Collected, so the mark alone says how much is known.
@@ -45,15 +54,41 @@ export function Results() {
               )}
             />
           </div>
-          <p className="sec-head__aside">Reporting frame</p>
+          <p className="sec-head__aside">{RESULTS.aside}</p>
         </div>
 
-        <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
+        <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 32 }}>
           {RESULTS.lead}
         </Reveal>
 
+        {/* The scenario the figures belong to, stated before the first one is
+            read. A number without a subject and a period attached is the exact
+            failure this section exists to argue against.
+
+            The badge that used to sit at the head of this row has gone. It
+            read as an unfinished placeholder rather than as a disclosure, and
+            saying "illustrative" twice in one section does not make the
+            section twice as honest — the basis row below carries it once,
+            where a reader has the figures in front of them. */}
+        <Reveal className="scenario" variant="rise">
+          <dl className="scenario__facts">
+            <div>
+              <dt className="micro">Subject</dt>
+              <dd className="label label--strong">{ILLUSTRATIVE_ENGAGEMENT.subject}</dd>
+            </div>
+            <div>
+              <dt className="micro">Period</dt>
+              <dd className="label label--strong">{ILLUSTRATIVE_ENGAGEMENT.period}</dd>
+            </div>
+            <div>
+              <dt className="micro">Scope</dt>
+              <dd className="label label--strong">{ILLUSTRATIVE_ENGAGEMENT.scope}</dd>
+            </div>
+          </dl>
+        </Reveal>
+
         <div className="results">
-          {RESULTS.cards.map((card, i) => (
+          {ILLUSTRATIVE_STAGES.map((card, i) => (
             <Reveal
               className="result"
               key={card.stage}
@@ -70,16 +105,11 @@ export function Results() {
               {/* 02 — the label */}
               <div className="result__stage">
                 <span className="label label--strong">{card.stage}</span>
-                <span className="placeholder-tag">TBC</span>
+                <span className="result__pct">{card.width}</span>
               </div>
 
-              {/* 03 — the metric. A reserved slot rather than a stray dash: it
-                  reads as a figure that has not been supplied, not as a broken
-                  element. */}
-              <p className="result__figure">
-                <span className="result__slot" aria-hidden="true" />
-                <span className="gl-sr">{`${card.stage} value, to be confirmed`}</span>
-              </p>
+              {/* 03 — the figure */}
+              <p className="result__figure">{card.value}</p>
 
               <div className="result__bar" aria-hidden="true">
                 <span
@@ -95,10 +125,30 @@ export function Results() {
           ))}
         </div>
 
+        {/* The operational detail underneath the money. Deliberately varied in
+            shape — counts, medians, depths, hours — because eight identically
+            framed percentages read as a template rather than as a report. */}
+        <div className="metrics">
+          {ILLUSTRATIVE_METRICS.map((metric, i) => (
+            <Reveal className="metric" key={metric.id} variant="card" index={i % 4}>
+              <p className="metric__value">{metric.value}</p>
+              <p className="metric__label">{metric.label}</p>
+              <p className="metric__basis micro">{metric.basis}</p>
+              <Link className="metric__module" href={metric.href}>
+                {metric.module}
+                <span aria-hidden="true">&nbsp;&rarr;</span>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* The section's one disclosure, at the foot of the figures rather than
+            at the head of them. A reader who has the numbers in front of them
+            is the reader this sentence is for. */}
         <Reveal className="results__note" variant="rise">
-          <span className="placeholder-tag">Placeholder</span>
-          <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
-            {RESULTS.note} {PLACEHOLDER_NOTE}
+          <span className="placeholder-tag">{ILLUSTRATIVE.tag}</span>
+          <p className="micro" style={{ flex: '1 1 26rem', margin: 0 }}>
+            {ILLUSTRATIVE_RESULTS_NOTE}
           </p>
           <TextLink href="/platform#value-stages">How a stage is promoted</TextLink>
         </Reveal>

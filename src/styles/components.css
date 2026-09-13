@@ -1129,6 +1129,13 @@ select.field__control {
   align-items: start;
   padding-block: clamp(64px, 8vw, 128px);
 }
+/* One child, one column. The two-column band leaves a permanently empty right
+   half when a page has nothing to put in it, which reads as a section that was
+   never finished rather than as deliberate space. */
+.ctaband__inner--single {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 62ch;
+}
 @media (max-width: 900px) {
   .ctaband__inner {
     grid-template-columns: minmax(0, 1fr);
@@ -1250,22 +1257,51 @@ select.field__control {
   background: var(--gl-ink);
   color: var(--gl-white);
 }
+/* One column per nav group, plus the brand column — five in total.
+ *
+ * This used to declare four tracks for five columns, so the last group wrapped
+ * onto a second row and left three quarters of that row empty. The footer was
+ * roughly twice the height it needed to be for that one reason. Count the
+ * tracks against NAV_GROUPS if a group is ever added or removed. */
 .foot__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
-  gap: var(--gl-s-8) var(--gl-s-5);
-  padding-block: var(--gl-s-9) var(--gl-s-7);
+  grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
+  gap: var(--gl-s-6) var(--gl-s-5);
+  padding-block: var(--gl-s-7) var(--gl-s-6);
 }
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
+  /* The brand column takes the full width and the four groups sit under it,
+     which keeps every group on one row rather than orphaning the last. */
+  .foot__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .foot__brand {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 720px) {
   .foot__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gl-s-5) var(--gl-s-4);
   }
 }
-@media (max-width: 520px) {
-  .foot__grid {
-    grid-template-columns: 1fr;
-    gap: var(--gl-s-7) 0;
-  }
+.foot__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.foot__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-purple-ondark);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.foot__cta:hover {
+  color: var(--gl-purple-ondark-hover);
 }
 .foot__nav {
   display: flex;
@@ -1274,10 +1310,10 @@ select.field__control {
 }
 .foot__nav a {
   display: block;
-  padding-block: 7px;
-  color: rgba(251, 250, 248, 0.7);
-  font-size: var(--gl-t-small);
-  line-height: 1.4;
+  padding-block: 4px;
+  color: rgba(251, 250, 248, 0.68);
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
   transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .foot__nav a:hover {
@@ -1286,10 +1322,10 @@ select.field__control {
 .foot__base {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gl-s-3) var(--gl-s-6);
+  gap: var(--gl-s-2) var(--gl-s-6);
   justify-content: space-between;
   align-items: center;
-  padding-block: var(--gl-s-5);
+  padding-block: var(--gl-s-4);
   border-top: 1px solid rgba(251, 250, 248, 0.13);
 }
 .foot__base a {
@@ -1298,4 +1334,95 @@ select.field__control {
 }
 .foot__base a:hover {
   color: var(--gl-white);
+}
+
+/* ==========================================================================
+   FAQ
+   A <details>/<summary> list. No client component, no state, and every answer
+   is in the document whether or not the bundle runs. The affordance is the
+   RESPONSE verb: colour at 180ms, plus the mark rotating. No lift.
+   ========================================================================= */
+.faq {
+  display: grid;
+  gap: var(--gl-s-6);
+  /* Capped rather than full-shell. A one-line question with the open/close
+     mark 1200px away from it is a row, not a question. */
+  max-width: 76ch;
+}
+.faq__group {
+  display: grid;
+  gap: 14px;
+}
+.faq__grouplabel {
+  color: var(--accent);
+}
+.faq__items {
+  display: grid;
+  border-top: 1px solid var(--rule);
+}
+.faq__item {
+  border-bottom: 1px solid var(--rule);
+}
+.faq__q {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: clamp(16px, 1.8vw, 22px);
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--gl-t-body);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.35;
+  letter-spacing: var(--gl-tr-tight);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+.faq__q:hover {
+  color: var(--accent);
+}
+.faq__item:focus-within .faq__q {
+  color: var(--accent);
+}
+.faq__q:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--gl-r-xs);
+}
+/* A plus that becomes a minus. Drawn from two rules rather than a glyph, so it
+   inherits the hairline weight the rest of the site uses. */
+.faq__mark {
+  position: relative;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 6px;
+  color: var(--accent);
+}
+.faq__mark::before,
+.faq__mark::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform var(--gl-dur-micro) var(--gl-ease);
+}
+.faq__mark::after {
+  transform: rotate(90deg);
+}
+.faq__item[open] .faq__mark::after {
+  transform: rotate(0deg);
+}
+.faq__a {
+  display: grid;
+  gap: 12px;
+  max-width: 62ch;
+  padding-bottom: clamp(18px, 2vw, 24px);
+}
+.faq__a p {
+  margin: 0;
 }

@@ -6,7 +6,6 @@ import { Results } from '@/components/home/Results';
 import { ReadsIngest } from '@/components/home/ReadsIngest';
 import { DeskBoard } from '@/components/home/DeskBoard';
 import { ProvenanceChain } from '@/components/home/ProvenanceChain';
-import { CaseStudies } from '@/components/home/CaseStudies';
 import { Testimonials } from '@/components/home/Testimonials';
 import { VideoTestimonials } from '@/components/home/VideoTestimonials';
 import { Team } from '@/components/home/Team';
@@ -104,6 +103,18 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      {/* ---------------------------------------------------------------- */}
+      {/* Three clients, on camera                                          */}
+      {/*                                                                   */}
+      {/* Directly after detection and before the modules, on purpose. The  */}
+      {/* page has just spent two sections arguing that demand is being     */}
+      {/* lost and that the platform can see it; this is the first point at */}
+      {/* which somebody other than us says so. Putting it after the four   */}
+      {/* modules would have made the reader take the mechanism on trust    */}
+      {/* first and meet the evidence for it second.                        */}
+      {/* ---------------------------------------------------------------- */}
+      <VideoTestimonials />
 
       {/* ---------------------------------------------------------------- */}
       {/* The four modules                                                  */}
@@ -221,6 +232,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Between the four-stage argument and the worked example of it. The
+          quotations are about the operational change, not about the numbers,
+          so they sit where the reader has just been told how the numbers work
+          and is about to be shown a set of them. */}
+      <Testimonials />
+
       <Results />
 
       {/* ---------------------------------------------------------------- */}
@@ -259,7 +276,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      <CaseStudies />
+      {/* The case-study section is off the homepage for now.
+
+          It is not deleted, and it is deliberately not deleted: the six
+          write-ups are the only long-form worked examples on the site, and
+          `/case-studies` still carries them, still labelled. What it could not
+          do was sit two sections away from six real, named client
+          testimonials while every card on it said "Placeholder case study".
+          Restore this line once the studies are real engagements.
+
+          The primary nav item for case studies now points at `/case-studies`
+          rather than at the `#case-studies` anchor this used to render. */}
+      {/* <CaseStudies /> */}
 
       {/* ---------------------------------------------------------------- */}
       {/* Evidence                                                          */}
@@ -304,9 +332,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <Testimonials />
-      <VideoTestimonials />
 
       {/* ---------------------------------------------------------------- */}
       {/* Two sectors                                                       */}

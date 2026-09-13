@@ -40,7 +40,7 @@ export default function PlatformPage() {
         strip={PLATFORM.strip}
       />
 
-      {/* § 01 — Architecture -------------------------------------------- */}
+      {/* Architecture -------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="architecture-title">
         <div className="shell">
           <Reveal variant="group">
@@ -72,7 +72,7 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* § 02 — The modules in one place --------------------------------- */}
+      {/* The modules in one place --------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="modules-title">
         <div className="shell">
           <Reveal variant="group">
@@ -117,7 +117,7 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* § 03 — Controls ------------------------------------------------- */}
+      {/* Controls ------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="controls-title">
         <div className="shell">
           <Reveal variant="group">
@@ -139,7 +139,7 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* § 04 — Data boundary -------------------------------------------- */}
+      {/* Data boundary -------------------------------------------- */}
       <section className="surface--black on-dark section" aria-labelledby="data-title">
         <div className="shell">
           <Reveal variant="group">
@@ -191,7 +191,7 @@ export default function PlatformPage() {
         </div>
       </section>
 
-      {/* § 05 — Reporting ------------------------------------------------ */}
+      {/* Reporting ------------------------------------------------ */}
       <section
         className="surface--mist on-light section"
         id="value-stages"

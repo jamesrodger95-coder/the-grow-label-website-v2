@@ -195,7 +195,7 @@ export function CapacityColumn({
   return (
     <div className="capblock">
       {label ? (
-        <div className="hero__columnhead">
+        <div className="capblock__head">
           <span className="label">{label}</span>
           {openLabel ? <span className="label label--accent">{openLabel}</span> : null}
         </div>
@@ -217,7 +217,7 @@ export function CapacityColumn({
         ))}
       </div>
       {note ? (
-        <div className="hero__columnfoot">
+        <div className="capblock__foot">
           <p className="micro">{note}</p>
         </div>
       ) : null}

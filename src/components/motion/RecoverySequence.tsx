@@ -211,7 +211,9 @@ export function RecoverySequence() {
         <ol className="scene__list">
           {FRAMES.map((f, i) => (
             <li className="scene__listitem" key={f.step}>
-              <p className="label label--accent">{`0${i + 1} / 04 · ${f.step}`}</p>
+              {/* No "/ 04". The index is the order, which is the meaning; the
+                  denominator is a template counter and says nothing. */}
+              <p className="label label--accent">{`0${i + 1} · ${f.step}`}</p>
               <h3 className="display d3">{f.title}</h3>
               <p className="small">{f.body}</p>
             </li>

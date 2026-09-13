@@ -20,8 +20,38 @@
   white-space: nowrap;
 }
 
+/* --- The scenario a set of figures belongs to ---------------------------- */
+.scenario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+  margin-bottom: var(--gl-s-6);
+  padding: 16px 20px;
+  border-radius: var(--gl-r-md);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.scenario__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 0;
+  flex: 1 1 22rem;
+}
+.scenario__facts > div {
+  display: grid;
+  gap: 3px;
+}
+.scenario__facts dt {
+  color: var(--ghost);
+}
+.scenario__facts dd {
+  margin: 0;
+}
+
 /* ==========================================================================
-   RESULTS — how a verified outcome will be presented
+   RESULTS — one engagement, reported at four stages
    ========================================================================= */
 .results {
   display: grid;
@@ -131,32 +161,21 @@
   gap: 10px;
   padding-top: 12px;
   margin: 0;
-  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
   font-weight: var(--gl-w-medium);
   letter-spacing: -0.04em;
   line-height: 1.1;
+  /* No tabular-nums: this face gives the comma a full digit advance in that
+     mode, setting "£486,200" as "£486 , 200" at display size. Nothing here is
+     aligned column-wise, so there is nothing to trade it for. */
+  color: var(--fg);
+}
+/* The proportion, beside the stage name. Carried at label weight rather than
+   figure weight: it qualifies the number below, it is not a second one. */
+.result__pct {
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
   font-variant-numeric: tabular-nums;
-  color: var(--faint);
-}
-/* The reserved slot a real figure will occupy. */
-.result__slot {
-  display: block;
-  width: 4.5rem;
-  height: 0.9em;
-  border-radius: var(--gl-r-xs);
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--track),
-    var(--track) 5px,
-    transparent 5px,
-    transparent 10px
-  );
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-.result__figure em {
-  font-style: normal;
-  font-size: 0.5em;
-  letter-spacing: -0.01em;
   color: var(--faint);
 }
 .result__bar {
@@ -207,16 +226,83 @@
   flex: none;
 }
 
+/* The basis row: one disclosure, at the foot of the section, where a reader
+   has the figures in front of them. It used to be a filled purple panel, which
+   gave a footnote the visual weight of a callout and made the whole section
+   look provisional. It is now a hairline rule and quiet type — still the first
+   thing anyone scrolling to the bottom of the figures meets, and no longer the
+   loudest thing on the page. */
 .results__note {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 18px;
+  align-items: baseline;
+  gap: 10px 18px;
   margin-top: var(--gl-s-6);
-  padding: 16px 20px;
-  border-radius: var(--gl-r-md);
-  background: var(--accent-wash);
+  padding-top: var(--gl-s-4);
+  border-top: 1px solid var(--rule);
+}
+
+/* --- The operational detail underneath the money ------------------------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+@media (max-width: 1000px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: var(--gl-r-lg);
+  background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
+}
+.metric__value {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  /* See .result__figure: tabular figures space the comma. */
+  color: var(--fg);
+}
+.metric__label {
+  margin: 0;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.35;
+}
+.metric__basis {
+  margin: 0;
+  color: var(--faint);
+  flex: 1;
+}
+.metric__module {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 6px;
+  padding-top: 12px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.metric__module:hover {
+  color: var(--fg);
 }
 
 /* ==========================================================================
@@ -238,17 +324,27 @@
   }
 }
 
+/* The whole card is the anchor. A nested link inside a clickable card gives a
+   keyboard user two stops for one destination, so the anchor wraps everything
+   and the focus ring is drawn on the card. */
 .case {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   overflow: hidden;
+  color: inherit;
+  text-decoration: none;
   transition:
     transform var(--gl-dur-standard) var(--gl-ease),
     box-shadow var(--gl-dur-standard) var(--gl-ease);
+}
+.case:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .case:hover {
   transform: translateY(-4px);
@@ -294,11 +390,41 @@
   color: var(--accent);
 }
 .case__title {
+  display: block;
   font-size: clamp(1.125rem, 1.7vw, 1.375rem);
   font-weight: var(--gl-w-medium);
   line-height: 1.22;
   letter-spacing: var(--gl-tr-tight);
 }
+
+/* The two headline figures. Sit above the chips, on their own rule, so the
+   card carries a number before it carries a link. */
+.case__figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+.case__figure {
+  display: grid;
+  gap: 3px;
+  flex: 1 1 8rem;
+}
+.case__figurevalue {
+  font-size: clamp(1.125rem, 1.9vw, 1.375rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  /* See .result__figure: tabular figures space the comma. */
+  color: var(--fg);
+}
+.case__figurelabel {
+  font-size: var(--gl-t-micro);
+  line-height: 1.35;
+  color: var(--faint);
+}
+
 .case__meta {
   display: flex;
   flex-wrap: wrap;
@@ -328,6 +454,74 @@
 }
 .case:hover .case__cta span {
   transform: translateX(4px);
+}
+
+/* ==========================================================================
+   CASE STUDY — the detail page
+   ========================================================================= */
+.cs-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: var(--gl-s-6);
+}
+@media (max-width: 520px) {
+  .cs-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.cs-metric {
+  display: grid;
+  gap: 5px;
+  padding: 18px 20px;
+  border-radius: var(--gl-r-md);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.cs-metric__value {
+  margin: 0;
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  /* No tabular-nums. The face gives the comma a full digit advance in that
+     mode, which sets "£486,200" as "£486 , 200" at display size. */
+}
+.cs-metric__label {
+  margin: 0;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.3;
+}
+.cs-metric__basis {
+  margin: 0;
+  color: var(--faint);
+}
+
+.cs-quote {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  margin: 0;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--gl-r-lg);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.cs-quote__text {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.9vw, 1.4375rem);
+  font-weight: var(--gl-w-regular);
+  line-height: 1.42;
+  letter-spacing: var(--gl-tr-tight);
+  text-wrap: pretty;
+}
+.cs-quote__text p {
+  margin: 0;
+}
+.cs-quote__who {
+  display: grid;
+  gap: 3px;
 }
 
 /* ==========================================================================
@@ -386,6 +580,7 @@
     var(--shadow);
 }
 .quote__mark {
+  flex: none;
   width: 22px;
   height: 18px;
   color: var(--accent);
@@ -412,6 +607,12 @@
   overflow: hidden;
   background: var(--track);
   box-shadow: inset 0 0 0 1px var(--rule);
+}
+.quote__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 .quote__name {
   display: block;
@@ -512,81 +713,119 @@
   }
 }
 
+.videos__note {
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+/* A figure, not a control. The card no longer lifts or opens anything — the
+   only interactive thing in it is the cover, and once that is pressed the card
+   is a video player at exactly the size it already occupied.
+
+   Laid out as a grid with a named row for the head, so the three frames sit on
+   one line whatever the headline above them wraps to. With the head left to
+   flow, a two-line detail on one card pushed its player 20px below its
+   neighbours and the row read as broken. */
 .vcard {
   position: relative;
-  display: block;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
   width: 100%;
-  text-align: left;
+  margin: 0;
+  padding: clamp(18px, 2vw, 24px);
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
-  overflow: hidden;
-  transition:
-    transform var(--gl-dur-standard) var(--gl-ease),
-    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
-.vcard:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--gl-shadow-lg);
+/* Subgrid is what actually lines the three players up. Each card spans three
+   rows of the section grid and adopts them, so the tallest headline sets the
+   head row for all three and every frame starts on the same line. Without it
+   the cards fall back to their own grid, which is the current behaviour and
+   is merely uneven, not broken. */
+@supports (grid-template-rows: subgrid) {
+  .videos {
+    align-items: stretch;
+  }
+  .vcard {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
 }
-.vcard__thumb {
+
+/* The headline. Sits above the frame and is set like one: the figure is the
+   loudest thing on the card, because it is the reason to watch. */
+.vcard__head {
+  margin: 0 0 16px;
+}
+.vcard__figure {
+  margin: 0;
+  font-family: var(--gl-font-display);
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: var(--gl-w-semi);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets "$20,000" as "$20 , 000". */
+}
+/* The qualifier stays attached to the figure and stays quiet. A recovery
+   figure without its window is a number, so the two never separate. */
+.vcard__period {
   display: block;
+  margin-top: 4px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-body);
+  color: var(--faint);
+}
+.vcard__detail {
+  margin: 8px 0 0;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--faint);
+}
+
+/* 16:9, which is what the recordings are. It was 16:10 when the frame held a
+   poster that could be cropped to any ratio; now it holds the video itself,
+   and any other ratio is a letterbox nobody asked for. */
+.vcard__frame {
   position: relative;
-  aspect-ratio: 16 / 10;
-  background: var(--gl-mist);
+  aspect-ratio: 16 / 9;
+  border-radius: var(--gl-r-md);
+  background: var(--gl-ink);
   overflow: hidden;
 }
-.vcard__thumbinner {
+.vcard__video {
   display: block;
   position: absolute;
   inset: 0;
-  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  width: 100%;
+  height: 100%;
+  /* `contain`, not `cover`. The ratios match, so these are identical today —
+     but a recording that arrives at another ratio should lose its edges to
+     black bars rather than lose the speaker's head to a crop. */
+  object-fit: contain;
+  background: var(--gl-ink);
 }
-.vcard:hover .vcard__thumbinner {
-  transform: scale(1.05);
-}
-.vcard__play {
+/* No file yet. The frame still holds its place, with a note saying what it is
+   waiting for rather than an empty player. */
+.vcard__pending {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
+  inset: 0;
   display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--gl-white) 88%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: var(--gl-shadow-md);
-  color: var(--gl-ink);
-  transition:
-    transform var(--gl-dur-standard) var(--gl-ease),
-    background var(--gl-dur-standard) var(--gl-ease);
+  place-items: end start;
+  background: var(--gl-mist);
 }
-.vcard:hover .vcard__play {
-  transform: scale(1.08);
-  background: var(--gl-white);
-}
-.vcard__dur {
-  display: block;
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  padding: 4px 9px;
-  border-radius: var(--gl-r-pill);
-  background: rgba(12, 12, 14, 0.72);
-  color: #fff;
-  font-size: 0.6875rem;
-  font-weight: var(--gl-w-medium);
-  font-variant-numeric: tabular-nums;
+.vcard__pendingnote {
+  position: relative;
+  z-index: 1;
+  margin: 12px;
+  background: var(--panel);
 }
 .vcard__body {
   display: grid;
-  gap: 5px;
-  padding: clamp(18px, 2vw, 24px);
+  gap: 3px;
+  padding-top: 16px;
 }
 .vcard__name {
   display: block;
@@ -619,6 +858,9 @@
   }
 }
 
+/* Not a control any more. The card used to be a button opening a modal, so it
+   carried a hover lift and an arrow that promised somewhere to go. There is
+   nowhere to go: the remit is the line on the card. Nothing here moves. */
 .person {
   display: block;
   width: 100%;
@@ -627,15 +869,6 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   overflow: hidden;
-  transition:
-    transform var(--gl-dur-standard) var(--gl-ease),
-    box-shadow var(--gl-dur-standard) var(--gl-ease);
-}
-.person:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--shadow);
 }
 .person__photo {
   display: block;
@@ -648,41 +881,40 @@
   display: block;
   position: absolute;
   inset: 0;
-  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
 }
-.person:hover .person__photoinner {
-  transform: scale(1.04);
+/* The photograph fills the reserved 4:5 frame whatever it was exported at, so
+   a portrait that is slightly off-crop costs a little of its edge rather than
+   the whole row's alignment. */
+.person__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
 }
 .person__body {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   padding: clamp(16px, 1.8vw, 22px);
 }
 .person__name {
   display: block;
-  font-size: var(--gl-t-small);
+  font-size: clamp(1rem, 1.2vw, 1.0625rem);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-tight);
 }
 .person__role {
   display: block;
   font-size: var(--gl-t-micro);
-  color: var(--faint);
-}
-.person__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  font-size: var(--gl-t-micro);
   font-weight: var(--gl-w-medium);
   color: var(--accent);
 }
-.person__more span {
-  transition: transform var(--gl-dur-standard) var(--gl-ease);
-}
-.person:hover .person__more span {
-  transform: translateX(3px);
+.person__intro {
+  display: block;
+  margin-top: 8px;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--faint);
 }
 
 /* ==========================================================================

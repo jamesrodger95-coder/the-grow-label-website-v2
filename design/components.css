@@ -5,15 +5,34 @@
 /* ==========================================================================
    GLOBAL NAV — a floating pill that condenses on scroll
    ========================================================================= */
+/* The sentinel the nav condense state is derived from. One pixel, at the very
+   top of the document, never seen. It exists so the nav can know the page has
+   moved without any script reading scroll position. */
+.nav__sentinel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
 .nav {
   position: sticky;
   top: 0;
   z-index: var(--gl-z-nav);
   padding-top: 14px;
-  transition: padding-top var(--gl-dur-base) var(--gl-ease-out);
+  transition: padding-top var(--gl-dur-standard) var(--gl-ease);
 }
 .nav[data-condensed="true"] {
   padding-top: 8px;
+}
+/* The bar floats above the open drawer. Without this the drawer sheet, which
+   is inset:0 so it can cover the page, also covers the bar — and the Close
+   button and the logo inside it stop responding to a tap. */
+.nav > .shell {
+  position: relative;
+  z-index: calc(var(--gl-z-overlay) + 1);
 }
 .nav__bar {
   display: grid;
@@ -28,8 +47,8 @@
   -webkit-backdrop-filter: saturate(150%) blur(18px);
   box-shadow: inset 0 0 0 1px transparent;
   transition:
-    box-shadow var(--gl-dur-base) var(--gl-ease-out),
-    background var(--gl-dur-base) var(--gl-ease-out);
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    background var(--gl-dur-standard) var(--gl-ease);
 }
 .nav[data-condensed="true"] .nav__bar {
   background: color-mix(in srgb, var(--gl-white) 88%, transparent);
@@ -38,23 +57,39 @@
     var(--gl-shadow-sm);
 }
 
-.nav__mark {
+/* The lockup: the mark and the wordmark. Used in the nav and the footer, and
+   nowhere else, because it is the only place the brand signs its own name. */
+.logo {
   display: inline-flex;
   align-items: center;
   gap: 9px;
   min-height: 44px;
   padding-left: 12px;
+  margin: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.logo__mark {
+  display: block;
+  height: 22px;
+  width: auto;
+  flex: none;
+}
+.logo__word {
   font-size: 0.9375rem;
   font-weight: var(--gl-w-semi);
   letter-spacing: -0.02em;
+  /* Black, as asked. Named rather than inherited so a dark surface cannot
+     quietly turn it to black-on-black, which is what happened in the footer. */
   color: var(--gl-ink);
-  white-space: nowrap;
 }
-.nav__glyph {
-  display: block;
-  width: 17px;
-  height: 17px;
-  flex: none;
+/* On the black footer the wordmark has to be the warm white instead; black on
+   near-black rendered the name completely invisible. */
+.logo--on-dark {
+  padding-left: 0;
+}
+.logo--on-dark .logo__word {
+  color: var(--gl-white);
 }
 
 .nav__links {
@@ -73,8 +108,8 @@
   color: var(--gl-graphite);
   white-space: nowrap;
   transition:
-    color var(--gl-dur-fast) var(--gl-ease-out),
-    background var(--gl-dur-fast) var(--gl-ease-out);
+    color var(--gl-dur-micro) var(--gl-ease),
+    background var(--gl-dur-micro) var(--gl-ease);
 }
 .nav__link:hover {
   color: var(--gl-ink);
@@ -115,6 +150,10 @@
   color: var(--gl-ink);
   background: rgba(12, 12, 14, 0.05);
 }
+.nav__toggle:focus-visible {
+  outline: var(--gl-focus-w) solid var(--gl-purple-600);
+  outline-offset: var(--gl-focus-offset);
+}
 .nav__burger {
   display: grid;
   gap: 4px;
@@ -125,7 +164,7 @@
   height: 1.5px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform var(--gl-dur-base) var(--gl-ease-spring);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 [data-open="true"] .nav__burger i:first-child {
   transform: translateY(2.75px) rotate(45deg);
@@ -183,7 +222,7 @@
   margin-inline: -14px;
   border-bottom: 1px solid rgba(12, 12, 14, 0.06);
   border-radius: var(--gl-r-sm);
-  transition: background var(--gl-dur-fast) var(--gl-ease-out);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
 .drawer__label {
   font-size: 1.375rem;
@@ -201,7 +240,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--gl-slate-soft);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .drawer__link:hover,
 .drawer__link:focus-visible {
@@ -258,7 +297,7 @@
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
   gap: clamp(32px, 4vw, 72px);
-  align-items: end;
+  align-items: start;
 }
 .hero__copy {
   max-width: 30rem;
@@ -283,31 +322,96 @@
   padding-top: var(--gl-s-5);
   border-top: 1px solid var(--gl-edge);
 }
-.hero__module {
-  padding: 6px 12px;
+/* --------------------------------------------------------------------------
+   MODULE BUTTON — the purple control.
+
+   Every route into a module uses this one class: the hero chips, the module
+   switcher at the foot of a module page, and the modules index. Purple is the
+   signal colour, so the four things that do the recovering are the four
+   things that carry it.
+
+   Measured: 700 on 50 is 10.37, white on 500 is 7.80, white on 600 is 9.51.
+   Only the border sits below AA, and it carries no text.
+   ----------------------------------------------------------------------- */
+.modbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border: 1px solid var(--gl-purple-200);
   border-radius: var(--gl-r-pill);
-  background: rgba(12, 12, 14, 0.045);
+  background: var(--gl-purple-50);
+  color: var(--gl-purple-700);
   font-size: var(--gl-t-micro);
   font-weight: var(--gl-w-medium);
-  color: var(--gl-graphite);
+  letter-spacing: var(--gl-tr-body);
+  /* Colour and border only. A hover lift here would be the fourth different
+     hover behaviour on the page; the RESPONSE verb is colour, not travel. */
   transition:
-    background var(--gl-dur-fast) var(--gl-ease-out),
-    color var(--gl-dur-fast) var(--gl-ease-out),
-    transform var(--gl-dur-fast) var(--gl-ease-out);
+    background var(--gl-dur-micro) var(--gl-ease-micro),
+    border-color var(--gl-dur-micro) var(--gl-ease-micro),
+    color var(--gl-dur-micro) var(--gl-ease-micro);
 }
-.hero__module:hover {
-  background: var(--gl-purple);
+.modbtn:hover {
+  background: var(--gl-purple-600);
+  border-color: var(--gl-purple-600);
   color: var(--gl-white);
-  transform: translateY(-1px);
 }
+.modbtn:active {
+  background: var(--gl-purple-700);
+  border-color: var(--gl-purple-700);
+  color: var(--gl-white);
+}
+.modbtn:focus-visible {
+  outline: var(--gl-focus-w) solid var(--gl-purple-600);
+  outline-offset: var(--gl-focus-offset);
+}
+.modbtn[aria-current="page"],
+.modbtn[data-active="true"] {
+  background: var(--gl-purple-600);
+  border-color: var(--gl-purple-600);
+  color: var(--gl-white);
+}
+.modbtn[aria-disabled="true"],
+.modbtn:disabled {
+  background: var(--gl-mist);
+  border-color: var(--gl-edge);
+  color: var(--gl-slate-soft);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* On a dark ground the ramp inverts: light purple type, transparent fill. */
+.on-dark .modbtn {
+  background: rgba(171, 159, 238, 0.1);
+  border-color: var(--gl-purple-ondark-muted);
+  color: var(--gl-purple-ondark);
+}
+.on-dark .modbtn:hover {
+  background: var(--gl-purple-ondark);
+  border-color: var(--gl-purple-ondark);
+  color: var(--gl-graphite-deep);
+}
+.on-dark .modbtn:active {
+  background: var(--gl-purple-ondark-hover);
+  border-color: var(--gl-purple-ondark-hover);
+  color: var(--gl-graphite-deep);
+}
+.on-dark .modbtn:focus-visible {
+  outline-color: var(--gl-purple-ondark);
+}
+.on-dark .modbtn[aria-current="page"],
+.on-dark .modbtn[data-active="true"] {
+  background: var(--gl-purple-ondark);
+  border-color: var(--gl-purple-ondark);
+  color: var(--gl-graphite-deep);
+}
+
 .hero__note {
+  padding: 7px 2px;
   color: var(--gl-slate-soft);
-  background: transparent;
-}
-.hero__note:hover {
-  background: transparent;
-  color: var(--gl-slate-soft);
-  transform: none;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-regular);
 }
 
 @media (max-width: 1024px) {
@@ -334,9 +438,6 @@
     var(--gl-shadow-lg);
   overflow: hidden;
   isolation: isolate;
-  /* Parallax: the panel drifts a little slower than the page. */
-  transform: translate3d(0, var(--field-y, 0px), 0);
-  will-change: transform;
 }
 .field__head {
   display: flex;
@@ -353,26 +454,41 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--gl-slate);
 }
 .field__dot {
+  position: relative;
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--gl-verified);
-  box-shadow: 0 0 0 0 var(--gl-verified-wash);
-  animation: gl-pulse 2.6s var(--gl-ease-out) infinite;
+}
+/* The expanding ring used to be an animated box-shadow, which is a paint
+   property: every frame of a permanent loop repainted it. It is now a ring
+   drawn once on a pseudo-element and scaled, so the whole thing is transform
+   and opacity and never leaves the compositor. Same size, same timing. */
+.field__dot::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 9px rgba(26, 111, 86, 0.32);
+  transform: scale(0.02);
+  opacity: 1;
+  animation: gl-pulse 2.6s var(--gl-ease) infinite;
 }
 @keyframes gl-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(26, 111, 86, 0.32);
+    transform: scale(0.02);
+    opacity: 1;
   }
   70% {
-    box-shadow: 0 0 0 9px rgba(26, 111, 86, 0);
+    transform: scale(1);
+    opacity: 0;
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(26, 111, 86, 0);
+    transform: scale(0.02);
+    opacity: 0;
   }
 }
 .field__count {
@@ -393,40 +509,70 @@
   align-content: center;
 }
 .field__tick {
+  position: relative;
   height: 3px;
   border-radius: 2px;
   background: var(--gl-mist);
   transform-origin: left center;
-  /* Each tick resolves as the sweep reaches its column. */
-  animation: gl-detect var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
-  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep) / 34));
+  /* Each tick resolves as the sweep reaches its column.
+
+     The tick animates TRANSFORM only. An earlier version animated
+     `background` from grey to purple, which is not a compositor property: 98
+     of these run at once in the hero, so every frame repainted all 98, for
+     the life of the page. The colour change now lives on the overlay below
+     as an opacity animation, which the compositor can run without paint. */
+  /* ONCE, then it stops. See the note on the keyframes below. */
+  animation: gl-detect-scale var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
+  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
+}
+.field__tick::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--gl-purple);
+  opacity: 0;
+  animation: gl-detect-fill var(--gl-dur-sweep-in) var(--gl-ease) 1 both;
+  animation-delay: calc(var(--c, 0) * (var(--gl-dur-sweep-in) / 16));
+}
+.field__tick--miss::after {
+  animation: none;
+  opacity: 0;
 }
 .field__tick--miss {
   animation: none;
   background: var(--gl-mist);
 }
-@keyframes gl-detect {
+/* The detect sweep runs ONCE and settles into the detected state.
+
+   It used to loop forever. Ninety-eight ticks, each with its own infinite
+   animation, ran for the entire life of the page, on screen or not, and they
+   were the single largest contributor to style recalculation: a throttled
+   homepage scroll recalculated styles across 178,000 elements with them
+   running and 34,000 without.
+
+   Running once is also the better design. The panel is showing that signals
+   have been detected, and a perpetual loop in the hero is exactly the
+   scattered ambient motion the rest of this system exists to avoid. It sweeps
+   in as the page loads, and then the field simply holds what it found. */
+@keyframes gl-detect-scale {
   0%,
   4% {
-    background: var(--gl-mist);
     transform: scaleX(0.72);
-    opacity: 0.9;
   }
-  10% {
-    background: var(--gl-purple);
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  62% {
-    background: var(--gl-purple);
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  74%,
+  10%,
   100% {
-    background: var(--gl-mist);
-    transform: scaleX(0.72);
-    opacity: 0.9;
+    transform: scaleX(1);
+  }
+}
+@keyframes gl-detect-fill {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  10%,
+  100% {
+    opacity: 1;
   }
 }
 
@@ -445,7 +591,7 @@
     rgba(74, 58, 196, 0.32) 92%,
     rgba(74, 58, 196, 0.55) 100%
   );
-  animation: gl-sweep var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
+  animation: gl-sweep var(--gl-dur-ambient) var(--gl-ease) infinite;
 }
 @keyframes gl-sweep {
   0% {
@@ -486,7 +632,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--gl-slate);
 }
 .field__stagetrack {
@@ -504,7 +649,7 @@
   border-radius: var(--gl-r-pill);
   background: var(--c);
   transform-origin: left;
-  animation: gl-stagefill var(--gl-dur-sweep) var(--gl-ease-inout) infinite;
+  animation: gl-stagefill var(--gl-dur-ambient) var(--gl-ease) infinite;
   animation-delay: calc(var(--i) * 180ms);
 }
 @keyframes gl-stagefill {
@@ -659,8 +804,8 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .modblock + .modblock {
   margin-top: 12px;
@@ -703,7 +848,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
   padding-bottom: 8px;
   margin-bottom: 10px;
@@ -752,8 +896,8 @@
   flex-direction: column;
   gap: 18px;
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .split__panel:hover {
   transform: translateY(-2px);
@@ -850,7 +994,7 @@
   gap: clamp(16px, 3vw, 48px);
   padding-block: clamp(22px, 2.6vw, 32px);
   border-bottom: 1px solid var(--rule);
-  transition: background var(--gl-dur-base) var(--gl-ease-out);
+  transition: background var(--gl-dur-standard) var(--gl-ease);
 }
 .entry:hover {
   background: var(--rule-soft);
@@ -896,8 +1040,8 @@
   border: 1px solid var(--rule);
   border-radius: var(--gl-r-sm);
   transition:
-    border-color var(--gl-dur-fast) var(--gl-ease-out),
-    box-shadow var(--gl-dur-fast) var(--gl-ease-out);
+    border-color var(--gl-dur-micro) var(--gl-ease),
+    box-shadow var(--gl-dur-micro) var(--gl-ease);
 }
 .field__control::placeholder {
   color: var(--ghost);
@@ -985,6 +1129,13 @@ select.field__control {
   align-items: start;
   padding-block: clamp(64px, 8vw, 128px);
 }
+/* One child, one column. The two-column band leaves a permanently empty right
+   half when a page has nothing to put in it, which reads as a section that was
+   never finished rather than as deliberate space. */
+.ctaband__inner--single {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 62ch;
+}
 @media (max-width: 900px) {
   .ctaband__inner {
     grid-template-columns: minmax(0, 1fr);
@@ -1005,7 +1156,7 @@ select.field__control {
   padding: 14px 12px 14px 0;
   border-bottom: 1px solid var(--rule);
   border-radius: var(--gl-r-sm);
-  transition: background var(--gl-dur-fast) var(--gl-ease-out);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
 .rail-index__item:hover {
   background: var(--rule-soft);
@@ -1106,22 +1257,51 @@ select.field__control {
   background: var(--gl-ink);
   color: var(--gl-white);
 }
+/* One column per nav group, plus the brand column — five in total.
+ *
+ * This used to declare four tracks for five columns, so the last group wrapped
+ * onto a second row and left three quarters of that row empty. The footer was
+ * roughly twice the height it needed to be for that one reason. Count the
+ * tracks against NAV_GROUPS if a group is ever added or removed. */
 .foot__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
-  gap: var(--gl-s-8) var(--gl-s-5);
-  padding-block: var(--gl-s-9) var(--gl-s-7);
+  grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 1fr));
+  gap: var(--gl-s-6) var(--gl-s-5);
+  padding-block: var(--gl-s-7) var(--gl-s-6);
 }
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
+  /* The brand column takes the full width and the four groups sit under it,
+     which keeps every group on one row rather than orphaning the last. */
+  .foot__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .foot__brand {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 720px) {
   .foot__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gl-s-5) var(--gl-s-4);
   }
 }
-@media (max-width: 520px) {
-  .foot__grid {
-    grid-template-columns: 1fr;
-    gap: var(--gl-s-7) 0;
-  }
+.foot__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.foot__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-purple-ondark);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.foot__cta:hover {
+  color: var(--gl-purple-ondark-hover);
 }
 .foot__nav {
   display: flex;
@@ -1130,11 +1310,11 @@ select.field__control {
 }
 .foot__nav a {
   display: block;
-  padding-block: 7px;
-  color: rgba(251, 250, 248, 0.7);
-  font-size: var(--gl-t-small);
-  line-height: 1.4;
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  padding-block: 4px;
+  color: rgba(251, 250, 248, 0.68);
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .foot__nav a:hover {
   color: var(--gl-white);
@@ -1142,16 +1322,107 @@ select.field__control {
 .foot__base {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gl-s-3) var(--gl-s-6);
+  gap: var(--gl-s-2) var(--gl-s-6);
   justify-content: space-between;
   align-items: center;
-  padding-block: var(--gl-s-5);
+  padding-block: var(--gl-s-4);
   border-top: 1px solid rgba(251, 250, 248, 0.13);
 }
 .foot__base a {
   color: rgba(251, 250, 248, 0.7);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .foot__base a:hover {
   color: var(--gl-white);
+}
+
+/* ==========================================================================
+   FAQ
+   A <details>/<summary> list. No client component, no state, and every answer
+   is in the document whether or not the bundle runs. The affordance is the
+   RESPONSE verb: colour at 180ms, plus the mark rotating. No lift.
+   ========================================================================= */
+.faq {
+  display: grid;
+  gap: var(--gl-s-6);
+  /* Capped rather than full-shell. A one-line question with the open/close
+     mark 1200px away from it is a row, not a question. */
+  max-width: 76ch;
+}
+.faq__group {
+  display: grid;
+  gap: 14px;
+}
+.faq__grouplabel {
+  color: var(--accent);
+}
+.faq__items {
+  display: grid;
+  border-top: 1px solid var(--rule);
+}
+.faq__item {
+  border-bottom: 1px solid var(--rule);
+}
+.faq__q {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-block: clamp(16px, 1.8vw, 22px);
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--gl-t-body);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.35;
+  letter-spacing: var(--gl-tr-tight);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+.faq__q:hover {
+  color: var(--accent);
+}
+.faq__item:focus-within .faq__q {
+  color: var(--accent);
+}
+.faq__q:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--gl-r-xs);
+}
+/* A plus that becomes a minus. Drawn from two rules rather than a glyph, so it
+   inherits the hairline weight the rest of the site uses. */
+.faq__mark {
+  position: relative;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  margin-top: 6px;
+  color: var(--accent);
+}
+.faq__mark::before,
+.faq__mark::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform var(--gl-dur-micro) var(--gl-ease);
+}
+.faq__mark::after {
+  transform: rotate(90deg);
+}
+.faq__item[open] .faq__mark::after {
+  transform: rotate(0deg);
+}
+.faq__a {
+  display: grid;
+  gap: 12px;
+  max-width: 62ch;
+  padding-bottom: clamp(18px, 2vw, 24px);
+}
+.faq__a p {
+  margin: 0;
 }

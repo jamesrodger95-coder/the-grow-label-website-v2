@@ -1,21 +1,21 @@
-import type { CSSProperties } from 'react';
+import Link from 'next/link';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import { TextLink } from '@/components/primitives';
-import { CASE_STUDIES } from '@/content/proof';
+import { CASES_SECTION } from '@/content/proof';
+import { CASE_STUDIES, ILLUSTRATIVE, type CaseStudy } from '@/content/illustrative';
 
 /**
  * Case studies.
  *
- * Cards are structured for real case-study pages: sector, title, summary,
- * module chips and a link. Until those pages exist the link is absent and the
- * card is marked as a placeholder rather than pointing at a dead route.
+ * Six write-ups, three per sector, each opening a full study at
+ * `/case-studies/<slug>`. The whole card is the link — a nested anchor inside a
+ * clickable card gives keyboard users two stops for one destination.
  *
- * The artwork is generated from each card's hue — a quiet abstraction of the
+ * The artwork is generated from each card's hue: a quiet abstraction of the
  * four-stage bar, so the section carries the same visual idea as the hero
  * without needing photography that does not exist.
  */
-function CaseArt({ hue }: { hue: number }) {
-  const bars = [92, 68, 55, 44];
+function CaseArt({ hue, widths }: { hue: number; widths: number[] }) {
   return (
     <svg className="case__svg" viewBox="0 0 160 100" aria-hidden="true" focusable="false">
       <rect width="160" height="100" fill={`hsl(${hue} 34% 96%)`} />
@@ -30,7 +30,7 @@ function CaseArt({ hue }: { hue: number }) {
           opacity="0.7"
         />
       ))}
-      {bars.map((w, i) => (
+      {widths.map((w, i) => (
         <rect
           key={i}
           x="16"
@@ -46,6 +46,14 @@ function CaseArt({ hue }: { hue: number }) {
   );
 }
 
+/** The four stage figures, as proportions of the estimated figure. */
+function stageWidths(study: CaseStudy): number[] {
+  const values = study.stages.map((s) => Number(s.value.replace(/[^\d.]/g, '')));
+  const top = values[0] ?? 0;
+  if (!top) return [92, 68, 55, 44];
+  return values.map((v) => Math.max(12, Math.round((v / top) * 92)));
+}
+
 export function CaseStudies() {
   return (
     <section
@@ -57,70 +65,86 @@ export function CaseStudies() {
         <div className="sec-head">
           <div>
             <Reveal variant="rise">
-              <span className="eyebrow sec-head__eyebrow">Case studies</span>
+              <span className="eyebrow sec-head__eyebrow">{CASES_SECTION.eyebrow}</span>
             </Reveal>
             <RevealLines
               as="h2"
               id="cases-title"
               className="display d2"
-              lines={['The work, written up', <em key="e">once it can be evidenced.</em>]}
+              lines={CASES_SECTION.titleLines.map((line, i) =>
+                i === 1 ? <em key={line}>{line}</em> : line
+              )}
             />
           </div>
-          <p className="sec-head__aside">Three in preparation</p>
+          <p className="sec-head__aside">{CASES_SECTION.aside}</p>
         </div>
 
-        <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 40 }}>
-          Each of these is a real workflow we can describe today and a case study we can publish
-          once a client has approved the figures behind it. The frames are built; the numbers are
-          not invented to fill them.
+        <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 28 }}>
+          {CASES_SECTION.lead}
+        </Reveal>
+
+        <Reveal className="results__note" variant="rise" style={{ marginTop: 0, marginBottom: 36 }}>
+          <span className="placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
+          <p className="small" style={{ flex: '1 1 22rem', margin: 0 }}>
+            {ILLUSTRATIVE.notice}
+          </p>
+          <TextLink href="/platform#limits">What we can and cannot claim</TextLink>
         </Reveal>
 
         <div className="cases">
           {CASE_STUDIES.map((study, i) => (
-            <Reveal className="case" key={study.slug} variant="card" index={i}>
-              <div className="case__art">
-                <span className="case__badge placeholder-tag">In preparation</span>
-                <div className="case__artinner">
-                  <CaseArt hue={study.hue} />
-                </div>
-              </div>
-              <div className="case__body">
-                <span className="case__sector">{study.sector}</span>
-                <h3 className="case__title">{study.title}</h3>
-                <p className="small">{study.summary}</p>
-                <div className="case__meta">
-                  {study.chips.map((chip) => (
-                    <span className="case__chip" key={chip}>
-                      {chip}
-                    </span>
-                  ))}
-                </div>
-                <span className="case__cta" aria-hidden="true">
-                  Full study to follow <span>&rarr;</span>
+            <Reveal key={study.slug} variant="card" index={i % 3}>
+              <Link className="case" href={`/case-studies/${study.slug}`}>
+                <span className="case__art">
+                  {study.illustrative ? (
+                    <span className="case__badge placeholder-tag">{ILLUSTRATIVE.caseTag}</span>
+                  ) : null}
+                  <span className="case__artinner">
+                    <CaseArt hue={study.hue} widths={stageWidths(study)} />
+                  </span>
                 </span>
-              </div>
+                <span className="case__body">
+                  <span className="case__sector">{`${study.sector} · ${study.shape}`}</span>
+                  <span className="case__title">{study.title}</span>
+                  <span className="small">{study.summary}</span>
+
+                  <span className="case__figures">
+                    {study.headline.map((figure) => (
+                      <span className="case__figure" key={figure.label}>
+                        <span className="case__figurevalue">{figure.value}</span>
+                        <span className="case__figurelabel">{figure.label}</span>
+                      </span>
+                    ))}
+                  </span>
+
+                  <span className="case__meta">
+                    {study.chips.map((chip) => (
+                      <span className="case__chip" key={chip}>
+                        {chip}
+                      </span>
+                    ))}
+                  </span>
+                  <span className="case__cta">
+                    Read the study <span aria-hidden="true">&rarr;</span>
+                  </span>
+                </span>
+              </Link>
             </Reveal>
           ))}
         </div>
 
         <Reveal
           variant="rise"
-          style={
-            {
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: '14px 20px',
-              alignItems: 'center',
-              marginTop: 32,
-            } as CSSProperties
-          }
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '14px 20px',
+            alignItems: 'center',
+            marginTop: 32,
+          }}
         >
-          <span className="placeholder-tag">Placeholder</span>
-          <p className="small" style={{ flex: '1 1 24rem', margin: 0 }}>
-            Card layout, artwork and metadata are final. Titles, summaries and links are replaced
-            when each study is signed off by the client it describes.
-          </p>
-          <TextLink href="/platform#limits">What we can claim</TextLink>
+          <TextLink href="/case-studies">All six case studies in one place</TextLink>
+          <TextLink href="/contact">Request an assessment on your own data</TextLink>
         </Reveal>
       </div>
     </section>

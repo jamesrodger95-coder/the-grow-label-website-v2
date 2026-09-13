@@ -1,15 +1,22 @@
 'use client';
 
 import { useRef, useState, type CSSProperties } from 'react';
-import { TESTIMONIALS, type Testimonial } from '@/content/proof';
+import { TESTIMONIALS, type Testimonial } from '@/content/testimonials';
+import { QUOTES_SECTION } from '@/content/proof';
 
 /**
  * Written testimonials on two rails moving in opposition.
  *
- * The rails are CSS animations on a duplicated track, so the loop has no visible seam
- * without a scroll listener. They pause on hover and on keyboard focus, and a
- * visible control pauses them outright — motion that carries content must be
- * stoppable, and the arrows give a keyboard user a way through the set.
+ * The rails are CSS animations on a duplicated track, so the loop has no
+ * visible seam without a scroll listener. They pause on hover and on keyboard
+ * focus, and the arrows step through the set for anyone who would rather not
+ * wait for a card to come round.
+ *
+ * There is no play/pause control. It existed to satisfy the rule that motion
+ * carrying content must be stoppable, and it does not need a button to do
+ * that: the rails stop under the pointer, stop on focus, stop entirely under
+ * `prefers-reduced-motion`, and collapse to a swipeable track below 720px. A
+ * third control in the header bought nothing those four already covered.
  *
  * Below 720px and under reduced motion the rails become one horizontally
  * swipeable track: cheaper on a phone, and a better fit for a thumb than
@@ -19,7 +26,7 @@ import { TESTIMONIALS, type Testimonial } from '@/content/proof';
 function Avatar({ hue, name }: { hue: number; name: string }) {
   const initials = name
     .split(' ')
-    .filter(Boolean)
+    .filter((word) => !/^(dr|mr|mrs|ms|prof)\.?$/i.test(word))
     .slice(0, 2)
     .map((w) => w[0])
     .join('');
@@ -46,12 +53,14 @@ function Avatar({ hue, name }: { hue: number; name: string }) {
 function QuoteCard({ item }: { item: Testimonial }) {
   return (
     <figure className="quote">
-      <svg className="quote__mark" viewBox="0 0 24 20" aria-hidden="true">
-        <path
-          fill="currentColor"
-          d="M0 20V11.6C0 5.6 3.2 1.2 9 0l1.2 3C6.7 4.1 5 6.2 5 9h4v11H0Zm13.8 0V11.6C13.8 5.6 17 1.2 22.8 0L24 3c-3.5 1.1-5.2 3.2-5.2 6h4v11h-9Z"
-        />
-      </svg>
+      <div className="quote__head">
+        <svg className="quote__mark" viewBox="0 0 24 20" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M0 20V11.6C0 5.6 3.2 1.2 9 0l1.2 3C6.7 4.1 5 6.2 5 9h4v11H0Zm13.8 0V11.6C13.8 5.6 17 1.2 22.8 0L24 3c-3.5 1.1-5.2 3.2-5.2 6h4v11h-9Z"
+          />
+        </svg>
+      </div>
       <blockquote className="quote__text">
         <p>{item.quote}</p>
       </blockquote>
@@ -59,9 +68,7 @@ function QuoteCard({ item }: { item: Testimonial }) {
         <Avatar hue={item.hue} name={item.name} />
         <span>
           <span className="quote__name">{item.name}</span>
-          <span className="quote__role">
-            {item.role} · {item.org}
-          </span>
+          <span className="quote__role">{item.role}</span>
         </span>
       </figcaption>
     </figure>
@@ -95,9 +102,9 @@ export function Testimonials() {
       <div className="shell">
         <div className="sec-head">
           <div>
-            <span className="eyebrow sec-head__eyebrow">In their words</span>
+            <span className="eyebrow sec-head__eyebrow">{QUOTES_SECTION.eyebrow}</span>
             <h2 className="display d2" id="quotes-title">
-              What clients will say <em>when there is something to say.</em>
+              {QUOTES_SECTION.title} <em>{QUOTES_SECTION.emphasis}</em>
             </h2>
           </div>
           <div className="rails__controls" role="group" aria-label="Testimonial controls">
@@ -112,36 +119,12 @@ export function Testimonials() {
             <button
               type="button"
               className="railbtn"
-              onClick={() => setPaused((p) => !p)}
-              aria-pressed={paused}
-            >
-              {paused ? 'Play' : 'Pause'}
-            </button>
-            <button
-              type="button"
-              className="railbtn"
               onClick={() => step(1)}
               aria-label="Next testimonial"
             >
               <span aria-hidden="true">&rarr;</span>
             </button>
           </div>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '12px 18px',
-            alignItems: 'center',
-            marginBottom: 28,
-          }}
-        >
-          <span className="placeholder-tag">Placeholder</span>
-          <p className="small" style={{ flex: '1 1 24rem', margin: 0 }}>
-            The layout, motion and controls are final. Every quotation, name and organisation below
-            is a placeholder and is replaced only with an approved, attributed testimonial.
-          </p>
         </div>
       </div>
 

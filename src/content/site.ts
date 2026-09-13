@@ -48,7 +48,9 @@ export const PRIMARY_NAV: NavLink[] = [
   { href: '/industries/veterinary', label: 'Veterinary' },
   { href: '/industries/dental', label: 'Dental' },
   { href: '/#results', label: 'Results' },
-  { href: '/#case-studies', label: 'Case studies' },
+  // Points at the page, not at an anchor: the homepage case-study section is
+  // off while the studies are still placeholders. See src/app/page.tsx.
+  { href: '/case-studies', label: 'Case studies' },
   { href: '/about', label: 'About' },
 ];
 
@@ -79,7 +81,7 @@ export const NAV_GROUPS: NavGroup[] = [
     label: 'Evidence',
     links: [
       { href: '/#results', label: 'Results', note: 'How an outcome is reported' },
-      { href: '/#case-studies', label: 'Case studies', note: 'Engagements in progress' },
+      { href: '/case-studies', label: 'Case studies', note: 'Six write-ups, three per sector' },
       { href: '/#team', label: 'Team', note: 'The people who do the work' },
     ],
   },

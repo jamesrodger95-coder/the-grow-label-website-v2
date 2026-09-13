@@ -29,11 +29,13 @@ test('the recovery sequence shows its completed final state', async ({ page }) =
   await page.goto('/');
   await page.waitForTimeout(400);
 
-  // Frame four: the staircase, its labels and the collected marker.
+  // Under reduced motion the scene is not a scrubbed rail with one active
+  // step; it is a static list carrying all four states at once, so nothing is
+  // hidden behind the preference. Frame four's copy is the last of them.
   await expect(page.getByText('One of these four numbers is revenue.')).toBeVisible();
-  const rail = page.locator('.scene__step[data-active="true"]');
-  await expect(rail).toHaveCount(1);
-  await expect(rail).toContainText('Hold');
+  const steps = page.locator('.scene--static .scene__listitem');
+  await expect(steps).toHaveCount(4);
+  await expect(steps.last()).toContainText('Hold');
 });
 
 test('stage bars are drawn at full width, not animating from zero', async ({ page }) => {

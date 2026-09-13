@@ -36,12 +36,53 @@ These come from the brief and are enforced by tests, not just convention.
    attended and collected are separate, always, everywhere. `tests/unit/content-integrity.test.ts`
    asserts the stage definitions stay four, ordered, and each carrying a
    confidence basis.
-2. **No invented commercial evidence.** No clients, logos, testimonials,
-   partners, integrations, case studies, revenue totals, benchmarks, guarantees
-   or performance statistics. The same test greps the source for asserted
-   claims, and is negation-aware so the pages that exist to _deny_ these claims
-   still pass. Anything needing evidence goes in `docs/CLAIMS_REGISTER.md`, not
-   on a page.
+2. **No invented commercial evidence, and exactly one guarded exception.** No
+   clients, logos, partners, integrations, revenue totals, benchmarks,
+   guarantees or performance statistics are asserted anywhere. The same test
+   greps the source for asserted claims, and is negation-aware so the pages that
+   exist to _deny_ these claims still pass. Anything needing evidence goes in
+   `docs/CLAIMS_REGISTER.md`, not on a page.
+
+   The exception is `src/content/illustrative.ts`, which holds the fabricated
+   results and case studies the site publishes so it can be presented. It is
+   safe only while both halves hold, and both are enforced:
+
+   - **Containment.** No currency figure appears in published source outside
+     that file or `src/content/testimonials.ts`. Add a number to one of those
+     two and import it; never inline one into a component. Both are
+     single-purpose, reviewed content files — the rule is that a figure is
+     never somewhere nobody reviews, not that only one file may hold one.
+   - **Labelling.** Every surface rendering anything from it also renders
+     `ILLUSTRATIVE.tag` / `.caseTag` in a visible `.placeholder-tag`, beside
+     the content. The test fails a consumer that imports the fixture without
+     rendering a badge.
+
+   Placeholder case-study pages also carry `robots: noindex` and stay out of
+   the sitemap. Replace an entry whole — a real figure beside an invented
+   quotation is worse than an entirely invented card, because the page no
+   longer tells a reader which half is which.
+
+   Two things are **not** covered by this, and both run the guard the other way
+   round:
+
+   - **The team** (`TEAM` in `src/content/proof.ts`) is real colleagues, named
+     in full. The test fails if a name is missing, is a single word, or holds a
+     placeholder string. Portraits are outstanding; drop files into
+     `public/team/` and they appear — `Team.tsx` checks the filesystem at build
+     time, so there is no flag to set.
+   - **Client testimonials** (`src/content/testimonials.ts`) are real, named,
+     released clients, including the figures on the video cards. No illustrative
+     badge, because nothing about them is illustrative. What the test enforces
+     instead: every quotation is attributed to a named person, every figure
+     carries its period as a separate field, and no copy in that file or in
+     `proof.ts` turns a named outcome into an average or an expectation. A
+     signed release per person is a prerequisite, tracked in
+     `docs/CLAIMS_REGISTER.md`.
+
+   The homepage case-study section is commented out in `src/app/page.tsx` while
+   the studies are placeholders — invented evidence two sections from real
+   evidence. `/case-studies` still carries them, labelled and `noindex`.
+
 3. **No clinical claim.** The product reads scheduling and contact data. It does
    not triage, advise, assess or diagnose, and no page may imply otherwise.
 4. **Meaningful content is never behind JavaScript.** Every animated element
@@ -66,10 +107,24 @@ src/
     contact/     the assessment form
     primitives   design-system primitives, all server-rendered
   content/       every word of published copy, typed
+                 illustrative.ts holds the invented figures; testimonials.ts
+                 holds the real, released, attributed ones
   lib/           env, validation, rate limit, delivery adapter
   styles/        tokens -> base -> components -> sections -> motion
+public/
+  team/          portrait drop-zone
+  testimonials/  recordings; the posters beside them are generated
+docs/media/      what to name each media file, and how to encode it
 design/          the Claude Design project's source, kept in sync with styles/
 ```
+
+**Media is dropped in, not wired up.** `Team.tsx` and `VideoTestimonials.tsx`
+both check `public/` at build time, so a file that is present is used and one
+that is absent falls back to a reserved frame. There is no flag to set. After
+adding or replacing a recording run `pnpm posters`, which extracts frame zero
+as the poster and remuxes the file to faststart if it needs it — the card uses
+`preload="none"`, so without a poster it would start on black. Keep the
+READMEs out of `public/`: anything in there is served.
 
 **Copy lives in `src/content`, not in components.** A route file assembles
 sections; it should not contain a sentence a reader will see. This is what makes
@@ -103,15 +158,27 @@ Client components exist only where there is genuine interaction:
 - `RecoverySequence` — the scroll-driven signature sequence
 - `MotionProvider` — enables motion after first paint
 - `AssessmentForm` — the form
+- `Testimonials` — the two rails and their step controls
+- `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`
 
 `PointerSignals`, `SignalField` and `Parallax` were removed. The first two were
 never mounted anywhere, and parallax was a fifth motion verb used exactly once
 with no meaning attached to it.
 
+`Team` used to be a client component too. It opened a modal carrying a
+two-paragraph remit per person, which cost a portal and a focus trap for
+content nobody had asked to read; the remit is now one line on the card and the
+section is server-rendered. `Modal` survives for nothing on the homepage — check
+before assuming it still earns its place.
+
 Adding another needs a reason. In particular, **do not import
 `lib/contact-schema` from a client component** — it pulls zod into the browser
 bundle. Use `lib/contact-fields`, which has no dependencies.
+
+The FAQ is the worked example of the alternative: `components/layout/Faq.tsx` is
+a server component built on `<details>`/`<summary>`, so every answer is in the
+document with the bundle blocked and it costs nothing to hydrate.
 
 ## Motion
 

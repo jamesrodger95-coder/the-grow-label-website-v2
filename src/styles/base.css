@@ -373,6 +373,23 @@ select {
 /* ==========================================================================
    ACTIONS
    ========================================================================= */
+/* The primary control.
+ *
+ * It rests in ink and fills with purple from the bottom edge on hover: the
+ * same gesture the rest of the site uses to say "detected". Three things make
+ * the purple state read as a finished object rather than as a flat swatch —
+ *
+ *   1. The fill is a short vertical ramp (500 -> 600), not one flat value. A
+ *      single saturated purple across 52px of pill has no top and no bottom.
+ *   2. The elevation is tinted with the fill's own hue. Neutral grey under
+ *      saturated purple reads as a smudge.
+ *   3. A one-pixel inner highlight along the top edge. It is what separates a
+ *      button from a rectangle of colour at this size.
+ *
+ * The shadow is present at rest and does not change depth, and there is no
+ * lift: the response verb on this site is colour, and a growing shadow is a
+ * bloom. Only the fill, the label colour and the arrow move.
+ */
 .btn {
   position: relative;
   display: inline-flex;
@@ -387,34 +404,53 @@ select {
   font-weight: var(--gl-w-medium);
   letter-spacing: -0.005em;
   border-radius: var(--gl-r-pill);
+  box-shadow: var(--gl-shadow-sm);
   overflow: hidden;
   isolation: isolate;
   white-space: nowrap;
   transition:
-    transform var(--gl-dur-micro) var(--gl-ease),
-    box-shadow var(--gl-dur-standard) var(--gl-ease),
-    color var(--gl-dur-standard) var(--gl-ease);
+    box-shadow var(--gl-dur-micro) var(--gl-ease),
+    color var(--gl-dur-micro) var(--gl-ease);
 }
 .btn::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: var(--gl-purple);
+  background: linear-gradient(180deg, var(--gl-purple-500) 0%, var(--gl-purple-600) 100%);
   transform: translateY(101%);
   transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
+/* The top-edge highlight. Lives on ::after so it can sit above the fill and
+   below the label, and is revealed with the fill rather than on its own. */
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  opacity: 0;
+  transition: opacity var(--gl-dur-standard) var(--gl-ease);
+}
 .btn:hover,
 .btn:focus-visible {
-  transform: translateY(-1px);
-  box-shadow: var(--gl-shadow-md);
+  box-shadow: var(--gl-shadow-purple);
 }
 .btn:hover::before,
 .btn:focus-visible::before {
   transform: translateY(0);
 }
+.btn:hover::after,
+.btn:focus-visible::after {
+  opacity: 1;
+}
+/* Press seats the control: the fill deepens rather than the button moving. */
+.btn:active::before {
+  background: linear-gradient(180deg, var(--gl-purple-600) 0%, var(--gl-purple-700) 100%);
+}
 .btn:active {
-  transform: translateY(0);
+  box-shadow: var(--gl-shadow-sm);
 }
 .btn__arrow {
   display: inline-block;
@@ -432,24 +468,55 @@ select {
 .btn--ghost::before {
   background: var(--fg);
 }
+.btn--ghost::after {
+  content: none;
+}
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
   color: var(--gl-white);
+  box-shadow: inset 0 0 0 1px transparent;
 }
+.btn--ghost:active {
+  box-shadow: inset 0 0 0 1px transparent;
+}
+
+/* On a dark ground the resting state is white and the fill is the lighter
+   ramp, because purple-500 on near-black has nothing like enough separation
+   from the surface behind it. The label flips to ink to stay readable. */
 .on-dark .btn {
   background: var(--gl-white);
   color: var(--gl-ink);
+  box-shadow: none;
 }
 .on-dark .btn::before {
-  background: var(--gl-purple-bright);
+  background: linear-gradient(180deg, var(--gl-purple-200) 0%, var(--gl-purple-300) 100%);
+}
+/* Stated rather than inherited: the ghost's fill is the foreground colour on
+   both grounds, and leaving it to the cascade above was an accident that
+   happened to look right. */
+.on-dark .btn--ghost::before {
+  background: var(--gl-white);
+}
+.on-dark .btn::after {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.on-dark .btn:hover,
+.on-dark .btn:focus-visible {
+  color: var(--gl-purple-900);
+  box-shadow: var(--gl-shadow-purple-ondark);
+}
+.on-dark .btn:active::before {
+  background: linear-gradient(180deg, var(--gl-purple-300) 0%, var(--gl-purple-400) 100%);
 }
 .on-dark .btn--ghost {
   background: transparent;
   color: var(--gl-white);
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 .on-dark .btn--ghost:hover,
 .on-dark .btn--ghost:focus-visible {
   color: var(--gl-ink);
+  box-shadow: inset 0 0 0 1px transparent;
 }
 
 .btn--sm {
@@ -591,6 +658,26 @@ select {
    ========================================================================= */
 .capblock {
   max-width: 300px;
+}
+/* These two carried no rules at all, so the label and the open count were
+   rendering as one run-together string ("After recovery0 open") and the note
+   sat hard against the last slot. */
+.capblock__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+.capblock__foot {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+.capblock__foot p {
+  margin: 0;
 }
 .capcol {
   display: grid;

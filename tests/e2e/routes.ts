@@ -8,6 +8,21 @@ export const ROUTES = [
   { path: '/modules/reactivate', name: 'reactivate', title: /Reactivate/ },
   { path: '/industries/veterinary', name: 'veterinary', title: /Veterinary/ },
   { path: '/industries/dental', name: 'dental', title: /Dental/ },
+  { path: '/case-studies', name: 'case-index', title: /Case studies/ },
+  // Placeholder studies carry `robots: noindex` and are deliberately absent
+  // from the sitemap; they join it when their `illustrative` flag is cleared.
+  {
+    path: '/case-studies/after-hours-demand-veterinary-group',
+    name: 'case-vet',
+    title: /After-hours demand/i,
+    unlisted: true,
+  },
+  {
+    path: '/case-studies/accepted-unscheduled-treatment-dental',
+    name: 'case-dental',
+    title: /accepted in the chair/i,
+    unlisted: true,
+  },
   { path: '/about', name: 'about', title: /About/ },
   { path: '/insights', name: 'insights', title: /Insights/ },
   {

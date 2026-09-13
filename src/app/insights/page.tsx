@@ -78,7 +78,7 @@ export default function InsightsPage() {
 
       <section className="ctaband surface--black on-dark" aria-labelledby="insights-cta">
         <div className="shell">
-          <div className="ctaband__inner">
+          <div className="ctaband__inner ctaband__inner--single">
             <Reveal>
               <p className="label label--accent" style={{ marginBottom: 24 }}>
                 Next step

@@ -36,7 +36,7 @@ export default function AboutPage() {
         ]}
       />
 
-      {/* § 01 — Position ------------------------------------------------- */}
+      {/* Position ------------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="position-title">
         <div className="shell">
           <Reveal variant="group">
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* § 02 — Operating principles -------------------------------------- */}
+      {/* Operating principles -------------------------------------- */}
       <section className="surface--ink on-dark section" aria-labelledby="principles-title">
         <div className="shell">
           <Reveal variant="group">
@@ -88,7 +88,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* § 03 — Who this is for ------------------------------------------- */}
+      {/* Who this is for ------------------------------------------- */}
       <section className="surface--paper on-light section" aria-labelledby="who-title">
         <div className="shell">
           <Reveal variant="group">
@@ -111,7 +111,9 @@ export default function AboutPage() {
               See how value is measured
             </ActionLink>
           </Reveal>
-          <Reveal as="p" style={{ marginTop: 28 }}>
+          <Reveal style={{ marginTop: 28, display: 'flex', gap: '10px 28px', flexWrap: 'wrap' }}>
+            <TextLink href="/case-studies">Six case-study write-ups</TextLink>
+            <TextLink href="/#team">The four roles on your account</TextLink>
             <TextLink href="/insights">Notes on revenue operations</TextLink>
           </Reveal>
         </div>

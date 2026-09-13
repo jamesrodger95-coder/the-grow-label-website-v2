@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { Faq } from '@/components/layout/Faq';
 import { Reveal } from '@/components/motion/Reveal';
 import { AssessmentForm } from '@/components/contact/AssessmentForm';
-import { SectionHeader, StepList, TextLink } from '@/components/primitives';
+import { ActionLink, SectionHeader, StepList, TextLink } from '@/components/primitives';
+import { FAQ_GROUPS } from '@/content/faq';
 import { CONTACT } from '@/content/pages';
 import { bookingUrl, deliveryMode } from '@/lib/env';
 
@@ -124,6 +126,34 @@ export default function ContactPage() {
               </p>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* The questions that actually get asked before a first call. --------- */}
+      <section className="surface--paper on-light section" aria-labelledby="faq-title">
+        <div className="shell">
+          <Reveal variant="group">
+            <SectionHeader
+              eyebrow="Questions"
+              aside="Price · terms · data · boundaries"
+              id="faq-title"
+              title="The questions people ask"
+              emphasis="before the first call."
+            />
+          </Reveal>
+          <Reveal as="p" className="lead" style={{ maxWidth: '62ch', marginBottom: 48 }}>
+            Including the two that are usually avoided until a proposal arrives: what it costs, and
+            what happens if it does not work.
+          </Reveal>
+          <Faq groups={FAQ_GROUPS} />
+          <Reveal
+            style={{ marginTop: 'var(--gl-s-8)', display: 'flex', gap: 14, flexWrap: 'wrap' }}
+          >
+            <ActionLink href="/platform">How the system fits together</ActionLink>
+            <ActionLink href="/modules" variant="ghost">
+              The four modules in full
+            </ActionLink>
+          </Reveal>
         </div>
       </section>
     </>

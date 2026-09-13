@@ -16,18 +16,65 @@
   font-size: 0.6875rem;
   font-weight: var(--gl-w-medium);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--accent);
   white-space: nowrap;
 }
 
+/* --- The scenario a set of figures belongs to ---------------------------- */
+.scenario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+  margin-bottom: var(--gl-s-6);
+  padding: 16px 20px;
+  border-radius: var(--gl-r-md);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.scenario__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 0;
+  flex: 1 1 22rem;
+}
+.scenario__facts > div {
+  display: grid;
+  gap: 3px;
+}
+.scenario__facts dt {
+  color: var(--ghost);
+}
+.scenario__facts dd {
+  margin: 0;
+}
+
 /* ==========================================================================
-   RESULTS — how a verified outcome will be presented
+   RESULTS — one engagement, reported at four stages
    ========================================================================= */
 .results {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+}
+/* Optical alignment, not just mathematical.
+
+   Every card carries the same six rows: mark, label, metric, bar, basis,
+   hint. Without a shared row track they align only at the top, and the four
+   basis lines wrap to different depths, so the four hints sit at four
+   different heights and the row stops reading as a set. Subgrid gives every
+   card the same six tracks, sized to the tallest content in each. */
+@supports (grid-template-rows: subgrid) {
+  .results {
+    grid-template-rows: auto auto auto auto auto auto;
+  }
+  .result {
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    gap: 0;
+  }
 }
 @media (max-width: 1000px) {
   .results {
@@ -50,71 +97,117 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   overflow: hidden;
-  transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+  /* No hover lift and no shadow bloom. These cards are not interactive --
+     nothing here is a link -- and a card that rises under the cursor promises
+     an affordance it does not have. The RESPONSE verb on this site is colour,
+     and on a non-interactive surface it is nothing at all. */
 }
-.result:hover {
-  transform: translateY(-3px);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--shadow);
+
+/* --- The stage mark ------------------------------------------------------ */
+.result__icon {
+  display: block;
+  /* NOT the stage ramp. That ramp is alpha over a track, which is right for a
+     6px bar and useless for a 1.5px stroke: at 24% the Estimated glyph was
+     close to invisible. These four are opaque steps of the same hue, so the
+     set still reads as a progression from least to most certain. */
+  color: var(--ico);
+}
+.stageicon {
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+/* The filled element in each glyph grows from its leading edge, staggered
+   down the four stages. Same verb, same curve and same stagger as the stage
+   bars below it, so the icons reinforce the staircase rather than announcing
+   themselves as a separate animation. */
+[data-motion="on"] .stageicon [data-fill] {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(220ms + var(--i, 0) * var(--gl-stagger));
+}
+[data-motion="on"] .result[data-inview="true"] .stageicon [data-fill] {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="on"] .stageicon [data-fill] {
+    transform: scaleX(1);
+    transition: none;
+  }
 }
 .result__stage {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  padding-top: 14px;
+}
+.result__basis {
+  padding-top: 14px;
+  margin: 0;
+  font-size: var(--gl-t-small);
+  line-height: 1.45;
+  color: var(--fg);
+}
+.result__hint {
+  padding-top: 8px;
+  margin: 0;
+  color: var(--ghost);
 }
 .result__figure {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  padding-top: 12px;
+  margin: 0;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
   font-weight: var(--gl-w-medium);
   letter-spacing: -0.04em;
   line-height: 1.1;
+  /* No tabular-nums: this face gives the comma a full digit advance in that
+     mode, setting "£486,200" as "£486 , 200" at display size. Nothing here is
+     aligned column-wise, so there is nothing to trade it for. */
+  color: var(--fg);
+}
+/* The proportion, beside the stage name. Carried at label weight rather than
+   figure weight: it qualifies the number below, it is not a second one. */
+.result__pct {
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
   font-variant-numeric: tabular-nums;
-  color: var(--faint);
-}
-/* The reserved slot a real figure will occupy. */
-.result__slot {
-  display: block;
-  width: 4.5rem;
-  height: 0.9em;
-  border-radius: var(--gl-r-xs);
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--track),
-    var(--track) 5px,
-    transparent 5px,
-    transparent 10px
-  );
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-.result__figure em {
-  font-style: normal;
-  font-size: 0.5em;
-  letter-spacing: -0.01em;
   color: var(--faint);
 }
 .result__bar {
   height: 6px;
+  margin-top: 14px;
   border-radius: var(--gl-r-pill);
   background: var(--track);
   overflow: hidden;
 }
 .result__barfill {
+  /* A span, so it needs an explicit box: width does not apply to a
+     non-replaced inline element, and without this the fill has laid out at
+     zero width for the whole life of this section. */
+  display: block;
   height: 100%;
   width: var(--w);
   border-radius: var(--gl-r-pill);
   background: var(--c);
   transform-origin: left;
-  transform: scaleX(0);
-  transition: transform var(--gl-dur-scene) var(--gl-ease-settle);
-  transition-delay: calc(var(--i, 0) * 140ms);
+  /* Authored final state. The zero state below is gated behind
+     [data-motion="on"], which MotionProvider sets after first paint. Written
+     the other way round -- scaleX(0) in the base rule -- a blocked bundle
+     leaves every bar permanently at zero width, which is the exact failure
+     the motion contract in this repository exists to prevent. */
+  transform: scaleX(1);
 }
-[data-inview="true"] .result__barfill {
+[data-motion="on"] .result__barfill {
+  transform: scaleX(0);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
+}
+[data-motion="on"] .result[data-inview="true"] .result__barfill {
   transform: scaleX(1);
 }
 .result__basis {
@@ -133,16 +226,83 @@
   flex: none;
 }
 
+/* The basis row: one disclosure, at the foot of the section, where a reader
+   has the figures in front of them. It used to be a filled purple panel, which
+   gave a footnote the visual weight of a callout and made the whole section
+   look provisional. It is now a hairline rule and quiet type — still the first
+   thing anyone scrolling to the bottom of the figures meets, and no longer the
+   loudest thing on the page. */
 .results__note {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 18px;
+  align-items: baseline;
+  gap: 10px 18px;
   margin-top: var(--gl-s-6);
-  padding: 16px 20px;
-  border-radius: var(--gl-r-md);
-  background: var(--accent-wash);
+  padding-top: var(--gl-s-4);
+  border-top: 1px solid var(--rule);
+}
+
+/* --- The operational detail underneath the money ------------------------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+@media (max-width: 1000px) {
+  .metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: clamp(18px, 2vw, 24px);
+  border-radius: var(--gl-r-lg);
+  background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
+}
+.metric__value {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  /* See .result__figure: tabular figures space the comma. */
+  color: var(--fg);
+}
+.metric__label {
+  margin: 0;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.35;
+}
+.metric__basis {
+  margin: 0;
+  color: var(--faint);
+  flex: 1;
+}
+.metric__module {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin-top: 6px;
+  padding-top: 12px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.metric__module:hover {
+  color: var(--fg);
 }
 
 /* ==========================================================================
@@ -164,17 +324,27 @@
   }
 }
 
+/* The whole card is the anchor. A nested link inside a clickable card gives a
+   keyboard user two stops for one destination, so the anchor wraps everything
+   and the focus ring is drawn on the card. */
 .case {
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   overflow: hidden;
+  color: inherit;
+  text-decoration: none;
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
+}
+.case:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .case:hover {
   transform: translateY(-4px);
@@ -191,7 +361,7 @@
 .case__artinner {
   position: absolute;
   inset: 0;
-  transition: transform var(--gl-dur-slow) var(--gl-ease-out);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
 }
 .case:hover .case__artinner {
   transform: scale(1.04);
@@ -217,15 +387,44 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--accent);
 }
 .case__title {
+  display: block;
   font-size: clamp(1.125rem, 1.7vw, 1.375rem);
   font-weight: var(--gl-w-medium);
   line-height: 1.22;
   letter-spacing: var(--gl-tr-tight);
 }
+
+/* The two headline figures. Sit above the chips, on their own rule, so the
+   card carries a number before it carries a link. */
+.case__figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+.case__figure {
+  display: grid;
+  gap: 3px;
+  flex: 1 1 8rem;
+}
+.case__figurevalue {
+  font-size: clamp(1.125rem, 1.9vw, 1.375rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  /* See .result__figure: tabular figures space the comma. */
+  color: var(--fg);
+}
+.case__figurelabel {
+  font-size: var(--gl-t-micro);
+  line-height: 1.35;
+  color: var(--faint);
+}
+
 .case__meta {
   display: flex;
   flex-wrap: wrap;
@@ -251,10 +450,78 @@
   color: var(--accent);
 }
 .case__cta span {
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .case:hover .case__cta span {
   transform: translateX(4px);
+}
+
+/* ==========================================================================
+   CASE STUDY — the detail page
+   ========================================================================= */
+.cs-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: var(--gl-s-6);
+}
+@media (max-width: 520px) {
+  .cs-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.cs-metric {
+  display: grid;
+  gap: 5px;
+  padding: 18px 20px;
+  border-radius: var(--gl-r-md);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.cs-metric__value {
+  margin: 0;
+  font-size: clamp(1.375rem, 2.2vw, 1.75rem);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  /* No tabular-nums. The face gives the comma a full digit advance in that
+     mode, which sets "£486,200" as "£486 , 200" at display size. */
+}
+.cs-metric__label {
+  margin: 0;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.3;
+}
+.cs-metric__basis {
+  margin: 0;
+  color: var(--faint);
+}
+
+.cs-quote {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  margin: 0;
+  padding: clamp(24px, 3vw, 36px);
+  border-radius: var(--gl-r-lg);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.cs-quote__text {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.9vw, 1.4375rem);
+  font-weight: var(--gl-w-regular);
+  line-height: 1.42;
+  letter-spacing: var(--gl-tr-tight);
+  text-wrap: pretty;
+}
+.cs-quote__text p {
+  margin: 0;
+}
+.cs-quote__who {
+  display: grid;
+  gap: 3px;
 }
 
 /* ==========================================================================
@@ -274,7 +541,10 @@
   width: max-content;
   animation: gl-rail var(--rail-dur, 68s) linear infinite;
   animation-direction: var(--rail-dir, normal);
-  will-change: transform;
+  /* No permanent will-change. A layer held for the life of the page costs
+     compositor memory whether or not the element is moving, and this marquee
+     spends most of its life off screen. The animation itself is enough of a
+     hint for the compositor. */
 }
 .rails[data-paused="true"] .rail-row {
   animation-play-state: paused;
@@ -300,8 +570,8 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .quote:hover {
   transform: translateY(-3px);
@@ -310,6 +580,7 @@
     var(--shadow);
 }
 .quote__mark {
+  flex: none;
   width: 22px;
   height: 18px;
   color: var(--accent);
@@ -336,6 +607,12 @@
   overflow: hidden;
   background: var(--track);
   box-shadow: inset 0 0 0 1px var(--rule);
+}
+.quote__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 .quote__name {
   display: block;
@@ -370,8 +647,8 @@
   font-weight: var(--gl-w-medium);
   color: var(--fg);
   transition:
-    background var(--gl-dur-fast) var(--gl-ease-out),
-    transform var(--gl-dur-fast) var(--gl-ease-out);
+    background var(--gl-dur-micro) var(--gl-ease),
+    transform var(--gl-dur-micro) var(--gl-ease);
 }
 .railbtn:hover {
   background: var(--rule-soft);
@@ -436,81 +713,119 @@
   }
 }
 
+.videos__note {
+  max-width: 62ch;
+  margin: 0 0 32px;
+}
+
+/* A figure, not a control. The card no longer lifts or opens anything — the
+   only interactive thing in it is the cover, and once that is pressed the card
+   is a video player at exactly the size it already occupied.
+
+   Laid out as a grid with a named row for the head, so the three frames sit on
+   one line whatever the headline above them wraps to. With the head left to
+   flow, a two-line detail on one card pushed its player 20px below its
+   neighbours and the row read as broken. */
 .vcard {
   position: relative;
-  display: block;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
   width: 100%;
-  text-align: left;
+  margin: 0;
+  padding: clamp(18px, 2vw, 24px);
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
-  overflow: hidden;
-  transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
 }
-.vcard:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--gl-shadow-lg);
+/* Subgrid is what actually lines the three players up. Each card spans three
+   rows of the section grid and adopts them, so the tallest headline sets the
+   head row for all three and every frame starts on the same line. Without it
+   the cards fall back to their own grid, which is the current behaviour and
+   is merely uneven, not broken. */
+@supports (grid-template-rows: subgrid) {
+  .videos {
+    align-items: stretch;
+  }
+  .vcard {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
 }
-.vcard__thumb {
+
+/* The headline. Sits above the frame and is set like one: the figure is the
+   loudest thing on the card, because it is the reason to watch. */
+.vcard__head {
+  margin: 0 0 16px;
+}
+.vcard__figure {
+  margin: 0;
+  font-family: var(--gl-font-display);
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: var(--gl-w-semi);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets "$20,000" as "$20 , 000". */
+}
+/* The qualifier stays attached to the figure and stays quiet. A recovery
+   figure without its window is a number, so the two never separate. */
+.vcard__period {
   display: block;
+  margin-top: 4px;
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-body);
+  color: var(--faint);
+}
+.vcard__detail {
+  margin: 8px 0 0;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--faint);
+}
+
+/* 16:9, which is what the recordings are. It was 16:10 when the frame held a
+   poster that could be cropped to any ratio; now it holds the video itself,
+   and any other ratio is a letterbox nobody asked for. */
+.vcard__frame {
   position: relative;
-  aspect-ratio: 16 / 10;
-  background: var(--gl-mist);
+  aspect-ratio: 16 / 9;
+  border-radius: var(--gl-r-md);
+  background: var(--gl-ink);
   overflow: hidden;
 }
-.vcard__thumbinner {
+.vcard__video {
   display: block;
   position: absolute;
   inset: 0;
-  transition: transform var(--gl-dur-slow) var(--gl-ease-out);
+  width: 100%;
+  height: 100%;
+  /* `contain`, not `cover`. The ratios match, so these are identical today —
+     but a recording that arrives at another ratio should lose its edges to
+     black bars rather than lose the speaker's head to a crop. */
+  object-fit: contain;
+  background: var(--gl-ink);
 }
-.vcard:hover .vcard__thumbinner {
-  transform: scale(1.05);
-}
-.vcard__play {
+/* No file yet. The frame still holds its place, with a note saying what it is
+   waiting for rather than an empty player. */
+.vcard__pending {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
+  inset: 0;
   display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--gl-white) 88%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  box-shadow: var(--gl-shadow-md);
-  color: var(--gl-ink);
-  transition:
-    transform var(--gl-dur-base) var(--gl-ease-spring),
-    background var(--gl-dur-base) var(--gl-ease-out);
+  place-items: end start;
+  background: var(--gl-mist);
 }
-.vcard:hover .vcard__play {
-  transform: scale(1.08);
-  background: var(--gl-white);
-}
-.vcard__dur {
-  display: block;
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  padding: 4px 9px;
-  border-radius: var(--gl-r-pill);
-  background: rgba(12, 12, 14, 0.72);
-  color: #fff;
-  font-size: 0.6875rem;
-  font-weight: var(--gl-w-medium);
-  font-variant-numeric: tabular-nums;
+.vcard__pendingnote {
+  position: relative;
+  z-index: 1;
+  margin: 12px;
+  background: var(--panel);
 }
 .vcard__body {
   display: grid;
-  gap: 5px;
-  padding: clamp(18px, 2vw, 24px);
+  gap: 3px;
+  padding-top: 16px;
 }
 .vcard__name {
   display: block;
@@ -543,6 +858,9 @@
   }
 }
 
+/* Not a control any more. The card used to be a button opening a modal, so it
+   carried a hover lift and an arrow that promised somewhere to go. There is
+   nowhere to go: the remit is the line on the card. Nothing here moves. */
 .person {
   display: block;
   width: 100%;
@@ -551,15 +869,6 @@
   background: var(--panel);
   box-shadow: inset 0 0 0 1px var(--rule);
   overflow: hidden;
-  transition:
-    transform var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
-}
-.person:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--shadow);
 }
 .person__photo {
   display: block;
@@ -572,41 +881,40 @@
   display: block;
   position: absolute;
   inset: 0;
-  transition: transform var(--gl-dur-slow) var(--gl-ease-out);
 }
-.person:hover .person__photoinner {
-  transform: scale(1.04);
+/* The photograph fills the reserved 4:5 frame whatever it was exported at, so
+   a portrait that is slightly off-crop costs a little of its edge rather than
+   the whole row's alignment. */
+.person__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
 }
 .person__body {
   display: grid;
-  gap: 4px;
+  gap: 3px;
   padding: clamp(16px, 1.8vw, 22px);
 }
 .person__name {
   display: block;
-  font-size: var(--gl-t-small);
+  font-size: clamp(1rem, 1.2vw, 1.0625rem);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-tight);
 }
 .person__role {
   display: block;
   font-size: var(--gl-t-micro);
-  color: var(--faint);
-}
-.person__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  font-size: var(--gl-t-micro);
   font-weight: var(--gl-w-medium);
   color: var(--accent);
 }
-.person__more span {
-  transition: transform var(--gl-dur-base) var(--gl-ease-out);
-}
-.person:hover .person__more span {
-  transform: translateX(3px);
+.person__intro {
+  display: block;
+  margin-top: 8px;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--faint);
 }
 
 /* ==========================================================================
@@ -622,7 +930,7 @@
   background: rgba(12, 12, 14, 0.62);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  animation: gl-modal-bg var(--gl-dur-base) var(--gl-ease-out) both;
+  animation: gl-modal-bg var(--gl-dur-standard) var(--gl-ease) both;
 }
 @keyframes gl-modal-bg {
   from {
@@ -642,7 +950,7 @@
   background: var(--gl-white);
   color: var(--gl-ink);
   box-shadow: var(--gl-shadow-lg);
-  animation: gl-modal-in var(--gl-dur-base) var(--gl-ease-settle) both;
+  animation: gl-modal-in var(--gl-dur-standard) var(--gl-ease) both;
 }
 .modal__panel--narrow {
   width: min(100%, 620px);
@@ -673,8 +981,8 @@
   box-shadow: inset 0 0 0 1px var(--gl-edge);
   color: var(--gl-ink);
   transition:
-    background var(--gl-dur-fast) var(--gl-ease-out),
-    transform var(--gl-dur-fast) var(--gl-ease-out);
+    background var(--gl-dur-micro) var(--gl-ease),
+    transform var(--gl-dur-micro) var(--gl-ease);
 }
 .modal__close:hover {
   background: var(--gl-white);
@@ -809,7 +1117,7 @@
   border-bottom: 1px solid var(--rule);
   text-decoration: none;
   color: inherit;
-  transition: border-color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: border-color var(--gl-dur-micro) var(--gl-ease);
 }
 .leak__rail {
   grid-area: rail;
@@ -827,7 +1135,7 @@
   background: var(--accent);
   transform: scaleY(0);
   transform-origin: top;
-  transition: transform var(--gl-dur-base) var(--gl-ease-settle);
+  transition: transform var(--gl-dur-standard) var(--gl-ease);
 }
 .leak__idx {
   grid-area: idx;
@@ -836,14 +1144,14 @@
   letter-spacing: 0.04em;
   color: var(--ghost);
   font-variant-numeric: tabular-nums;
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .leak__key {
   grid-area: key;
   font-size: 1.0625rem;
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-tight);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .leak__val {
   grid-area: val;
@@ -859,17 +1167,16 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--faint);
   white-space: nowrap;
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .leak__arrow {
   opacity: 0;
   transform: translate3d(-4px, 0, 0);
   transition:
-    opacity var(--gl-dur-fast) var(--gl-ease-out),
-    transform var(--gl-dur-base) var(--gl-ease-settle);
+    opacity var(--gl-dur-micro) var(--gl-ease),
+    transform var(--gl-dur-standard) var(--gl-ease);
 }
 
 .leak:hover,
@@ -978,7 +1285,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
 }
 .pipe__live {
   color: var(--accent);
@@ -1035,7 +1341,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--faint);
 }
 .pipe__stamp {
@@ -1053,7 +1358,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--accent);
   box-shadow: inset 0 0 0 1px currentColor;
 }
@@ -1096,7 +1400,6 @@
 .pipe__fields dt {
   font-size: var(--gl-t-label);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
   margin-bottom: 5px;
 }
@@ -1217,7 +1520,7 @@
   animation: gl-pipe-scan var(--pipe-loop) linear infinite both;
 }
 [data-motion="on"] .pipe__dot {
-  animation: gl-pipe-pulse 2.2s var(--gl-ease-out) infinite;
+  animation: gl-pipe-pulse 2.2s var(--gl-ease) infinite;
 }
 @keyframes gl-pipe-pulse {
   0%,
@@ -1326,7 +1629,6 @@
   font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
 }
 .mtl__stagedetail {
   font-size: var(--gl-t-micro);
@@ -1354,8 +1656,8 @@
   background: var(--accent-wash);
   box-shadow: inset 0 0 0 1px var(--rule);
   transition:
-    box-shadow var(--gl-dur-fast) var(--gl-ease-out),
-    background var(--gl-dur-fast) var(--gl-ease-out);
+    box-shadow var(--gl-dur-micro) var(--gl-ease),
+    background var(--gl-dur-micro) var(--gl-ease);
 }
 .mtl__spanbar {
   position: absolute;
@@ -1368,7 +1670,7 @@
   font-size: 1.0625rem;
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-tight);
-  transition: color var(--gl-dur-fast) var(--gl-ease-out);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .mtl__spancaption {
   font-size: var(--gl-t-micro);
@@ -1416,8 +1718,8 @@
   border-radius: var(--gl-r-lg);
   background: var(--panel);
   transition:
-    border-color var(--gl-dur-base) var(--gl-ease-out),
-    box-shadow var(--gl-dur-base) var(--gl-ease-out);
+    border-color var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
 }
 .mod:hover,
 .mod:focus-within {
@@ -1482,7 +1784,6 @@
 .mod__stagerole {
   font-size: var(--gl-t-label);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
   white-space: nowrap;
 }
@@ -1610,7 +1911,6 @@
   gap: 8px;
   font-size: var(--gl-t-label);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--faint);
 }
 .day__swatch {
@@ -1661,7 +1961,7 @@
   font-variant-numeric: tabular-nums;
 }
 [data-motion="on"] .day__bar {
-  animation: gl-day-grow var(--gl-dur-slow) var(--gl-ease-settle) both;
+  animation: gl-day-grow var(--gl-dur-orchestrated) var(--gl-ease) both;
   animation-delay: calc(140ms + var(--i) * 45ms);
 }
 @keyframes gl-day-grow {
@@ -1699,7 +1999,6 @@
 .depth__state {
   font-size: var(--gl-t-label);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--ghost);
 }
 .depth__rows {
@@ -1763,14 +2062,13 @@
   font-size: 0.625rem;
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
   color: var(--gl-white);
   background: var(--accent);
   white-space: nowrap;
 }
 
 [data-motion="on"] .depth__row[data-worked="false"] {
-  animation: gl-depth-in var(--gl-dur-base) var(--gl-ease-out) both;
+  animation: gl-depth-in var(--gl-dur-standard) var(--gl-ease) both;
   animation-delay: calc(360ms + var(--i) * 70ms);
 }
 @keyframes gl-depth-in {
@@ -1784,7 +2082,7 @@
   }
 }
 [data-motion="on"] .depth__line {
-  animation: gl-depth-line var(--gl-dur-slow) var(--gl-ease-settle) both;
+  animation: gl-depth-line var(--gl-dur-orchestrated) var(--gl-ease) both;
   animation-delay: 180ms;
 }
 @keyframes gl-depth-line {
@@ -1829,3 +2127,1201 @@
     animation: none;
   }
 }
+
+/* ==========================================================================
+   MODULE SCENES — the four signature visuals on the module pages.
+
+   The chrome is shared so the four read as one family of instrument; the
+   plots inside are unalike, because the four modules do unalike things.
+
+   Everything a scene animates per frame is `opacity`, written directly by the
+   scene's draw callback in `useScene`. There are no transitions declared here
+   on plot elements: a scroll-linked scene must land exactly where the page is,
+   and a transition would make it lag behind the scrollbar by its own duration.
+   ========================================================================= */
+.mscene {
+  margin: 0;
+  border: 1px solid var(--gl-edge);
+  border-radius: var(--gl-r-lg);
+  background: var(--gl-white);
+  overflow: hidden;
+}
+.on-dark .mscene {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+}
+.mscene__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--gl-edge);
+}
+.on-dark .mscene__head {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+.mscene__label {
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-slate);
+}
+.on-dark .mscene__label {
+  color: var(--gl-purple-ondark);
+}
+.mscene__plot {
+  padding: 18px 18px 8px;
+}
+.mplot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.mplot__axis {
+  font-family: var(--gl-font);
+  font-size: 7px;
+  font-weight: var(--gl-w-medium);
+  letter-spacing: 0.04em;
+  fill: var(--gl-slate-soft);
+}
+.on-dark .mplot__axis {
+  fill: rgba(255, 255, 255, 0.42);
+}
+
+/* A call the desk answered. Deliberately quiet: this is the work that is
+   already happening, and it is not what the module is for. */
+.mplot__tick {
+  fill: #e2e0da;
+}
+.on-dark .mplot__tick {
+  fill: rgba(255, 255, 255, 0.14);
+}
+/* A call that rang out. Outlined rather than filled, so absence reads as
+   absence rather than as another colour of presence. */
+.mplot__tick-ring {
+  fill: none;
+  stroke: var(--gl-purple-400);
+  stroke-width: 1;
+}
+.on-dark .mplot__tick-ring {
+  stroke: var(--gl-purple-ondark);
+}
+/* The same call, answered. */
+.mplot__tick-caught {
+  fill: var(--gl-purple-500);
+}
+.on-dark .mplot__tick-caught {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__cap {
+  fill: rgba(74, 58, 196, 0.045);
+  stroke: none;
+}
+.mplot__capedge {
+  stroke: var(--gl-purple-200);
+  stroke-width: 1;
+}
+.mplot__caplabel {
+  fill: var(--gl-purple-600);
+  font-size: 6.5px;
+}
+.on-dark .mplot__cap {
+  fill: rgba(171, 159, 238, 0.06);
+}
+.on-dark .mplot__capedge {
+  stroke: var(--gl-purple-ondark-muted);
+}
+.on-dark .mplot__caplabel {
+  fill: var(--gl-purple-ondark);
+}
+
+.mscene__readouts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 8px 0 0;
+  border-top: 1px solid var(--gl-edge);
+  background: var(--gl-edge);
+}
+.on-dark .mscene__readouts {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+}
+.mscene__readout {
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  background: var(--gl-white);
+}
+.on-dark .mscene__readout {
+  background: var(--gl-graphite-deep);
+}
+.mscene__readout dt {
+  font-size: var(--gl-t-micro);
+  color: var(--gl-slate);
+}
+.on-dark .mscene__readout dt {
+  color: rgba(255, 255, 255, 0.55);
+}
+.mscene__readout dd {
+  margin: 0;
+  font-size: var(--gl-t-figure-sm);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-tight);
+  /* Tabular figures, so a counting number never changes the column width. */
+  font-variant-numeric: tabular-nums;
+  color: var(--gl-ink);
+}
+.on-dark .mscene__readout dd {
+  color: var(--gl-white);
+}
+.mscene__readout[data-tone="signal"] dd {
+  color: var(--gl-purple-600);
+}
+.on-dark .mscene__readout[data-tone="signal"] dd {
+  color: var(--gl-purple-ondark);
+}
+.mscene__note {
+  padding: 12px 18px 16px;
+  margin: 0;
+  color: var(--gl-slate-soft);
+}
+
+@media (max-width: 560px) {
+  .mscene__readouts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mscene__readout {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PROOF NUMBER — the figure that makes a module's problem concrete.
+
+   Deliberately not a "stat card": no icon, no border box, no coloured pill.
+   A large figure, the thing it counts, and the basis for it, set as a hanging
+   note against a purple rule. The basis line is not optional decoration; a
+   number without one is the sort of claim this site exists to avoid.
+   ----------------------------------------------------------------------- */
+.proofnum {
+  margin-top: var(--gl-s-7);
+  padding-left: var(--gl-s-5);
+  border-left: 2px solid var(--gl-purple-500);
+  max-width: 46ch;
+}
+.on-dark .proofnum {
+  border-left-color: var(--gl-purple-ondark);
+}
+.proofnum__value {
+  margin: 0 0 6px;
+  font-size: var(--gl-t-figure);
+  font-weight: var(--gl-w-medium);
+  line-height: 0.92;
+  letter-spacing: var(--gl-tr-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--gl-purple-600);
+}
+.on-dark .proofnum__value {
+  color: var(--gl-purple-ondark);
+}
+.proofnum__label {
+  margin: 0 0 10px;
+  font-size: var(--gl-t-lead);
+  line-height: 1.35;
+  letter-spacing: var(--gl-tr-tight);
+  color: var(--gl-ink);
+}
+.on-dark .proofnum__label {
+  color: var(--gl-white);
+}
+.proofnum__basis {
+  margin: 0;
+  color: var(--gl-slate);
+}
+.on-dark .proofnum__basis {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   BOUNDARIES — what a module will not do.
+
+   Set as a plain two-column list rather than as cards. These statements are
+   the most trustworthy thing on the page and should look like clauses, not
+   like features.
+   ----------------------------------------------------------------------- */
+.boundaries {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gl-s-6) var(--gl-s-8);
+  margin-top: var(--gl-s-7);
+}
+.boundary {
+  padding-top: var(--gl-s-4);
+  border-top: 1px solid var(--gl-edge);
+}
+.on-dark .boundary {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+.boundary__key {
+  margin: 0 0 8px;
+  font-size: var(--gl-t-display-4);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-tight);
+  color: var(--gl-ink);
+}
+.on-dark .boundary__key {
+  color: var(--gl-white);
+}
+.boundary__detail {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--gl-graphite);
+}
+.on-dark .boundary__detail {
+  color: rgba(255, 255, 255, 0.72);
+}
+@media (max-width: 720px) {
+  .boundaries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* --- RESPOND: minutes, and the window ----------------------------------- */
+.mplot__min {
+  fill: var(--gl-mist);
+}
+.on-dark .mplot__min {
+  fill: rgba(255, 255, 255, 0.16);
+}
+.mplot__min--window {
+  fill: var(--gl-purple-500);
+}
+.on-dark .mplot__min--window {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__window {
+  fill: var(--gl-purple-50);
+}
+.on-dark .mplot__window {
+  fill: rgba(171, 159, 238, 0.09);
+}
+.mplot__windowlabel {
+  fill: var(--gl-purple-600);
+}
+.on-dark .mplot__windowlabel {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__base {
+  stroke: var(--gl-edge);
+  stroke-width: 1;
+}
+.on-dark .mplot__base {
+  stroke: rgba(255, 255, 255, 0.18);
+}
+.mplot__sweep {
+  stroke: var(--gl-ink);
+  stroke-width: 1.2;
+}
+.on-dark .mplot__sweep {
+  stroke: var(--gl-white);
+}
+.mplot__sweepdot {
+  fill: var(--gl-ink);
+}
+.on-dark .mplot__sweepdot {
+  fill: var(--gl-white);
+}
+
+/* --- RETAIN: a day column ------------------------------------------------ */
+.mplot__slot {
+  fill: var(--gl-mist);
+  opacity: 0.55;
+}
+.on-dark .mplot__slot {
+  fill: rgba(255, 255, 255, 0.07);
+  opacity: 1;
+}
+.mplot__booked {
+  fill: #d9d6ce;
+}
+.on-dark .mplot__booked {
+  fill: rgba(255, 255, 255, 0.2);
+}
+.mplot__risk {
+  fill: none;
+  stroke: var(--gl-purple-400);
+  stroke-width: 1;
+  stroke-dasharray: 3 2.5;
+}
+.on-dark .mplot__risk {
+  stroke: var(--gl-purple-ondark);
+}
+.mplot__held {
+  fill: var(--gl-purple-500);
+}
+.on-dark .mplot__held {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__open {
+  fill: none;
+  stroke: var(--gl-slate-soft);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+.on-dark .mplot__open {
+  stroke: rgba(255, 255, 255, 0.4);
+}
+.mplot__wait {
+  fill: var(--gl-purple-200);
+}
+.on-dark .mplot__wait {
+  fill: rgba(171, 159, 238, 0.4);
+}
+
+/* --- REACTIVATE: the back book ------------------------------------------ */
+.mplot__rec {
+  fill: var(--gl-mist);
+}
+.on-dark .mplot__rec {
+  fill: rgba(255, 255, 255, 0.16);
+}
+.mplot__rec--back {
+  fill: var(--gl-purple-500);
+}
+.on-dark .mplot__rec--back {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__curve {
+  fill: none;
+  stroke: var(--gl-purple-400);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.on-dark .mplot__curve {
+  stroke: var(--gl-purple-ondark);
+}
+.mplot__curvedot {
+  fill: var(--gl-purple-500);
+}
+.on-dark .mplot__curvedot {
+  fill: var(--gl-purple-ondark);
+}
+.mplot__curvelabel {
+  fill: var(--gl-purple-600);
+}
+.on-dark .mplot__curvelabel {
+  fill: var(--gl-purple-ondark);
+}
+
+/* --------------------------------------------------------------------------
+   MODULE SWITCHER — the bottom bar on a module page.
+
+   The active module is marked three ways, not one: a filled purple chip, an
+   `aria-current` the screen reader announces, and a rule under the chip. One
+   signal is a style; three is a state.
+   ----------------------------------------------------------------------- */
+.mswitch {
+  padding-top: var(--gl-s-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.mswitch__label {
+  margin: 0 0 var(--gl-s-4);
+  color: rgba(255, 255, 255, 0.55);
+}
+.mswitch__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mswitch__item {
+  position: relative;
+  padding: 10px 18px;
+  font-size: var(--gl-t-small);
+}
+.mswitch__num {
+  font-size: var(--gl-t-label);
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+.mswitch__name {
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-tight);
+}
+/* The third signal. Sits outside the pill so it reads as a tab marker rather
+   than as part of the chip. */
+.mswitch__item[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: -9px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--gl-purple-ondark);
+}
+.mswitch__note {
+  margin: var(--gl-s-6) 0 0;
+  max-width: 52ch;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ==========================================================================
+   INGEST — "what it reads to do that".
+
+   Four lanes feeding one record. The marks travel on `transform` only, and
+   the keyframes are declared once rather than per lane, so the whole diagram
+   costs one composited layer per mark and no JavaScript at all.
+   ========================================================================= */
+.ingest {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--gl-r-lg);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+.ingest__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 16px 22px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.ingest__label {
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-purple-ondark);
+}
+/* 0.52, not 0.45. Composited over the panel this measured 4.41:1, just under
+   AA for body text. The sweep had been ignoring foreground alpha and so had
+   been reporting it as a pass. */
+.ingest__note {
+  color: rgba(255, 255, 255, 0.52);
+}
+.ingest__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+  padding: 22px;
+}
+.ingest__lanes {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lane {
+  display: grid;
+  grid-template-columns: minmax(0, 20rem) minmax(90px, 1fr);
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+}
+.lane__key {
+  margin: 0 0 3px;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-tight);
+  color: var(--gl-white);
+}
+.lane__detail {
+  margin: 0;
+  font-size: var(--gl-t-micro);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+.lane__tape {
+  position: relative;
+  height: 18px;
+  overflow: hidden;
+}
+.lane__rule {
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.lane__mark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 2px;
+  background: var(--gl-purple-ondark);
+  opacity: 0.85;
+  /* Authored end state: spread along the lane. The animation only moves the
+     marks along the axis they already occupy, so a blocked bundle or a
+     reduced-motion preference leaves a legible tape, not a bare rule. */
+  transform: translateX(calc(var(--m) * 26px));
+}
+.lane__mark--ref {
+  width: 8px;
+  opacity: 0.4;
+}
+[data-motion="on"] .lane__mark {
+  animation: gl-lane-run var(--gl-dur-ambient) linear infinite;
+  animation-delay: calc(var(--m) * -1000ms + var(--lane) * -260ms);
+}
+@keyframes gl-lane-run {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  to {
+    transform: translateX(190px);
+    opacity: 0;
+  }
+}
+.ingest__out {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Stretched, so the brace spans the whole stack of lanes rather than just
+     the height of the record. The convergence is the point of the drawing. */
+  align-self: stretch;
+}
+.ingest__brace {
+  width: 10px;
+  align-self: stretch;
+  border: 1px solid var(--gl-purple-ondark-muted);
+  border-right: 0;
+  border-radius: var(--gl-r-xs) 0 0 var(--gl-r-xs);
+}
+.ingest__record {
+  display: grid;
+  gap: 6px;
+  min-width: 140px;
+  padding: 14px 16px;
+  border: 1px solid var(--gl-purple-ondark-muted);
+  border-radius: var(--gl-r-sm);
+  background: rgba(171, 159, 238, 0.08);
+}
+.ingest__recordlabel {
+  margin-bottom: 4px;
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-purple-ondark);
+}
+.ingest__recordrow {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.22);
+}
+.ingest__recordrow--short {
+  width: 62%;
+}
+.ingest__foot {
+  padding: 0 22px 18px;
+  margin: 0;
+  max-width: 78ch;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 900px) {
+  .ingest__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .ingest__out {
+    justify-content: flex-start;
+  }
+  .ingest__brace {
+    min-height: 56px;
+  }
+}
+
+/* ==========================================================================
+   BOARD — which recurring jobs stop landing on the front desk.
+   ========================================================================= */
+.board {
+  padding: 20px 22px 18px;
+  border: 1px solid var(--gl-edge);
+  border-radius: var(--gl-r-lg);
+  background: var(--gl-white);
+}
+.board__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--gl-edge);
+}
+.board__col {
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-slate);
+}
+.board__col--to {
+  color: var(--gl-purple-600);
+}
+.board__jobs {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.job {
+  position: relative;
+  display: grid;
+  /* index, then two equal owner columns. Equal is what makes one column of
+     travel the same distance on every row. */
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+}
+.job__cell {
+  grid-column: 3;
+  /* Authored end state: with the right-hand owner. */
+  transform: translateX(0);
+}
+.job__idx {
+  font-size: var(--gl-t-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--gl-slate-soft);
+}
+.job__track {
+  position: absolute;
+  left: 26px;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: repeating-linear-gradient(to right, var(--gl-edge) 0 4px, transparent 4px 8px);
+}
+.job__chip {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  padding: 6px 12px;
+  border: 1px solid var(--gl-purple-200);
+  border-radius: var(--gl-r-pill);
+  background: var(--gl-purple-50);
+}
+.job__name {
+  font-size: var(--gl-t-micro);
+  font-weight: var(--gl-w-medium);
+  line-height: 1.35;
+  color: var(--gl-purple-700);
+}
+[data-motion="on"] .job__cell {
+  animation: gl-job-move var(--gl-dur-orchestrated) var(--gl-ease) both;
+  animation-delay: calc(var(--i) * 110ms);
+}
+@keyframes gl-job-move {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.board__back {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--gl-edge);
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--gl-slate);
+}
+.board__backarrow {
+  color: var(--gl-purple-600);
+}
+
+@media (max-width: 560px) {
+  /* One column on a phone: there is not room for two owners side by side, so
+     the board becomes a plain list of the jobs that moved. */
+  .job {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .job__cell {
+    grid-column: 2;
+    transform: none;
+  }
+  [data-motion="on"] .job__cell {
+    animation: none;
+  }
+  .job__track,
+  .board__head .board__col--from {
+    display: none;
+  }
+  .board__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ==========================================================================
+   CHAIN — the quiet evidence variant. No chrome, no animation of its own.
+   ========================================================================= */
+.chain__figure {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 18px;
+}
+.chain__value {
+  width: 92px;
+  height: 30px;
+  border: 1px solid var(--gl-purple-ondark-muted);
+  border-radius: var(--gl-r-xs);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(171, 159, 238, 0.35) 0 5px,
+    transparent 5px 10px
+  );
+}
+.chain__figurelabel {
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-white);
+}
+.chain__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chain__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 0 0 20px 26px;
+}
+.chain__thread {
+  position: absolute;
+  left: 5px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--gl-purple-ondark-muted);
+}
+.chain__link:last-child .chain__thread {
+  bottom: auto;
+  height: 10px;
+}
+.chain__node {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--gl-purple-ondark);
+  border-radius: 50%;
+  background: var(--gl-graphite-deep);
+}
+.chain__stage {
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  color: var(--gl-white);
+}
+.chain__basis {
+  font-size: var(--gl-t-label);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-purple-ondark);
+}
+.chain__detail {
+  grid-column: 1 / -1;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+}
+.chain__foot {
+  margin: 4px 0 0;
+  max-width: 44ch;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   TWO-COL, FLIPPED — visual on the left, copy on the right.
+
+   Used once on the homepage, in the returned-time section, so the signature
+   panels do not all march down the right-hand edge. The order is set with
+   `order` rather than by reversing the markup, so the reading order for a
+   screen reader and for a phone stays copy-first: on a narrow screen the
+   diagram is the supporting act, whichever side it sits on at 1440.
+   ----------------------------------------------------------------------- */
+.two-col--flip .two-col__visual {
+  order: 2;
+}
+@media (min-width: 921px) {
+  .two-col--flip {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .two-col--flip .two-col__visual {
+    order: 0;
+  }
+}
+
+/* ==========================================================================
+   MODULE CARDS — the modules index.
+
+   Four cards, one identity each. The identity is tone and weight within the
+   single purple, never a different hue: Answer sits lightest because it is the
+   earliest and least certain point in the system, Reactivate deepest. That is
+   the value-stage ramp the reader has already been taught two sections
+   earlier, so the variation carries meaning instead of decoration.
+   ========================================================================= */
+.modcards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: var(--gl-s-7);
+}
+@media (max-width: 860px) {
+  .modcards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.modcard {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto auto auto auto auto;
+  gap: 0;
+  height: 100%;
+  padding: clamp(20px, 2vw, 26px);
+  border: 1px solid var(--gl-edge);
+  border-radius: var(--gl-r-lg);
+  background: var(--gl-white);
+  text-decoration: none;
+  /* Colour and border only. No lift: the RESPONSE verb on this site is
+     colour, and a card that rises is the effect every template ships with. */
+  transition:
+    border-color var(--gl-dur-micro) var(--gl-ease-micro),
+    background var(--gl-dur-micro) var(--gl-ease-micro);
+}
+
+/* The four identities. */
+.modcard[data-module="answer"] {
+  --tone: var(--gl-purple-400);
+  --tone-deep: var(--gl-purple-600);
+}
+.modcard[data-module="respond"] {
+  --tone: var(--gl-purple-500);
+  --tone-deep: var(--gl-purple-600);
+}
+.modcard[data-module="retain"] {
+  --tone: var(--gl-purple-600);
+  --tone-deep: var(--gl-purple-700);
+}
+.modcard[data-module="reactivate"] {
+  --tone: var(--gl-purple-700);
+  --tone-deep: var(--gl-purple-800);
+}
+
+.modcard:hover {
+  border-color: var(--gl-purple-300);
+  background: var(--gl-purple-50);
+}
+.modcard:focus-visible {
+  outline: var(--gl-focus-w) solid var(--gl-purple-600);
+  outline-offset: var(--gl-focus-offset);
+}
+
+/* --- The preview ---------------------------------------------------------- */
+.modcard__preview {
+  display: block;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border-radius: var(--gl-r-sm);
+  background: var(--gl-paper);
+  color: var(--tone);
+}
+.modcard:hover .modcard__preview {
+  background: var(--gl-white);
+}
+.mprev {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* --- Hierarchy: name, job, metric, link ----------------------------------- */
+.modcard__head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.modcard__index {
+  font-size: var(--gl-t-label);
+  font-variant-numeric: tabular-nums;
+  /* The deep step, not the identity tone. Purple 400 measures 3.79 on warm
+     white, which is large-text only, and this is a 12px numeral. */
+  color: var(--tone-deep);
+}
+.modcard__name {
+  font-size: var(--gl-t-display-3);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-display);
+  color: var(--gl-ink);
+}
+.modcard__job {
+  padding-top: 8px;
+  font-size: var(--gl-t-small);
+  line-height: 1.5;
+  color: var(--gl-graphite);
+}
+.modcard__metric {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  padding-top: 16px;
+}
+.modcard__metriclabel {
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-slate);
+}
+.modcard__metricvalue {
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  color: var(--tone-deep);
+}
+
+/* Revealed on hover and on focus. Never the only place a fact appears. */
+.modcard__reveal {
+  overflow: hidden;
+  max-height: 0;
+  padding-top: 0;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--gl-slate);
+  opacity: 0;
+  transition:
+    max-height var(--gl-dur-standard) var(--gl-ease),
+    opacity var(--gl-dur-standard) var(--gl-ease),
+    padding-top var(--gl-dur-standard) var(--gl-ease);
+}
+.modcard:hover .modcard__reveal,
+.modcard:focus-visible .modcard__reveal {
+  max-height: 6em;
+  padding-top: 14px;
+  opacity: 1;
+}
+.modcard__link {
+  align-self: end;
+  padding-top: 20px;
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-medium);
+  color: var(--tone-deep);
+}
+
+@media (max-width: 860px), (hover: none) {
+  /* No hover on a phone, so the supplementary line is simply shown. */
+  .modcard__reveal {
+    max-height: none;
+    padding-top: 14px;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .modcard__reveal {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   PREVIEW MARKS — shared by all four card diagrams.
+
+   Every preview is authored in its settled state; the loops below only cycle
+   emphasis on the marks that carry the module's point. Long and shallow on
+   purpose: four cards animating in one viewport is already at the limit of
+   what reads as calm.
+   ========================================================================= */
+.mprev__tick,
+.mprev__bar,
+.mprev__rec {
+  fill: var(--gl-mist);
+}
+.mprev__slot {
+  fill: var(--gl-mist);
+}
+.mprev__base {
+  stroke: var(--gl-edge);
+  stroke-width: 1;
+}
+.mprev__window {
+  fill: var(--gl-purple-50);
+}
+.mprev__wait {
+  fill: var(--gl-purple-200);
+}
+.mprev__curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+.mprev__tick--caught,
+.mprev__bar--window,
+.mprev__held,
+.mprev__rec--back {
+  fill: currentColor;
+}
+.mprev__held--refill {
+  fill: currentColor;
+}
+
+/* The loop: the signal marks breathe, one after another, and settle full. */
+[data-motion="on"] .mprev__tick--caught,
+[data-motion="on"] .mprev__rec--back {
+  animation: gl-prev-pulse var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--n, 0) * -320ms);
+}
+[data-motion="on"] .mprev__held--refill {
+  animation: gl-prev-refill var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes gl-prev-pulse {
+  0%,
+  55%,
+  100% {
+    opacity: 1;
+  }
+  22% {
+    opacity: 0.25;
+  }
+}
+@keyframes gl-prev-refill {
+  0%,
+  12% {
+    opacity: 0;
+  }
+  30%,
+  100% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="on"] .mprev__tick--caught,
+  [data-motion="on"] .mprev__rec--back,
+  [data-motion="on"] .mprev__held--refill {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   MODULE TIMELINE — one orchestrated load, not four entrances.
+
+   The argument of the whole site is that the four modules compose into a
+   single recovery layer. Four spans each fading up on their own says the
+   opposite: four products that happen to share a page. So the whole device
+   loads as ONE sequence, in the order the system actually runs:
+
+     0ms      the axis draws left to right, because it is the thing the four
+              modules are positioned against
+     420ms    each span extends from its own start point, in sequence, so the
+              overlaps arrive as overlaps rather than as coincidences
+     +90ms    the labels settle behind their own span
+
+   Everything is transform and opacity, on the one house curve. The spans grow
+   from `transform-origin: left`, which is the site's DRAW verb, so the device
+   is speaking a vocabulary the reader has already met on the stage bars and
+   the result cards.
+
+   Authored end state is the finished timeline; the zero states are gated on
+   [data-motion="on"], so a blocked bundle leaves the whole diagram complete.
+   ========================================================================= */
+[data-motion="on"] .mtl__axis {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+[data-motion="on"] .m-card[data-inview="true"] .mtl__axis {
+  transform: scaleX(1);
+}
+
+[data-motion="on"] .mtl__span {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  /* Sequenced after the axis has drawn, then one span at a time. */
+  transition-delay: calc(420ms + var(--i, 0) * 130ms);
+}
+[data-motion="on"] .m-card[data-inview="true"] .mtl__span {
+  transform: scaleX(1);
+}
+
+/* The labels do not stretch with their span. They settle into it. */
+[data-motion="on"] .mtl__spanname,
+[data-motion="on"] .mtl__spancaption {
+  opacity: 0;
+  transition: opacity var(--gl-dur-standard) var(--gl-ease);
+  transition-delay: calc(510ms + var(--i, 0) * 130ms);
+}
+[data-motion="on"] .m-card[data-inview="true"] .mtl__spanname,
+[data-motion="on"] .m-card[data-inview="true"] .mtl__spancaption {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="on"] .mtl__axis,
+  [data-motion="on"] .mtl__span {
+    transform: scaleX(1);
+    transition: none;
+  }
+  [data-motion="on"] .mtl__spanname,
+  [data-motion="on"] .mtl__spancaption {
+    opacity: 1;
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   content-visibility: auto WAS TRIED TWICE HERE AND REMOVED BOTH TIMES.
+   Recorded so it is not tried a third time.
+
+   The intent was sound: skip style, layout and paint for off-screen sections,
+   and with them the CSS animations inside, which do not stop just because
+   they have been scrolled away. It measured well on the load metrics, taking
+   Lighthouse total blocking time from 484ms to 198ms.
+
+   It broke two things that matter more.
+
+   1. Scroll scenes. While the scenes still read getBoundingClientRect() every
+      frame, answering that read forced the browser to lay out the very
+      sections this rule was skipping, once per frame. Rendering went from
+      38.0s to 59.7s at 4x throttling. Caching document offsets fixed that
+      half.
+
+   2. Entrances, in Safari. An element inside a skipped subtree has no box to
+      intersect, so the IntersectionObserver that drives entrance animations
+      never fired for it. A cross-browser run found 9 of the homepage's 52
+      reveals, and 4 of a module page's 23, permanently stuck at opacity 0 in
+      WebKit. Removing the rule cleared every one of them.
+
+   Content that never appears is a worse failure than a slower page, so the
+   rule is gone. The animation half of the problem is solved instead by the
+   [data-ambient] observer in MotionProvider, which pauses off-screen loops
+   without hiding anything.
+   ========================================================================= */

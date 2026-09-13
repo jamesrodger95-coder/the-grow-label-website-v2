@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { ROUTES } from './routes';
+import { PRIMARY_NAV } from '../../src/content/site';
 
 test.describe('every route renders', () => {
   for (const route of ROUTES) {
@@ -51,6 +52,8 @@ test('sitemap and robots are served and consistent', async ({ request }) => {
   for (const route of ROUTES) {
     if (route.path.startsWith('/dev/')) {
       expect(xml, 'dev routes stay out of the sitemap').not.toContain(`${route.path}<`);
+    } else if ('unlisted' in route && route.unlisted) {
+      expect(xml, 'noindex routes stay out of the sitemap').not.toContain(`${route.path}<`);
     } else {
       expect(xml).toContain(`${route.path === '/' ? '/' : route.path}<`);
     }
@@ -92,12 +95,23 @@ test('the old methodology URL redirects into the platform page', async ({ page }
   await expect(page.locator('#value-stages')).toBeAttached();
 });
 
-/** The two anchored nav items must land on sections that exist. */
+/**
+ * Every anchored nav item must land on a section that exists.
+ *
+ * The list is read from `PRIMARY_NAV` rather than written out here, so removing
+ * a homepage section and repointing its nav item at a page — which is what
+ * happened to case studies — cannot leave this test asserting an anchor nobody
+ * links to any more. `#team` is asserted separately because the footer links it
+ * even though the primary nav does not.
+ */
 test('the anchored navigation items resolve to real sections', async ({ page }) => {
   await page.goto('/');
-  for (const id of ['results', 'case-studies']) {
-    await expect(page.locator(`#${id}`)).toBeAttached();
+  const anchored = PRIMARY_NAV.filter((link) => link.href.startsWith('/#'));
+  expect(anchored.length).toBeGreaterThan(0);
+  for (const link of anchored) {
+    await expect(page.locator(`#${link.href.slice(2)}`)).toBeAttached();
   }
+  await expect(page.locator('#team')).toBeAttached();
 });
 
 test('the current route is marked in the navigation', async ({ page }) => {

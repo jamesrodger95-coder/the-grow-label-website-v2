@@ -1,223 +1,70 @@
 /**
- * Results, case studies, testimonials, video and team.
+ * Framing copy for the results, team and ingest surfaces.
  *
- * Everything in this file is a **labelled placeholder**. No figure, quote,
- * face, organisation or outcome here is real, and every surface that renders it
- * says so on the page rather than only in a comment. See
- * docs/CLAIMS_REGISTER.md for what evidence would be needed to publish real
- * content in each slot.
+ * This file holds the *frame*: headings, leads, definitions and the notes that
+ * explain what a reader is looking at. The content those frames hold lives in
+ * one of two places, and which one it is, is the whole point:
  *
- * Replacing a placeholder is a content edit in this file — no component needs
- * to change.
+ *   - `src/content/illustrative.ts` — invented. Results worked example, case
+ *     studies. Every surface rendering it shows a label.
+ *   - `src/content/testimonials.ts` — real, named, released clients, figures
+ *     included. No label, because nothing about it is illustrative.
+ *
+ * `TEAM` below is the exception that lives here: real colleagues, so it is
+ * neither a fixture nor client evidence, and the test that guards it fails on
+ * a *missing* name rather than on an invented one.
+ *
+ * See `docs/CLAIMS_REGISTER.md` for what evidence unblocks each slot, and for
+ * the release status of every person named on the site.
  */
 
-export const PLACEHOLDER_NOTE =
-  'Placeholder content. Real figures, quotations and profiles are added only once they are evidenced and approved.';
-
 /* -------------------------------------------------------------------------- */
-/* Results — how a verified outcome will be presented                         */
+/* Results — the frame a verified outcome arrives in                          */
 /* -------------------------------------------------------------------------- */
 
 export const RESULTS = {
   eyebrow: 'Results',
   titleLines: ['Reported at four stages,', 'never as one number.'],
-  lead: 'This is the shape every Grow Label report takes. When a client result is published here, it arrives in exactly this frame: the same four stages, each with the evidence that promoted it.',
-  cards: [
-    {
-      stage: 'Estimated',
-      basis: 'Modelled from your fee schedule',
-      width: '100%',
-      tone: 'var(--gl-stage-1)',
-      hint: 'Opportunity detected',
-    },
-    {
-      stage: 'Booked',
-      basis: 'Appointment record in your PMS',
-      width: '74%',
-      tone: 'var(--gl-stage-2)',
-      hint: 'A date exists',
-    },
-    {
-      stage: 'Attended',
-      basis: 'Attendance status in your PMS',
-      width: '61%',
-      tone: 'var(--gl-stage-3)',
-      hint: 'The appointment happened',
-    },
-    {
-      stage: 'Collected',
-      basis: 'Payment against your ledger',
-      width: '52%',
-      tone: 'var(--gl-stage-4)',
-      hint: 'The only figure that is revenue',
-    },
-  ],
-  note: 'Every published result will carry its reporting period, its cut-off date, its attribution status and a link to the source events behind it.',
+  lead: 'This is the shape every Grow Label report takes, and the figures below are a worked example of it: one group, one year, the same four stages with the evidence that promoted each one. Under the money sits the operational detail it came from.',
+  aside: 'One engagement, four stages',
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/* Case studies                                                               */
+/* Testimonials, video and case studies — section framing                     */
 /* -------------------------------------------------------------------------- */
 
-export type CaseStudy = {
-  slug: string;
-  sector: string;
-  title: string;
-  summary: string;
-  chips: string[];
-  /** Two hues drive the placeholder artwork so the cards differ at a glance. */
-  hue: number;
-};
+export const CASES_SECTION = {
+  eyebrow: 'Case studies',
+  titleLines: ['Six write-ups of the work,', 'in the shape a real one takes.'],
+  aside: 'Three veterinary · three dental',
+  lead: 'Each of these describes a place demand is commonly lost, what an assessment finds when it looks there, what the modules do about it, and what that produces at each of the four value stages. The workflows are real. The organisations and the figures are not.',
+} as const;
 
-export const CASE_STUDIES: CaseStudy[] = [
-  {
-    slug: 'multi-site-after-hours',
-    sector: 'Veterinary · multi-site',
-    title: 'After-hours demand across a practice group',
-    summary:
-      'What happens to contact that arrives before opening, after closing and across the weekend, and what changes when it is answered.',
-    chips: ['Answer', 'Respond', 'Multi-location'],
-    hue: 248,
-  },
-  {
-    slug: 'accepted-unscheduled',
-    sector: 'Dental · single site',
-    title: 'Treatment accepted in the chair and never given a date',
-    summary:
-      'The highest-intent demand a practice holds, and the workflow that turns an accepted plan into an appointment before the patient leaves.',
-    chips: ['Retain', 'Reactivate', 'Chair time'],
-    hue: 262,
-  },
-  {
-    slug: 'hygiene-recall-depth',
-    sector: 'Dental · group',
-    title: 'How far down the recall list a practice actually gets',
-    summary:
-      'Where the list stops being worked is where the revenue stops. Measuring that line, then holding it steady week to week.',
-    chips: ['Reactivate', 'Recall', 'Provider view'],
-    hue: 234,
-  },
-];
+export const QUOTES_SECTION = {
+  eyebrow: 'In their words',
+  title: 'What our clients',
+  emphasis: 'have to say.',
+} as const;
 
-/* -------------------------------------------------------------------------- */
-/* Written testimonials                                                       */
-/* -------------------------------------------------------------------------- */
-
-export type Testimonial = {
-  id: string;
-  quote: string;
-  name: string;
-  role: string;
-  org: string;
-  hue: number;
-};
-
-/**
- * The quotes below describe the *kind* of thing a client would be asked to say,
- * so the section can be reviewed for design. They are attributed to obvious
- * placeholders and must be replaced wholesale, not edited.
- */
-export const TESTIMONIALS: Testimonial[] = [
-  {
-    id: 't1',
-    quote:
-      'Placeholder quotation. This slot is sized for two or three sentences about a specific operational change, not a general endorsement.',
-    name: 'Name to be confirmed',
-    role: 'Operations Director',
-    org: 'Client organisation',
-    hue: 250,
-  },
-  {
-    id: 't2',
-    quote:
-      'Placeholder quotation. The strongest version of this names the workflow that changed and what it replaced.',
-    name: 'Name to be confirmed',
-    role: 'Practice Owner',
-    org: 'Client organisation',
-    hue: 268,
-  },
-  {
-    id: 't3',
-    quote:
-      'Placeholder quotation. A finance-side quote belongs here, about the reporting rather than the automation.',
-    name: 'Name to be confirmed',
-    role: 'Finance Director',
-    org: 'Client organisation',
-    hue: 232,
-  },
-  {
-    id: 't4',
-    quote:
-      'Placeholder quotation. Reserved for a practice manager describing what stopped landing on their desk.',
-    name: 'Name to be confirmed',
-    role: 'Practice Manager',
-    org: 'Client organisation',
-    hue: 256,
-  },
-  {
-    id: 't5',
-    quote:
-      'Placeholder quotation. A multi-site quote about comparing locations on the same definitions.',
-    name: 'Name to be confirmed',
-    role: 'Group Operations Lead',
-    org: 'Client organisation',
-    hue: 240,
-  },
-  {
-    id: 't6',
-    quote:
-      'Placeholder quotation. Something about the assessment itself, and what it surfaced before any commitment.',
-    name: 'Name to be confirmed',
-    role: 'Managing Partner',
-    org: 'Client organisation',
-    hue: 274,
-  },
-];
-
-/* -------------------------------------------------------------------------- */
-/* Video testimonials                                                         */
-/* -------------------------------------------------------------------------- */
-
-export type VideoTestimonial = {
-  id: string;
-  name: string;
-  role: string;
-  org: string;
-  duration: string;
-  /** Set to a real embed URL to enable playback; null renders the empty state. */
-  src: string | null;
-  hue: number;
-};
-
-export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
-  {
-    id: 'v1',
-    name: 'Name to be confirmed',
-    role: 'Operations Director',
-    org: 'Client organisation',
-    duration: '2:14',
-    src: null,
-    hue: 250,
-  },
-  {
-    id: 'v2',
-    name: 'Name to be confirmed',
-    role: 'Practice Owner',
-    org: 'Client organisation',
-    duration: '1:48',
-    src: null,
-    hue: 266,
-  },
-  {
-    id: 'v3',
-    name: 'Name to be confirmed',
-    role: 'Finance Director',
-    org: 'Client organisation',
-    duration: '3:02',
-    src: null,
-    hue: 236,
-  },
-];
+export const VIDEO_SECTION = {
+  eyebrow: 'On camera',
+  title: 'Three clients,',
+  emphasis: 'on what changed.',
+  /**
+   * Accurate, and checked: `preload="none"` means the recordings themselves
+   * fetch nothing until play, and the still on each card is a 30 KB frame
+   * pulled from the video it belongs to. Do not restore the older wording
+   * ("Nothing loads until you press play") without re-measuring — it was
+   * written against a player that turned out to fetch 10 MB on page load.
+   */
+  aside: 'Each plays in the card, no download until you press play',
+  /**
+   * The one sentence this section owes a reader. Three named outcomes are
+   * three named outcomes; saying so here is what stops the figures above the
+   * players being read as a rate anyone else should expect.
+   */
+  note: 'Each figure below is that client’s own reported recovery over the period stated on the card. Nothing here is an average, and no result is typical.',
+} as const;
 
 /* -------------------------------------------------------------------------- */
 /* Team                                                                       */
@@ -225,65 +72,68 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
 
 export type TeamMember = {
   id: string;
+  /** Real colleagues. Never invent one — see the test that enforces this. */
   name: string;
   role: string;
+  /** One line on what this person owns, shown on the card. */
   intro: string;
-  bio: string[];
-  focus: string[];
+  /**
+   * Portrait path under `public/team/`. Every member has one reserved, and a
+   * missing file renders the drawn placeholder rather than a broken image —
+   * see `docs/media/TEAM_PORTRAITS.md` for the file names and the crop.
+   */
+  photo: string;
+  /** Seeds the placeholder while the photograph is outstanding. */
   hue: number;
 };
 
+/**
+ * The four people a client deals with.
+ *
+ * These are real colleagues, so the rule here is the opposite of the one in
+ * `illustrative.ts`: nothing in this list may be invented, and a person is
+ * added only once they are actually on the account. Portraits are the one
+ * outstanding item and the cards render without them.
+ */
 export const TEAM = {
   eyebrow: 'The team',
-  titleLines: ['The people who', 'work your back book.'],
-  lead: 'Grow Label is delivered by a small team that sits between your systems and your schedule. Profiles are placeholders until each person has approved their own.',
+  titleLines: ['The four people', 'on your account.'],
+  aside: 'Founders, client relations and advisory',
+  lead: 'Grow Label is delivered by a small team that sits between your systems and your schedule. These are the four people you deal with and what each of them owns.',
   members: [
     {
-      id: 'p1',
-      name: 'Name to be confirmed',
-      role: 'Founder',
-      intro: 'Placeholder profile. One or two lines on background and what they own here.',
-      bio: [
-        'Placeholder biography. Two or three short paragraphs work best in this space: what they did before Grow Label, what they are responsible for now, and the part of the product they care most about.',
-        'Nothing in this profile is real. It is here so the layout, the modal and the typography can be reviewed before real profiles are written.',
-      ],
-      focus: ['Commercial', 'Methodology'],
+      id: 'james-rodger',
+      name: 'James Rodger',
+      role: 'Co-Founder',
+      intro:
+        'Owns the commercial position, the four-stage measurement model, and the things this product refuses to do.',
+      photo: '/team/james-rodger.jpg',
       hue: 250,
     },
     {
-      id: 'p2',
-      name: 'Name to be confirmed',
-      role: 'Head of Delivery',
-      intro: 'Placeholder profile. Two lines on who owns delivery, and what they did before this.',
-      bio: [
-        'Placeholder biography. This slot suits someone who owns onboarding, escalation policy and the configuration conversations with each practice.',
-        'Nothing in this profile is real.',
-      ],
-      focus: ['Onboarding', 'Escalation'],
+      id: 'trent-overy',
+      name: 'Trent Overy',
+      role: 'Co-Founder',
+      intro:
+        'Owns delivery: onboarding, the module ceiling, and the escalation policy your team lives with.',
+      photo: '/team/trent-overy.jpg',
       hue: 264,
     },
     {
-      id: 'p3',
-      name: 'Name to be confirmed',
-      role: 'Data & Measurement',
-      intro: 'Placeholder profile. Two lines on who defends the numbers, and how.',
-      bio: [
-        'Placeholder biography. The natural fit here is whoever defends the four-stage model, the attribution rules and the duplicate logic.',
-        'Nothing in this profile is real.',
-      ],
-      focus: ['Attribution', 'Reporting'],
+      id: 'isabelle-njorrak',
+      name: 'Isabelle Njorrak',
+      role: 'Client Relations Manager',
+      intro: 'Your day-to-day contact, and the person who reviews what each module did every week.',
+      photo: '/team/isabelle-njorrak.jpg',
       hue: 236,
     },
     {
-      id: 'p4',
-      name: 'Name to be confirmed',
-      role: 'Client Operations',
-      intro: 'Placeholder profile. Two lines on who each practice actually speaks to.',
-      bio: [
-        'Placeholder biography. Day-to-day contact for practice managers, and the person who reviews what the modules did each week.',
-        'Nothing in this profile is real.',
-      ],
-      focus: ['Accounts', 'Quality'],
+      id: 'hadleigh-bognuda',
+      name: 'Hadleigh Bognuda',
+      role: 'Advisor',
+      intro:
+        'Sense-checks the measurement model and the commercial position against how groups actually buy.',
+      photo: '/team/hadleigh-bognuda.jpg',
       hue: 272,
     },
   ] satisfies TeamMember[],

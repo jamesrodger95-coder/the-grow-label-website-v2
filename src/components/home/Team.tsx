@@ -1,24 +1,28 @@
-'use client';
-
-import { useState } from 'react';
-import { Modal } from '@/components/ui/Modal';
-import { TEAM, type TeamMember } from '@/content/proof';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Image from 'next/image';
+import { Reveal } from '@/components/motion/Reveal';
+import { TEAM } from '@/content/proof';
 
 /**
- * Meet the team.
+ * The four people on a client account.
  *
- * Each card opens a profile in a modal. Photographs are generated placeholders
- * sized to the real 4:5 crop, so dropping in real portraits is a content change
- * rather than a layout one.
+ * A server component with no interaction in it. It used to open a modal
+ * carrying a two-paragraph remit per person, which meant a client component, a
+ * portal and a focus trap for content nobody had asked to read. The remit is
+ * now one line on the face of the card, which is the amount anyone wanted.
+ *
+ * ---------------------------------------------------------------------------
+ * PORTRAITS
+ * ---------------------------------------------------------------------------
+ * Drop the four files into `public/team/` using the names in `TEAM.members`
+ * and they appear — no code change. Until a file exists, `<Portrait/>` renders
+ * a drawn 4:5 frame at exactly the ratio the photograph will occupy, so adding
+ * one is a content change and never a layout one. The naming, the crop and the
+ * export settings are in `docs/media/TEAM_PORTRAITS.md`.
  */
 
-function Portrait({ hue, name }: { hue: number; name: string }) {
-  const initials = name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join('');
+function Portrait({ hue }: { hue: number }) {
   return (
     <svg
       viewBox="0 0 100 125"
@@ -27,125 +31,84 @@ function Portrait({ hue, name }: { hue: number; name: string }) {
       style={{ width: '100%', height: '100%' }}
     >
       <rect width="100" height="125" fill={`hsl(${hue} 28% 93%)`} />
-      <circle cx="50" cy="48" r="21" fill={`hsl(${hue} 28% 84%)`} />
-      <path d="M14 125c5-24 17-36 36-36s31 12 36 36Z" fill={`hsl(${hue} 28% 84%)`} />
-      <text
-        x="50"
-        y="49"
-        textAnchor="middle"
-        dominantBaseline="central"
-        fontSize="15"
-        fontWeight="500"
-        fill={`hsl(${hue} 36% 52%)`}
-      >
-        {initials}
-      </text>
+      {/* The 4:5 crop marks. Reads as a reserved frame rather than as a
+          missing image, which is the difference between a placeholder that
+          looks intentional and one that looks broken. */}
+      <g stroke={`hsl(${hue} 26% 84%)`} strokeWidth="0.75" fill="none">
+        <rect x="8" y="8" width="84" height="109" />
+        <path d="M8 8h10M8 8v10M92 8H82M92 8v10M8 117h10M8 117v-10M92 117H82M92 117v-10" />
+      </g>
+      <circle cx="50" cy="48" r="21" fill={`hsl(${hue} 28% 86%)`} />
+      <path d="M17 117c4-22 16-33 33-33s29 11 33 33Z" fill={`hsl(${hue} 28% 86%)`} />
     </svg>
   );
 }
 
-export function Team() {
-  const [active, setActive] = useState<TeamMember | null>(null);
+/**
+ * Whether a portrait file has actually been supplied.
+ *
+ * Checked against the filesystem at build time rather than left to a flag in
+ * the content file, so adding a portrait is exactly one action: drop the file
+ * into `public/team/` under the name the member already declares. A flag would
+ * be a second place to forget, and `<Image>` given a src that 404s renders a
+ * broken frame rather than falling back to anything.
+ *
+ * This is a server component, so the read happens once during the build and
+ * never in a browser.
+ */
+function hasPortrait(photo: string): boolean {
+  if (!photo.trim()) return false;
+  return existsSync(join(process.cwd(), 'public', photo.replace(/^\//, '')));
+}
 
+export function Team() {
   return (
     <section className="surface--white on-light section" id="team" aria-labelledby="team-title">
       <div className="shell">
         <div className="sec-head">
           <div>
-            <span className="eyebrow sec-head__eyebrow">{TEAM.eyebrow}</span>
+            <Reveal variant="rise">
+              <span className="eyebrow sec-head__eyebrow">{TEAM.eyebrow}</span>
+            </Reveal>
             <h2 className="display d2" id="team-title">
               {TEAM.titleLines[0]} <em>{TEAM.titleLines[1]}</em>
             </h2>
           </div>
-          <p className="sec-head__aside">Profiles in progress</p>
+          <p className="sec-head__aside">{TEAM.aside}</p>
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '12px 18px',
-            alignItems: 'center',
-            marginBottom: 32,
-          }}
-        >
-          <span className="placeholder-tag">Placeholder</span>
-          <p className="small" style={{ flex: '1 1 24rem', margin: 0 }}>
-            {TEAM.lead}
-          </p>
-        </div>
+        <Reveal as="p" className="lead" variant="rise" style={{ marginBottom: 32 }}>
+          {TEAM.lead}
+        </Reveal>
 
         <div className="team">
-          {TEAM.members.map((member) => (
-            <button
-              type="button"
-              className="person"
-              key={member.id}
-              onClick={() => setActive(member)}
-              /* See the note in VideoTestimonials: the accessible name has to
-                 contain the visible text, not replace it. */
-            >
-              <span className="gl-sr">Read the profile for </span>
+          {TEAM.members.map((member, i) => (
+            <Reveal className="person" key={member.id} variant="card" index={i}>
               <span className="person__photo">
                 <span className="person__photoinner">
-                  <Portrait hue={member.hue} name={member.name} />
+                  {hasPortrait(member.photo) ? (
+                    <Image
+                      src={member.photo}
+                      alt={`${member.name}, ${member.role}`}
+                      width={800}
+                      height={1000}
+                      sizes="(max-width: 520px) 46vw, (max-width: 1000px) 44vw, 22vw"
+                      className="person__img"
+                    />
+                  ) : (
+                    <Portrait hue={member.hue} />
+                  )}
                 </span>
               </span>
               <span className="person__body">
                 <span className="person__name">{member.name}</span>
                 <span className="person__role">{member.role}</span>
-                <span className="person__more">
-                  Profile <span aria-hidden="true">&rarr;</span>
-                </span>
+                <span className="person__intro">{member.intro}</span>
               </span>
-            </button>
+            </Reveal>
           ))}
         </div>
       </div>
-
-      <Modal
-        open={active !== null}
-        onClose={() => setActive(null)}
-        labelledBy="team-modal-title"
-        narrow
-      >
-        {active ? (
-          <div className="modal__body">
-            <div className="modal__profile">
-              <div className="modal__photo">
-                <Portrait hue={active.hue} name={active.name} />
-              </div>
-              <div>
-                <span className="placeholder-tag">Placeholder profile</span>
-                <h3 className="d3 display" id="team-modal-title" style={{ marginTop: 14 }}>
-                  {active.name}
-                </h3>
-                <p className="label label--accent" style={{ marginTop: 8 }}>
-                  {active.role}
-                </p>
-                <p className="small" style={{ marginTop: 16 }}>
-                  {active.intro}
-                </p>
-                {active.bio.map((paragraph) => (
-                  <p className="small" style={{ marginTop: 12 }} key={paragraph.slice(0, 20)}>
-                    {paragraph}
-                  </p>
-                ))}
-                <div
-                  style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 18 }}
-                  aria-label="Focus areas"
-                >
-                  {active.focus.map((f) => (
-                    <span className="case__chip" key={f}>
-                      {f}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : null}
-      </Modal>
     </section>
   );
 }

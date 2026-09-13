@@ -1,18 +1,19 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MODULES } from '@/content/modules';
 import { INDUSTRIES } from '@/content/industries';
 import { STAGE_DEFINITIONS } from '@/content/methodology';
 import { PRIMARY_NAV, VALUE_STAGES } from '@/content/site';
+import { TEAM, VIDEO_SECTION } from '@/content/proof';
 import {
   CASE_STUDIES,
-  PLACEHOLDER_NOTE,
-  RESULTS,
-  TEAM,
-  TESTIMONIALS,
-  VIDEO_TESTIMONIALS,
-} from '@/content/proof';
+  ILLUSTRATIVE,
+  ILLUSTRATIVE_METRICS,
+  ILLUSTRATIVE_STAGES,
+} from '@/content/illustrative';
+import { TESTIMONIALS, VIDEO_TESTIMONIALS } from '@/content/testimonials';
+import { FAQ_GROUPS, SECTOR_FAQ } from '@/content/faq';
 
 /**
  * Guards the editorial rules that the brief treats as non-negotiable. These are
@@ -31,8 +32,39 @@ function walk(dir: string, out: string[] = []): string[] {
 
 const SOURCE_FILES = [...walk('src/content'), ...walk('src/app'), ...walk('src/components')];
 
+/**
+ * The one file allowed to hold an invented figure, quotation or organisation.
+ * Everything rendered from it carries a visible illustrative label; the tests
+ * below enforce both halves of that arrangement.
+ */
+const FIXTURE = join('src', 'content', 'illustrative.ts');
+
+/**
+ * Real, attributed, released client testimonials, including the figures they
+ * quote. A separate file from the fixture on purpose: the fixture's rule is
+ * "everything in here is invented and must be labelled", and this file's rule
+ * is the opposite one. Its own guard is `describe('client testimonials')`
+ * below.
+ */
+const CLIENT_EVIDENCE = join('src', 'content', 'testimonials.ts');
+
+/**
+ * The files a currency figure is allowed to live in.
+ *
+ * The rule this enforces has never been "only one file may hold a number". It
+ * is that no figure is ever inlined into a component, because a figure in a
+ * component is a figure nobody reviews. Both files here are single-purpose,
+ * reviewed content files that state what their numbers are and are not.
+ */
+const FIGURE_FILES = new Set([FIXTURE, CLIENT_EVIDENCE]);
+
 function readAll(): { file: string; text: string }[] {
   return SOURCE_FILES.map((file) => ({ file, text: readFileSync(file, 'utf8') }));
+}
+
+/** Everything except the illustrative fixture. */
+function readAllExceptFixture(): { file: string; text: string }[] {
+  return readAll().filter(({ file }) => file !== FIXTURE);
 }
 
 const BANNED_PHRASES = [
@@ -129,56 +161,134 @@ describe('unevidenced commercial claims', () => {
     expect(hits).toEqual([]);
   });
 
-  /**
-   * The site now has testimonial, case-study and team sections, so the rule is
-   * no longer "never write the word". It is that every one of those slots is an
-   * unmistakable placeholder: no real person, organisation or engagement is
-   * named anywhere until one is evidenced and approved.
-   */
-  it('names no client, and every proof slot stays a labelled placeholder', () => {
+  it('names no client anywhere', () => {
     const patterns = [/\btrusted by\b/i, /\bour clients include\b/i, /\bas used by\b/i];
     const hits: string[] = [];
     for (const { file, text } of readAll()) {
       for (const hit of assertedHits(text, patterns)) hits.push(`${file}: ${hit}`);
     }
     expect(hits).toEqual([]);
+  });
 
-    const attributed = [...TESTIMONIALS, ...VIDEO_TESTIMONIALS];
-    expect(attributed.length).toBeGreaterThan(0);
-    for (const entry of attributed) {
-      expect(entry.name).toBe('Name to be confirmed');
-      expect(entry.org).toBe('Client organisation');
+  /**
+   * The site publishes finished results, case studies and testimonials, and
+   * every one of them is invented. That is only safe under two conditions, and
+   * this file exists to hold both of them in place:
+   *
+   *   1. Containment — no invented figure lives outside the fixture.
+   *   2. Labelling  — every surface rendering one shows the label.
+   *
+   * Breaking either turns a demonstration into a fabricated client claim.
+   */
+  it('keeps every money figure inside a reviewed content file', () => {
+    const hits: string[] = [];
+    // `/dev/*` is disallowed in robots.ts and linked from nowhere. The
+    // styleguide needs a specimen figure to typeset; it is not published copy.
+    const published = readAll().filter(
+      ({ file }) => !FIGURE_FILES.has(file) && !file.includes(`app${sep}dev`)
+    );
+    for (const { file, text } of published) {
+      for (const match of text.matchAll(/[£$€]\s?\d[\d,.]*|\b(?:AED|SAR|USD|GBP)\s?\d[\d,.]*/g)) {
+        hits.push(`${file}: ${match[0]}`);
+      }
     }
+    expect(hits).toEqual([]);
+  });
 
-    expect(TEAM.members.length).toBeGreaterThan(0);
-    for (const member of TEAM.members) {
-      expect(member.name).toBe('Name to be confirmed');
-      expect(member.intro.toLowerCase()).toContain('placeholder');
+  it('labels the fixture unmistakably', () => {
+    expect(ILLUSTRATIVE.tag.toLowerCase()).toContain('illustrative');
+    expect(ILLUSTRATIVE.caseTag.toLowerCase()).toContain('placeholder');
+    expect(ILLUSTRATIVE.notice.toLowerCase()).toContain('not client results');
+  });
+
+  it('renders the label on every surface that shows a fixture figure', () => {
+    // Anything importing the fixture must also render its badge. `.map` is the
+    // give-away for a surface that lists fixture entries; a page that only
+    // reads a label constant is exempt because the label IS what it renders.
+    const consumers = readAllExceptFixture().filter(({ text }) =>
+      /from '@\/content\/illustrative'/.test(text)
+    );
+    expect(consumers.length).toBeGreaterThan(3);
+
+    const rendering = consumers.filter(({ file }) => !file.includes('sitemap'));
+    for (const { file, text } of rendering) {
+      expect(`${file} renders a badge`).toBe(
+        text.includes('placeholder-tag') && /ILLUSTRATIVE\.(tag|caseTag|mediaTag)/.test(text)
+          ? `${file} renders a badge`
+          : `${file} MISSING illustrative badge`
+      );
     }
+  });
 
-    for (const quote of TESTIMONIALS) {
-      expect(quote.quote.toLowerCase()).toContain('placeholder');
+  it('flags every fabricated entry as illustrative', () => {
+    expect(CASE_STUDIES.length).toBeGreaterThan(0);
+    for (const entry of CASE_STUDIES) {
+      expect(entry.illustrative).toBe(true);
     }
   });
 
   /**
-   * Results carry no figure at all. The reserved slot is the point: a number
-   * added here without a reporting period would be an invented client result.
+   * A published result means nothing without the period it covers. Every
+   * fixture figure therefore travels with one, and the stated engagement is on
+   * the page beside the numbers rather than in a footnote.
    */
-  it('publishes no result figure', () => {
-    for (const card of RESULTS.cards) {
-      expect(Object.keys(card)).not.toContain('value');
-      expect(JSON.stringify(card)).not.toMatch(/[£$]\s?\d/);
+  it('gives every set of figures a stated period and basis', () => {
+    for (const stage of ILLUSTRATIVE_STAGES) {
+      expect(stage.value).toMatch(/^£[\d,]+$/);
+      expect(stage.basis.length).toBeGreaterThan(20);
     }
-    expect(RESULTS.note.toLowerCase()).toContain('reporting period');
-    expect(PLACEHOLDER_NOTE.toLowerCase()).toContain('placeholder');
+    expect(ILLUSTRATIVE_STAGES.map((s) => s.stage)).toEqual([
+      'Estimated',
+      'Booked',
+      'Attended',
+      'Collected',
+    ]);
+
+    for (const metric of ILLUSTRATIVE_METRICS) {
+      expect(metric.basis.length).toBeGreaterThan(20);
+      expect(metric.href.startsWith('/')).toBe(true);
+    }
+
+    for (const study of CASE_STUDIES) {
+      expect(study.period.toLowerCase()).toMatch(/month|week|year/);
+      expect(study.stages.map((s) => s.stage)).toEqual([
+        'Estimated',
+        'Booked',
+        'Attended',
+        'Collected',
+      ]);
+      // A study that only lists what worked is a marketing document.
+      expect(study.caveats.length).toBeGreaterThan(1);
+    }
   });
 
-  /** Case studies are shaped, not claimed: no outcome figure on a card. */
-  it('states no outcome on a case study card', () => {
-    for (const study of CASE_STUDIES) {
-      expect(`${study.title} ${study.summary}`).not.toMatch(/\d+(\.\d+)?\s*%|[£$]\s?\d/);
+  /** Case-study figures never repeat between studies. */
+  it('varies the figures rather than reusing one set', () => {
+    const collected = CASE_STUDIES.map((s) => s.stages[3]?.value);
+    expect(new Set(collected).size).toBe(CASE_STUDIES.length);
+  });
+
+  /**
+   * The team is real colleagues, so the guard runs the opposite way to the one
+   * on the fixture: every member must be a named person with a reserved
+   * portrait path, and none of them may carry a placeholder string where a
+   * name should be. Inventing a colleague is not the same kind of placeholder
+   * as inventing an example, and this is what stops one becoming the other.
+   */
+  it('names a real person for every member of the team', () => {
+    expect(TEAM.members.length).toBeGreaterThan(0);
+    for (const member of TEAM.members) {
+      expect(member.name.length).toBeGreaterThan(2);
+      // Two words at minimum, so "TBC" or "Name to follow" cannot pass as one.
+      expect(member.name.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
+      expect(member.name.toLowerCase()).not.toMatch(/follow|tbc|placeholder|pending/);
+      expect(member.role.length).toBeGreaterThan(2);
+      expect(member.intro.length).toBeGreaterThan(40);
+      // The portrait slot is reserved whether or not the file exists yet, and
+      // the filename is derived from the id so the README stays true.
+      expect(member.photo).toBe(`/team/${member.id}.jpg`);
     }
+    expect(new Set(TEAM.members.map((m) => m.id)).size).toBe(TEAM.members.length);
   });
 
   it('still catches an asserted claim if one is introduced', () => {
@@ -193,6 +303,83 @@ describe('unevidenced commercial claims', () => {
     expect(
       assertedHits('No result is guaranteed and no industry average is published.', patterns)
     ).toEqual([]);
+  });
+});
+
+/**
+ * Real client testimonials carry the opposite obligations to the fixture.
+ *
+ * The fixture's danger is that something invented is read as evidence. This
+ * file's danger is the reverse: that a real, named outcome is quietly turned
+ * into a general claim — an average, a rate, a "clients typically". These
+ * tests hold the line between "this named person recovered this, over this
+ * period" and "this is what you will get".
+ */
+describe('client testimonials', () => {
+  it('attributes every quotation to a named person and a role', () => {
+    expect(TESTIMONIALS.length).toBeGreaterThanOrEqual(4);
+    for (const item of TESTIMONIALS) {
+      expect(item.name.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
+      expect(item.role.length).toBeGreaterThan(2);
+      expect(item.quote.length).toBeGreaterThan(40);
+      // An unattributed testimonial carrying a real claim is the one thing
+      // worse than an invented one, because nothing on the card is checkable.
+      expect(item.name.toLowerCase()).not.toMatch(/anonymous|a client|withheld/);
+    }
+    expect(new Set(TESTIMONIALS.map((t) => t.quote)).size).toBe(TESTIMONIALS.length);
+    expect(new Set(TESTIMONIALS.map((t) => t.id)).size).toBe(TESTIMONIALS.length);
+  });
+
+  it('gives every video figure a period, a basis and a recording', () => {
+    expect(VIDEO_TESTIMONIALS.length).toBeGreaterThan(0);
+    for (const item of VIDEO_TESTIMONIALS) {
+      expect(item.name.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
+      // A recovery figure with no window attached is not a result. The period
+      // is a separate field precisely so it cannot be dropped in a redesign.
+      expect(item.period.length).toBeGreaterThan(2);
+      expect(item.detail.length).toBeGreaterThan(20);
+      expect(item.video).toMatch(/^\/testimonials\/[a-z-]+\.mp4$/);
+    }
+    expect(new Set(VIDEO_TESTIMONIALS.map((v) => v.video)).size).toBe(VIDEO_TESTIMONIALS.length);
+  });
+
+  /**
+   * There is exactly one converted figure on the site, and the rule is that a
+   * conversion is never silent. If a second one appears, or if this one loses
+   * the working that justifies it, this fails.
+   */
+  it('shows its working for the one converted figure', () => {
+    const source = readFileSync(CLIENT_EVIDENCE, 'utf8');
+    const converted = VIDEO_TESTIMONIALS.filter((v) => /SAR/.test(v.detail));
+    expect(converted).toHaveLength(1);
+    // The arithmetic is in the file header, in full, with both pegs named.
+    expect(source).toContain('3.6725');
+    expect(source).toContain('3.75');
+    expect(source).toMatch(/27,000 AED[\s\S]{0,80}27,569\.78 SAR/);
+    expect(readFileSync(join('docs', 'CLAIMS_REGISTER.md'), 'utf8')).toContain('27,569.78');
+  });
+
+  /**
+   * The figures are six named outcomes, not a rate. This catches the sentence
+   * that would turn them into one, in the file itself and in the copy that
+   * frames the section.
+   */
+  it('never generalises a named outcome into an expectation', () => {
+    const text = [
+      readFileSync(CLIENT_EVIDENCE, 'utf8'),
+      readFileSync(join('src', 'content', 'proof.ts'), 'utf8'),
+    ].join('\n');
+    const patterns = [
+      /\b(typical|typically|on average|average of|expect to recover|you will recover)\b/i,
+      /\bclients? (typically|usually|generally)\b/i,
+      /\bup to [£$]\s?\d/i,
+    ];
+    expect(assertedHits(text, patterns)).toEqual([]);
+  });
+
+  /** The section framing has to say, in the page's own words, what these are. */
+  it('states on the page that no result is typical', () => {
+    expect(VIDEO_SECTION.note.toLowerCase()).toMatch(/not (an )?average|no result is typical/);
   });
 });
 
@@ -354,9 +541,10 @@ describe('navigation', () => {
       '/modules',
       '/industries/veterinary',
       '/industries/dental',
+      '/case-studies',
       '/about',
     ]);
-    const anchors = new Set(['results', 'case-studies']);
+    const anchors = new Set(['results']);
     for (const link of PRIMARY_NAV) {
       if (link.href.startsWith('/#')) {
         expect(anchors.has(link.href.slice(2))).toBe(true);
@@ -366,18 +554,86 @@ describe('navigation', () => {
     }
   });
 
-  /** Anchored nav items need the id they name to be rendered somewhere. */
+  /**
+   * An anchored nav item needs the id it names to be rendered on the homepage —
+   * rendered, not merely present in a file. The case-study section is commented
+   * out of `page.tsx` while the studies are placeholders, so `#case-studies` is
+   * no longer an anchor anywhere and the nav item points at the page instead.
+   * This reads the route file so that stays true.
+   */
   it('renders the ids the anchored nav items point at', () => {
-    const homeSources = [
-      'src/components/home/Results.tsx',
-      'src/components/home/CaseStudies.tsx',
-      'src/components/home/Team.tsx',
-    ]
+    const page = readFileSync(join('src', 'app', 'page.tsx'), 'utf8');
+    const mounted = ['Results', 'Team'].filter((name) =>
+      new RegExp(`^\\s*<${name} />`, 'm').test(page)
+    );
+    expect(mounted).toEqual(['Results', 'Team']);
+
+    const homeSources = ['src/components/home/Results.tsx', 'src/components/home/Team.tsx']
       .map((file) => readFileSync(file, 'utf8'))
       .join('\n');
     expect(homeSources).toContain('id="results"');
-    expect(homeSources).toContain('id="case-studies"');
     expect(homeSources).toContain('id="team"');
+
+    for (const link of PRIMARY_NAV.filter((l) => l.href.startsWith('/#'))) {
+      expect(homeSources).toContain(`id="${link.href.slice(2)}"`);
+    }
+  });
+});
+
+describe('frequently asked questions', () => {
+  it('answers the commercial questions rather than avoiding them', () => {
+    const all = FAQ_GROUPS.flatMap((g) => g.items);
+    expect(all.length).toBeGreaterThanOrEqual(8);
+
+    const questions = all.map((item) => item.q.toLowerCase()).join(' ');
+    // The two that are usually deferred to a proposal.
+    expect(questions).toMatch(/cost|priced/);
+    expect(questions).toMatch(/minimum term|term\b/);
+
+    for (const item of all) {
+      expect(item.q.endsWith('?')).toBe(true);
+      expect(item.a.join(' ').length).toBeGreaterThan(80);
+    }
+  });
+
+  it('carries a distinct set for each sector', () => {
+    const vet = SECTOR_FAQ.veterinary.map((i) => i.q);
+    const dental = SECTOR_FAQ.dental.map((i) => i.q);
+    expect(vet.length).toBeGreaterThanOrEqual(3);
+    expect(dental.length).toBeGreaterThanOrEqual(3);
+    expect(vet.filter((q) => dental.includes(q))).toEqual([]);
+  });
+
+  it('restates the clinical boundary rather than softening it', () => {
+    const text = [...FAQ_GROUPS.flatMap((g) => g.items), ...SECTOR_FAQ.veterinary]
+      .flatMap((item) => item.a)
+      .join(' ')
+      .toLowerCase();
+    expect(text).toMatch(/triages?, assesses?, advises?|no module triages/);
+  });
+});
+
+describe('case studies', () => {
+  it('covers both sectors and links each card to a page that exists', () => {
+    const sectors = new Set(CASE_STUDIES.map((s) => s.sector));
+    expect([...sectors].sort()).toEqual(['Dental', 'Veterinary']);
+
+    for (const study of CASE_STUDIES) {
+      expect(study.slug).toMatch(/^[a-z0-9-]+$/);
+      expect(['veterinary', 'dental']).toContain(study.sectorSlug);
+      expect(study.headline.length).toBe(2);
+      expect(study.metrics.length).toBeGreaterThanOrEqual(3);
+    }
+    expect(new Set(CASE_STUDIES.map((s) => s.slug)).size).toBe(CASE_STUDIES.length);
+  });
+
+  /** A fabricated study must not be indexed as though it were evidence. */
+  it('keeps placeholder studies out of the index and the sitemap', () => {
+    const page = readFileSync(join('src', 'app', 'case-studies', '[slug]', 'page.tsx'), 'utf8');
+    expect(page).toMatch(/robots:\s*study\.illustrative/);
+
+    const sitemap = readFileSync(join('src', 'app', 'sitemap.ts'), 'utf8');
+    expect(sitemap).toMatch(/filter\(\(s\) => !s\.illustrative\)/);
   });
 });
 
