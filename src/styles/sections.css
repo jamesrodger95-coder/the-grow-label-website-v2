@@ -1611,32 +1611,125 @@
    A single axis with four overlapping spans. The overlaps are the content:
    they are where one module hands over to the next.
    ========================================================================= */
+/* --------------------------------------------------------------------------
+   MODULE TIMELINE — the life of one opportunity, with the four spans over it.
+
+   Phases and spans share one coordinate space: the phase rules are drawn at
+   25/50/75% of the panel and the spans are positioned as percentages of the
+   same width, so a span crossing a rule is a module that genuinely spans two
+   phases. That is the whole argument of the device, and before this it was
+   only stated in a caption.
+   ----------------------------------------------------------------------- */
 .mtl {
+  /* One value, used by the panel padding AND by the rules and the playhead,
+     so all three share a content box. With the rules inset to 0 they were
+     drawn at 25/50/75% of the padded panel while the spans were positioned
+     against the content box inside it, and every boundary sat one padding
+     width out. */
+  --mtl-pad: clamp(18px, 2.2vw, 30px);
+  position: relative;
   display: grid;
-  gap: clamp(28px, 3.5vw, 44px);
+  gap: clamp(22px, 2.4vw, 32px);
+  padding: clamp(20px, 2.4vw, 32px) var(--mtl-pad) clamp(22px, 2.6vw, 34px);
+  border-radius: var(--gl-r-lg);
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1px var(--rule);
+  overflow: hidden;
 }
+
+/* The phase boundaries. Full height, behind everything. */
+.mtl__rules {
+  position: absolute;
+  inset: 0 var(--mtl-pad);
+  pointer-events: none;
+}
+.mtl__rules span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--at);
+  width: 1px;
+  background: var(--rule);
+}
+
+/* The sweep. Transform only, so it never leaves the compositor however long
+   it loops, and `linear` because a playhead that eases is a playhead that
+   lies about where the opportunity is. */
+/* Full width, with the line drawn at its own left edge. That is what makes
+   `translateX(100%)` exactly one panel width — a 2px element translated by
+   100% of itself would travel 2px. */
+.mtl__playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--mtl-pad);
+  right: var(--mtl-pad);
+  opacity: 0;
+  pointer-events: none;
+}
+.mtl__playhead::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--accent);
+}
+.mtl__playheadglow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -48px;
+  width: 48px;
+  background: linear-gradient(90deg, transparent, var(--accent-wash));
+}
+[data-motion="on"] .mtl__playhead {
+  animation: gl-mtl-sweep var(--gl-dur-ambient) linear infinite;
+}
+@keyframes gl-mtl-sweep {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  5%,
+  90% {
+    opacity: 1;
+  }
+  97%,
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* --- The phases ---------------------------------------------------------- */
 .mtl__axis {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--gl-s-4);
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--rule);
 }
 .mtl__stage {
   position: relative;
   display: grid;
   gap: 4px;
-  padding-top: var(--gl-s-4);
+  align-content: start;
+  padding: 0 var(--gl-s-4) 0 0;
+}
+.mtl__stage + .mtl__stage {
+  padding-left: var(--gl-s-4);
 }
 .mtl__tick {
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 28px;
+  width: 22px;
   height: 2px;
+  margin-bottom: 8px;
+  border-radius: 2px;
   background: var(--accent);
+  opacity: calc(0.45 + var(--i) * 0.18);
 }
 .mtl__stagekey {
   font-size: var(--gl-t-label);
@@ -1645,24 +1738,43 @@
 }
 .mtl__stagedetail {
   font-size: var(--gl-t-micro);
+  line-height: 1.45;
   color: var(--faint);
   max-width: 30ch;
 }
 
+/* --- The spans ----------------------------------------------------------- */
 .mtl__spans {
   position: relative;
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
+
+/* Per-module tone: the same ramp the relay and the cards use, so the three
+   devices on this page cannot drift apart. */
+.mtl__span[data-module="answer"] {
+  --tone: var(--gl-purple-400);
+}
+.mtl__span[data-module="respond"] {
+  --tone: var(--gl-purple-500);
+}
+.mtl__span[data-module="retain"] {
+  --tone: var(--gl-purple-600);
+}
+.mtl__span[data-module="reactivate"] {
+  --tone: var(--gl-purple-700);
+}
+
 .mtl__span {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 3px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 2px 12px;
   margin-left: var(--from);
   width: var(--width);
-  min-width: 8.5rem;
-  padding: 10px 14px 12px;
+  min-width: 9.5rem;
+  padding: 11px 14px 12px 18px;
   border-radius: var(--gl-r-sm);
   text-decoration: none;
   color: inherit;
@@ -1672,12 +1784,26 @@
     box-shadow var(--gl-dur-micro) var(--gl-ease),
     background var(--gl-dur-micro) var(--gl-ease);
 }
+/* The leading edge. This is where the module starts holding the opportunity,
+   so it is the one part of the bar drawn at full tone. */
 .mtl__spanbar {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
   border-radius: var(--gl-r-sm) 0 0 var(--gl-r-sm);
   background: var(--tone);
+}
+.mtl__spanhead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  grid-column: 1;
+}
+.mtl__spanidx {
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  color: var(--tone);
+  font-variant-numeric: tabular-nums;
 }
 .mtl__spanname {
   font-size: 1.0625rem;
@@ -1686,35 +1812,66 @@
   transition: color var(--gl-dur-micro) var(--gl-ease);
 }
 .mtl__spancaption {
+  grid-column: 1;
   font-size: var(--gl-t-micro);
+  line-height: 1.4;
   color: var(--muted);
 }
+/* The window, in the axis's own terms. A bar's edges are a measurement, and a
+   measurement with no units is decoration. */
+.mtl__spanrange {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: var(--gl-t-label);
+  font-weight: var(--gl-w-medium);
+  color: var(--ghost);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .mtl__span:hover,
 .mtl__span:focus-visible {
   outline: none;
   background: var(--panel);
-  box-shadow: inset 0 0 0 1px var(--accent);
+  box-shadow:
+    inset 0 0 0 1px var(--tone),
+    var(--gl-shadow-purple);
 }
 .mtl__span:hover .mtl__spanname,
 .mtl__span:focus-visible .mtl__spanname {
-  color: var(--accent);
-}
-.mtl__span:focus-visible {
-  box-shadow:
-    inset 0 0 0 1px var(--accent),
-    0 0 0 3px var(--accent-wash);
+  color: var(--tone);
 }
 
 /* Below the fold of a phone the offsets stop meaning anything, so the spans
-   become a plain stack and the axis becomes a two-up. */
+   become a plain stack, the axis becomes a two-up, and the shared coordinate
+   space — the rules and the playhead — goes with them. It cannot be read at
+   this width and a sweep across a stack would be describing nothing. */
 @media (max-width: 760px) {
   .mtl__axis {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     row-gap: var(--gl-s-5);
   }
+  .mtl__stage + .mtl__stage {
+    padding-left: 0;
+  }
+  .mtl__stage:nth-child(even) {
+    padding-left: var(--gl-s-4);
+  }
   .mtl__span {
     margin-left: 0;
     width: 100%;
+  }
+  .mtl__rules,
+  .mtl__playhead {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion="on"] .mtl__playhead {
+    animation: none;
+    opacity: 0;
   }
 }
 
