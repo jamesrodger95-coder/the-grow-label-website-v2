@@ -1,9 +1,7 @@
-import Link from 'next/link';
 import { RevealLines, Reveal } from '@/components/motion/Reveal';
 import { ActionLink } from '@/components/primitives';
 import { RecoveryField } from './RecoveryField';
 import { HERO } from '@/content/home';
-import { MODULES } from '@/content/modules';
 import { CTA } from '@/content/site';
 
 /**
@@ -39,20 +37,14 @@ export function Hero() {
                 {HERO.lead}
               </Reveal>
 
-              {/* One action. The route to how value is measured is carried by
-                  the value-stages section, the closing band and the platform
-                  page; a second button here only competed with the first. */}
+              {/* One action, and nothing under it. The four module chips and
+                  their "four modules, one recovery system" note used to close
+                  this column: eight words and four secondary controls competing
+                  with the one thing the hero is asking for, and the modules are
+                  reached from the nav, the losses table and the modules page
+                  anyway. The hero now ends on the ask. */}
               <Reveal className="hero__actions" variant="rise" index={5}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-              </Reveal>
-
-              <Reveal className="hero__modules" variant="rise" index={6}>
-                {MODULES.map((m) => (
-                  <Link className="modbtn" key={m.slug} href={`/modules/${m.slug}`}>
-                    {m.name}
-                  </Link>
-                ))}
-                <span className="hero__note">{HERO.modulesNote}</span>
               </Reveal>
             </div>
 

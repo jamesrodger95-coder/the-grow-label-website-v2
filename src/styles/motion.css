@@ -35,12 +35,26 @@
 .m-line {
   display: block;
   overflow: hidden;
+
+  /* Descenders fall outside the line box and the mask was cutting them off.
+     At the hero's 0.95 line-height the box is SHORTER than the type, so the
+     tail of a "y" — and the leg of a capital Y in a face that draws one below
+     the baseline — met the clip rather than the edge of the glyph.
+
+     The mask is extended below the line and the extension taken straight back
+     out of the layout, so nothing below the heading moves. The waiting line
+     has to clear the extension as well as the line box, which is why the
+     travel below is the extension plus the 106%, not 106% alone. Change one
+     and change the other. */
+  --gl-line-descent: 0.22em;
+  padding-bottom: var(--gl-line-descent);
+  margin-bottom: calc(var(--gl-line-descent) * -1);
 }
 .m-line > * {
   display: block;
 }
 [data-motion="on"] .m-line > * {
-  transform: translate3d(0, 106%, 0);
+  transform: translate3d(0, calc(106% + var(--gl-line-descent)), 0);
   transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
   transition-delay: calc(var(--i, 0) * var(--gl-stagger));
   /* will-change is set only while the line is waiting to run, and dropped the

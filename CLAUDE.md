@@ -74,10 +74,12 @@ These come from the brief and are enforced by tests, not just convention.
      released clients, including the figures on the video cards. No illustrative
      badge, because nothing about them is illustrative. What the test enforces
      instead: every quotation is attributed to a named person, every figure
-     carries its period as a separate field, and no copy in that file or in
-     `proof.ts` turns a named outcome into an average or an expectation. A
-     signed release per person is a prerequisite, tracked in
-     `docs/CLAIMS_REGISTER.md`.
+     carries its `qualifier` — the window it covers, or the count where the
+     client reported one instead — as a separate field, and no copy in that
+     file or in `proof.ts` turns a named outcome into an average or an
+     expectation. Never attach a window a client did not supply, and never
+     carry one across from a figure that has been restated. A signed release
+     per person is a prerequisite, tracked in `docs/CLAIMS_REGISTER.md`.
 
    The homepage case-study section is commented out in `src/app/page.tsx` while
    the studies are placeholders — invented evidence two sections from real
@@ -102,7 +104,8 @@ src/
     layout/      nav, footer, page header, legal page shell
     motion/      the only client components that exist for motion
     home/        the homepage's own sections and signature visuals
-    modules/     the modules index timeline
+    modules/     the modules index timeline and its header relay
+    platform/    the platform page's header device, "the pass"
     sector/      the veterinary and dental signature devices
     contact/     the assessment form
     primitives   design-system primitives, all server-rendered

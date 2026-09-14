@@ -709,34 +709,69 @@
   }
 }
 
-/* The headline. Sits above the frame and is set like one: the figure is the
-   loudest thing on the card, because it is the reason to watch. */
+/* --- The title ----------------------------------------------------------- */
+/* Sits above the frame and is set as a title, because that is what it is.
+
+   The earlier version stacked a purple number, a grey qualifier and a grey
+   detail, all left-aligned and all the same weight of grey. It read as a stat
+   block bolted to the top of a video, and the three lines had no hierarchy
+   between them beyond size.
+
+   Now the amount and the verb share one heading line — accent then ink, the
+   same size, so "$9,000 recovered" reads as a phrase — and the qualifier sits
+   below a hairline rule with an accent tick against it, which is what
+   separates the title from the supporting line without another font size. */
 .vcard__head {
-  margin: 0 0 16px;
+  margin: 0 0 18px;
 }
-.vcard__figure {
+.vcard__title {
+  display: block;
   margin: 0;
   font-family: var(--gl-font-display);
   font-size: clamp(1.5rem, 2.2vw, 1.875rem);
   font-weight: var(--gl-w-semi);
-  line-height: 1.12;
+  line-height: 1.1;
   letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.vcard__figure {
   color: var(--accent);
   /* No tabular-nums. See .result__figure: this face gives the comma a full
-     digit advance in that mode, which sets "$20,000" as "$20 , 000". */
+     digit advance in that mode, which sets "$10,000" as "$10 , 000". */
 }
-/* The qualifier stays attached to the figure and stays quiet. A recovery
-   figure without its window is a number, so the two never separate. */
-.vcard__period {
-  display: block;
-  margin-top: 4px;
-  font-size: var(--gl-t-micro);
+/* The verb that finishes the title. Ink, one step lighter than the amount, so
+   the eye takes the money first and the phrase second. */
+.vcard__outcome {
+  color: var(--fg);
+  font-weight: var(--gl-w-medium);
+}
+/* The window, or the count where the client reported one instead. Held under
+   the title by a rule and an accent tick — a figure without the thing it
+   covers is a number, so the two never separate. */
+.vcard__qual {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: var(--gl-t-small);
   font-weight: var(--gl-w-medium);
   letter-spacing: var(--gl-tr-body);
-  color: var(--faint);
+  color: var(--muted);
+}
+.vcard__qual::before {
+  content: "";
+  flex: none;
+  width: 14px;
+  height: 2px;
+  border-radius: var(--gl-r-pill);
+  background: var(--accent);
+  transform: translateY(-0.3em);
 }
 .vcard__detail {
   margin: 8px 0 0;
+  padding-left: 23px;
   font-size: var(--gl-t-micro);
   line-height: 1.5;
   color: var(--faint);
@@ -4148,6 +4183,409 @@
     animation: none;
   }
   [data-motion="on"] .station__panel::before {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   THE PASS — the platform page opening device.
+
+   Four panels, one quantity, four forms. Sibling to the relay on the modules
+   page and deliberately not its twin: the relay moves one opportunity ALONG a
+   rail past four stations, this redraws the same demand AS four things. Same
+   rail, same node, same one looping duration, different argument.
+
+   Authored lit, like the relay. The loop applies under [data-motion="on"]
+   only, so a blocked bundle leaves four finished diagrams rather than four
+   empty frames.
+   ========================================================================= */
+.pass {
+  position: relative;
+  margin-top: clamp(36px, 4vw, 60px);
+}
+
+/* --- The rail ------------------------------------------------------------ */
+.pass__rail {
+  position: relative;
+  height: 1px;
+  margin-bottom: 26px;
+  /* Horizontal clip only. The pulse runs past the end of the rail and would
+     otherwise sit out in the page gutter at the end of every loop; `overflow`
+     cannot be used because the rail is 1px tall and the pulse is 3px, so the
+     inset is negative on the block axis and zero on the inline one. */
+  clip-path: inset(-8px 0 -8px 0);
+}
+.pass__line {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--gl-purple-200),
+    var(--gl-edge) 30%,
+    var(--gl-edge) 70%,
+    var(--gl-purple-200)
+  );
+}
+/* Transform and opacity only, so it never leaves the compositor however long
+   it loops. */
+.pass__pulse {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 22%;
+  height: 3px;
+  border-radius: var(--gl-r-pill);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--gl-purple-300) 40%,
+    var(--gl-purple) 78%,
+    var(--gl-purple-400)
+  );
+  opacity: 0;
+}
+[data-motion="on"] .pass__pulse {
+  animation: gl-pass-pulse var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes gl-pass-pulse {
+  0% {
+    transform: translateX(-110%);
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  82% {
+    transform: translateX(465%);
+    opacity: 1;
+  }
+  92%,
+  100% {
+    transform: translateX(465%);
+    opacity: 0;
+  }
+}
+
+/* --- The four stages ----------------------------------------------------- */
+.pass__stages {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1.4vw, 18px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pass__stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The node on the rail, above its panel. Authored filled. */
+.pass__node {
+  position: absolute;
+  top: calc(-26px - 5px);
+  left: 22px;
+  display: grid;
+  place-items: center;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--gl-white);
+  box-shadow: 0 0 0 1px var(--gl-purple-300);
+}
+.pass__nodedot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gl-purple);
+}
+[data-motion="on"] .pass__node {
+  animation: gl-pass-node var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-pass-node {
+  0%,
+  4% {
+    box-shadow: 0 0 0 1px var(--gl-edge);
+  }
+  12%,
+  70% {
+    box-shadow: 0 0 0 1px var(--gl-purple-300);
+  }
+  86%,
+  100% {
+    box-shadow: 0 0 0 1px var(--gl-edge);
+  }
+}
+[data-motion="on"] .pass__nodedot {
+  animation: gl-pass-dot var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-pass-dot {
+  0%,
+  4% {
+    transform: scale(0.35);
+    opacity: 0.35;
+  }
+  12%,
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  86%,
+  100% {
+    transform: scale(0.35);
+    opacity: 0.35;
+  }
+}
+
+/* --- The panel ----------------------------------------------------------- */
+.pass__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 18px 18px 16px;
+  border-radius: var(--gl-r-lg);
+  background: var(--gl-white);
+  box-shadow: inset 0 0 0 1px var(--gl-edge);
+  overflow: hidden;
+}
+/* The wash that arrives with the pulse. A pseudo-element so the panel itself
+   never animates a paint property. */
+.pass__panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--gl-purple-50), transparent 62%);
+  opacity: 1;
+  pointer-events: none;
+}
+[data-motion="on"] .pass__panel::before {
+  animation: gl-pass-wash var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--s) * (var(--gl-dur-ambient) / -5));
+}
+@keyframes gl-pass-wash {
+  0%,
+  4% {
+    opacity: 0;
+  }
+  14%,
+  66% {
+    opacity: 1;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.pass__head {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin: 0 0 14px;
+}
+.pass__idx {
+  font-size: var(--gl-t-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--gl-purple-400);
+}
+.pass__key {
+  font-size: var(--gl-t-display-4);
+  font-weight: var(--gl-w-medium);
+  letter-spacing: var(--gl-tr-tight);
+  color: var(--gl-ink);
+}
+
+/* The diagram. Given a floor so the four panels agree on where the text under
+   them starts, whatever each drawing needs vertically. */
+.pass__art {
+  position: relative;
+  display: block;
+  margin-bottom: 16px;
+  padding: 12px 12px 10px;
+  border-radius: var(--gl-r-md);
+  background: var(--gl-paper);
+  box-shadow: inset 0 0 0 1px var(--gl-edge);
+}
+.pass__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.pass__detail {
+  position: relative;
+  margin: auto 0 0;
+  font-size: var(--gl-t-micro);
+  line-height: 1.5;
+  color: var(--gl-graphite);
+}
+
+/* --- The marks, shared by the four drawings ------------------------------ */
+/* Everything is authored at full strength. The loops below only cycle the
+   emphasis on the marks that carry each panel's point, in the order the pulse
+   reaches them. */
+.pass__lane,
+.pass__floor {
+  stroke: var(--gl-edge);
+  stroke-width: 1;
+}
+.pass__ceiling {
+  stroke: var(--gl-purple-300);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+.pass__mark {
+  fill: var(--gl-mist);
+}
+.pass__mark--lost {
+  fill: var(--gl-purple);
+}
+.pass__dot {
+  fill: var(--gl-purple-400);
+}
+.pass__owner {
+  fill: var(--gl-mist);
+}
+.pass__due {
+  fill: var(--gl-purple-200);
+}
+.pass__value {
+  fill: var(--gl-purple);
+}
+.pass__lanewell {
+  fill: var(--gl-mist);
+}
+.pass__work {
+  fill: var(--gl-purple-400);
+}
+.pass__track {
+  fill: var(--gl-mist);
+}
+.pass__stagebar[data-stage="1"] {
+  fill: var(--gl-stage-1);
+}
+.pass__stagebar[data-stage="2"] {
+  fill: var(--gl-stage-2);
+}
+.pass__stagebar[data-stage="3"] {
+  fill: var(--gl-stage-3);
+}
+.pass__stagebar[data-stage="4"] {
+  fill: var(--gl-stage-4);
+}
+
+/* The loop. Every mark is authored at its full size and the loop cycles
+   EMPHASIS only, never geometry — the same rule the card previews follow, and
+   it is not a stylistic preference. A bar that scales from nothing on a seven
+   second loop spends part of every cycle reading as an empty chart, and a
+   diagram that is momentarily wrong is worse than one that does not move: a
+   reader who glances at the panel during that part of the loop sees four
+   stages with no value in them, on the page whose entire argument is that the
+   four stages are measured separately and honestly.
+
+   So the marks fade up in sequence behind the pulse and stay up. Each delay
+   comes from the mark's index and the one looping duration; nothing here is a
+   typed number. */
+[data-motion="on"] .pass__mark--lost {
+  animation: gl-pass-lift var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(var(--n, 0) * (var(--gl-dur-ambient) / -28));
+}
+/* The dim floor is 0.42, not something near zero. Three of the four stage
+   tones are already translucent, so a deeper floor took that panel to blank
+   paper for part of every loop — which is the exact failure the note above
+   describes, arriving through opacity instead of through scale. At 0.42 the
+   diagram is legible at every point in the cycle and the lift still reads. */
+@keyframes gl-pass-lift {
+  0%,
+  6% {
+    opacity: 0.42;
+  }
+  16%,
+  74% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 0.42;
+  }
+}
+
+/* Stage two answers a fifth of a loop later, stage three two fifths, stage
+   four three fifths — the same 1/5 step the nodes and the washes use, so the
+   four panels light in the order the pulse reaches them. */
+[data-motion="on"] .pass__due,
+[data-motion="on"] .pass__value {
+  animation: gl-pass-lift var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc((var(--gl-dur-ambient) / -5) + var(--n, 0) * (var(--gl-dur-ambient) / -40));
+}
+[data-motion="on"] .pass__work {
+  animation: gl-pass-lift var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(
+    (var(--gl-dur-ambient) / -2.5) + var(--n, 0) * (var(--gl-dur-ambient) / -40)
+  );
+}
+[data-motion="on"] .pass__stagebar {
+  animation: gl-pass-lift var(--gl-dur-ambient) var(--gl-ease) infinite;
+  animation-delay: calc(
+    (var(--gl-dur-ambient) / -1.7) + var(--n, 0) * (var(--gl-dur-ambient) / -34)
+  );
+}
+
+/* --- Narrower ------------------------------------------------------------ */
+@media (max-width: 1080px) {
+  .pass__stages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 14px;
+  }
+  /* The rail only spans the first row once the grid wraps, so the nodes on the
+     second row would hang off nothing. */
+  .pass__stage:nth-child(n + 3) .pass__node {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .pass__stages {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pass__rail {
+    display: none;
+  }
+  .pass__node {
+    display: none;
+  }
+  .pass__panel {
+    padding: 15px 16px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The authored state: every stage lit, every mark full, no pulse. */
+  [data-motion="on"] .pass__pulse {
+    animation: none;
+    opacity: 0;
+  }
+  [data-motion="on"] .pass__node,
+  [data-motion="on"] .pass__nodedot,
+  [data-motion="on"] .pass__panel::before,
+  [data-motion="on"] .pass__mark--lost,
+  [data-motion="on"] .pass__due,
+  [data-motion="on"] .pass__value,
+  [data-motion="on"] .pass__work,
+  [data-motion="on"] .pass__stagebar {
+    animation: none;
+  }
+  [data-motion="on"] .pass__panel::before,
+  [data-motion="on"] .pass__mark--lost,
+  [data-motion="on"] .pass__due,
+  [data-motion="on"] .pass__value,
+  [data-motion="on"] .pass__work,
+  [data-motion="on"] .pass__stagebar {
     opacity: 1;
   }
 }

@@ -41,16 +41,24 @@ export function VideoCard({
 }) {
   return (
     <figure className="vcard">
-      {/* The figure leads the card, above the frame, because it is what the
-          recording is about. Set in the accent at display weight so it reads
-          as a heading rather than as a caption. The period is a separate line
-          and never separates from it: a recovery figure without its window is
-          a number, not a result. */}
+      {/* The title leads the card, above the frame, because it is what the
+          recording is about.
+
+          It is a real heading, not a number with a caption under it. The
+          amount carries the accent and the verb beside it is set in ink at the
+          same size, so the line reads as an amount-and-verb phrase rather than
+          as a statistic someone has labelled. (No example here: the amount is
+          the one thing that may not be typed outside a reviewed content file,
+          and a comment is not one.) The qualifier sits under a
+          rule on its own line and never separates from the figure: a recovery
+          figure without the window or the count it covers is a number, not a
+          result. */}
       <figcaption className="vcard__head">
-        <p className="vcard__figure">
-          {video.figure}
-          <span className="vcard__period">{video.period}</span>
-        </p>
+        <h3 className="vcard__title">
+          <span className="vcard__figure">{video.figure}</span>{' '}
+          <span className="vcard__outcome">{video.outcome}</span>
+        </h3>
+        <p className="vcard__qual">{video.qualifier}</p>
         <p className="vcard__detail">{video.detail}</p>
       </figcaption>
 

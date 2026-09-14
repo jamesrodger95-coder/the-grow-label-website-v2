@@ -9,7 +9,6 @@ export const HERO = {
   /** Line breaks are a design decision, so the headline is authored as lines. */
   titleLines: ['Recover the revenue', 'you already earned.'],
   lead: 'Grow Label watches every call, enquiry, recall and open treatment plan your practice generates. It works the ones that were missed and reports what came back at four separate stages, so the number survives a board meeting.',
-  modulesNote: 'Four modules, one recovery system',
   columnLabel: 'A working day',
   columnNote:
     'Every open slot in a working schedule is demand that already existed and did not arrive.',

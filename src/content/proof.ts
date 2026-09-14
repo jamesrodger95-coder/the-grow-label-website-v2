@@ -60,7 +60,7 @@ export const VIDEO_SECTION = {
    * of competing with the heading, but it does have to be there, and a test
    * fails the build if it goes missing.
    */
-  foot: 'Each figure is that client’s own reported recovery over the period shown on their card. No result is typical and none of these is an average.',
+  foot: 'Each figure is that client’s own reported recovery over the window, or across the number of patients, shown on their card. No result is typical and none of these is an average.',
 } as const;
 
 /* -------------------------------------------------------------------------- */

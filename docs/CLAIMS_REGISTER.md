@@ -59,7 +59,7 @@ rounding, hedge or illustration of these may appear on any page.
 
 | Claim                                                              | Evidence needed to publish                                                        |
 | ------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| Any recovered-revenue figure, in any currency †                    | The client's own reporting, written client permission, and a stated period        |
+| Any recovered-revenue figure, in any currency †                    | The client's own reporting, written client permission, and a stated qualifier     |
 | Any percentage uplift, conversion rate or improvement              | A defined baseline, a defined method, and a sample size worth quoting             |
 | Any client logo or mark                                            | Written permission naming the specific usage                                      |
 | Any case study                                                     | Client sign-off on both the figures and the narrative                             |
@@ -74,10 +74,10 @@ rounding, hedge or illustration of these may appear on any page.
 
 † Three recovered-revenue figures **are** published, on the video testimonial
 cards. They are not an exception to this row, they are this row being satisfied:
-each is one named client's own reported figure over a stated period, published
-with permission and never generalised. See _Published — named client
-testimonials_ below. The row stays blocked for every figure that does not meet
-all three conditions.
+each is one named client's own reported figure, published with permission,
+carrying the window or the patient count the client stated, and never
+generalised. See _Published — named client testimonials_ below. The row stays
+blocked for every figure that does not meet all three conditions.
 
 ### Where the site would have used one of these
 
@@ -107,39 +107,50 @@ illustrative.
 > entries — the recording itself and the figure printed above it. Nothing here
 > is safe on a verbal yes.
 
-| Person            | Role                    | Surface       | Figure published        | Release on file |
-| ----------------- | ----------------------- | ------------- | ----------------------- | --------------- |
-| Dr Elias Hussain  | Dentist                 | Quote + video | $20,000 over two months | ☐ Outstanding   |
-| Dr Hassan Qureshi | Dental Practice Owner   | Quote + video | 19 gaps / SAR 27,570 †  | ☐ Outstanding   |
-| Dr Samir Haddad   | Dentist                 | Quote + video | AED 33,000              | ☐ Outstanding   |
-| Dr Daniel Reed    | Veterinary Surgeon      | Quote         | None                    | ☐ Outstanding   |
-| Laura Bennett     | Veterinary Practice Mgr | Quote         | None                    | ☐ Outstanding   |
-| Sophie Harris     | Veterinary Practice Mgr | Quote         | None                    | ☐ Outstanding   |
+| Person            | Role                    | Surface       | Figure published         | Release on file |
+| ----------------- | ----------------------- | ------------- | ------------------------ | --------------- |
+| Dr Elias Hussain  | Dentist                 | Quote + video | $10,000+ / 30 patients † | ☐ Outstanding   |
+| Dr Hassan Qureshi | Dental Practice Owner   | Quote + video | $8,000 in first month    | ☐ Outstanding   |
+| Dr Samir Haddad   | Dentist                 | Quote + video | $9,000 in three weeks    | ☐ Outstanding   |
+| Dr Daniel Reed    | Veterinary Surgeon      | Quote         | None                     | ☐ Outstanding   |
+| Laura Bennett     | Veterinary Practice Mgr | Quote         | None                     | ☐ Outstanding   |
+| Sophie Harris     | Veterinary Practice Mgr | Quote         | None                     | ☐ Outstanding   |
 
-† **The one converted figure on the site.** Dr Qureshi's recovery was reported
-as 27,000 dirhams, but the practice is in Saudi Arabia, so it is published in
-riyals. Both currencies are pegged to the dollar and neither peg has moved in
-decades — AED 3.6725/USD since 1997, SAR 3.75/USD since 1986 — so the
-conversion carries no exchange date and will not drift:
+† **No time window supplied.** Dr Hussain's outcome was reported as a count —
+30 returning patients, over $10,000 — with no period attached. It is published
+as the count, and the card's qualifier line carries the count rather than a
+window. Do not attach a window to it: the earlier card read "recovered in two
+months" against a different figure, and carrying that period across to a
+restated figure would be inventing evidence. Confirm the window with the client
+and it moves onto the card; until then the count stands alone.
+
+**There is no converted figure on the site.** Until the three video figures were
+restated in the currency each client reported, Dr Qureshi's recovery was the one
+converted figure: reported as 27,000 dirhams and published in riyals, because
+the practice is in Saudi Arabia and both currencies are pegged to the dollar —
+AED 3.6725/USD since 1997, SAR 3.75/USD since 1986:
 
 ```
 27,000 AED ÷ 3.6725 = 7,351.94 USD × 3.75 = 27,569.78 SAR
 ```
 
-Published as **SAR 27,570**. A unit test fails if a second converted figure
-appears, or if this one loses the working above.
+That figure is superseded and appears nowhere on the site. The working is kept
+here because a superseded figure that was once published is one a reader may
+still have seen, and because the question it raised — whether "DHS" in the
+handover was a slip for riyals — is still worth settling before the release is
+countersigned.
 
-**Still to confirm with the client.** If the figure was always riyals and "DHS"
-was a slip in the handover, the correct number is **SAR 27,000** and this
-conversion should be undone. Settle it before the release is countersigned.
+A unit test fails if any future figure is published in a currency it was not
+reported in without the same working in `src/content/testimonials.ts`.
 
 **What keeps these safe.** Each figure is that client's own reported recovery
-over a stated period, never annualised, and converted between currencies only
-in the single documented case above. The section note on the page says in its
+over the window or the count they stated, never annualised, and never converted
+into a currency it was not reported in. The section note on the page says in its
 own words that nothing shown is an average and no result is typical, and
 `describe('client testimonials')` in `tests/unit/content-integrity.test.ts`
-fails the build if a period is dropped, if a name becomes anonymous, or if any
-copy in that file or in `proof.ts` generalises one of these into an expectation.
+fails the build if a qualifier is dropped, if a name becomes anonymous, or if
+any copy in that file or in `proof.ts` generalises one of these into an
+expectation.
 
 **To withdraw one.** Delete the entry. Do not anonymise it: an unattributed
 quotation carrying a real figure is the one thing worse than an invented one,
@@ -200,21 +211,21 @@ cards render correctly without them.
 Not marketing claims: facts the site legitimately needs and does not yet have.
 Each is currently either absent or explicitly flagged on the page itself.
 
-| Item                                                                  | Where it belongs               | Current state                            |
-| --------------------------------------------------------------------- | ------------------------------ | ---------------------------------------- |
-| Portrait photograph: Trent Overy (4:5, 800×1000)                      | `/#team`                       | Reserved frame; other three supplied     |
-| Video testimonial recordings                                          | Videos section                 | **All three supplied and live**          |
-| Captions (WebVTT) for the three recordings                            | Videos section                 | Empty `<track>` wired, no files yet      |
-| Signed releases for all six named clients                             | Videos and quotes sections     | **Outstanding — see the table above**    |
-| Confirm Dr Qureshi's figure was dirhams, not riyals                   | Videos section                 | **Outstanding — converted; see † above** |
-| Registered company name and number                                    | `/terms`, footer               | Absent; flagged on the page              |
-| Registered office address                                             | `/terms`, `/privacy`           | Absent; flagged on the page              |
-| Named data controller and contact route                               | `/privacy`                     | Absent; flagged on the page              |
-| ICO registration number, if applicable                                | `/privacy`                     | Absent                                   |
-| Retention schedule for enquiry data                                   | `/privacy`                     | Described in principle, not in periods   |
-| The delivery provider actually used, named                            | `/privacy` third-party section | Described generically                    |
-| Confirmed governing-law jurisdiction                                  | `/terms`                       | Assumed England and Wales — confirm      |
-| Real published fee-schedule wording, if the assessment references one | `/contact`                     | Not referenced                           |
+| Item                                                                  | Where it belongs               | Current state                             |
+| --------------------------------------------------------------------- | ------------------------------ | ----------------------------------------- |
+| Portrait photograph: Trent Overy (4:5, 800×1000)                      | `/#team`                       | Reserved frame; other three supplied      |
+| Video testimonial recordings                                          | Videos section                 | **All three supplied and live**           |
+| Captions (WebVTT) for the three recordings                            | Videos section                 | Empty `<track>` wired, no files yet       |
+| Signed releases for all six named clients                             | Videos and quotes sections     | **Outstanding — see the table above**     |
+| Confirm the period behind Dr Hussain's 30 patients / $10,000          | Videos section                 | **Outstanding — count only; see † above** |
+| Registered company name and number                                    | `/terms`, footer               | Absent; flagged on the page               |
+| Registered office address                                             | `/terms`, `/privacy`           | Absent; flagged on the page               |
+| Named data controller and contact route                               | `/privacy`                     | Absent; flagged on the page               |
+| ICO registration number, if applicable                                | `/privacy`                     | Absent                                    |
+| Retention schedule for enquiry data                                   | `/privacy`                     | Described in principle, not in periods    |
+| The delivery provider actually used, named                            | `/privacy` third-party section | Described generically                     |
+| Confirmed governing-law jurisdiction                                  | `/terms`                       | Assumed England and Wales — confirm       |
+| Real published fee-schedule wording, if the assessment references one | `/contact`                     | Not referenced                            |
 
 ---
 

@@ -27,25 +27,20 @@
  * ---------------------------------------------------------------------------
  * CURRENCY
  * ---------------------------------------------------------------------------
- * Figures are shown in the currency of the practice they came from, and the
- * unit is part of the string so no component ever has to format one.
+ * Figures are shown in the currency the client reported them in, and the unit
+ * is part of the string so no component ever has to format one. All three
+ * video figures are now reported in dollars, as supplied.
  *
- * A converted figure is a figure with a rate and a date hidden inside it, so
- * there is exactly one on this site and neither is hidden: Dr Qureshi's
- * recovery was reported as 27,000 dirhams but the practice is in Saudi Arabia,
- * so it is published in riyals. Both currencies are pegged to the dollar and
- * neither peg has moved in decades — AED 3.6725/USD since 1997, SAR 3.75/USD
- * since 1986 — which is why the conversion has no date attached to it and will
- * not drift:
+ * There is no converted figure on this site any more. There used to be exactly
+ * one — Dr Qureshi's recovery, reported in dirhams and published in riyals at
+ * the two standing dollar pegs — and it went when the three figures were
+ * restated in dollars. `docs/CLAIMS_REGISTER.md` keeps the arithmetic on
+ * record for the superseded figure.
  *
- *     27,000 AED ÷ 3.6725 = 7,351.94 USD × 3.75 = 27,569.78 SAR
- *
- * Published as SAR 27,570. The working is repeated in
- * `docs/CLAIMS_REGISTER.md` so it is reviewable without reading the source.
- *
- * Worth confirming with the client before the release is countersigned: if the
- * figure was always riyals and "DHS" was a slip in the handover, the correct
- * number is SAR 27,000 and this conversion should be undone.
+ * A converted figure is a figure with a rate and a date hidden inside it. If
+ * one is ever added back, the rate, the working and the reason go in this
+ * header and in the claims register, and `content-integrity.test.ts` fails
+ * until they do.
  */
 
 /* -------------------------------------------------------------------------- */
@@ -131,13 +126,24 @@ export type VideoTestimonial = {
   /** Where the practice is, which is the only location detail published. */
   location: string;
   /**
-   * The headline outcome, split so the figure can be set in the accent and the
-   * qualifier cannot be separated from it. `period` is not optional: a recovery
-   * figure without the window it covers is not a result, it is a number.
+   * The card's title, in three parts, because a title is what this is — not a
+   * number with a caption under it.
+   *
+   * `figure` is the amount and carries the accent. `outcome` is the verb that
+   * finishes the title line and is set in ink beside it, so the card reads
+   * "$9,000 recovered" as one phrase rather than as a statistic. `qualifier`
+   * is the window or the basis, on its own line underneath.
+   *
+   * `qualifier` is not optional: a recovery figure without the window it
+   * covers is not a result, it is a number. It was called `period` when every
+   * entry carried a time window; it is called `qualifier` now because one
+   * entry's client reported a count rather than a window, and calling a count
+   * a period would have been the first step to inventing one.
    */
   figure: string;
-  period: string;
-  /** One line on what the figure is, under the headline. */
+  outcome: string;
+  qualifier: string;
+  /** One line on what the figure is, under the title. */
   detail: string;
   /**
    * The recording, under `public/testimonials/`. There is no poster field and
@@ -157,8 +163,12 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     name: 'Dr Elias Hussain',
     role: 'Dentist',
     location: 'United Arab Emirates',
-    figure: '$20,000',
-    period: 'recovered in two months',
+    figure: '$10,000+',
+    outcome: 'recovered',
+    // The client reported a count, not a window. It is published as the count,
+    // because the alternative is to attach a period nobody supplied. If the
+    // window is confirmed, it belongs here and the count moves to `detail`.
+    qualifier: 'across 30 returning patients',
     detail: 'Treatment already accepted, rebooked and attended.',
     video: '/testimonials/elias-hussain.mp4',
     hue: 250,
@@ -168,13 +178,10 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     name: 'Dr Hassan Qureshi',
     role: 'Dental Practice Owner',
     location: 'Saudi Arabia',
-    figure: '19 gaps filled',
-    period: 'in one month',
-    // The one converted figure on the site. See the CURRENCY note at the head
-    // of this file: reported as 27,000 dirhams, converted to riyals at the two
-    // standing dollar pegs because the practice is Saudi. Rate and working are
-    // recorded in docs/CLAIMS_REGISTER.md.
-    detail: 'SAR 27,570 recovered from short-notice diary gaps.',
+    figure: '$8,000',
+    outcome: 'recovered',
+    qualifier: 'in the first month',
+    detail: 'Enquiries answered inside the window, before the caller went elsewhere.',
     video: '/testimonials/hassan-qureshi.mp4',
     hue: 266,
   },
@@ -183,8 +190,9 @@ export const VIDEO_TESTIMONIALS: VideoTestimonial[] = [
     name: 'Dr Samir Haddad',
     role: 'Dentist',
     location: 'United Arab Emirates',
-    figure: 'AED 33,000',
-    period: 'recovered',
+    figure: '$9,000',
+    outcome: 'recovered',
+    qualifier: 'within three weeks',
     detail: 'Patients overdue a visit, contacted and returned to the diary.',
     video: '/testimonials/samir-haddad.mp4',
     hue: 236,

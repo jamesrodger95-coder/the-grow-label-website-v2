@@ -300,13 +300,19 @@
 }
 /* The panel takes more of the row and sits hard against the right edge: it is
    the thing worth looking at, and the copy column had more width than its
-   30rem measure could use.  lifts the panel out of the
-   dead space it used to leave under the shorter copy column. */
+   30rem measure could use.
+
+   `align-items: start`, not `center`. Centring was right while the copy column
+   ran to the four module chips and was nearly as tall as the panel. With the
+   chips gone the column is barely half its height, and centring it opened a
+   gap between the headline and the lead that read as a missing element. The
+   copy now starts directly under the headline, which is where a reader coming
+   off the last line of the title is already looking. */
 .hero__base {
   display: grid;
   grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
   gap: clamp(28px, 3.4vw, 56px);
-  align-items: center;
+  align-items: start;
 }
 .hero__copy {
   max-width: 30rem;
@@ -324,20 +330,17 @@
   gap: 12px;
   margin-bottom: clamp(18px, 2.4vh, 34px);
 }
-.hero__modules {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-  padding-top: var(--gl-s-5);
-  border-top: 1px solid var(--gl-edge);
-}
 /* --------------------------------------------------------------------------
    MODULE BUTTON — the purple control.
 
-   Every route into a module uses this one class: the hero chips, the module
-   switcher at the foot of a module page, and the modules index. Purple is the
-   signal colour, so the four things that do the recovering are the four
-   things that carry it.
+   Every route into a module uses this one class: the module switcher at the
+   foot of a module page, and the modules index. Purple is the signal colour,
+   so the four things that do the recovering are the four things that carry it.
+
+   The hero used to carry four of these under its call to action, with a
+   "four modules, one recovery system" note beside them. They are gone: the
+   hero asks for one thing, and four secondary controls under the primary one
+   were competing with it.
 
    Measured: 700 on 50 is 10.37, white on 500 is 7.80, white on 600 is 9.51.
    Only the border sits below AA, and it carries no text.
@@ -414,13 +417,6 @@
   background: var(--gl-purple-ondark);
   border-color: var(--gl-purple-ondark);
   color: var(--gl-graphite-deep);
-}
-
-.hero__note {
-  padding: 7px 2px;
-  color: var(--gl-slate-soft);
-  font-size: var(--gl-t-micro);
-  font-weight: var(--gl-w-regular);
 }
 
 @media (max-width: 1024px) {

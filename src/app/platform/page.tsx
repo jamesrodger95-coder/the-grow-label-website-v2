@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { PlatformHero } from '@/components/platform/PlatformHero';
 import { Reveal } from '@/components/motion/Reveal';
 import {
   ActionLink,
@@ -31,13 +32,19 @@ const STAGE_ROWS = [
 export default function PlatformPage() {
   return (
     <>
+      {/* The pass replaces the four-item key/value strip that used to close
+          this header. This page's argument is that a figure can be opened back
+          into the event that caused it — a claim about a transformation, and
+          four boxes of prose is the one form that cannot show one. The device
+          reads the same four entries from `PLATFORM.strip`, so the copy has
+          not moved. */}
       <PageHeader
         label={PLATFORM.label}
         meta="Four layers · four modules · four stages"
         title={PLATFORM.title}
         emphasis={PLATFORM.emphasis}
         lead={PLATFORM.lead}
-        strip={PLATFORM.strip}
+        feature={<PlatformHero />}
       />
 
       {/* Architecture -------------------------------------------- */}

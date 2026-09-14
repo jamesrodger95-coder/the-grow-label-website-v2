@@ -338,13 +338,17 @@ describe('client testimonials', () => {
     expect(new Set(TESTIMONIALS.map((t) => t.id)).size).toBe(TESTIMONIALS.length);
   });
 
-  it('gives every video figure a period, a basis and a recording', () => {
+  it('gives every video figure a qualifier, a basis and a recording', () => {
     expect(VIDEO_TESTIMONIALS.length).toBeGreaterThan(0);
     for (const item of VIDEO_TESTIMONIALS) {
       expect(item.name.trim().split(/\s+/).length).toBeGreaterThanOrEqual(2);
-      // A recovery figure with no window attached is not a result. The period
-      // is a separate field precisely so it cannot be dropped in a redesign.
-      expect(item.period.length).toBeGreaterThan(2);
+      // A recovery figure with nothing attached is not a result. The qualifier
+      // carries the window, or the count where the client reported one instead
+      // of a window, and is a separate field precisely so a redesign cannot
+      // drop it. The verb that completes the title is separate for the same
+      // reason: "$9,000" alone says nothing about what happened to it.
+      expect(item.qualifier.length).toBeGreaterThan(2);
+      expect(item.outcome.length).toBeGreaterThan(2);
       expect(item.detail.length).toBeGreaterThan(20);
       expect(item.video).toMatch(/^\/testimonials\/[a-z-]+\.mp4$/);
     }
@@ -352,19 +356,23 @@ describe('client testimonials', () => {
   });
 
   /**
-   * There is exactly one converted figure on the site, and the rule is that a
-   * conversion is never silent. If a second one appears, or if this one loses
-   * the working that justifies it, this fails.
+   * A conversion is never silent. There is no converted figure on the site at
+   * present — the one there used to be went when the three video figures were
+   * restated in the currency the clients reported them in — so this passes on
+   * an empty set. It exists for the next one: publish a figure in a currency
+   * it was not reported in and the rate, the working and both pegs have to be
+   * in the content file's own header before this goes green again.
    */
-  it('shows its working for the one converted figure', () => {
+  it('shows its working for any converted figure', () => {
     const source = readFileSync(CLIENT_EVIDENCE, 'utf8');
-    const converted = VIDEO_TESTIMONIALS.filter((v) => /SAR/.test(v.detail));
-    expect(converted).toHaveLength(1);
-    // The arithmetic is in the file header, in full, with both pegs named.
-    expect(source).toContain('3.6725');
-    expect(source).toContain('3.75');
-    expect(source).toMatch(/27,000 AED[\s\S]{0,80}27,569\.78 SAR/);
-    expect(readFileSync(join('docs', 'CLAIMS_REGISTER.md'), 'utf8')).toContain('27,569.78');
+    const converted = VIDEO_TESTIMONIALS.filter((v) =>
+      /\b(SAR|AED|DHS)\b/.test(`${v.figure} ${v.detail}`)
+    );
+    for (const item of converted) {
+      // The arithmetic belongs in the file header, in full, with the peg named.
+      expect(source).toMatch(/÷\s*[\d.]+\s*=/);
+      expect(source).toMatch(new RegExp(`${item.name.split(' ').pop()}`));
+    }
   });
 
   /**
