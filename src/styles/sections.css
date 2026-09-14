@@ -249,68 +249,12 @@
   border-top: 1px solid var(--rule);
 }
 
-/* --- The operational detail underneath the money ------------------------- */
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 14px;
-}
-@media (max-width: 1000px) {
-  .metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 560px) {
-  .metrics {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-.metric {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: clamp(18px, 2vw, 24px);
-  border-radius: var(--gl-r-lg);
-  background: var(--panel);
-  box-shadow: inset 0 0 0 1px var(--rule);
-}
-.metric__value {
-  margin: 0;
-  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
-  font-weight: var(--gl-w-medium);
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  /* See .result__figure: tabular figures space the comma. */
-  color: var(--fg);
-}
-.metric__label {
-  margin: 0;
-  font-size: var(--gl-t-small);
-  font-weight: var(--gl-w-medium);
-  line-height: 1.35;
-}
-.metric__basis {
-  margin: 0;
-  color: var(--faint);
-  flex: 1;
-}
-.metric__module {
-  display: inline-flex;
-  align-items: center;
-  align-self: flex-start;
-  margin-top: 6px;
-  padding-top: 12px;
-  font-size: var(--gl-t-micro);
-  font-weight: var(--gl-w-medium);
-  letter-spacing: var(--gl-tr-label);
-  text-transform: uppercase;
-  color: var(--accent);
-  transition: color var(--gl-dur-micro) var(--gl-ease);
-}
-.metric__module:hover {
-  color: var(--fg);
-}
+/* The eight-card `.metrics` grid that used to close this section is gone with
+   the markup that rendered it. The section's argument is that a recovery
+   figure is four numbers and not one; following those four with eight more of
+   a different shape buried the point under its own supporting detail. The
+   operational figures still exist in `illustrative.ts` and the module pages
+   still carry the detail they described. */
 
 /* ==========================================================================
    CASE STUDIES — cards that scale and lift, ready to link out
@@ -1118,6 +1062,7 @@
 }
 
 .leak {
+  position: relative;
   display: grid;
   grid-template-columns: 3px 2.25rem minmax(0, 1fr) auto;
   grid-template-areas:
@@ -1131,6 +1076,36 @@
   text-decoration: none;
   color: inherit;
   transition: border-color var(--gl-dur-micro) var(--gl-ease);
+}
+/* The highlight. A wash behind the whole row rather than a colour change on
+   three words, because six rows of the same weight need the pointer to say
+   which one it is on before anything is read.
+
+   It bleeds past the row's own box so the wash clears the type, and it exists
+   at rest at zero opacity, so lighting it moves nothing: the row still opens
+   and closes on the same baseline grid. */
+.leak::before {
+  content: "";
+  position: absolute;
+  inset: 2px calc(var(--gl-s-4) * -1) 1px;
+  border-radius: var(--gl-r-xs);
+  /* `--accent-wash` is the theme-aware default; the section this lives in is a
+     white surface, where the 7% wash was too faint to answer "which row am I
+     on" at a glance, so the light case gets the opaque quiet tint instead. */
+  background: var(--accent-wash);
+  opacity: 0;
+  transition: opacity var(--gl-dur-micro) var(--gl-ease);
+}
+.on-light .leak::before {
+  background: var(--gl-purple-quiet);
+}
+.leak > * {
+  position: relative;
+  z-index: 1;
+}
+.leak:hover::before,
+.leak:focus-visible::before {
+  opacity: 1;
 }
 .leak__rail {
   grid-area: rail;
@@ -3118,26 +3093,71 @@
   border-right: 1.5px solid var(--gl-purple-400);
   transform: translateY(-50%) rotate(45deg);
 }
+/* The line the job travels along. Full row width, under everything, and it is
+   the panel's ground rule as well as its route: with motion off it is simply
+   a purple hairline per row. Clips its own pulse. */
 .job__track {
-  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  overflow: hidden;
+  background: var(--gl-edge);
 }
+.job__track::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  /* Quiet at rest. Five saturated rules would make the panel read as a table
+     with purple borders; the resting line is a ground rule and the PULSE is
+     what carries the purple. */
+  background: var(--gl-purple-200);
+  transform-origin: left;
+}
+/* The pulse, travelling the same path the chip took. */
+.job__track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0 38%,
+    var(--gl-purple-600) 50%,
+    transparent 62% 100%
+  );
+  opacity: 0;
+  transform: translateX(-100%);
+}
+/* The chip: a filled purple pill, not an outline on a tint. The right-hand
+   column is where the work now sits, and a tinted outline reads as proposed. */
 .job__chip {
   position: relative;
   display: inline-block;
   max-width: 100%;
   padding: 6px 12px;
-  border: 1px solid var(--gl-purple-200);
+  border: 1px solid var(--gl-purple-600);
   border-radius: var(--gl-r-pill);
-  background: var(--gl-purple-50);
+  background: var(--gl-purple-600);
+  box-shadow: 0 1px 2px rgba(28, 20, 80, 0.16);
 }
 .job__name {
   font-size: var(--gl-t-micro);
   font-weight: var(--gl-w-medium);
   line-height: 1.35;
-  color: var(--gl-purple-700);
+  color: var(--gl-white);
 }
 [data-motion="on"] .job__cell {
   animation: gl-job-move var(--gl-dur-orchestrated) var(--gl-ease) both;
+  animation-delay: calc(var(--i) * 110ms);
+}
+/* The track draws on the same delay as the chip it is carrying. */
+[data-motion="on"] .job__track::before {
+  animation: gl-job-draw var(--gl-dur-orchestrated) var(--gl-ease) both;
+  animation-delay: calc(var(--i) * 110ms);
+}
+[data-motion="on"] .job__track::after {
+  animation: gl-job-carry var(--gl-dur-ambient) var(--gl-ease) infinite;
   animation-delay: calc(var(--i) * 110ms);
 }
 @keyframes gl-job-move {
@@ -3146,6 +3166,31 @@
   }
   to {
     transform: translateX(0);
+  }
+}
+@keyframes gl-job-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes gl-job-carry {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  12% {
+    opacity: 1;
+  }
+  46% {
+    opacity: 1;
+  }
+  58%,
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
   }
 }
 .board__back {
@@ -3190,28 +3235,88 @@
 }
 
 /* ==========================================================================
-   CHAIN — the quiet evidence variant. No chrome, no animation of its own.
+   CHAIN — the quiet evidence variant.
+
+   No titled chrome bar and no readout row; the pipeline higher up the page
+   owns that shape. What this one has that the pipeline does not is a
+   DIRECTION: purple runs downwards, Collected to Estimated, because the claim
+   is that you start at a number and walk back to the event.
+
+   The figure at the top used to be a hatched rectangle. It was honest — the
+   value is withheld on purpose — but it read as a missing asset rather than
+   as a withheld figure, which is a bad thing for the one panel on the page
+   whose job is to look like a dashboard. It is now a figure cell: a stage tag,
+   masked digits, and the expand affordance that says the cell opens.
    ========================================================================= */
 .chain__figure {
   display: grid;
-  gap: 8px;
-  padding-bottom: 18px;
+  gap: 10px;
+  padding-bottom: 20px;
 }
-.chain__value {
-  width: 92px;
-  height: 30px;
+
+/* The cell. Sized by its content rather than fixed, so the mask below cannot
+   be cropped by a width that was chosen for a different number of digits. */
+.chain__cell {
+  justify-self: start;
+  display: grid;
+  gap: 10px;
+  min-width: 176px;
+  padding: 10px 12px 11px;
   border: 1px solid var(--gl-purple-ondark-muted);
-  border-radius: var(--gl-r-xs);
-  background: repeating-linear-gradient(
-    -45deg,
-    rgba(171, 159, 238, 0.35) 0 5px,
-    transparent 5px 10px
-  );
+  border-radius: var(--gl-r-sm);
+  background: linear-gradient(180deg, rgba(171, 159, 238, 0.1), rgba(171, 159, 238, 0.03));
 }
-.chain__figurelabel {
-  font-size: var(--gl-t-small);
+.chain__cellhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.chain__celltag {
+  font-size: var(--gl-t-label);
   font-weight: var(--gl-w-medium);
-  color: var(--gl-white);
+  letter-spacing: var(--gl-tr-label);
+  color: var(--gl-purple-ondark);
+}
+.chain__cellopen {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--gl-t-label);
+  letter-spacing: var(--gl-tr-label);
+  color: rgba(255, 255, 255, 0.55);
+}
+/* Points down, at the chain. */
+.chain__caret {
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid var(--gl-purple-ondark);
+  border-bottom: 1.5px solid var(--gl-purple-ondark);
+  transform: translateY(-2px) rotate(45deg);
+}
+
+/* The masked amount. Glyph blocks grouped the way an amount is grouped, so it
+   reads as a redacted number rather than as texture. No currency mark and no
+   digit: this site publishes no client figure, real or plausible. */
+.chain__mask {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+}
+.chain__maskgroup {
+  display: flex;
+  gap: 3px;
+}
+.chain__digit {
+  width: 8px;
+  height: 18px;
+  border-radius: 1.5px;
+  background: var(--gl-purple-ondark);
+  opacity: 0.85;
+}
+
+.chain__run {
+  position: relative;
 }
 .chain__links {
   margin: 0;
@@ -3238,6 +3343,46 @@
   bottom: auto;
   height: 10px;
 }
+/* The drawn segment, over the muted thread. Authored at full height: with the
+   bundle blocked the chain is simply already drawn. */
+.chain__flow {
+  position: absolute;
+  inset: -1px;
+  border-radius: 1px;
+  background: var(--gl-purple-ondark);
+  transform-origin: top;
+}
+/* The carrier: one pulse making one trip down the whole run, which is what
+   makes the panel read as live rather than as a diagram that has finished.
+   It is ambient, so the section observer pauses it off screen.
+
+   The outer span is the track and clips; the pulse is its pseudo-element, at
+   the track's full height with the bright band in the middle of an otherwise
+   transparent gradient. Travelling a full height in each direction is then one
+   trip down the run, whatever the run measures. */
+.chain__carrier {
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.chain__carrier::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent 0 40%,
+    var(--gl-purple-bright) 50%,
+    transparent 60% 100%
+  );
+  opacity: 0;
+  transform: translateY(-100%);
+}
 .chain__node {
   position: absolute;
   left: 0;
@@ -3246,7 +3391,56 @@
   height: 11px;
   border: 1.5px solid var(--gl-purple-ondark);
   border-radius: 50%;
+  /* Authored FILLED, like the thread above it: with the bundle blocked the
+     chain is drawn and its nodes are lit, not a row of empty rings waiting on
+     an observer that will never run. */
+  background: var(--gl-purple-bright);
+  box-shadow: 0 0 0 3px rgba(171, 159, 238, 0.18);
+}
+/* Motion then empties the ones the draw has not reached, and each fills again
+   as the draw arrives. Colour only: the ring is the same size throughout, so
+   nothing moves and nothing reflows. */
+[data-motion="on"] .chain__node {
+  transition:
+    background-color var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
+  transition-delay: calc(var(--n, 0) * var(--gl-stagger));
+}
+[data-motion="on"] .chain:not([data-inview="true"]) .chain__node {
   background: var(--gl-graphite-deep);
+  box-shadow: 0 0 0 3px transparent;
+}
+
+/* The draw, verb 3: the thread grows from its leading edge, top first, each
+   link starting as the one above it lands. Authored end state is drawn, so a
+   blocked bundle leaves the whole chain purple rather than empty. */
+[data-motion="on"] .chain__flow {
+  transform: scaleY(0);
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--n, 0) * var(--gl-stagger));
+}
+[data-motion="on"] .chain[data-inview="true"] .chain__flow {
+  transform: scaleY(1);
+}
+[data-motion="on"] .chain[data-inview="true"] .chain__carrier::after {
+  animation: gl-chain-carry var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes gl-chain-carry {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  10% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 1;
+  }
+  72%,
+  100% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
 }
 .chain__stage {
   font-size: var(--gl-t-small);

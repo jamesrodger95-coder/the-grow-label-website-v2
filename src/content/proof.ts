@@ -25,7 +25,7 @@
 export const RESULTS = {
   eyebrow: 'Results',
   titleLines: ['Reported at four stages,', 'never as one number.'],
-  lead: 'This is the shape every Grow Label report takes, and the figures below are a worked example of it: one group, one year, the same four stages with the evidence that promoted each one. Under the money sits the operational detail it came from.',
+  lead: 'This is the shape every Grow Label report takes, and the figures below are a worked example of it: one group, one year, the same four stages with the evidence that promoted each one.',
   aside: 'One engagement, four stages',
 } as const;
 
@@ -85,18 +85,24 @@ export type TeamMember = {
 };
 
 /**
- * The four people a client deals with.
+ * The senior team a client deals with.
  *
  * These are real colleagues, so the rule here is the opposite of the one in
  * `illustrative.ts`: nothing in this list may be invented, and a person is
  * added only once they are actually on the account. Portraits are the one
  * outstanding item and the cards render without them.
+ *
+ * The copy deliberately states no headcount. It used to open with "the four
+ * people on your account", which dated the moment a fifth person joined and,
+ * worse, read as a boast about how small the team is rather than as an
+ * introduction to it. The list length is visible on the page; it does not
+ * need asserting in the heading.
  */
 export const TEAM = {
   eyebrow: 'The team',
-  titleLines: ['The four people', 'on your account.'],
+  titleLines: ['Meet the senior team', 'behind the solution.'],
   aside: 'Founders, client relations and advisory',
-  lead: 'Grow Label is delivered by a small team that sits between your systems and your schedule. These are the four people you deal with and what each of them owns.',
+  lead: 'Grow Label is delivered by a senior team that sits between your systems and your schedule. These are the people you deal with, and what each of them owns.',
   members: [
     {
       id: 'james-rodger',

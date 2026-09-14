@@ -154,23 +154,47 @@ export function KeyValueStrip({ items }: { items: readonly { key: string; detail
 /* Numbered step list                                                         */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * A numbered list of steps.
+ *
+ * `glow` opts a list into lighting its numbers as they arrive: each row
+ * becomes its own `Reveal`, so it carries `data-inview` on ITSELF — which is
+ * the whole trick, and the one the motion notes warn about, because CSS that
+ * keys off a parent's attribute lights every row at once. The number then
+ * takes the purple response as it lands, and stays lit.
+ *
+ * It is opt-in rather than the default because most of the step lists on this
+ * site are reference material — the controls on `/platform`, what we cannot
+ * claim — where a row lighting up as you reach it would be decoration. It is
+ * used where the list is the section's argument and is read in order.
+ */
 export function StepList({
   items,
   headingLevel = 3,
+  glow = false,
 }: {
   items: readonly { index: string; title: string; detail: string }[];
   headingLevel?: 3 | 4;
+  glow?: boolean;
 }) {
   const Heading = headingLevel === 4 ? 'h4' : 'h3';
   return (
     <div className="steps">
-      {items.map((item) => (
-        <div className="step" key={item.index}>
-          <span className="step__num">{item.index}</span>
-          <Heading className="step__title">{item.title}</Heading>
-          <p className="small">{item.detail}</p>
-        </div>
-      ))}
+      {items.map((item, i) =>
+        glow ? (
+          <Reveal className="step step--glow" key={item.index} variant="rise" index={i}>
+            <span className="step__num">{item.index}</span>
+            <Heading className="step__title">{item.title}</Heading>
+            <p className="small">{item.detail}</p>
+          </Reveal>
+        ) : (
+          <div className="step" key={item.index}>
+            <span className="step__num">{item.index}</span>
+            <Heading className="step__title">{item.title}</Heading>
+            <p className="small">{item.detail}</p>
+          </div>
+        )
+      )}
     </div>
   );
 }

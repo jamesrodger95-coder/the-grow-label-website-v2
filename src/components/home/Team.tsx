@@ -5,7 +5,7 @@ import { Reveal } from '@/components/motion/Reveal';
 import { TEAM } from '@/content/proof';
 
 /**
- * The four people on a client account.
+ * The senior team on a client account.
  *
  * A server component with no interaction in it. It used to open a modal
  * carrying a two-paragraph remit per person, which meant a client component, a
@@ -15,7 +15,7 @@ import { TEAM } from '@/content/proof';
  * ---------------------------------------------------------------------------
  * PORTRAITS
  * ---------------------------------------------------------------------------
- * Drop the four files into `public/team/` using the names in `TEAM.members`
+ * Drop one file per member into `public/team/`, named from `TEAM.members`,
  * and they appear — no code change. Until a file exists, `<Portrait/>` renders
  * a drawn 4:5 frame at exactly the ratio the photograph will occupy, so adding
  * one is a content change and never a layout one. The naming, the crop and the

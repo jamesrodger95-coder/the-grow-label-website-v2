@@ -1032,6 +1032,7 @@
   gap: 14px;
 }
 .split__panel {
+  position: relative;
   padding: clamp(24px, 3.2vw, 44px);
   border-radius: var(--gl-r-lg);
   background: var(--panel);
@@ -1039,15 +1040,53 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  transition:
-    transform var(--gl-dur-standard) var(--gl-ease),
-    box-shadow var(--gl-dur-standard) var(--gl-ease);
+  transition: background var(--gl-dur-micro) var(--gl-ease);
 }
-.split__panel:hover {
-  transform: translateY(-2px);
+/* The same hover glow the module blocks carry, and deliberately the same: the
+   two sector panels and the four module blocks are both "a block you can open"
+   on the same page, so they should answer a pointer identically.
+
+   It replaces a 2px lift and a neutral grey shadow. Both are ruled out by the
+   response verb, the lift fought the entrance transform these panels already
+   carry as `m-card`, and a grey bloom under a purple-accented panel reads as
+   dirt. The glow is drawn once at full size and only fades, which is what
+   makes it a colour response rather than a bloom.
+
+   `:focus-within` is not optional: the panel is a div, so a pointer would get
+   the glow and a keyboard nothing — but there is a link inside it, and tabbing
+   to that link should light the same panel. */
+.split__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
   box-shadow:
-    inset 0 0 0 1px var(--rule),
-    var(--shadow);
+    inset 0 0 0 1px var(--gl-purple-300),
+    0 0 0 1px var(--gl-purple-200),
+    0 4px 18px rgba(74, 58, 196, 0.2),
+    0 0 46px rgba(74, 58, 196, 0.14);
+  transition: opacity var(--gl-dur-micro) var(--gl-ease);
+}
+.split__panel:hover,
+.split__panel:focus-within {
+  background: var(--gl-purple-quiet);
+}
+.split__panel:hover::after,
+.split__panel:focus-within::after {
+  opacity: 1;
+}
+.on-dark .split__panel::after {
+  box-shadow:
+    inset 0 0 0 1px var(--gl-purple-ondark-muted),
+    0 0 0 1px rgba(154, 143, 240, 0.22),
+    0 4px 20px rgba(154, 143, 240, 0.16),
+    0 0 52px rgba(154, 143, 240, 0.12);
+}
+.on-dark .split__panel:hover,
+.on-dark .split__panel:focus-within {
+  background: rgba(154, 143, 240, 0.07);
 }
 @media (max-width: 860px) {
   .split {
@@ -1074,6 +1113,53 @@
   color: var(--accent);
   padding-top: 5px;
   font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   The lit variant, opted into with `<StepList glow />`.
+
+   The number becomes a counter that lights as its row arrives. The disc is
+   drawn at rest and only its COLOURS change, so a row landing does not push
+   the one below it — response, not layout.
+
+   The authored state is LIT. Motion then turns the not-yet-arrived rows down,
+   and each turns back up as it comes into view, which is the ordering the
+   whole motion system uses: a blocked bundle leaves five lit numbers rather
+   than five grey ones waiting on an observer that will never run.
+
+   `data-inview` is read from the ROW, and the row is the element that carries
+   it — `StepList` gives each step its own `Reveal` for exactly that reason.
+   Reading it from the list would light all five at once.
+   ----------------------------------------------------------------------- */
+.step--glow .step__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding-top: 0;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--gl-white);
+  box-shadow:
+    0 0 0 4px var(--accent-wash),
+    0 2px 16px rgba(74, 58, 196, 0.26);
+}
+[data-motion="on"] .step--glow .step__num {
+  transition:
+    color var(--gl-dur-standard) var(--gl-ease),
+    background-color var(--gl-dur-standard) var(--gl-ease),
+    border-color var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease);
+}
+[data-motion="on"] .step--glow:not([data-inview="true"]) .step__num {
+  border-color: var(--rule);
+  background: transparent;
+  color: var(--faint);
+  box-shadow:
+    0 0 0 4px transparent,
+    0 2px 16px transparent;
 }
 .step__title {
   font-size: clamp(1.125rem, 1.8vw, 1.4375rem);

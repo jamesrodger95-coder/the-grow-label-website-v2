@@ -3,48 +3,28 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 97,
+      "performance": 92,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2651,
-      "cls": 0.001,
-      "tbt": 44,
-      "bytes": 344434,
-      "scriptBytes": 171615
+      "lcp": 3414,
+      "cls": 0,
+      "tbt": 42,
+      "bytes": 434855,
+      "scriptBytes": 166568
     },
     "problems": [],
     "notes": [
-      "LCP 2651ms over the 2500ms target"
+      "LCP 3414ms over the 2500ms target"
     ]
   },
   {
     "name": "modules",
     "path": "/modules",
     "scores": {
-      "performance": 98,
-      "accessibility": 100,
-      "best-practices": 100,
-      "seo": 100,
-      "agentic-browsing": 100
-    },
-    "metrics": {
-      "lcp": 2354,
-      "cls": 0,
-      "tbt": 35,
-      "bytes": 269283,
-      "scriptBytes": 164956
-    },
-    "problems": [],
-    "notes": []
-  },
-  {
-    "name": "module",
-    "path": "/modules/answer",
-    "scores": {
       "performance": 97,
       "accessibility": 100,
       "best-practices": 100,
@@ -52,15 +32,37 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2639,
+      "lcp": 2512,
       "cls": 0,
-      "tbt": 14,
-      "bytes": 324971,
-      "scriptBytes": 171615
+      "tbt": 49,
+      "bytes": 305641,
+      "scriptBytes": 166568
     },
     "problems": [],
     "notes": [
-      "LCP 2639ms over the 2500ms target"
+      "LCP 2512ms over the 2500ms target"
+    ]
+  },
+  {
+    "name": "module",
+    "path": "/modules/answer",
+    "scores": {
+      "performance": 96,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100,
+      "agentic-browsing": 100
+    },
+    "metrics": {
+      "lcp": 2670,
+      "cls": 0,
+      "tbt": 76,
+      "bytes": 320153,
+      "scriptBytes": 166568
+    },
+    "problems": [],
+    "notes": [
+      "LCP 2670ms over the 2500ms target"
     ]
   }
 ]

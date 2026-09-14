@@ -1,22 +1,26 @@
 import type { CSSProperties } from 'react';
-import Link from 'next/link';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import { TextLink } from '@/components/primitives';
 import { StageIcon } from './StageIcon';
 import { RESULTS } from '@/content/proof';
-import {
-  ILLUSTRATIVE_ENGAGEMENT,
-  ILLUSTRATIVE_METRICS,
-  ILLUSTRATIVE_STAGES,
-} from '@/content/illustrative';
+import { ILLUSTRATIVE_ENGAGEMENT, ILLUSTRATIVE_STAGES } from '@/content/illustrative';
 
 /**
  * Results.
  *
- * A worked example of the reporting frame: one engagement, four stages, and
- * the operational detail the money came from. Every figure is imported from
- * `content/illustrative.ts` and every surface that shows one carries the
- * illustrative badge, so nothing here can be mistaken for client evidence.
+ * A worked example of the reporting frame: one engagement, four stages. Every
+ * figure is imported from `content/illustrative.ts`, so nothing here can be
+ * mistaken for client evidence.
+ *
+ * ---------------------------------------------------------------------------
+ * THE EIGHT OPERATIONAL METRICS ARE GONE FROM THIS SECTION
+ * ---------------------------------------------------------------------------
+ * `ILLUSTRATIVE_METRICS` used to render as an eight-card grid underneath the
+ * stage cards. The section's whole argument is that a recovery figure is four
+ * numbers and not one; following those four with eight more of a different
+ * shape buried the point under the detail that was supposed to support it.
+ * The four stages are the section. The fixture still holds the metrics and
+ * the module pages still carry the operational detail they describe.
  */
 
 /**
@@ -115,23 +119,6 @@ export function Results() {
               {/* 04 — the explanation: what promotes a figure to this stage */}
               <p className="result__basis">{card.basis}</p>
               <p className="result__hint micro">{card.hint}</p>
-            </Reveal>
-          ))}
-        </div>
-
-        {/* The operational detail underneath the money. Deliberately varied in
-            shape — counts, medians, depths, hours — because eight identically
-            framed percentages read as a template rather than as a report. */}
-        <div className="metrics">
-          {ILLUSTRATIVE_METRICS.map((metric, i) => (
-            <Reveal className="metric" key={metric.id} variant="card" index={i % 4}>
-              <p className="metric__value">{metric.value}</p>
-              <p className="metric__label">{metric.label}</p>
-              <p className="metric__basis micro">{metric.basis}</p>
-              <Link className="metric__module" href={metric.href}>
-                {metric.module}
-                <span aria-hidden="true">&nbsp;&rarr;</span>
-              </Link>
             </Reveal>
           ))}
         </div>

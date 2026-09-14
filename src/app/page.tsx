@@ -254,7 +254,11 @@ export default function HomePage() {
               <p className="lead" style={{ marginBottom: 32 }}>
                 {TIME_RETURNED.lead}
               </p>
-              <StepList items={TIME_RETURNED.items} />
+              {/* `glow` lights each number as it arrives. The five jobs on
+                  the board to the left are the same five in the same order,
+                  so the list is read down rather than scanned, and the
+                  arriving number is what keeps the two halves in step. */}
+              <StepList items={TIME_RETURNED.items} glow />
             </Reveal>
           </div>
         </div>

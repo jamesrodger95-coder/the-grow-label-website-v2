@@ -31,6 +31,20 @@ import { TIME_RETURNED } from '@/content/home';
  * Server-rendered and CSS-only. Each job's slide is a transform with a delay
  * off its index, gated on `data-motion` so the authored markup — every job
  * already across — is what a blocked bundle leaves behind.
+ *
+ * ---------------------------------------------------------------------------
+ * THE LINE, AND THE CHIP
+ * ---------------------------------------------------------------------------
+ * The chip a job ends up in is now a filled purple pill rather than a purple
+ * outline on a 50-tint. The board's whole point is that the right-hand column
+ * is where the work now sits; a tinted outline said "proposed", and the solid
+ * fill says "there".
+ *
+ * Underneath each row is a track. It draws purple left to right on the same
+ * per-row delay as the chip, so the line carries the job across rather than
+ * the job teleporting over a static rule, and then a slow pulse repeats the
+ * trip. That pulse is the only loop on this panel and it is ambient, so the
+ * section observer pauses it the moment the board leaves the viewport.
  */
 export function DeskBoard() {
   return (
@@ -48,6 +62,12 @@ export function DeskBoard() {
       <ul className="board__jobs">
         {TIME_RETURNED.items.map((item, i) => (
           <li className="job" key={item.index} style={{ '--i': i } as CSSProperties}>
+            {/* The line the job travels along. It runs the full width of the
+                row underneath everything else, draws purple left to right as
+                the chip arrives, and then carries a slow pulse along the same
+                path so the board reads as a route rather than as a snapshot.
+                The track is the clip; the pulse is its pseudo-element. */}
+            <span className="job__track" aria-hidden="true" />
             <span className="job__idx" aria-hidden="true">
               {item.index}
             </span>
