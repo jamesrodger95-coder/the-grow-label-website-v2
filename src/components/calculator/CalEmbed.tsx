@@ -189,11 +189,6 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
 
   return (
     <div className="calembed">
-      <div className="calembed__head">
-        <p className="label label--accent">{RESULT.embedLabel}</p>
-        <p className="small calembed__note">{RESULT.embedNote}</p>
-      </div>
-
       <div className="calembed__frame" id={MOUNT_ID} ref={frameRef} data-status={status} />
 
       <p className="micro calembed__fallback">

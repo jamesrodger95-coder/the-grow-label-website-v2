@@ -3,45 +3,43 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 93,
+      "performance": 96,
       "accessibility": 100,
       "best-practices": 96,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 3261,
+      "lcp": 2746,
       "cls": 0.001,
-      "tbt": 20,
-      "bytes": 382359,
+      "tbt": 25,
+      "bytes": 382181,
       "scriptBytes": 161583
     },
     "problems": [],
     "notes": [
-      "LCP 3261ms over the 2500ms target"
+      "LCP 2746ms over the 2500ms target"
     ]
   },
   {
     "name": "modules",
     "path": "/modules",
     "scores": {
-      "performance": 97,
+      "performance": 99,
       "accessibility": 100,
       "best-practices": 96,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2502,
+      "lcp": 1973,
       "cls": 0,
-      "tbt": 42,
-      "bytes": 299826,
+      "tbt": 53,
+      "bytes": 301115,
       "scriptBytes": 166568
     },
     "problems": [],
-    "notes": [
-      "LCP 2502ms over the 2500ms target"
-    ]
+    "notes": []
   },
   {
     "name": "module",
@@ -54,15 +52,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2581,
+      "lcp": 2621,
       "cls": 0,
-      "tbt": 24,
+      "tbt": 36,
       "bytes": 304828,
       "scriptBytes": 166568
     },
     "problems": [],
     "notes": [
-      "LCP 2581ms over the 2500ms target"
+      "LCP 2621ms over the 2500ms target"
     ]
   }
 ]

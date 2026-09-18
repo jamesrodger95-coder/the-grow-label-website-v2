@@ -311,8 +311,12 @@ export const RESULT = {
     'One thing worth saying now: under about 1,500 active records the reactivation arithmetic is working on a list too small to behave like one. We will say so again on the call rather than quietly leaning on it.',
   /** The ask. */
   bookCta: 'Book the call',
-  /** The embed, and the copy around it. */
-  embedLabel: 'Pick a time',
+  /**
+   * The calendar leads the completed screen, so this is the page's heading
+   * once the questions are done — the hero above it is hidden. Short, because
+   * the fuller version of the same sentence is the box underneath.
+   */
+  embedTitle: 'Pick a time for your call.',
   embedNote:
     'Thirty minutes, and nothing to prepare. You will get a confirmation with the details, and we will have your assessment built before we speak.',
   embedLoading: 'Loading the calendar…',

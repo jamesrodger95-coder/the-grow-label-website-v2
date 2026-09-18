@@ -107,6 +107,18 @@ for (let i = 0; i < ANSWERS.length; i += 1) {
 
 await page.waitForTimeout(900);
 await page.screenshot({ path: join(outDir, 'result-top.png'), fullPage: false });
+
+// Walk the page down before the full-page capture, the way scripts/shot.mjs
+// does. Entrances are marked by an IntersectionObserver, so a full-page
+// screenshot of a page nobody scrolled shows every section below the fold at
+// opacity 0 — which reads as a broken layout and is not one.
+const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+for (let y = 0; y < pageHeight; y += Math.round(+h * 0.7)) {
+  await page.evaluate((to) => window.scrollTo(0, to), y);
+  await page.waitForTimeout(120);
+}
+await page.evaluate(() => window.scrollTo(0, 0));
+await page.waitForTimeout(400);
 await page.screenshot({ path: join(outDir, 'result-full.png'), fullPage: true });
 
 const hours = await page.locator('.calc__hoursvalue').first().textContent();

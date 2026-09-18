@@ -63,6 +63,33 @@ test.describe('the nine questions', () => {
   });
 
   /**
+   * The calendar leads the page once the questions are done.
+   *
+   * It used to sit under the copy and the module list, which put it below the
+   * fold — and a calendar nobody scrolls to is, to the reader, a calendar that
+   * did not load. Both halves are asserted: the hero goes, and the calendar is
+   * above the box that explains it.
+   */
+  test('puts the calendar at the top, and takes the hero away', async ({ page }) => {
+    await page.goto('/calculator');
+    await expect(page.locator('.phead')).toBeVisible();
+
+    await complete(page);
+
+    // "Start with nine questions" is not true of anybody reading this screen.
+    await expect(page.locator('.phead')).toBeHidden();
+
+    const calendar = await page.locator('.calembed').boundingBox();
+    const box = await page.locator('.calc__box').boundingBox();
+    expect(calendar).not.toBeNull();
+    expect(box).not.toBeNull();
+    expect(calendar!.y).toBeLessThan(box!.y);
+
+    // And it starts near the top of the document rather than a screen down.
+    expect(calendar!.y).toBeLessThan(500);
+  });
+
+  /**
    * The point of the funnel. The figure is what the call is for, so a reader
    * who has finished the questions must not be able to read it off the page —
    * not in the copy, not in an attribute, not in the markup at all.

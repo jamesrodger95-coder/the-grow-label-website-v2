@@ -240,12 +240,24 @@ The order of the flow:
    page that ranks is one people arrive at without having done the thing it
    confirms.
 
-The completed screen breaks out of the two columns the questions ran in:
-`.calc-layout:has(.calc--result)` drops to one column and hides the aside, so
-the calendar gets the full width. An embedded month grid in an aside-width
-column collapses to a list of times, and `:has` keeps that decision in CSS
-rather than passing state from a client component to the server-rendered aside
-beside it.
+**The calendar leads the completed screen.** It is the first thing on the page,
+above the box that explains it, and the page header is hidden while it is there
+— "Start with nine questions" is not true of anybody reading that screen, and
+leaving it in pushed the calendar below the fold, which to a reader is
+indistinguishable from a calendar that failed to load. That was reported as
+"the calendar is not loading" when it was loading perfectly.
+
+Three rules do it, all keyed off `:has(.calc--result)` in sections.css: the
+layout drops to one column and hides the aside, `.phead` goes, and the
+section's top padding closes up. `:has` keeps the decision in CSS rather than
+passing state from a client component out to the server-rendered sections
+around it, and where it is unsupported the page still works — hero, columns and
+calendar all stay where they were. `tests/e2e/calculator.spec.ts` asserts the
+hero disappears and the calendar sits above the box and near the top.
+
+The heading moves with it: the completed screen's `<h1>` is "Pick a time for
+your call", because the hero's h1 is display:none by then and a page with a
+hidden h1 and a visible h2 is a heading-order skip.
 
 `NEXT_PUBLIC_BOOKING_URL` is the Cal.com link. `/calculator` is
 `force-dynamic` so setting it takes effect without a redeploy — the same
