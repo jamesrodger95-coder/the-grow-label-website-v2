@@ -168,32 +168,83 @@ render exactly as production does. After changing a stylesheet, re-copy:
 cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/styles/sections.css design/
 ```
 
-## The calculator
+## The calculator, and the funnel it feeds
 
-`/calculator` estimates; the paid assessment measures. Everything about the
-feature holds that line, and the copy says it in those words on the result
-screen and three times in the report.
+`/calculator` is a lead magnet. Nine questions, and the thing it produces is a
+booked call — not a figure on a screen and not a document in somebody's
+downloads folder.
+
+**The revenue figure is never shown to the prospect.** It is computed, it is
+sent to us, and it is what the call is for. A reader who already has the number
+has no reason to turn up, so the completed screen shows exactly two things
+instead, both true and both specific to their answers: the front-desk hours
+their own answers imply, and the four modules ranked by how much of their
+estimate sits in each — the order, never the amounts. `tests/e2e/calculator.spec.ts`
+greps the finished screen's markup for anything shaped like a currency figure
+and fails if one appears, and `scripts/calculator-walk.mjs` does the same on
+every run. Neither is decoration: this is the one property the funnel depends on.
+
+The order of the flow:
+
+1. Nine questions, one per screen. Unchanged.
+2. The booking screen: what the call covers, the hours, the module ranking.
+3. **The answers POST to `/api/calculator/lead`, and only then** does the
+   browser navigate to Cal.com. That order is deliberate — a prospect who
+   answers nine questions and abandons the Cal.com page is still a lead, and
+   the answers are the whole of what we need. Delivery is best effort: if the
+   lead cannot be sent, the reader still reaches the booking page. Nothing
+   about our plumbing is worth standing between somebody and a booking.
+4. Cal.com redirects to `/assessment-booked`. Set that redirect on the event
+   type; the page is `noindex` and out of the sitemap, because a confirmation
+   page that ranks is one people arrive at without having done the thing it
+   confirms.
+
+`NEXT_PUBLIC_BOOKING_URL` is the Cal.com link. `/calculator` is
+`force-dynamic` so setting it takes effect without a redeploy — the same
+reason `/contact` is. With it unset the screen says so and routes to
+`/contact` rather than offering a button that goes nowhere.
 
 **The model is `src/lib/calculator/model.ts` and its coefficients do not move.**
 They are tuned to under-promise: the headline is 60% of what the arithmetic
 produces, every figure rounds down, an open-topped band takes its lower bound,
 and a "not sure" answer resolves to the practice-type default rather than the
-most favourable option. `tests/unit/calculator-model.test.ts` asserts the
-worked example's figures literally — raise a coefficient and the build fails
-rather than the change passing review. It also asserts the headline stays under
-10% of modelled gross revenue, which is the ratio an owner checks first.
+most favourable option. `tests/unit/calculator-model.test.ts` asserts the worked
+example's figures literally — raise a coefficient and the build fails rather
+than the change passing review. It also asserts the headline stays under 10% of
+modelled gross revenue, which is the ratio an owner checks first.
 
-The file exports its coefficients because the report prints all sixteen on its
-methodology pages. One source for the working and for the statement of the
-working, so the document cannot state a rate the arithmetic did not use.
+The estimate that reaches the CRM is recomputed on the server from the nine
+validated answers rather than accepted from the browser, so a payload edited in
+the console produces a corrected figure and not a fabricated one.
 
-**The report is built in the browser, on request.** `lib/calculator/report.ts`
-is behind a dynamic `import()` in `ReportDownload`, so pdf-lib — a 1.1MB chunk —
-is not on the critical path of a page most people open on a phone. It is set in
-the site's own face, from `public/fonts/*.ttf`, embedded subsetted.
+### The report
 
-Three things about it are easy to get wrong again:
+The report is a **team-side artefact**. Nothing on the site builds it and no
+prospect is offered it; we build it from their answers and go through it with
+them on the call.
 
+```bash
+pnpm report artifacts/leads/GL-C-260918-K3F9P.json      # -> artifacts/reports/…pdf
+pnpm report <lead.json> out/their-name.pdf
+node scripts/pdf-shots.mjs <file.pdf> <outDir>          # to look at it
+```
+
+The input is whatever the CRM webhook received — the `LeadPayload` shape in
+`src/lib/calculator/crm.ts`. Only `answers` is required; the figures are
+recomputed from the same model the site used.
+
+`scripts/report.mjs` imports the TypeScript in `src/` directly. Node strips the
+types, `scripts/ts-resolve.mjs` supplies the `@/` alias and the missing file
+extensions, and that is the whole build step. It is also why neither
+`model.ts` nor `report.ts` may use a constructor parameter property or an enum:
+strip-only mode rejects both, and the script is the only consumer that would
+notice.
+
+Four things about the document are easy to get wrong again:
+
+- **Assets are injected, not fetched.** `buildReport` takes a `load(path)`
+  function. The script reads from `public/`; a browser caller would pass one
+  built on `fetch`. Nothing else about the document changes.
 - **Tracking is per-glyph.** pdf-lib has no letter-spacing. Joining characters
   with a hair space looks like the cheap fix and is not one: U+200A is outside
   the embedded subset and every gap renders as a .notdef box. `drawTracked`
@@ -206,24 +257,16 @@ Three things about it are easy to get wrong again:
   this face gives the comma a full digit advance, so `$287,000` sets as
   `$287 , 000`.
 
-**Lead capture never pretends.** The estimate reaching the CRM is recomputed
-server-side from the nine validated answers rather than accepted from the
-client. With no `CALCULATOR_CRM_URL` and no contact webhook the route answers
-`unconfigured`, the interface says nothing was sent, and the report is handed
-over anyway — it is built locally, and withholding it would punish the reader
-for our configuration.
-
-**Reviewing it.** The page and the document both have a harness:
+### Reviewing the funnel
 
 ```bash
 node scripts/calculator-walk.mjs 3112 390 844 artifacts/calculator/mobile
-node scripts/pdf-shots.mjs artifacts/calculator/desktop/report.pdf artifacts/calculator/pdf
 ```
 
-The first walks all nine questions at a viewport, captures each one, generates
-the report and reports console errors, failed requests and overflow. The second
-rasterises the PDF a page at a time, because a sales asset nobody looks at is a
-sales asset nobody has checked.
+Walks all nine questions at a viewport, captures each one and the booking
+screen, stubs the Cal.com host, and reports console errors, failed requests,
+horizontal overflow, whether the answers were posted before the reader left —
+and whether any figure leaked onto the screen.
 
 ## Client-component budget
 
@@ -234,8 +277,8 @@ Client components exist only where there is genuine interaction:
 - `RecoverySequence` — the scroll-driven signature sequence
 - `MotionProvider` — enables motion after first paint
 - `AssessmentForm` — the form
-- `Calculator`, `Result`, `ReportDownload` — the nine-question flow, the figure
-  it produces and the report it generates
+- `Calculator`, `Result`, `BookCall` — the nine-question flow and the booking
+  it ends on
 - `Testimonials` — the two rails and their step controls
 - `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`
@@ -295,14 +338,18 @@ Every variable is optional and the site is deployable with none of them.
 | ------------------------------------- | ---------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL`                | Falls back to the Vercel URL, then local |
 | `NEXT_PUBLIC_DASHBOARD_URL`           | "Client sign in" is hidden entirely      |
-| `NEXT_PUBLIC_BOOKING_URL`             | "Book a call" is hidden entirely         |
+| `NEXT_PUBLIC_BOOKING_URL`             | The Cal.com link. Without it the         |
+|                                       | calculator routes to /contact instead    |
 | `CONTACT_WEBHOOK_URL`                 | Form switches to its unconfigured state  |
 | `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | As above                                 |
 | `CALCULATOR_CRM_URL`                  | Falls back to `CONTACT_WEBHOOK_URL`      |
 | `CALCULATOR_CRM_TOKEN`                | Sent as a bearer token when present      |
 
-With neither `CALCULATOR_CRM_URL` nor `CONTACT_WEBHOOK_URL` set, the calculator
-says plainly that nothing was sent and hands over the report anyway.
+With neither `CALCULATOR_CRM_URL` nor `CONTACT_WEBHOOK_URL` set, a completed
+questionnaire reaches nobody. The reader still gets to the booking page — the
+lead POST is best effort and never blocks it — but the answers are gone, and
+with them the assessment. **This is the one variable the funnel does not work
+without.**
 
 ## When changing something visual
 

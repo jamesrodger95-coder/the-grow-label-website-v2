@@ -54,7 +54,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   const parsed = leadSchema.safeParse(payload);
   if (!parsed.success) {
-    return json({ status: 'error', message: 'Enter a valid work email address.' }, 400);
+    return json({ status: 'error', message: 'This request could not be accepted.' }, 400);
   }
 
   const input = parsed.data;
@@ -73,13 +73,19 @@ export async function POST(request: Request): Promise<NextResponse> {
   const outcome = await deliverLead({
     source: 'grow-label-website/calculator',
     submittedAt: new Date().toISOString(),
-    email: input.email,
+    email: input.email || undefined,
     practiceName: input.practiceName || undefined,
     answers: input.answers,
+    // The figures the reader was NOT shown. They are the substance of the call,
+    // and they are recomputed here rather than accepted from the browser, so a
+    // payload edited in the console produces a corrected figure and not a
+    // fabricated one.
     estimate: {
       headline: result.headline,
       upper: result.upper,
       hoursReturned: result.hoursReturned,
+      appointmentsPerYear: result.appointmentsPerYear,
+      appointmentValue: result.appointmentValue,
       modules: result.modules.map((m) => ({ slug: m.slug, value: roundDownHundred(m.value) })),
     },
   });

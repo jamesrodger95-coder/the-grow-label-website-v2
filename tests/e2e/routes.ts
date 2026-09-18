@@ -31,7 +31,15 @@ export const ROUTES = [
     title: /recovered-revenue number/i,
   },
   { path: '/contact', name: 'contact', title: /assessment/i },
-  { path: '/calculator', name: 'calculator', title: /Revenue recovery calculator/i },
+  { path: '/calculator', name: 'calculator', title: /Revenue recovery assessment/i },
+  // The Cal.com return page: noindex, out of the sitemap, linked from nowhere
+  // on the site. It is reached by redirect once a call is booked.
+  {
+    path: '/assessment-booked',
+    name: 'assessment-booked',
+    title: /booked/i,
+    unlisted: true,
+  },
   { path: '/privacy', name: 'privacy', title: /Privacy/ },
   { path: '/terms', name: 'terms', title: /Terms/ },
   { path: '/dev/styleguide', name: 'styleguide', title: /Styleguide/ },

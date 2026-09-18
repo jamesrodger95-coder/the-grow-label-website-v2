@@ -241,17 +241,33 @@ it is recorded.
 
 ## The revenue recovery calculator
 
-`/calculator` publishes a figure. It is not evidence, and the reason it is safe
-is different from every other row in this register: nothing about it is a claim
-about what Grow Label has achieved. It is arithmetic applied to nine answers the
-reader gave about their own practice, and both the page and the report say so in
-those words.
+`/calculator` publishes almost nothing, and that is the first thing to know
+about it. The revenue figure it computes is **not shown to the prospect** — it
+goes to us, and we go through it with them on a call. What the finished screen
+shows is the front-desk hours their answers imply and the four modules ranked in
+order, with no amounts attached.
+
+So the surface area of this section is smaller than it was. What is published on
+the site is a modelled hours figure and an ordering. What is said on a call, and
+written in the report we build for it, is everything else — and it is safe for
+the same reason it always was: nothing about it is a claim about what Grow Label
+has achieved. It is arithmetic applied to nine answers the reader gave about
+their own practice, and the page, the report and the call all say so in those
+words.
+
+**The report is no longer a published document.** It is built by the team with
+`pnpm report` from the answers the questionnaire sent us, and it is handed over
+in conversation rather than downloaded. That makes it a sales document under
+review rather than a page on a website, which raises the standard for what goes
+in it rather than lowering it: nobody reads a disclaimer they were talked past.
+Every limit it states is still in it, and the methodology pages still print all
+sixteen coefficients.
 
 **What keeps it safe.**
 
 - **It never claims to have measured anything.** "Modelled estimate", "not a
   measurement", "nothing in it has been read from your systems" appear on the
-  result screen, on page 2 of the report and again on the methodology pages.
+  booking screen, on page 2 of the report and again on the methodology pages.
 - **Every coefficient is published.** The report prints all sixteen, with the
   reasoning, generated from `src/lib/calculator/model.ts` itself — so the
   document cannot state a rate the arithmetic did not use. A reader can redo the
@@ -266,11 +282,12 @@ those words.
   module works with operationally — "your phone system and your appointment
   diary" — because a named integration is still blocked above.
 
-| Claim                                        | Status    | Basis                                                                  |
-| -------------------------------------------- | --------- | ---------------------------------------------------------------------- |
-| The modelled estimate shown at `/calculator` | Published | Stated as modelled, from stated coefficients, with all working printed |
-| The front-desk hours figure in the report    | Published | Same basis. See the note on the blocked hours row below                |
-| The coefficients themselves                  | Published | Set at or beneath the conservative end of each operation's usual range |
+| Claim                                        | Status        | Basis                                                                  |
+| -------------------------------------------- | ------------- | ---------------------------------------------------------------------- |
+| The front-desk hours figure at `/calculator` | Published     | Modelled from the reader's own answers, stated as modelled             |
+| The module ordering at `/calculator`         | Published     | The reader's own estimate, ranked. No amounts shown                    |
+| The revenue figure                           | Not published | Sent to us and discussed on the call. It reaches no page               |
+| The coefficients themselves                  | In the report | Set at or beneath the conservative end of each operation's usual range |
 
 **The hours figure and the blocked row.** "Any staffing-cost or hours-saved
 figure" remains blocked above, and the calculator does not breach it. That row
@@ -280,13 +297,17 @@ own current workload, derived from their own answers at three stated
 per-task minutes, and presented as an estimate. Publish it as an outcome — "our
 clients save 530 hours" — and the blocked row applies in full.
 
+It is now the **only** figure the calculator puts in front of a prospect, which
+makes it worth restating: it is their workload, modelled, not our result.
+
 ### The assessment guarantee
 
 **This is the one statement in the feature that is a commercial commitment
 rather than a description, and it needs signing off.**
 
 `ASSESSMENT_GUARANTEE` in `src/content/calculator.ts` is printed on page 9 of
-the report. It was added at the owner's direction, and the guard that used to
+the report the team builds, and is therefore said out loud on a call rather than
+published on a page — which makes confirming the wording more urgent, not less. It was added at the owner's direction, and the guard that used to
 fail the build on the word `guarantee` was removed from
 `tests/unit/content-integrity.test.ts` at the same time, along with the rule
 that kept currency figures out of components. Both removals are recorded in a

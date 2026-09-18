@@ -26,10 +26,21 @@ export const answersSchema = z.object({
 });
 
 export const leadSchema = z.object({
+  /**
+   * Optional, and usually absent.
+   *
+   * The questionnaire does not ask for it: the reader goes straight from their
+   * last answer to the booking page, and Cal.com collects their name and email
+   * there. What arrives here is the answers plus a reference, and the booking
+   * carries the same reference back. The field stays because a lead with an
+   * address is still worth accepting from anywhere else that posts one.
+   */
   email: z
     .string()
     .transform((v) => v.trim())
-    .pipe(z.string().email().max(200)),
+    .pipe(z.string().email().max(200))
+    .optional()
+    .or(z.literal('')),
   practiceName: z
     .string()
     .transform((v) => v.trim())

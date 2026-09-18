@@ -63,3 +63,8 @@ artifacts/m390/
 artifacts/prod-check/
 artifacts/logo-*.png
 artifacts/og-card.png
+
+# Calculator leads and the reports built from them. Real prospect answers and
+# real practice names; neither belongs in the repository.
+artifacts/leads/
+artifacts/reports/

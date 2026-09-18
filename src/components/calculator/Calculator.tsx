@@ -40,7 +40,7 @@ function isComplete(draft: Draft): draft is Answers {
   });
 }
 
-export function Calculator() {
+export function Calculator({ bookingUrl }: { bookingUrl?: string }) {
   const groupId = useId();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Draft>({});
@@ -203,6 +203,7 @@ export function Calculator() {
       <Result
         answers={answers}
         estimate={result}
+        bookingUrl={bookingUrl}
         onChange={() => {
           setDone(false);
           setStep(0);

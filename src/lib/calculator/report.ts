@@ -43,6 +43,8 @@ export type ReportInput = {
   answers: Answers;
   estimate: Estimate;
   practiceName?: string;
+  /** Reads a site-absolute asset path. See `AssetLoader`. */
+  load: AssetLoader;
 };
 
 /* -------------------------------------------------------------------------- */
@@ -151,14 +153,26 @@ class Sheet {
   readonly page: PDFPage;
   y: number;
 
+  readonly doc: PDFDocument;
+  readonly fonts: Fonts;
+  readonly pageNumber: number;
+  /** Opens the next page. Held here so a section can run past one. */
+  readonly nextSheet: () => Sheet;
+
+  // Fields are declared rather than written as constructor parameter
+  // properties: this module is imported straight from `scripts/report.mjs`,
+  // and Node's type stripping does not support that syntax.
   constructor(
-    readonly doc: PDFDocument,
-    readonly fonts: Fonts,
-    readonly pageNumber: number,
-    /** Opens the next page. Held here so a section can run past one. */
-    readonly nextSheet: () => Sheet,
+    doc: PDFDocument,
+    fonts: Fonts,
+    pageNumber: number,
+    nextSheet: () => Sheet,
     ground: RGB = WHITE
   ) {
+    this.doc = doc;
+    this.fonts = fonts;
+    this.pageNumber = pageNumber;
+    this.nextSheet = nextSheet;
     this.page = doc.addPage([PAGE_W, PAGE_H]);
     this.page.drawRectangle({ x: 0, y: 0, width: PAGE_W, height: PAGE_H, color: ground });
     this.y = MARGIN + 18;
@@ -310,11 +324,20 @@ class Sheet {
 /* Assets                                                                     */
 /* -------------------------------------------------------------------------- */
 
-async function loadBytes(path: string): Promise<ArrayBuffer> {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error(`could not load ${path}`);
-  return res.arrayBuffer();
-}
+/**
+ * How the report reaches its fonts and the mark.
+ *
+ * Injected rather than assumed, because this no longer runs in a browser. The
+ * report is a team-side artefact now: `scripts/report.mjs` passes a loader
+ * that reads straight from `public/`. A caller in a browser would pass one
+ * built on `fetch`, and nothing else about the document would change.
+ */
+export type AssetLoader = (path: string) => Promise<ArrayBuffer>;
+
+/** Paths are site-absolute — "/fonts/…" — whatever the loader does with them. */
+const FONT_REGULAR = '/fonts/schibsted-grotesk-400.ttf';
+const FONT_SEMI = '/fonts/schibsted-grotesk-600.ttf';
+const MARK = '/logo-mark.png';
 
 /* -------------------------------------------------------------------------- */
 /* The document                                                               */
@@ -324,14 +347,12 @@ export async function buildReport({
   answers,
   estimate,
   practiceName,
+  load,
 }: ReportInput): Promise<Uint8Array> {
   const doc = await PDFDocument.create();
   doc.registerFontkit(fontkit);
 
-  const [regularBytes, semiBytes] = await Promise.all([
-    loadBytes('/fonts/schibsted-grotesk-400.ttf'),
-    loadBytes('/fonts/schibsted-grotesk-600.ttf'),
-  ]);
+  const [regularBytes, semiBytes] = await Promise.all([load(FONT_REGULAR), load(FONT_SEMI)]);
   const fonts: Fonts = {
     regular: await doc.embedFont(regularBytes, { subset: true }),
     semi: await doc.embedFont(semiBytes, { subset: true }),
@@ -353,7 +374,7 @@ export async function buildReport({
   const sheet = (ground?: RGB): Sheet =>
     new Sheet(doc, fonts, (pageNumber += 1), () => sheet(ground), ground);
 
-  await cover(sheet(WHITE), { practiceName, date });
+  await cover(sheet(WHITE), { practiceName, date, load });
   headline(sheet(), estimate);
   inputs(sheet(), answers);
   for (const mod of CALCULATOR_MODULES) {
@@ -368,7 +389,10 @@ export async function buildReport({
 
 /* --- 1. Cover ------------------------------------------------------------- */
 
-async function cover(s: Sheet, meta: { practiceName?: string; date: string }): Promise<void> {
+async function cover(
+  s: Sheet,
+  meta: { practiceName?: string; date: string; load: AssetLoader }
+): Promise<void> {
   // A single field of rules behind the title: the site's own recovery field,
   // reduced to what a printed page can carry without becoming decoration.
   for (let i = 0; i < 9; i += 1) {
@@ -382,7 +406,7 @@ async function cover(s: Sheet, meta: { practiceName?: string; date: string }): P
   }
 
   try {
-    const mark = await s.doc.embedPng(await loadBytes('/logo-mark.png'));
+    const mark = await s.doc.embedPng(await meta.load(MARK));
     const width = 34;
     s.page.drawImage(mark, {
       x: MARGIN,

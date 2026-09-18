@@ -3,66 +3,62 @@
     "name": "home",
     "path": "/",
     "scores": {
-      "performance": 92,
+      "performance": 93,
       "accessibility": 100,
-      "best-practices": 100,
+      "best-practices": 96,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 3352,
+      "lcp": 3282,
       "cls": 0.001,
-      "tbt": 34,
-      "bytes": 405213,
-      "scriptBytes": 171121
+      "tbt": 26,
+      "bytes": 381118,
+      "scriptBytes": 161583
     },
     "problems": [],
     "notes": [
-      "LCP 3352ms over the 2500ms target"
+      "LCP 3282ms over the 2500ms target"
     ]
   },
   {
     "name": "modules",
     "path": "/modules",
     "scores": {
-      "performance": 96,
+      "performance": 98,
       "accessibility": 100,
-      "best-practices": 100,
+      "best-practices": 96,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2669,
+      "lcp": 2498,
       "cls": 0,
-      "tbt": 28,
-      "bytes": 306626,
+      "tbt": 31,
+      "bytes": 301115,
       "scriptBytes": 166568
     },
     "problems": [],
-    "notes": [
-      "LCP 2669ms over the 2500ms target"
-    ]
+    "notes": []
   },
   {
     "name": "module",
     "path": "/modules/answer",
     "scores": {
-      "performance": 96,
+      "performance": 100,
       "accessibility": 100,
-      "best-practices": 100,
+      "best-practices": 96,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2650,
+      "lcp": 1419,
       "cls": 0,
-      "tbt": 34,
-      "bytes": 319744,
+      "tbt": 26,
+      "bytes": 304828,
       "scriptBytes": 166568
     },
     "problems": [],
-    "notes": [
-      "LCP 2650ms over the 2500ms target"
-    ]
+    "notes": []
   }
 ]

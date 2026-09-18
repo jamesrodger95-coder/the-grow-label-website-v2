@@ -10,7 +10,8 @@
 import type { Answers } from './model';
 
 export type LeadInput = {
-  email: string;
+  /** Usually absent: Cal.com collects it at the booking. See `lead-schema.ts`. */
+  email?: string;
   practiceName?: string;
   answers: Answers;
   /** Honeypot. Must be empty; bots fill it in. */

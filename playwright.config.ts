@@ -47,5 +47,12 @@ export default defineConfig({
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
         timeout: 120_000,
+        // The calculator exists to produce a booking, so the suite runs with a
+        // booking destination configured. The host is never reached: the test
+        // that follows the button through intercepts the request.
+        env: {
+          NEXT_PUBLIC_BOOKING_URL:
+            process.env.NEXT_PUBLIC_BOOKING_URL ?? 'https://cal.example.com/grow-label/assessment',
+        },
       },
 });

@@ -40,7 +40,7 @@ async function answer(page: Page, value: string) {
 
 async function complete(page: Page) {
   for (const value of SAMPLE) await answer(page, value);
-  await expect(page.locator('.calc__figure')).toBeVisible();
+  await expect(page.locator('.calc__book')).toBeVisible();
 }
 
 test.describe('the nine questions', () => {
@@ -54,35 +54,53 @@ test.describe('the nine questions', () => {
     await context.close();
   });
 
-  test('completes, and shows the figure before asking for anything', async ({ page }) => {
+  test('completes, and ends on the booking', async ({ page }) => {
     await page.goto('/calculator');
     await complete(page);
 
-    // The email capture exists, but the figure is not behind it.
-    await expect(page.locator('.calc__figure')).toHaveText(/^\$[\d,]+$/);
-    await expect(page.locator('input[name="email"]')).toBeVisible();
-
-    // Four module rows, each with a figure.
-    await expect(page.locator('.calc-row')).toHaveCount(4);
-    for (const text of await page.locator('.calc-row__value').allTextContents()) {
-      expect(text).toMatch(/^\$[\d,]+$/);
-    }
+    await expect(page.getByRole('heading', { name: /book your call/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /book the call/i })).toBeVisible();
   });
 
-  test('the headline is the low end and is stated as such', async ({ page }) => {
+  /**
+   * The point of the funnel. The figure is what the call is for, so a reader
+   * who has finished the questions must not be able to read it off the page —
+   * not in the copy, not in an attribute, not in the markup at all.
+   */
+  test('shows no revenue figure anywhere on the completed screen', async ({ page }) => {
     await page.goto('/calculator');
     await complete(page);
 
-    const headline = await page.locator('.calc__figure').innerText();
-    const range = await page.locator('.calc__range').innerText();
-    const toNumber = (value: string) => Number(value.replace(/[^\d]/g, ''));
-    const upper = toNumber(range);
+    const markup = await page.locator('main').innerHTML();
+    expect(markup).not.toMatch(/\$\s?\d/);
+    // The two things it IS allowed to show: the hours, and the module order.
+    await expect(page.locator('.calc__hoursvalue')).toHaveText(/^[\d,]+$/);
+    await expect(page.locator('.calc__point')).toHaveCount(4);
+  });
 
-    expect(toNumber(headline)).toBeLessThan(upper);
-    await expect(page.locator('.calc__resulthead')).toContainText(/at least/i);
-    // Both figures are rounded down to a thousand; neither ends in stray digits.
-    expect(toNumber(headline) % 1000).toBe(0);
-    expect(upper % 1000).toBe(0);
+  test('sends the answers before it sends the reader to the booking page', async ({ page }) => {
+    // The booking host is stubbed; the point is the order of the two steps.
+    await page.route('https://cal.example.com/**', (route) =>
+      route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Booking</h1>' })
+    );
+
+    await page.goto('/calculator');
+    await complete(page);
+
+    const posted = page.waitForRequest(
+      (request) => request.url().includes('/api/calculator/lead') && request.method() === 'POST'
+    );
+    await page.getByRole('button', { name: /book the call/i }).click();
+    const request = await posted;
+
+    const body = request.postDataJSON() as { answers?: Record<string, unknown> };
+    expect(body.answers?.practice).toBe('dental');
+    expect(body.answers?.weeklyAppointments).toBe(240);
+    // No email is collected on our side; Cal.com takes it at the booking.
+    expect(body).not.toHaveProperty('email');
+
+    // And the reader does arrive at the booking page, whatever the lead did.
+    await page.waitForURL(/cal\.example\.com/, { timeout: 15_000 });
   });
 
   test('back preserves the answer that was given', async ({ page }) => {
@@ -177,6 +195,27 @@ test.describe('the lead endpoint', () => {
     const body = (await res.json()) as { status: string };
     if (res.status() === 503) expect(body.status).toBe('unconfigured');
     if (res.status() === 200) expect(body.status).toBe('success');
+  });
+
+  test('accepts a lead with no email at all, which is the normal case', async ({ request }) => {
+    const res = await request.post('/api/calculator/lead', {
+      headers: bucket('25'),
+      data: {
+        answers: {
+          practice: 'veterinary',
+          locations: '2-3',
+          records: '1500-4000',
+          weeklyAppointments: 120,
+          value: '100-200',
+          desk: '2-3',
+          calls: 'try-again',
+          noShows: '5-10',
+          campaign: 'over-12',
+        },
+      },
+    });
+    // Never a 400: the questionnaire does not ask for an email.
+    expect([200, 429, 502, 503]).toContain(res.status());
   });
 
   test('rejects a filled honeypot and a malformed email', async ({ request }) => {

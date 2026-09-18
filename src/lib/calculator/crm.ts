@@ -24,12 +24,22 @@ import type { Answers } from './model';
  * else.
  */
 
+/**
+ * The figures behind a lead — none of which the prospect has seen.
+ *
+ * The questionnaire shows them their front-desk hours and which modules their
+ * answers point at, and stops there. Everything below is what the call is for,
+ * and it is what the team builds the assessment from.
+ */
 export type LeadEstimateSummary = {
-  /** The figure shown large, already rounded down. */
+  /** The conservative headline, already rounded down. */
   headline: number;
   /** Top of the modelled range, already rounded down. */
   upper: number;
   hoursReturned: number;
+  /** The spine of the model, so the arithmetic can be followed by hand. */
+  appointmentsPerYear: number;
+  appointmentValue: number;
   /** Per module, rounded down to the nearest hundred, in module order. */
   modules: { slug: string; value: number }[];
 };
@@ -39,9 +49,13 @@ export type LeadPayload = {
   source: string;
   /** ISO 8601, UTC. */
   submittedAt: string;
-  /** Opaque reference, also shown to the person who filled the form in. */
+  /**
+   * Opaque reference. It travels to Cal.com as a query parameter on the
+   * booking link, so the booking that arrives can be matched to these answers.
+   */
   reference: string;
-  email: string;
+  /** Usually absent — Cal.com collects it at the booking. */
+  email?: string;
   /** Practice name, when it was given. Optional on the form by design. */
   practiceName?: string;
   /** The nine answers exactly as the model received them. */

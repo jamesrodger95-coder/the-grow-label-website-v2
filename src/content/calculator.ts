@@ -29,10 +29,10 @@ import {
 } from '@/lib/calculator/model';
 
 export const CALCULATOR = {
-  label: 'Revenue recovery calculator',
+  label: 'Revenue recovery assessment',
   title: 'Nine questions,',
-  emphasis: 'and a conservative number.',
-  lead: 'A modelled estimate of the revenue your practice is generating and not converting, built from nine answers about how your front desk runs. It takes under two minutes and gives you the figure before it asks for anything.',
+  emphasis: 'then a call about the answers.',
+  lead: 'Answer nine questions about how your front desk runs and we build your revenue assessment from them — what your practice is generating and not converting, priced against your own appointment value. It takes under two minutes, and we go through what it found on a call.',
   meta: 'Nine questions · under two minutes',
   /** Shown beside the progress indicator while the questions are open. */
   progressLabel: 'Question',
@@ -52,11 +52,11 @@ export const CALCULATOR = {
           : 'Under 30 seconds left',
   back: 'Back',
   next: 'Continue',
-  finish: 'See the estimate',
+  finish: 'Finish',
   restart: 'Start again',
   change: 'Change an answer',
   /** How the two entry points elsewhere on the site name this. */
-  entry: 'Estimate what you are losing',
+  entry: 'Get your revenue assessment',
   entryHref: '/calculator',
 } as const;
 
@@ -223,7 +223,12 @@ export const QUESTIONS: readonly Question[] = [
 /** Seconds a person needs per question. Used for the time-remaining line. */
 export const SECONDS_PER_QUESTION = 10;
 
-/** The label a given answer should show in a summary or a report table. */
+/**
+ * The label a given answer should show in a summary or a report table.
+ *
+ * Used by the report the team builds, which prints the nine answers back so a
+ * wrong one can be corrected on the call rather than quietly carried.
+ */
 export function answerLabel(id: keyof Answers, value: string | number): string {
   const question = QUESTIONS.find((q) => q.id === id);
   if (!question) return String(value);
@@ -232,44 +237,94 @@ export function answerLabel(id: keyof Answers, value: string | number): string {
 }
 
 /* -------------------------------------------------------------------------- */
-/* The result screen                                                          */
+/* The booking screen                                                         */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The screen the nine questions end on.
+ *
+ * It is a booking screen, not a results screen. The revenue figure the model
+ * produced is deliberately not on it: the number is what the call is for, and
+ * a prospect who has read it has no reason to turn up.
+ *
+ * What IS on it has to be worth the nine questions on its own, or the
+ * questionnaire reads as a toll gate. So it shows two things that are true,
+ * specific to their answers, and cost nothing to give away: the hours their
+ * front desk currently spends on this work, and which of the four modules
+ * their own answers point at, in order. Neither one is the number.
+ */
 export const RESULT = {
-  eyebrow: 'Your estimate',
-  headlineLabel: 'At least',
-  headlineSuffix: 'a year',
-  rangeLabel: (upper: string) => `Modelled range: up to ${upper} a year on the same answers.`,
-  lead: 'This is a modelled estimate built from your nine answers, not a measurement of your practice. It is deliberately set at the low end of what the model produces, because the assessment that follows has to be able to beat it.',
+  eyebrow: 'Your assessment',
+  titleLines: ['Book your call to get', 'your revenue assessment.'],
+  lead: 'Your answers are in. We build the assessment from them before the call, and go through it with you on the call — what is being lost, where, and what it is worth, priced against your own appointment value.',
+  /** The two things the reader is shown. Neither is the revenue figure. */
   hoursLabel: 'Front-desk hours a year',
   hoursNote:
-    'Time currently spent returning missed calls, chasing no-shows and working a dormant list by hand.',
-  breakdownTitle: 'Where the estimate comes from',
-  breakdownNote:
-    'Each row is the top of that module’s own range. They sum to the upper figure above; the headline holds at sixty per cent of it.',
+    'Modelled from your own answers: time currently spent returning missed calls, chasing no-shows and working a lapsed list by hand. It is the smaller half of what we found.',
+  pointsTitle: 'What your answers point at',
+  pointsNote:
+    'The four modules, ordered by how much of your estimate sits in each. The figures behind this ordering are in the assessment.',
+  pointsLead: 'Largest first, for a practice answering the way you did.',
   thresholdWarning:
-    'Under about 1,500 active records the reactivation arithmetic is working on a list too small to behave like one. The estimate still stands, but treat the Reactivate row as the softest of the four.',
+    'One thing worth saying now: under about 1,500 active records the reactivation arithmetic is working on a list too small to behave like one. We will say so again on the call rather than quietly leaning on it.',
+  /** The ask. */
+  bookCta: 'Book the call',
+  bookPreparing: 'One moment…',
+  bookNote:
+    'Thirty minutes, no preparation needed, and nothing is installed or changed in your systems to produce the assessment.',
+  whatYouGet: [
+    'The full revenue figure, at four separate stages rather than as one number.',
+    'The working: every coefficient, every input, and what each one was set from.',
+    'Which of the four modules applies to which loss in your practice, and what each would need.',
+    'A plain statement of what nine answers cannot tell us, and what an assessment would measure instead.',
+  ],
+  /** Shown when there is no booking destination configured. */
+  unbooked:
+    'The booking link is not configured on this deployment. Send the request through the contact form and we will come back with a time.',
   disclaimer:
-    'No figure here is a forecast, a commitment or a result. It is arithmetic applied to nine answers, and every coefficient behind it is printed in the report.',
-  reportTitle: 'The full report',
-  reportLead:
-    'Nine pages: how each module applies to the answers you gave, the inputs that produced each figure, what an assessment measures, and every coefficient used with the reasoning behind it.',
-  reportCta: 'Email me the report',
-  reportDownload: 'Download the report',
-  reportPreparing: 'Preparing the report…',
-  reportReady:
-    'Your report has downloaded. It carries the same figures as this page and shows all of the working.',
-  emailLabel: 'Work email',
-  emailError: 'Enter a valid work email address.',
-  nameLabel: 'Practice name',
-  nameHelp: 'Optional. It goes on the cover of the report.',
-  privacy:
-    'We use your email to send the report and to follow up once. No client, patient or clinical information is collected by this tool.',
-  unconfigured:
-    'This deployment has nowhere to send your details, so nothing was sent and nothing was stored. The report is yours either way — it is built in your browser.',
-  failed:
-    'Your details could not be sent, so nothing was stored. The report is still yours: it is built in your browser, not on our server.',
-  assessmentCta: 'Request the assessment that measures it',
+    'Everything here is modelled from nine answers. It is not a measurement of your practice, nothing has been read from your systems, and no figure is a commitment.',
+  change: 'Change an answer',
+} as const;
+
+/**
+ * The page Cal.com returns them to once the booking is made.
+ *
+ * Set the redirect on the Cal.com event type to this route. It is deliberately
+ * `noindex` and out of the sitemap: it is a confirmation, and a confirmation
+ * page that ranks is a confirmation page people arrive at without having done
+ * the thing it confirms.
+ */
+export const BOOKED = {
+  label: 'Booked',
+  title: 'That is booked.',
+  emphasis: 'We will be in touch with your report.',
+  lead: 'Your call is confirmed and the details are in your inbox. We build the assessment from the answers you gave before we speak, so the call starts at the findings rather than at the questions.',
+  stepsTitle: 'Between now and then',
+  steps: [
+    {
+      index: '01',
+      title: 'We build the assessment',
+      detail:
+        'From your nine answers, using your own appointment value. Nothing is installed, nothing connects to your systems, and we ask for no data to do it.',
+    },
+    {
+      index: '02',
+      title: 'We go through it with you',
+      detail:
+        'The figure at four separate stages, the working behind each one, and which of the four modules applies to which loss. Thirty minutes.',
+    },
+    {
+      index: '03',
+      title: 'You decide whether to measure it',
+      detail:
+        'The paid assessment reads a defined window of your own contact and scheduling data and reports what was actually lost. Nothing commits you to it.',
+    },
+  ],
+  prepTitle: 'Nothing to prepare',
+  prepBody:
+    'You do not need to pull a report or ask anyone for figures before the call. If you happen to know your unanswered-call count for last month, bring it — it is the one number that usually surprises people, and it is the hardest of the four to estimate from the outside.',
+  reschedule:
+    'Need to move it? The confirmation email carries the reschedule link. If anything else comes up, reply to it and it reaches us.',
 } as const;
 
 /* -------------------------------------------------------------------------- */

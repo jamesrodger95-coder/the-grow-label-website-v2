@@ -3,26 +3,41 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
 import { Calculator } from '@/components/calculator/Calculator';
 import { ActionLink, SectionHeader, TextLink } from '@/components/primitives';
-import { CALCULATOR, REPORT } from '@/content/calculator';
+import { CALCULATOR } from '@/content/calculator';
+import { bookingUrl } from '@/lib/env';
 
 export const metadata: Metadata = {
-  title: 'Revenue recovery calculator',
+  title: 'Revenue recovery assessment',
   description:
-    'A conservative, modelled estimate of the revenue your practice generates and does not convert. Nine questions, under two minutes, and the figure is shown before anything is asked for.',
+    'Nine questions about how your front desk runs, and we build your revenue assessment from them. Under two minutes, and we go through what it found on a call.',
   alternates: { canonical: '/calculator' },
 };
 
 /**
- * The calculator.
+ * Rendered per request so the booking link is read at runtime.
  *
- * It sits before the paid assessment in the funnel: this estimates, the
- * assessment measures, and every line of copy on the route holds that line.
+ * Statically prerendered, `NEXT_PUBLIC_BOOKING_URL` would be baked in at build
+ * time and setting the Cal.com link would mean a redeploy. `/contact` is
+ * dynamic for exactly this reason.
+ */
+export const dynamic = 'force-dynamic';
+
+/**
+ * The assessment questionnaire.
  *
- * The page is server-rendered apart from the wizard itself, so a reader with a
- * blocked bundle still gets the first question, the explanation of what the
- * model is, and a working route to the assessment.
+ * A lead magnet, and the shape of the funnel is deliberate: the questions
+ * produce an estimate, the estimate is built into an assessment, and the
+ * assessment is gone through on a call. The revenue figure is never shown on
+ * screen — it is the reason for the call, and a reader who already has it has
+ * no reason to turn up.
+ *
+ * The page is server-rendered apart from the questionnaire itself, so a reader
+ * with a blocked bundle still gets the first question, the explanation of what
+ * this is, and a working route to the assessment.
  */
 export default function CalculatorPage() {
+  const booking = bookingUrl();
+
   return (
     <>
       <PageHeader
@@ -40,7 +55,7 @@ export default function CalculatorPage() {
           </h2>
           <div className="calc-layout">
             <Reveal variant="card">
-              <Calculator />
+              <Calculator bookingUrl={booking} />
             </Reveal>
 
             <Reveal className="calc-aside" index={1}>
@@ -49,25 +64,25 @@ export default function CalculatorPage() {
               </p>
               <ul className="ticks">
                 <li>
-                  A modelled estimate from nine answers. It is not a measurement, and nothing in it
-                  has been read from your systems.
+                  Nine questions about how your front desk runs. No system details, no logins, and
+                  nothing connects to your practice management system.
                 </li>
                 <li>
-                  Deliberately conservative. The headline holds at sixty per cent of what the model
-                  produces, and every figure is rounded down.
+                  We build your assessment from the answers and go through it with you on a call —
+                  the figure, the working, and which of the four modules applies where.
                 </li>
                 <li>
-                  The figure appears before the form. Nothing is gated behind an email except the
-                  written report.
+                  Every figure in it is modelled from what you tell us. It is not a measurement, and
+                  we say so on the call as plainly as we say it here.
                 </li>
                 <li>
                   No client, patient or clinical information is collected, and none of it is needed.
                 </li>
               </ul>
               <p className="small" style={{ marginTop: 28 }}>
-                The paid revenue assessment is what measures this properly: it reads a defined
-                window of your own contact and scheduling data and reports what was actually lost,
-                priced from your own fee schedule.
+                The paid revenue assessment is the step after the call, and it is what measures this
+                properly: it reads a defined window of your own contact and scheduling data and
+                reports what was actually lost, priced from your own fee schedule.
               </p>
               <p style={{ marginTop: 20 }}>
                 <TextLink href="/platform#value-stages">How value is measured, in full</TextLink>
@@ -77,34 +92,40 @@ export default function CalculatorPage() {
         </div>
       </section>
 
-      <section className="surface--white on-light section" aria-labelledby="calc-report-title">
+      <section className="surface--white on-light section" aria-labelledby="calc-call-title">
         <div className="shell">
           <Reveal variant="group">
             <SectionHeader
-              eyebrow="The report"
-              aside="Ten pages · every coefficient stated"
-              id="calc-report-title"
-              title="It shows its working,"
+              eyebrow="The call"
+              aside="Thirty minutes · nothing to prepare"
+              id="calc-call-title"
+              title="We show our working,"
               emphasis="which nobody else does."
             />
           </Reveal>
           <div className="two-col">
             <Reveal>
               <p className="lead" style={{ marginBottom: 28 }}>
-                {REPORT.methodologyBody[0]}
+                Every coefficient behind your figure is stated on the call, with what it was set
+                from. A number you can audit is worth more than a number you cannot, even when the
+                auditable one is smaller — and ours is deliberately the smaller one.
               </p>
-              <p className="small">{REPORT.basisBody}</p>
+              <p className="small">
+                The model is tuned to be beaten. It holds its headline at sixty per cent of what its
+                own arithmetic produces and rounds every figure down, because the estimate exists to
+                be exceeded by the measurement that follows rather than defended.
+              </p>
             </Reveal>
             <Reveal index={1}>
               <p className="label" style={{ marginBottom: 14 }}>
-                What the report contains
+                What we go through
               </p>
               <ul className="ticks">
-                <li>The estimate, and the front-desk hours a year behind it.</li>
+                <li>The figure, at four separate stages rather than as one number.</li>
                 <li>Your nine answers, so you can correct anything that is wrong.</li>
                 <li>
-                  One page per module: the leak in your practice, the figure, and the inputs that
-                  produced it.
+                  One section per module: the leak in your practice, what it is worth, and the
+                  inputs that produced it.
                 </li>
                 <li>What an assessment measures, what it needs, and how long it takes.</li>
                 <li>Every coefficient used, and a plain statement of what the estimate is not.</li>

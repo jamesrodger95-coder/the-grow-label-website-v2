@@ -5,10 +5,13 @@ import { join } from 'node:path';
 /**
  * Walks the calculator end to end and captures every state.
  *
- * Nine question screens, the result, and the generated PDF, at one viewport per
- * run. It also reports what the capture harness reports — console errors,
- * failed requests and horizontal overflow — because a flow that is only ever
- * screenshotted at rest hides the states that actually break.
+ * Nine question screens and the booking screen the funnel ends on, at one
+ * viewport per run. The report is a team-side artefact now and is built by
+ * `pnpm report`, not by anything the prospect touches.
+ *
+ * It reports what the capture harness reports — console errors, failed
+ * requests and horizontal overflow — plus the one thing specific to this
+ * funnel: whether a revenue figure leaked onto the completed screen.
  *
  *   node scripts/calculator-walk.mjs 3112 390 844 artifacts/calculator/mobile
  */
@@ -38,7 +41,6 @@ const context = await browser.newContext({
   viewport: { width: +w, height: +h },
   deviceScaleFactor: 1,
   hasTouch: +w <= 820,
-  acceptDownloads: true,
 });
 const page = await context.newPage();
 
@@ -98,30 +100,49 @@ await page.waitForTimeout(900);
 await page.screenshot({ path: join(outDir, 'result-top.png'), fullPage: false });
 await page.screenshot({ path: join(outDir, 'result-full.png'), fullPage: true });
 
-const headline = await page.locator('.calc__figure').first().textContent();
-const range = await page.locator('.calc__range').first().textContent();
 const hours = await page.locator('.calc__hoursvalue').first().textContent();
-const rows = await page.locator('.calc-row__value').allTextContents();
+const points = await page.locator('.calc__pointname').allTextContents();
+const booking = await page
+  .getByRole('button', { name: /book the call/i })
+  .count()
+  .then((n) => n > 0);
+
+// The figure must not be anywhere in the completed screen's markup. This is
+// the funnel's whole premise, so the harness checks it rather than trusting it.
+const leaked = (await page.locator('main').innerHTML()).match(/\$\s?[\d,]+/g);
+if (leaked) notes.push(`FIGURE LEAKED ON SCREEN: ${[...new Set(leaked)].join(', ')}`);
 const over = await overflow();
 if (over) notes.push(`result overflow: ${JSON.stringify(over)}`);
 
-// The report: fill the capture, submit, and keep the file.
-await page.fill('input[name="email"]', 'owner@example.com');
-await page.fill('input[name="practiceName"]', 'Northgate Dental Group');
-const download = page.waitForEvent('download', { timeout: 60000 });
-await page.click('.calc__reportform button[type="submit"]');
-const file = await download;
-const pdfPath = join(outDir, 'report.pdf');
-await file.saveAs(pdfPath);
+// The booking. The host is stubbed so the walk stays local, and what is
+// being checked is that the answers are posted before the reader leaves.
+await page.route('**://cal.com/**', (route) =>
+  route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Booking</h1>' })
+);
+let posted = null;
+page.on('request', (request) => {
+  if (request.url().includes('/api/calculator/lead') && request.method() === 'POST') {
+    posted = request.postDataJSON();
+  }
+});
+if (booking) {
+  await page.getByRole('button', { name: /book the call/i }).click();
+  await page.waitForTimeout(2500);
+}
 
 await page.waitForTimeout(500);
-await page.screenshot({ path: join(outDir, 'result-after-download.png'), fullPage: false });
+await page.screenshot({ path: join(outDir, 'after-booking-click.png'), fullPage: false });
 
-writeFileSync(
-  join(outDir, 'summary.json'),
-  JSON.stringify({ headline, range, hours, rows, errors, failed, notes, pdf: pdfPath }, null, 2)
-);
-
-console.log(JSON.stringify({ headline, range, hours, rows, errors, failed, notes }, null, 2));
+const summary = {
+  hours,
+  points,
+  booking,
+  postedAnswers: posted?.answers ?? null,
+  errors,
+  failed,
+  notes,
+};
+writeFileSync(join(outDir, 'summary.json'), JSON.stringify(summary, null, 2));
+console.log(JSON.stringify(summary, null, 2));
 
 await browser.close();
