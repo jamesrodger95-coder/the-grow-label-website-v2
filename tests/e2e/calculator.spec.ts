@@ -101,15 +101,36 @@ test.describe('the nine questions', () => {
     expect(body).not.toHaveProperty('email');
   });
 
-  test('offers a way to book while the embed is not yet wired', async ({ page }) => {
+  test('mounts the calendar, and keeps a way to book if it does not load', async ({ page }) => {
     await page.goto('/calculator');
     await complete(page);
 
-    // The slot the calendar mounts into, and the fallback that has to survive
-    // it: on a network that blocks the Cal.com script this link is the only
-    // way left to book.
-    await expect(page.locator('#cal-booking')).toBeVisible();
+    // The element Cal.com mounts into, by the id its own snippet names.
+    await expect(page.locator('#my-cal-inline-revenue-assessment')).toBeVisible();
+
+    // The fallback beside it, which has to survive the embed: on a network
+    // that blocks app.cal.com this link is the only way left to book.
     await expect(page.getByRole('link', { name: /book the call|request a time/i })).toBeVisible();
+  });
+
+  /**
+   * The embed is the site's only third-party script, so `/calculator` is the
+   * only route whose CSP names Cal.com. Get that wrong and the calendar is a
+   * blank box with a console error nobody sees.
+   */
+  test('carries a policy that allows the calendar, and only here', async ({ request }) => {
+    const booking = await request.get('/calculator');
+    const policy = booking.headers()['content-security-policy'] ?? '';
+    expect(policy).toContain('frame-src https://app.cal.com');
+    expect(policy).toMatch(/script-src[^;]*https:\/\/app\.cal\.com/);
+    expect(policy).toMatch(/connect-src[^;]*https:\/\/app\.cal\.com/);
+
+    const elsewhere = await request.get('/contact');
+    const strict = elsewhere.headers()['content-security-policy'] ?? '';
+    expect(strict).toContain("frame-src 'none'");
+    expect(strict).not.toContain('cal.com');
+    // And exactly one policy header, or the browser intersects them.
+    expect(strict.split('frame-src').length).toBe(2);
   });
 
   test('back preserves the answer that was given', async ({ page }) => {

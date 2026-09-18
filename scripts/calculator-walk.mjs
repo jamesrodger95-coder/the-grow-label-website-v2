@@ -120,6 +120,35 @@ const bookingControl = await page
   .count()
   .then((n) => n > 0);
 
+// The calendar is the point of the screen, so the harness waits for it rather
+// than screenshotting the top of the page and calling the flow verified. It
+// reports what it found either way: "failed" is a real outcome on a network
+// that blocks app.cal.com, and the fallback link is what covers it.
+const mount = page.locator('#my-cal-inline-revenue-assessment');
+let embed = 'absent';
+if (await mount.count()) {
+  await mount.scrollIntoViewIfNeeded();
+  try {
+    // Cal marks its wrapper `loading="done"` once the iframe has rendered.
+    // Waiting on childElementCount instead catches the wrapper a second or two
+    // earlier and screenshots a spinner, which is how a calendar that never
+    // actually arrives gets recorded as working.
+    await page.waitForFunction(
+      () => {
+        const el = document.querySelector('#my-cal-inline-revenue-assessment');
+        return Boolean(el?.querySelector('cal-inline[loading="done"] iframe'));
+      },
+      undefined,
+      { timeout: 25000 }
+    );
+  } catch {
+    notes.push('the calendar did not finish loading inside 25s');
+  }
+  embed = (await mount.getAttribute('data-status')) ?? 'unknown';
+  await page.waitForTimeout(1500);
+  await mount.screenshot({ path: join(outDir, 'calendar.png') }).catch(() => {});
+}
+
 // The figure must not be anywhere in the completed screen's markup. This is
 // the funnel's whole premise, so the harness checks it rather than trusting it.
 const leaked = (await page.locator('main').innerHTML()).match(/\$\s?[\d,]+/g);
@@ -135,6 +164,7 @@ const summary = {
   points,
   booking,
   bookingControl,
+  embed,
   postedAnswers: posted?.answers ?? null,
   errors,
   failed,

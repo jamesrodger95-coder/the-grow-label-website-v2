@@ -206,11 +206,35 @@ The order of the flow:
    value. Sent once, guarded by a ref against a re-render and a sessionStorage
    flag against a refresh, and best effort throughout: a failure is never shown
    to the reader, who has a calendar in front of them and that is the job.
-4. The calendar is embedded in the screen itself — `CalEmbed`, which currently
-   renders a **placeholder** with the real booking link inside it. The paste
-   instructions are in that file's header comment. Keep the link when the embed
-   goes in: on a network that blocks the Cal.com script it is the only way left
-   to book.
+4. The calendar is embedded in the screen itself — `CalEmbed`. It is Cal.com's
+   published snippet, ported to run from an effect rather than a script tag:
+   the component mounts when the ninth question is answered and unmounts if the
+   reader goes back to change one, and a `<script>` runs once per document, so
+   the second time round the calendar would never come back. `inline()` is
+   called against whatever element is on screen now.
+
+   Three things around it that are not in Cal's snippet:
+
+   - **The CSP.** This is the site's only third-party script, so `/calculator`
+     is the only route whose policy names Cal.com — script-src, connect-src and
+     frame-src. Every other route keeps `frame-src 'none'` and
+     `connect-src 'self'`. The two rules in `next.config.ts` are mutually
+     exclusive by regex on purpose: two Content-Security-Policy headers on one
+     response are intersected by the browser, so the stricter one would win and
+     the calendar would be a blank box. `tests/e2e/calculator.spec.ts` asserts
+     both halves.
+   - **The event comes from `NEXT_PUBLIC_BOOKING_URL`**, not from a constant.
+     That variable already drives the footer and the fallback link, so holding
+     the event in a second place would mean changing it twice and hearing about
+     the one you missed from a prospect. `calLinkFrom()` takes the path off a
+     Cal.com URL and falls back to the published default for anything else —
+     a Calendly link, a lookalike host, nothing at all. `tests/unit/cal-link.test.ts`
+     covers it, because it silently decides which event gets booked.
+   - **The fallback link stays.** A network that blocks app.cal.com otherwise
+     leaves an empty box and a reader with no way to book. It is rendered
+     beside the calendar always, and the copy leads with it once the embed has
+     visibly failed — an 8s deadline, then `data-status="failed"`.
+
 5. Cal.com redirects to `/assessment-booked`. Set that redirect on the event
    type; the page is `noindex` and out of the sitemap, because a confirmation
    page that ranks is one people arrive at without having done the thing it
@@ -362,8 +386,8 @@ Every variable is optional and the site is deployable with none of them.
 | ------------------------------------- | ---------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL`                | Falls back to the Vercel URL, then local |
 | `NEXT_PUBLIC_DASHBOARD_URL`           | "Client sign in" is hidden entirely      |
-| `NEXT_PUBLIC_BOOKING_URL`             | The Cal.com link. Without it the         |
-|                                       | calculator routes to /contact instead    |
+| `NEXT_PUBLIC_BOOKING_URL`             | The Cal.com link. Also names the event   |
+|                                       | the embedded calendar books              |
 | `CONTACT_WEBHOOK_URL`                 | Form switches to its unconfigured state  |
 | `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | As above                                 |
 | `CALCULATOR_CRM_URL`                  | Falls back to `CONTACT_WEBHOOK_URL`      |

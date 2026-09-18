@@ -5241,28 +5241,45 @@
 /* The slot the calendar mounts into. Sized so the month grid has room before
    Cal.com collapses it, and so the page does not jump when it arrives. */
 .calembed__frame {
+  /* Roughly the height Cal.com's month view settles at, so the page does not
+     jump when the calendar replaces the loading line. It grows past this: the
+     embed sets its own height, and the slots view on a phone is taller. */
   min-height: 560px;
   display: grid;
   border-radius: var(--gl-r-lg);
   background: var(--gl-white);
   box-shadow: inset 0 0 0 1px var(--gl-edge);
-  overflow: hidden;
+  /* `auto`, not `hidden`: on a short viewport the month view scrolls inside
+     its own box rather than being clipped. Cal's own snippet uses `scroll`,
+     which shows the bars permanently. */
+  overflow: auto;
 }
 @media (max-width: 720px) {
   .calembed__frame {
     min-height: 420px;
   }
 }
-.calembed__placeholder {
-  display: grid;
-  gap: 12px;
-  justify-items: center;
-  align-content: center;
-  text-align: center;
-  padding: clamp(28px, 4vw, 56px);
+/* The calendar mounts inside; until it does the frame says so rather than
+   sitting empty. Once Cal.com has put something in it the message is covered
+   by the iframe, so it is removed from the flow rather than hidden. */
+.calembed__frame[data-status="loading"]::before {
+  content: "Loading the calendar…";
+  place-self: center;
+  font-size: var(--gl-t-small);
+  color: var(--ghost);
 }
-.calembed__pendingnote {
+.calembed__frame[data-status="failed"]::before {
+  content: "";
+}
+.calembed__frame > * {
+  min-width: 0;
+}
+.calembed__fallback {
   color: var(--faint);
-  max-width: 44ch;
-  margin: 0 0 10px;
+  margin: 0;
+}
+.calembed__frame[data-status="failed"] {
+  min-height: 0;
+  padding: clamp(24px, 3vw, 40px);
+  text-align: center;
 }

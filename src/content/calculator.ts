@@ -315,9 +315,12 @@ export const RESULT = {
   embedLabel: 'Pick a time',
   embedNote:
     'Thirty minutes, and nothing to prepare. You will get a confirmation with the details, and we will have your assessment built before we speak.',
-  embedPending: 'Booking calendar',
-  embedPendingNote:
-    'The calendar loads here. If it has not appeared, this link opens the same booking page in a new tab.',
+  embedLoading: 'Loading the calendar…',
+  /** Sits under the calendar whether or not it arrived. */
+  embedFallback: 'Would rather book in a new tab?',
+  /** Replaces it once the calendar has visibly failed to load. */
+  embedFailed:
+    'The calendar has not loaded — some networks block it. It opens in a new tab instead:',
   unbookedCta: 'Request a time',
   getsTitle: 'What the call covers',
   whatYouGet: [

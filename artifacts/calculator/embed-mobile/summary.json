@@ -1,0 +1,28 @@
+{
+  "hours": "530",
+  "points": [
+    "Answer",
+    "Retain",
+    "Reactivate",
+    "Respond"
+  ],
+  "booking": true,
+  "bookingControl": true,
+  "embed": "ready",
+  "postedAnswers": {
+    "practice": "dental",
+    "value": "200-400",
+    "locations": "4-7",
+    "records": "4000-10000",
+    "weeklyAppointments": 240,
+    "desk": "4-6",
+    "calls": "voicemail",
+    "noShows": "not-sure",
+    "campaign": "never"
+  },
+  "errors": [
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "failed": [],
+  "notes": []
+}
