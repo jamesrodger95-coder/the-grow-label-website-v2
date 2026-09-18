@@ -10,6 +10,7 @@ import {
   StepList,
   TextLink,
 } from '@/components/primitives';
+import { CALCULATOR } from '@/content/calculator';
 import { PLATFORM } from '@/content/pages';
 import { MODULES } from '@/content/modules';
 import { AUDIT_QUESTIONS, CANNOT_CLAIM, STAGE_DEFINITIONS } from '@/content/methodology';
@@ -314,6 +315,9 @@ export default function PlatformPage() {
               </p>
               <div style={{ marginTop: 32, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
+                <ActionLink href={CALCULATOR.entryHref} variant="ghost">
+                  {CALCULATOR.entry}
+                </ActionLink>
               </div>
             </Reveal>
             <Reveal index={1}>

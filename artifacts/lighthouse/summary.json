@@ -10,37 +10,37 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 3414,
-      "cls": 0,
-      "tbt": 42,
-      "bytes": 434855,
-      "scriptBytes": 166568
+      "lcp": 3352,
+      "cls": 0.001,
+      "tbt": 34,
+      "bytes": 405213,
+      "scriptBytes": 171121
     },
     "problems": [],
     "notes": [
-      "LCP 3414ms over the 2500ms target"
+      "LCP 3352ms over the 2500ms target"
     ]
   },
   {
     "name": "modules",
     "path": "/modules",
     "scores": {
-      "performance": 97,
+      "performance": 96,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100,
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2512,
+      "lcp": 2669,
       "cls": 0,
-      "tbt": 49,
-      "bytes": 305641,
+      "tbt": 28,
+      "bytes": 306626,
       "scriptBytes": 166568
     },
     "problems": [],
     "notes": [
-      "LCP 2512ms over the 2500ms target"
+      "LCP 2669ms over the 2500ms target"
     ]
   },
   {
@@ -54,15 +54,15 @@
       "agentic-browsing": 100
     },
     "metrics": {
-      "lcp": 2670,
+      "lcp": 2650,
       "cls": 0,
-      "tbt": 76,
-      "bytes": 320153,
+      "tbt": 34,
+      "bytes": 319744,
       "scriptBytes": 166568
     },
     "problems": [],
     "notes": [
-      "LCP 2670ms over the 2500ms target"
+      "LCP 2650ms over the 2500ms target"
     ]
   }
 ]

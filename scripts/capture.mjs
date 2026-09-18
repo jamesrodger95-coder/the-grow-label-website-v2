@@ -30,6 +30,9 @@ export const ROUTES = [
   ['insights', '/insights'],
   ['insights-entry', '/insights/why-one-revenue-number-is-not-enough'],
   ['contact', '/contact'],
+  // The first question only; the nine screens and the report have their own
+  // harness in scripts/calculator-walk.mjs.
+  ['calculator', '/calculator'],
   ['privacy', '/privacy'],
   ['terms', '/terms'],
   ['dev-styleguide', '/dev/styleguide'],

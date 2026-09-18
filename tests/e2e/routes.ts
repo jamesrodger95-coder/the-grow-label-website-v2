@@ -31,6 +31,7 @@ export const ROUTES = [
     title: /recovered-revenue number/i,
   },
   { path: '/contact', name: 'contact', title: /assessment/i },
+  { path: '/calculator', name: 'calculator', title: /Revenue recovery calculator/i },
   { path: '/privacy', name: 'privacy', title: /Privacy/ },
   { path: '/terms', name: 'terms', title: /Terms/ },
   { path: '/dev/styleguide', name: 'styleguide', title: /Styleguide/ },

@@ -49,14 +49,32 @@ const FIXTURE = join('src', 'content', 'illustrative.ts');
 const CLIENT_EVIDENCE = join('src', 'content', 'testimonials.ts');
 
 /**
- * The files a currency figure is allowed to live in.
+ * WHAT THIS FILE NO LONGER GUARDS, AND WHY
  *
- * The rule this enforces has never been "only one file may hold a number". It
- * is that no figure is ever inlined into a component, because a figure in a
- * component is a figure nobody reviews. Both files here are single-purpose,
- * reviewed content files that state what their numbers are and are not.
+ * Two assertions were removed at the owner's direction when the revenue
+ * recovery calculator was built, because the calculator cannot exist under
+ * either of them:
+ *
+ *   1. CURRENCY CONTAINMENT. A test asserted that no `$`-prefixed figure
+ *      appeared in published source outside `illustrative.ts` and
+ *      `testimonials.ts`. The calculator prices bands, formats a modelled
+ *      estimate and prints a coefficient table, all at runtime. The intent
+ *      behind the rule is met a different way there: `lib/calculator/model.ts`
+ *      derives every label from the same bounds the arithmetic uses, so no
+ *      figure is inlined into a component and none is unreviewed. It is a
+ *      convention now rather than a gate — the gate is gone.
+ *
+ *   2. THE GUARANTEE GREP. `\bguarantee(d|s)?\b` used to fail unless the
+ *      sentence around it carried a negation. The assessment carries a
+ *      guarantee and the report states it, so the pattern was dropped from the
+ *      claims test below. The published limitation on `/platform` and `/terms`
+ *      — that no RESULT is guaranteed — is unaffected and still true; nothing
+ *      enforces it automatically any more.
+ *
+ * Everything else here is intact: the four value stages, the real team, the
+ * attribution and qualifier rules on the released client testimonials, the
+ * typography constraints and the navigation guards.
  */
-const FIGURE_FILES = new Set([FIXTURE, CLIENT_EVIDENCE]);
 
 function readAll(): { file: string; text: string }[] {
   return SOURCE_FILES.map((file) => ({ file, text: readFileSync(file, 'utf8') }));
@@ -146,12 +164,13 @@ function assertedHits(text: string, patterns: RegExp[]): string[] {
 }
 
 describe('unevidenced commercial claims', () => {
-  it('asserts no percentage uplift, ROI, benchmark or guarantee', () => {
+  it('asserts no percentage uplift, ROI or benchmark', () => {
+    // The guarantee pattern that used to sit in this list was removed at the
+    // owner's direction; see the note at the top of the file.
     const patterns = [
       /\b\d+(\.\d+)?\s*%\s*(more|uplift|increase|growth|improvement|higher|better)/i,
       /\b\d+(\.\d+)?\s*x\s+(more|return|roi|revenue|faster|better)/i,
       /\b(average|typical|clients?|practices?)\s+(see|saw|recover|report)\b/i,
-      /\bguarantee(d|s)?\b/i,
       /\bindustry (average|benchmark|standard)\b/i,
     ];
     const hits: string[] = [];
@@ -166,31 +185,6 @@ describe('unevidenced commercial claims', () => {
     const hits: string[] = [];
     for (const { file, text } of readAll()) {
       for (const hit of assertedHits(text, patterns)) hits.push(`${file}: ${hit}`);
-    }
-    expect(hits).toEqual([]);
-  });
-
-  /**
-   * The site publishes finished results, case studies and testimonials, and
-   * every one of them is invented. That is only safe under two conditions, and
-   * this file exists to hold both of them in place:
-   *
-   *   1. Containment — no invented figure lives outside the fixture.
-   *   2. Labelling  — every surface rendering one shows the label.
-   *
-   * Breaking either turns a demonstration into a fabricated client claim.
-   */
-  it('keeps every money figure inside a reviewed content file', () => {
-    const hits: string[] = [];
-    // `/dev/*` is disallowed in robots.ts and linked from nowhere. The
-    // styleguide needs a specimen figure to typeset; it is not published copy.
-    const published = readAll().filter(
-      ({ file }) => !FIGURE_FILES.has(file) && !file.includes(`app${sep}dev`)
-    );
-    for (const { file, text } of published) {
-      for (const match of text.matchAll(/[£$€]\s?\d[\d,.]*|\b(?:AED|SAR|USD|GBP)\s?\d[\d,.]*/g)) {
-        hits.push(`${file}: ${match[0]}`);
-      }
     }
     expect(hits).toEqual([]);
   });

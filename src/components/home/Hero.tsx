@@ -2,6 +2,7 @@ import { RevealLines, Reveal } from '@/components/motion/Reveal';
 import { ActionLink } from '@/components/primitives';
 import { RecoveryField } from './RecoveryField';
 import { HERO } from '@/content/home';
+import { CALCULATOR } from '@/content/calculator';
 import { CTA } from '@/content/site';
 
 /**
@@ -43,8 +44,16 @@ export function Hero() {
                   with the one thing the hero is asking for, and the modules are
                   reached from the nav, the losses table and the modules page
                   anyway. The hero now ends on the ask. */}
+              {/* The second control is the calculator, and it is the only one
+                  that has earned a place back beside the ask: it is a lighter
+                  version of the same request, for a reader who is not ready to
+                  hand over their details yet. It stays a ghost so the hero
+                  still has exactly one primary action. */}
               <Reveal className="hero__actions" variant="rise" index={5}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
+                <ActionLink href={CALCULATOR.entryHref} variant="ghost">
+                  {CALCULATOR.entry}
+                </ActionLink>
               </Reveal>
             </div>
 

@@ -4589,3 +4589,407 @@
     opacity: 1;
   }
 }
+
+/* ==========================================================================
+   REVENUE RECOVERY CALCULATOR  (/calculator)
+
+   One question per screen, inside one card. The card is the only thing on the
+   route that changes as you use it, so everything else is held still: no
+   progress animation beyond the bar drawing, and no transition on anything
+   carrying a figure.
+
+   The question's entrance is the RISE verb, written out rather than borrowed
+   from `.m-rise`. It cannot use `Reveal`: MotionProvider marks `[data-reveal]`
+   elements once per route, and a question mounted after that pass would never
+   be marked — it would sit at opacity 0 permanently. The attribute is the same
+   one, set by the component itself.
+   ========================================================================= */
+.calc-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(28px, 4vw, 72px);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .calc-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.calc {
+  position: relative;
+  /* Focus moves to each new question's heading, which scrolls the card. The
+     nav is fixed, so without this the heading lands underneath it. */
+  scroll-margin-top: calc(var(--gl-nav-h) + 28px);
+  padding: clamp(22px, 3vw, 38px);
+  background: var(--gl-white);
+  border-radius: var(--gl-r-xl);
+  box-shadow:
+    inset 0 0 0 1px var(--gl-edge),
+    var(--gl-shadow-md);
+}
+
+/* --- Progress ------------------------------------------------------------- */
+.calc__head {
+  margin-bottom: clamp(24px, 3vw, 36px);
+}
+.calc__count {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.calc__time {
+  color: var(--ghost);
+}
+.calc__progress {
+  position: relative;
+  height: 3px;
+  border-radius: var(--gl-r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+.calc__progressfill {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width var(--gl-dur-standard) var(--gl-ease);
+}
+
+/* --- The question --------------------------------------------------------- */
+[data-motion="on"] .calc__q {
+  opacity: 0;
+  transform: translate3d(0, var(--gl-rise), 0);
+  transition:
+    opacity var(--gl-dur-standard) var(--gl-ease),
+    transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+[data-motion="on"] .calc__q[data-inview="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+.calc__set {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.calc__legend {
+  display: block;
+  padding: 0;
+  width: 100%;
+}
+.calc__title {
+  margin: 0;
+  max-width: 22ch;
+}
+.calc__title:focus {
+  outline: none;
+}
+.calc__help {
+  margin-top: 14px;
+  max-width: 54ch;
+  color: var(--faint);
+}
+
+/* --- Options -------------------------------------------------------------- */
+.calc__opts {
+  display: grid;
+  gap: 10px;
+  margin-top: clamp(24px, 3vw, 32px);
+}
+.calc__opt {
+  position: relative;
+}
+/* The radio keeps its place in the accessibility tree and its arrow-key
+   navigation; it is the label beside it that is painted. */
+.calc__radio {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.calc__optlabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  min-height: 56px;
+  border: 1px solid var(--rule);
+  border-radius: var(--gl-r-md);
+  background: var(--gl-white);
+  cursor: pointer;
+  transition:
+    border-color var(--gl-dur-micro) var(--gl-ease),
+    background-color var(--gl-dur-micro) var(--gl-ease),
+    color var(--gl-dur-micro) var(--gl-ease);
+}
+.calc__optlabel:hover {
+  border-color: var(--gl-purple-muted);
+  background: var(--gl-purple-quiet);
+}
+.calc__radio:focus-visible + .calc__optlabel {
+  outline: var(--gl-focus-w) solid var(--accent);
+  outline-offset: var(--gl-focus-offset);
+}
+.calc__optmark {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 1px solid var(--faint);
+  transition:
+    border-color var(--gl-dur-micro) var(--gl-ease),
+    box-shadow var(--gl-dur-micro) var(--gl-ease);
+}
+.calc__opt[data-checked="true"] .calc__optlabel {
+  border-color: var(--accent);
+  background: var(--gl-purple-quiet);
+}
+.calc__opt[data-checked="true"] .calc__optmark {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 4px var(--accent);
+}
+.calc__opttext {
+  display: block;
+  font-size: var(--gl-t-body);
+  font-weight: var(--gl-w-medium);
+  color: var(--fg);
+}
+.calc__optnote {
+  display: block;
+  margin-top: 4px;
+  color: var(--faint);
+}
+
+/* --- The one numeric answer ----------------------------------------------- */
+.calc__number {
+  margin-top: clamp(24px, 3vw, 32px);
+  display: grid;
+  gap: 10px;
+  max-width: 280px;
+}
+.calc__input {
+  font-size: var(--gl-t-display-3);
+  font-weight: var(--gl-w-semi);
+  letter-spacing: var(--gl-tr-tight);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets a headline as "$287 , 000". */
+  min-height: 64px;
+}
+.calc__suffix {
+  color: var(--faint);
+}
+.calc__error {
+  margin-top: 2px;
+}
+
+/* --- Actions -------------------------------------------------------------- */
+.calc__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: clamp(28px, 3.4vw, 40px);
+}
+.calc__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--gl-t-small);
+  color: var(--faint);
+  transition: color var(--gl-dur-micro) var(--gl-ease);
+}
+.calc__back:hover,
+.calc__back:focus-visible {
+  color: var(--accent);
+}
+/* A control that cannot yet do anything says so in colour, which is the
+   response verb, rather than by dimming the whole button. */
+.calc .btn:disabled {
+  background: var(--gl-purple-disabled);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.calc .btn:disabled::before {
+  content: none;
+}
+
+/* --- The aside ------------------------------------------------------------ */
+.calc-aside {
+  position: sticky;
+  top: calc(var(--gl-nav-h) + 32px);
+}
+@media (max-width: 900px) {
+  .calc-aside {
+    position: static;
+  }
+}
+
+/* --- The result ----------------------------------------------------------- */
+.calc--result {
+  display: grid;
+  gap: clamp(28px, 3.4vw, 44px);
+}
+.calc__resulthead {
+  display: grid;
+  gap: 12px;
+}
+.calc__figurelabel {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  font-weight: var(--gl-w-regular);
+}
+.calc__figurelabel:focus {
+  outline: none;
+}
+.calc__figure {
+  font-size: var(--gl-t-figure);
+  font-weight: var(--gl-w-semi);
+  letter-spacing: var(--gl-tr-hero);
+  line-height: 1;
+  color: var(--fg);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets a headline as "$287 , 000". */
+}
+.calc__range {
+  color: var(--faint);
+}
+.calc__resultlead {
+  max-width: 56ch;
+  color: var(--muted);
+}
+
+.calc__hours {
+  display: grid;
+  gap: 6px;
+  padding: 20px 22px;
+  border-radius: var(--gl-r-md);
+  background: var(--gl-purple-quiet);
+}
+.calc__hoursvalue {
+  font-size: var(--gl-t-figure-sm);
+  font-weight: var(--gl-w-semi);
+  letter-spacing: var(--gl-tr-display);
+  line-height: 1;
+  color: var(--gl-purple-ink);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets a headline as "$287 , 000". */
+}
+.calc__hours .micro {
+  color: var(--faint);
+  max-width: 52ch;
+}
+
+.calc__breakdown {
+  display: grid;
+  gap: 18px;
+  padding-top: clamp(24px, 3vw, 34px);
+  border-top: 1px solid var(--rule);
+}
+.calc__breakdowntitle {
+  margin: 0;
+}
+.calc__rows {
+  display: grid;
+  gap: 22px;
+}
+.calc-row__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.calc-row__name {
+  font-size: var(--gl-t-small);
+  font-weight: var(--gl-w-semi);
+  letter-spacing: var(--gl-tr-label);
+  text-transform: uppercase;
+  color: var(--fg);
+}
+.calc-row__value {
+  font-size: var(--gl-t-display-4);
+  font-weight: var(--gl-w-semi);
+  color: var(--fg);
+  /* No tabular-nums. See .result__figure: this face gives the comma a full
+     digit advance in that mode, which sets a headline as "$287 , 000". */
+}
+.calc-row__track {
+  display: block;
+  height: 5px;
+  border-radius: var(--gl-r-pill);
+  background: var(--track);
+  overflow: hidden;
+}
+.calc-row__fill {
+  display: block;
+  width: var(--w);
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+[data-motion="on"] .calc-row__fill {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+  transition-delay: calc(var(--i, 0) * var(--gl-stagger));
+}
+[data-motion="on"] .calc__rows[data-inview="true"] .calc-row__fill {
+  transform: scaleX(1);
+}
+.calc-row__leak {
+  margin-top: 10px;
+  color: var(--faint);
+  max-width: 62ch;
+}
+.calc__note {
+  color: var(--ghost);
+  max-width: 62ch;
+}
+.calc__warning {
+  padding: 14px 16px;
+  border-radius: var(--gl-r-sm);
+  background: var(--gl-purple-quiet);
+  color: var(--gl-purple-ink);
+  max-width: 62ch;
+}
+
+.calc__report {
+  display: grid;
+  gap: 14px;
+  padding-top: clamp(24px, 3vw, 34px);
+  border-top: 1px solid var(--rule);
+}
+.calc__reportlead {
+  max-width: 58ch;
+  color: var(--muted);
+}
+.calc__reportform {
+  margin-top: 8px;
+  max-width: 420px;
+}
+
+.calc__after {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  padding-top: clamp(24px, 3vw, 34px);
+  border-top: 1px solid var(--rule);
+}
+.calc__afterlinks {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}

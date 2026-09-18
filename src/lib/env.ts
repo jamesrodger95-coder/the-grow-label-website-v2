@@ -46,6 +46,15 @@ export function bookingUrl(): string | undefined {
   return asUrl(process.env.NEXT_PUBLIC_BOOKING_URL);
 }
 
+/**
+ * Whether the calculator has anywhere to send a lead. A deployment that can
+ * already receive an assessment request can receive one without further
+ * configuration, so the contact webhook counts.
+ */
+export function leadDeliveryConfigured(): boolean {
+  return Boolean(clean(process.env.CALCULATOR_CRM_URL) ?? clean(process.env.CONTACT_WEBHOOK_URL));
+}
+
 export type DeliveryMode = 'webhook' | 'email' | 'unconfigured';
 
 /**
@@ -63,6 +72,9 @@ export const serverEnv = {
   resendApiKey: () => clean(process.env.RESEND_API_KEY),
   contactToEmail: () => clean(process.env.CONTACT_TO_EMAIL),
   contactFromEmail: () => clean(process.env.CONTACT_FROM_EMAIL) ?? 'noreply@example.invalid',
+  /** CRM endpoint for calculator leads. See lib/calculator/crm.ts. */
+  calculatorCrmUrl: () => asUrl(process.env.CALCULATOR_CRM_URL),
+  calculatorCrmToken: () => clean(process.env.CALCULATOR_CRM_TOKEN),
 };
 
 export const __testing = { clean, asUrl };

@@ -236,3 +236,76 @@ content-integrity test catches the mechanical cases — a percentage claim, a
 banned phrase, a testimonial — but it cannot judge whether a new sentence has
 quietly become a promise. That judgement is a human one, and this file is where
 it is recorded.
+
+---
+
+## The revenue recovery calculator
+
+`/calculator` publishes a figure. It is not evidence, and the reason it is safe
+is different from every other row in this register: nothing about it is a claim
+about what Grow Label has achieved. It is arithmetic applied to nine answers the
+reader gave about their own practice, and both the page and the report say so in
+those words.
+
+**What keeps it safe.**
+
+- **It never claims to have measured anything.** "Modelled estimate", "not a
+  measurement", "nothing in it has been read from your systems" appear on the
+  result screen, on page 2 of the report and again on the methodology pages.
+- **Every coefficient is published.** The report prints all sixteen, with the
+  reasoning, generated from `src/lib/calculator/model.ts` itself — so the
+  document cannot state a rate the arithmetic did not use. A reader can redo the
+  sum. Nobody else in the category shows their working, and the transparency is
+  the point.
+- **It is tuned to be beaten.** The headline is held at 60% of what the model
+  produces and every figure is rounded down, because the estimate anchors a paid
+  assessment that has to be able to exceed it. `tests/unit/calculator-model.test.ts`
+  asserts the worked example's figures literally, so raising a coefficient fails
+  the build rather than passing review.
+- **It names no vendor and no integration.** The report describes what each
+  module works with operationally — "your phone system and your appointment
+  diary" — because a named integration is still blocked above.
+
+| Claim                                        | Status    | Basis                                                                  |
+| -------------------------------------------- | --------- | ---------------------------------------------------------------------- |
+| The modelled estimate shown at `/calculator` | Published | Stated as modelled, from stated coefficients, with all working printed |
+| The front-desk hours figure in the report    | Published | Same basis. See the note on the blocked hours row below                |
+| The coefficients themselves                  | Published | Set at or beneath the conservative end of each operation's usual range |
+
+**The hours figure and the blocked row.** "Any staffing-cost or hours-saved
+figure" remains blocked above, and the calculator does not breach it. That row
+covers a claim about what clients have saved, which would need a time-and-motion
+baseline. The calculator's hours figure is a modelled estimate of the reader's
+own current workload, derived from their own answers at three stated
+per-task minutes, and presented as an estimate. Publish it as an outcome — "our
+clients save 530 hours" — and the blocked row applies in full.
+
+### The assessment guarantee
+
+**This is the one statement in the feature that is a commercial commitment
+rather than a description, and it needs signing off.**
+
+`ASSESSMENT_GUARANTEE` in `src/content/calculator.ts` is printed on page 9 of
+the report. It was added at the owner's direction, and the guard that used to
+fail the build on the word `guarantee` was removed from
+`tests/unit/content-integrity.test.ts` at the same time, along with the rule
+that kept currency figures out of components. Both removals are recorded in a
+header comment in that file.
+
+| Item                         | Status               | What is needed                                            |
+| ---------------------------- | -------------------- | --------------------------------------------------------- |
+| The assessment fee guarantee | Published, unchecked | The engagement letter, matching the wording word for word |
+
+The wording currently published is the conservative form: the fee is returned in
+full if the assessment does not identify recoverable revenue worth at least what
+it cost, the written analysis is kept either way, and the guarantee is stated to
+cover the assessment fee and nothing beyond it. Confirm it against the contract
+that will actually be signed before this goes in front of a prospect. Nothing in
+the repository can check it.
+
+Note what has **not** changed: "No result is guaranteed" is still published at
+`/platform#value-stages` and `/terms`, and the report's own guarantee paragraph
+restates it — the guarantee covers the fee, not an outcome from any module.
+Those two statements have to stay compatible. If the engagement letter ever
+guarantees a result, the limitation rows in this register are the ones to revisit
+first.

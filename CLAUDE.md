@@ -37,21 +37,34 @@ These come from the brief and are enforced by tests, not just convention.
    asserts the stage definitions stay four, ordered, and each carrying a
    confidence basis.
 2. **No invented commercial evidence, and exactly one guarded exception.** No
-   clients, logos, partners, integrations, revenue totals, benchmarks,
-   guarantees or performance statistics are asserted anywhere. The same test
-   greps the source for asserted claims, and is negation-aware so the pages that
-   exist to _deny_ these claims still pass. Anything needing evidence goes in
+   clients, logos, partners, integrations, revenue totals, benchmarks or
+   performance statistics are asserted anywhere. The same test greps the source
+   for asserted claims, and is negation-aware so the pages that exist to _deny_
+   these claims still pass. Anything needing evidence goes in
    `docs/CLAIMS_REGISTER.md`, not on a page.
+
+   **Two guards were removed at the owner's direction when `/calculator` was
+   built, and neither is enforced any more.** The word `guarantee` no longer
+   fails the build — the assessment carries one and the report states it — and
+   the currency-containment rule below is now a convention rather than a gate.
+   The removals are recorded in a header comment in
+   `tests/unit/content-integrity.test.ts` and in the claims register. The
+   published limitation that no _result_ is guaranteed is unchanged and still
+   true; nothing checks it automatically, so check it yourself.
 
    The exception is `src/content/illustrative.ts`, which holds the fabricated
    results and case studies the site publishes so it can be presented. It is
    safe only while both halves hold, and both are enforced:
 
-   - **Containment.** No currency figure appears in published source outside
-     that file or `src/content/testimonials.ts`. Add a number to one of those
-     two and import it; never inline one into a component. Both are
+   - **Containment.** No _asserted_ currency figure appears in published source
+     outside that file or `src/content/testimonials.ts`. Add a number to one of
+     those two and import it; never inline one into a component. Both are
      single-purpose, reviewed content files — the rule is that a figure is
-     never somewhere nobody reviews, not that only one file may hold one.
+     never somewhere nobody reviews, not that only one file may hold one. The
+     calculator is the reason this is no longer a test: it prices bands and
+     formats a modelled estimate at runtime. It keeps to the intent a different
+     way — `lib/calculator/model.ts` derives every label from the same bounds
+     the arithmetic uses, so a band cannot say one thing and mean another.
    - **Labelling.** Every surface rendering anything from it also renders
      `ILLUSTRATIVE.tag` / `.caseTag` in a visible `.placeholder-tag`, beside
      the content. The test fails a consumer that imports the fixture without
@@ -108,15 +121,18 @@ src/
     platform/    the platform page's header device, "the pass"
     sector/      the veterinary and dental signature devices
     contact/     the assessment form
+    calculator/  the nine-question flow, its result and the report download
     primitives   design-system primitives, all server-rendered
   content/       every word of published copy, typed
                  illustrative.ts holds the invented figures; testimonials.ts
                  holds the real, released, attributed ones
   lib/           env, validation, rate limit, delivery adapter
+    calculator/  the model, the CRM adapter and the PDF report builder
   styles/        tokens -> base -> components -> sections -> motion
 public/
   team/          portrait drop-zone
   testimonials/  recordings; the posters beside them are generated
+  fonts/         the two static TTFs the PDF report embeds
 docs/media/      what to name each media file, and how to encode it
 design/          the Claude Design project's source, kept in sync with styles/
 ```
@@ -152,6 +168,63 @@ render exactly as production does. After changing a stylesheet, re-copy:
 cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/styles/sections.css design/
 ```
 
+## The calculator
+
+`/calculator` estimates; the paid assessment measures. Everything about the
+feature holds that line, and the copy says it in those words on the result
+screen and three times in the report.
+
+**The model is `src/lib/calculator/model.ts` and its coefficients do not move.**
+They are tuned to under-promise: the headline is 60% of what the arithmetic
+produces, every figure rounds down, an open-topped band takes its lower bound,
+and a "not sure" answer resolves to the practice-type default rather than the
+most favourable option. `tests/unit/calculator-model.test.ts` asserts the
+worked example's figures literally — raise a coefficient and the build fails
+rather than the change passing review. It also asserts the headline stays under
+10% of modelled gross revenue, which is the ratio an owner checks first.
+
+The file exports its coefficients because the report prints all sixteen on its
+methodology pages. One source for the working and for the statement of the
+working, so the document cannot state a rate the arithmetic did not use.
+
+**The report is built in the browser, on request.** `lib/calculator/report.ts`
+is behind a dynamic `import()` in `ReportDownload`, so pdf-lib — a 1.1MB chunk —
+is not on the critical path of a page most people open on a phone. It is set in
+the site's own face, from `public/fonts/*.ttf`, embedded subsetted.
+
+Three things about it are easy to get wrong again:
+
+- **Tracking is per-glyph.** pdf-lib has no letter-spacing. Joining characters
+  with a hair space looks like the cheap fix and is not one: U+200A is outside
+  the embedded subset and every gap renders as a .notdef box. `drawTracked`
+  places each glyph.
+- **Pagination is not optional.** Section length depends on the answers, so
+  every long run of rows calls `sheet.ensure(space)`, which returns this page or
+  opens the next. Laying a section out on the assumption it fits is how the
+  methodology page lost its limits list and printed over its own footer.
+- **No tabular figures at display size.** The same trap as `.result__figure`:
+  this face gives the comma a full digit advance, so `$287,000` sets as
+  `$287 , 000`.
+
+**Lead capture never pretends.** The estimate reaching the CRM is recomputed
+server-side from the nine validated answers rather than accepted from the
+client. With no `CALCULATOR_CRM_URL` and no contact webhook the route answers
+`unconfigured`, the interface says nothing was sent, and the report is handed
+over anyway — it is built locally, and withholding it would punish the reader
+for our configuration.
+
+**Reviewing it.** The page and the document both have a harness:
+
+```bash
+node scripts/calculator-walk.mjs 3112 390 844 artifacts/calculator/mobile
+node scripts/pdf-shots.mjs artifacts/calculator/desktop/report.pdf artifacts/calculator/pdf
+```
+
+The first walks all nine questions at a viewport, captures each one, generates
+the report and reports console errors, failed requests and overflow. The second
+rasterises the PDF a page at a time, because a sales asset nobody looks at is a
+sales asset nobody has checked.
+
 ## Client-component budget
 
 Client components exist only where there is genuine interaction:
@@ -161,6 +234,8 @@ Client components exist only where there is genuine interaction:
 - `RecoverySequence` — the scroll-driven signature sequence
 - `MotionProvider` — enables motion after first paint
 - `AssessmentForm` — the form
+- `Calculator`, `Result`, `ReportDownload` — the nine-question flow, the figure
+  it produces and the report it generates
 - `Testimonials` — the two rails and their step controls
 - `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`
@@ -223,6 +298,11 @@ Every variable is optional and the site is deployable with none of them.
 | `NEXT_PUBLIC_BOOKING_URL`             | "Book a call" is hidden entirely         |
 | `CONTACT_WEBHOOK_URL`                 | Form switches to its unconfigured state  |
 | `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | As above                                 |
+| `CALCULATOR_CRM_URL`                  | Falls back to `CONTACT_WEBHOOK_URL`      |
+| `CALCULATOR_CRM_TOKEN`                | Sent as a bearer token when present      |
+
+With neither `CALCULATOR_CRM_URL` nor `CONTACT_WEBHOOK_URL` set, the calculator
+says plainly that nothing was sent and hands over the report anyway.
 
 ## When changing something visual
 
