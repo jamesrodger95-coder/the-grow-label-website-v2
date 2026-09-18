@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/home/Hero';
-import { Leaks } from '@/components/home/Leaks';
 import { RecoveryPipeline } from '@/components/home/RecoveryPipeline';
 import { Results } from '@/components/home/Results';
 import { ReadsIngest } from '@/components/home/ReadsIngest';
@@ -49,10 +48,22 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Where the revenue goes                                            */}
-      {/* ---------------------------------------------------------------- */}
-      <Leaks />
+      {/* The six points of loss are off the homepage for now.
+
+          Not deleted. `src/components/home/Leaks.tsx` and `LEAK_GROUPS` in
+          `src/content/home.ts` are untouched, and every one of the six rows is
+          still reachable — each was a link to the module that works it, and
+          those module pages carry the same argument in more detail.
+
+          The reason it is off: the page now runs hero -> the strip naming what
+          the platform reads -> detection, which is the job. Naming six losses
+          before the reader has been told anything can see them spent a full
+          section on the problem while the hero had only just stated it.
+
+          To restore: put back the import at the top of this file and the line
+          below. It belongs here, between the strip and detection, if it comes
+          back at all. */}
+      {/* <Leaks /> */}
 
       {/* ---------------------------------------------------------------- */}
       {/* Detection                                                         */}
