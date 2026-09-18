@@ -174,6 +174,16 @@ cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/style
 booked call — not a figure on a screen and not a document in somebody's
 downloads folder.
 
+**It is step one of three, and the page says so in its opening device.** People
+arrive from a cold email promising a detailed revenue assessment — which
+callbacks and confirmations could come off a front desk's workload, where
+bookings are being missed — and land on a questionnaire. Nine answers cannot
+show that; it needs their own data. So `Journey` draws the sequence across the
+header: the questions, the call, the assessment. Without it the reader's first
+thought is that the email and the page do not match. The copy must never imply
+the questionnaire IS the assessment: that is the gap a prospect notices on the
+call, and noticing it costs more than overstating gains.
+
 **The revenue figure is never shown to the prospect.** It is computed, it is
 sent to us, and it is what the call is for. A reader who already has the number
 has no reason to turn up, so the completed screen shows exactly two things
@@ -188,16 +198,30 @@ The order of the flow:
 
 1. Nine questions, one per screen. Unchanged.
 2. The booking screen: what the call covers, the hours, the module ranking.
-3. **The answers POST to `/api/calculator/lead`, and only then** does the
-   browser navigate to Cal.com. That order is deliberate — a prospect who
-   answers nine questions and abandons the Cal.com page is still a lead, and
-   the answers are the whole of what we need. Delivery is best effort: if the
-   lead cannot be sent, the reader still reaches the booking page. Nothing
-   about our plumbing is worth standing between somebody and a booking.
-4. Cal.com redirects to `/assessment-booked`. Set that redirect on the event
+3. **The answers POST to `/api/calculator/lead` the moment the questions are
+   finished** — on mount of the completed screen, not on a click. With a
+   calendar embedded there is no click to hang it on: a booking happens inside
+   an iframe we never hear from. It also means somebody who completes the
+   questions and never picks a time is still a lead, which is most of the
+   value. Sent once, guarded by a ref against a re-render and a sessionStorage
+   flag against a refresh, and best effort throughout: a failure is never shown
+   to the reader, who has a calendar in front of them and that is the job.
+4. The calendar is embedded in the screen itself — `CalEmbed`, which currently
+   renders a **placeholder** with the real booking link inside it. The paste
+   instructions are in that file's header comment. Keep the link when the embed
+   goes in: on a network that blocks the Cal.com script it is the only way left
+   to book.
+5. Cal.com redirects to `/assessment-booked`. Set that redirect on the event
    type; the page is `noindex` and out of the sitemap, because a confirmation
    page that ranks is one people arrive at without having done the thing it
    confirms.
+
+The completed screen breaks out of the two columns the questions ran in:
+`.calc-layout:has(.calc--result)` drops to one column and hides the aside, so
+the calendar gets the full width. An embedded month grid in an aside-width
+column collapses to a list of times, and `:has` keeps that decision in CSS
+rather than passing state from a client component to the server-rendered aside
+beside it.
 
 `NEXT_PUBLIC_BOOKING_URL` is the Cal.com link. `/calculator` is
 `force-dynamic` so setting it takes effect without a redeploy — the same
@@ -277,8 +301,8 @@ Client components exist only where there is genuine interaction:
 - `RecoverySequence` — the scroll-driven signature sequence
 - `MotionProvider` — enables motion after first paint
 - `AssessmentForm` — the form
-- `Calculator`, `Result`, `BookCall` — the nine-question flow and the booking
-  it ends on
+- `Calculator`, `Result`, `CalEmbed` — the nine-question flow and the booking
+  it ends on. `Journey`, the header device, is a server component
 - `Testimonials` — the two rails and their step controls
 - `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`

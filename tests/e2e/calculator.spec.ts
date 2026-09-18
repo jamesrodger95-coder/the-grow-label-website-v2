@@ -40,7 +40,7 @@ async function answer(page: Page, value: string) {
 
 async function complete(page: Page) {
   for (const value of SAMPLE) await answer(page, value);
-  await expect(page.locator('.calc__book')).toBeVisible();
+  await expect(page.locator('.calembed')).toBeVisible();
 }
 
 test.describe('the nine questions', () => {
@@ -59,7 +59,7 @@ test.describe('the nine questions', () => {
     await complete(page);
 
     await expect(page.getByRole('heading', { name: /book your call/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /book the call/i })).toBeVisible();
+    await expect(page.locator('.calembed')).toBeVisible();
   });
 
   /**
@@ -78,19 +78,20 @@ test.describe('the nine questions', () => {
     await expect(page.locator('.calc__point')).toHaveCount(4);
   });
 
-  test('sends the answers before it sends the reader to the booking page', async ({ page }) => {
-    // The booking host is stubbed; the point is the order of the two steps.
-    await page.route('https://cal.example.com/**', (route) =>
-      route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Booking</h1>' })
+  /**
+   * The answers go the moment the questions are finished, not on a click.
+   *
+   * With a calendar embedded there is no click to hang it on — a booking
+   * happens inside an iframe we never hear from — and somebody who completes
+   * the questions and never picks a time is still a lead worth having.
+   */
+  test('sends the answers as soon as the questions are finished', async ({ page }) => {
+    const posted = page.waitForRequest(
+      (request) => request.url().includes('/api/calculator/lead') && request.method() === 'POST'
     );
 
     await page.goto('/calculator');
     await complete(page);
-
-    const posted = page.waitForRequest(
-      (request) => request.url().includes('/api/calculator/lead') && request.method() === 'POST'
-    );
-    await page.getByRole('button', { name: /book the call/i }).click();
     const request = await posted;
 
     const body = request.postDataJSON() as { answers?: Record<string, unknown> };
@@ -98,9 +99,17 @@ test.describe('the nine questions', () => {
     expect(body.answers?.weeklyAppointments).toBe(240);
     // No email is collected on our side; Cal.com takes it at the booking.
     expect(body).not.toHaveProperty('email');
+  });
 
-    // And the reader does arrive at the booking page, whatever the lead did.
-    await page.waitForURL(/cal\.example\.com/, { timeout: 15_000 });
+  test('offers a way to book while the embed is not yet wired', async ({ page }) => {
+    await page.goto('/calculator');
+    await complete(page);
+
+    // The slot the calendar mounts into, and the fallback that has to survive
+    // it: on a network that blocks the Cal.com script this link is the only
+    // way left to book.
+    await expect(page.locator('#cal-booking')).toBeVisible();
+    await expect(page.getByRole('link', { name: /book the call|request a time/i })).toBeVisible();
   });
 
   test('back preserves the answer that was given', async ({ page }) => {

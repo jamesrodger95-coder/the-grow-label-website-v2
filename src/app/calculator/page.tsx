@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Reveal } from '@/components/motion/Reveal';
 import { Calculator } from '@/components/calculator/Calculator';
+import { Journey } from '@/components/calculator/Journey';
 import { ActionLink, SectionHeader, TextLink } from '@/components/primitives';
 import { CALCULATOR } from '@/content/calculator';
 import { bookingUrl } from '@/lib/env';
@@ -9,7 +10,7 @@ import { bookingUrl } from '@/lib/env';
 export const metadata: Metadata = {
   title: 'Revenue recovery assessment',
   description:
-    'Nine questions about how your front desk runs, and we build your revenue assessment from them. Under two minutes, and we go through what it found on a call.',
+    'Step one of three. Nine questions about how your front desk runs give a first view of where demand is being lost; a call goes through it; the revenue assessment reads your own data. Under two minutes.',
   alternates: { canonical: '/calculator' },
 };
 
@@ -40,12 +41,17 @@ export default function CalculatorPage() {
 
   return (
     <>
+      {/* The sequence, drawn rather than described. People arrive here from a
+          cold email promising a detailed revenue assessment and land on a
+          questionnaire; without the three steps in front of them, the first
+          thought is that the two do not match. */}
       <PageHeader
         label={CALCULATOR.label}
         meta={CALCULATOR.meta}
         title={CALCULATOR.title}
         emphasis={CALCULATOR.emphasis}
         lead={CALCULATOR.lead}
+        feature={<Journey />}
       />
 
       <section className="surface--paper on-light section" aria-labelledby="calc-title">
@@ -68,12 +74,12 @@ export default function CalculatorPage() {
                   nothing connects to your practice management system.
                 </li>
                 <li>
-                  We build your assessment from the answers and go through it with you on a call —
-                  the figure, the working, and which of the four modules applies where.
+                  A first view, modelled from what you tell us, which we go through with you on a
+                  call — the figure, the working, and which of the four modules applies where.
                 </li>
                 <li>
-                  Every figure in it is modelled from what you tell us. It is not a measurement, and
-                  we say so on the call as plainly as we say it here.
+                  It is not a measurement. The revenue assessment that follows the call is the one
+                  that reads your own data, and we say so on the call as plainly as we say it here.
                 </li>
                 <li>
                   No client, patient or clinical information is collected, and none of it is needed.

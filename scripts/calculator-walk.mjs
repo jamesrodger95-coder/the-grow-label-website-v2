@@ -72,6 +72,15 @@ async function overflow() {
 
 const notes = [];
 
+// The lead posts as soon as the questions are finished, so this listens from
+// the start rather than from the booking.
+let posted = null;
+page.on('request', (request) => {
+  if (request.url().includes('/api/calculator/lead') && request.method() === 'POST') {
+    posted = request.postDataJSON();
+  }
+});
+
 await page.goto(`http://localhost:${port}/calculator`, { waitUntil: 'load', timeout: 90000 });
 await page.waitForTimeout(700);
 
@@ -103,7 +112,11 @@ await page.screenshot({ path: join(outDir, 'result-full.png'), fullPage: true })
 const hours = await page.locator('.calc__hoursvalue').first().textContent();
 const points = await page.locator('.calc__pointname').allTextContents();
 const booking = await page
-  .getByRole('button', { name: /book the call/i })
+  .locator('.calembed')
+  .count()
+  .then((n) => n > 0);
+const bookingControl = await page
+  .getByRole('link', { name: /book the call|request a time/i })
   .count()
   .then((n) => n > 0);
 
@@ -114,29 +127,14 @@ if (leaked) notes.push(`FIGURE LEAKED ON SCREEN: ${[...new Set(leaked)].join(', 
 const over = await overflow();
 if (over) notes.push(`result overflow: ${JSON.stringify(over)}`);
 
-// The booking. The host is stubbed so the walk stays local, and what is
-// being checked is that the answers are posted before the reader leaves.
-await page.route('**://cal.com/**', (route) =>
-  route.fulfill({ status: 200, contentType: 'text/html', body: '<h1>Booking</h1>' })
-);
-let posted = null;
-page.on('request', (request) => {
-  if (request.url().includes('/api/calculator/lead') && request.method() === 'POST') {
-    posted = request.postDataJSON();
-  }
-});
-if (booking) {
-  await page.getByRole('button', { name: /book the call/i }).click();
-  await page.waitForTimeout(2500);
-}
-
 await page.waitForTimeout(500);
-await page.screenshot({ path: join(outDir, 'after-booking-click.png'), fullPage: false });
+await page.screenshot({ path: join(outDir, 'booking.png'), fullPage: false });
 
 const summary = {
   hours,
   points,
   booking,
+  bookingControl,
   postedAnswers: posted?.answers ?? null,
   errors,
   failed,

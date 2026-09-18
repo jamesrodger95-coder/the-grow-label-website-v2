@@ -30,10 +30,10 @@ import {
 
 export const CALCULATOR = {
   label: 'Revenue recovery assessment',
-  title: 'Nine questions,',
-  emphasis: 'then a call about the answers.',
-  lead: 'Answer nine questions about how your front desk runs and we build your revenue assessment from them — what your practice is generating and not converting, priced against your own appointment value. It takes under two minutes, and we go through what it found on a call.',
-  meta: 'Nine questions · under two minutes',
+  title: 'Start with nine questions.',
+  emphasis: 'Finish with a revenue assessment.',
+  lead: 'The first step of three, and it takes two minutes. Nine questions about how your front desk runs give us a first view of where demand is being lost; a call goes through it; the revenue assessment itself reads your own contact and scheduling data and shows what is actually being missed.',
+  meta: 'Step one of three · under two minutes',
   /** Shown beside the progress indicator while the questions are open. */
   progressLabel: 'Question',
   of: 'of',
@@ -58,6 +58,48 @@ export const CALCULATOR = {
   /** How the two entry points elsewhere on the site name this. */
   entry: 'Get your revenue assessment',
   entryHref: '/calculator',
+} as const;
+
+/**
+ * The three steps, and the reason this page exists.
+ *
+ * The cold email pitches a detailed revenue assessment — which callbacks and
+ * confirmations could come off a front desk's workload, where bookings are
+ * being missed. Nine questions cannot show that: it needs their own contact
+ * and scheduling data. So the page has to be honest about being the first step
+ * of three rather than the thing that was promised, while still being worth
+ * two minutes on its own.
+ *
+ * What it must never do is imply the questionnaire IS the assessment. That is
+ * the gap a prospect notices on the call, and noticing it costs more than the
+ * page gains by overstating.
+ */
+export const JOURNEY = {
+  label: 'How this works',
+  steps: [
+    {
+      index: '01',
+      when: 'Two minutes, now',
+      name: 'These nine questions',
+      detail:
+        'A first view of where your practice is losing demand, modelled from what you tell us. No data, no system access, and nothing installed.',
+    },
+    {
+      index: '02',
+      when: 'Thirty minutes',
+      name: 'A call',
+      detail:
+        'We go through what your answers point at, what it looks like it is worth, and what a full assessment would measure in a practice like yours.',
+    },
+    {
+      index: '03',
+      when: 'After the call',
+      name: 'Your revenue assessment',
+      detail:
+        'The detailed one. Which callbacks and appointment confirmations could come off your team’s workload, and where bookings are being missed — read from your own contact and scheduling data rather than modelled from nine answers.',
+    },
+  ],
+  foot: 'You are on the first of the three. It is the only one that asks nothing of your systems.',
 } as const;
 
 /* -------------------------------------------------------------------------- */
@@ -256,7 +298,7 @@ export function answerLabel(id: keyof Answers, value: string | number): string {
 export const RESULT = {
   eyebrow: 'Your assessment',
   titleLines: ['Book your call to get', 'your revenue assessment.'],
-  lead: 'Your answers are in. We build the assessment from them before the call, and go through it with you on the call — what is being lost, where, and what it is worth, priced against your own appointment value.',
+  lead: 'Your answers are in. They give us a first view of where your practice is losing demand, and we go through it with you on the call — what is being lost, where, and what it looks like it is worth against your own appointment value. The revenue assessment itself comes after that, and reads your own data rather than nine answers.',
   /** The two things the reader is shown. Neither is the revenue figure. */
   hoursLabel: 'Front-desk hours a year',
   hoursNote:
@@ -269,18 +311,21 @@ export const RESULT = {
     'One thing worth saying now: under about 1,500 active records the reactivation arithmetic is working on a list too small to behave like one. We will say so again on the call rather than quietly leaning on it.',
   /** The ask. */
   bookCta: 'Book the call',
-  bookPreparing: 'One moment…',
-  bookNote:
-    'Thirty minutes, no preparation needed, and nothing is installed or changed in your systems to produce the assessment.',
+  /** The embed, and the copy around it. */
+  embedLabel: 'Pick a time',
+  embedNote:
+    'Thirty minutes, and nothing to prepare. You will get a confirmation with the details, and we will have your assessment built before we speak.',
+  embedPending: 'Booking calendar',
+  embedPendingNote:
+    'The calendar loads here. If it has not appeared, this link opens the same booking page in a new tab.',
+  unbookedCta: 'Request a time',
+  getsTitle: 'What the call covers',
   whatYouGet: [
     'The full revenue figure, at four separate stages rather than as one number.',
     'The working: every coefficient, every input, and what each one was set from.',
     'Which of the four modules applies to which loss in your practice, and what each would need.',
     'A plain statement of what nine answers cannot tell us, and what an assessment would measure instead.',
   ],
-  /** Shown when there is no booking destination configured. */
-  unbooked:
-    'The booking link is not configured on this deployment. Send the request through the contact form and we will come back with a time.',
   disclaimer:
     'Everything here is modelled from nine answers. It is not a measurement of your practice, nothing has been read from your systems, and no figure is a commitment.',
   change: 'Change an answer',
