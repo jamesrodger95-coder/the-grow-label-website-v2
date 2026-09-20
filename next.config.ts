@@ -5,7 +5,7 @@ import type { NextConfig } from 'next';
  *
  * The site shipped no third-party scripts at all until the booking calendar
  * arrived, and the policy below is written to keep that true everywhere except
- * the one route that now needs it. `/calculator` gets Cal.com added to three
+ * the two routes that now need it. `/calculator` and `/contact` get Cal.com added to three
  * directives — the script that boots the embed, the frame it mounts, and the
  * calls that frame makes — and every other route keeps the original policy,
  * including `frame-src 'none'` and `connect-src 'self'`.
@@ -92,7 +92,14 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/:path((?!calculator$).*)',
+        source: '/contact',
+        headers: [
+          { key: 'Content-Security-Policy', value: policy({ cal: true }) },
+          ...SHARED_HEADERS,
+        ],
+      },
+      {
+        source: '/:path((?!calculator$|contact$).*)',
         headers: [{ key: 'Content-Security-Policy', value: policy() }, ...SHARED_HEADERS],
       },
     ];

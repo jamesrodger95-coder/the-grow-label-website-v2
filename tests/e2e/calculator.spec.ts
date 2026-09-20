@@ -141,18 +141,26 @@ test.describe('the nine questions', () => {
   });
 
   /**
-   * The embed is the site's only third-party script, so `/calculator` is the
-   * only route whose CSP names Cal.com. Get that wrong and the calendar is a
-   * blank box with a console error nobody sees.
+   * The embed is the site's only third-party script, so only the two routes
+   * carrying the calculator may name Cal.com. Get that wrong and the calendar
+   * is a blank box with a console error nobody sees.
    */
-  test('carries a policy that allows the calendar, and only here', async ({ request }) => {
+  test('carries a policy that allows the calendar only on calculator routes', async ({
+    request,
+  }) => {
     const booking = await request.get('/calculator');
     const policy = booking.headers()['content-security-policy'] ?? '';
     expect(policy).toContain('frame-src https://app.cal.com');
     expect(policy).toMatch(/script-src[^;]*https:\/\/app\.cal\.com/);
     expect(policy).toMatch(/connect-src[^;]*https:\/\/app\.cal\.com/);
 
-    const elsewhere = await request.get('/contact');
+    const contact = await request.get('/contact');
+    const contactPolicy = contact.headers()['content-security-policy'] ?? '';
+    expect(contactPolicy).toContain('frame-src https://app.cal.com');
+    expect(contactPolicy).toMatch(/script-src[^;]*https:\/\/app\.cal\.com/);
+    expect(contactPolicy).toMatch(/connect-src[^;]*https:\/\/app\.cal\.com/);
+
+    const elsewhere = await request.get('/platform');
     const strict = elsewhere.headers()['content-security-policy'] ?? '';
     expect(strict).toContain("frame-src 'none'");
     expect(strict).not.toContain('cal.com');

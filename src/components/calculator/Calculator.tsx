@@ -40,7 +40,13 @@ function isComplete(draft: Draft): draft is Answers {
   });
 }
 
-export function Calculator({ bookingUrl }: { bookingUrl?: string }) {
+export function Calculator({
+  bookingUrl,
+  embedded = false,
+}: {
+  bookingUrl?: string;
+  embedded?: boolean;
+}) {
   const groupId = useId();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Draft>({});
@@ -204,6 +210,7 @@ export function Calculator({ bookingUrl }: { bookingUrl?: string }) {
         answers={answers}
         estimate={result}
         bookingUrl={bookingUrl}
+        embedded={embedded}
         onChange={() => {
           setDone(false);
           setStep(0);

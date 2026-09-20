@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Faq } from '@/components/layout/Faq';
 import { Reveal } from '@/components/motion/Reveal';
-import { AssessmentForm } from '@/components/contact/AssessmentForm';
+import { Calculator } from '@/components/calculator/Calculator';
 import { ActionLink, SectionHeader, StepList, TextLink } from '@/components/primitives';
 import { FAQ_GROUPS } from '@/content/faq';
 import { CONTACT } from '@/content/pages';
-import { bookingUrl, deliveryMode } from '@/lib/env';
+import { bookingUrl } from '@/lib/env';
 
 export const metadata: Metadata = {
   title: 'Request an assessment',
@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default function ContactPage() {
-  const configured = deliveryMode() !== 'unconfigured';
   const booking = bookingUrl();
 
   return (
@@ -73,7 +72,7 @@ export default function ContactPage() {
               <h3 className="display d4" style={{ marginBottom: 24 }}>
                 Send the outline
               </h3>
-              <AssessmentForm configured={configured} dataNotice={CONTACT.dataNotice} />
+              <Calculator bookingUrl={booking} embedded />
             </Reveal>
           </div>
         </div>

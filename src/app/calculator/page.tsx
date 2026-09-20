@@ -54,7 +54,10 @@ export default function CalculatorPage() {
         feature={<Journey />}
       />
 
-      <section className="surface--paper on-light section" aria-labelledby="calc-title">
+      <section
+        className="surface--paper on-light section calculator-section"
+        aria-labelledby="calc-title"
+      >
         <div className="shell">
           <h2 className="gl-sr" id="calc-title">
             The questions

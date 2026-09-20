@@ -108,22 +108,46 @@ test('the contact page states the journey before asking for anything', async ({ 
   await expect(page.getByText(/you keep the analysis/i)).toBeVisible();
 });
 
-test('the form either works or says plainly that it is switched off', async ({ page }) => {
+test('the contact page starts the revenue calculator below the outline heading', async ({
+  page,
+}) => {
   await page.goto('/contact');
-  const form = page.locator('form');
+  await expect(page.getByText(/form unavailable/i)).toHaveCount(0);
+  await expect(
+    page.getByRole('heading', { name: /what kind of practice do you run/i })
+  ).toBeVisible();
+  await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '1');
+  await expect(page.getByRole('radio', { name: 'Veterinary' })).toBeVisible();
+  await expect(page.getByRole('radio', { name: 'Dental' })).toBeVisible();
+});
 
-  if ((await form.count()) === 0) {
-    await expect(page.getByText(/form unavailable/i)).toBeVisible();
-    await expect(page.getByText(/no delivery provider configured/i)).toBeVisible();
-    return;
+test('the contact calculator ends on the inline booking calendar', async ({ page }) => {
+  await page.goto('/contact');
+
+  const answers = [
+    'dental',
+    '4-7',
+    '4000-10000',
+    '240',
+    '200-400',
+    '4-6',
+    'voicemail',
+    'not-sure',
+    'never',
+  ];
+
+  for (const answer of answers) {
+    if (answer === '240') {
+      await page.fill('input[name="weeklyAppointments"]', answer);
+      await page.click('.calc button[type="submit"]');
+    } else {
+      await page.locator(`.calc__radio[value="${answer}"]`).click();
+    }
   }
 
-  // Client-side required attributes are present, and the notice is attached.
-  await expect(form.getByLabel(/work email/i)).toHaveAttribute('type', 'email');
-  await expect(page.getByText(/do not include client, patient or clinical/i)).toBeVisible();
-
-  // No field asks for sensitive information.
-  const labels = await page.$$eval('label', (nodes) => nodes.map((n) => n.textContent ?? ''));
-  const forbidden = /patient|client name|nhs|medical|clinical detail|diagnosis|card|password/i;
-  expect(labels.filter((l) => forbidden.test(l))).toEqual([]);
+  const bookingHeading = page.getByRole('heading', { name: /book your call/i });
+  await expect(bookingHeading).toBeVisible();
+  expect(await bookingHeading.evaluate((node) => node.tagName)).toBe('H2');
+  await expect(page.locator('.calembed')).toBeVisible();
+  await expect(page.locator('.phead')).toBeVisible();
 });

@@ -28,12 +28,14 @@ export function Result({
   answers,
   estimate,
   bookingUrl,
+  embedded = false,
   onChange,
   onRestart,
 }: {
   answers: Answers;
   estimate: Estimate;
   bookingUrl?: string;
+  embedded?: boolean;
   onChange: () => void;
   onRestart: () => void;
 }) {
@@ -43,10 +45,14 @@ export function Result({
 
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
-    // The hero above is hidden at this point, so the top of the page is the
-    // top of this card.
-    window.scrollTo({ top: 0 });
-  }, []);
+    if (embedded) {
+      cardRef.current?.scrollIntoView({ block: 'start' });
+    } else {
+      // The calculator page's hero is hidden at this point, so the top of the
+      // page is the top of this card.
+      window.scrollTo({ top: 0 });
+    }
+  }, [embedded]);
 
   /**
    * The lead goes the moment the questions are finished, not when anything is
@@ -94,15 +100,16 @@ export function Result({
       value: estimate.modules.find((m) => m.slug === module.slug)?.value ?? 0,
     }))
     .sort((a, b) => b.value - a.value);
+  const ResultHeading = embedded ? 'h2' : 'h1';
 
   return (
     <div className="calc calc--result" ref={cardRef}>
       {/* The calendar, and the page's heading while it is on screen. */}
       <div className="calc__bookhead">
         <span className="eyebrow">{RESULT.eyebrow}</span>
-        <h1 className="display d2 calc__booktitle" tabIndex={-1} ref={headingRef}>
+        <ResultHeading className="display d2 calc__booktitle" tabIndex={-1} ref={headingRef}>
           {RESULT.embedTitle}
-        </h1>
+        </ResultHeading>
         <p className="small calc__booknote">{RESULT.embedNote}</p>
       </div>
 
