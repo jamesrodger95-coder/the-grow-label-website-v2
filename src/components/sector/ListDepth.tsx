@@ -32,21 +32,47 @@ const UNREACHED = [
   'Hygiene recall · overdue',
 ];
 
-export function ListDepth() {
+const COPY = {
+  dental: {
+    title: 'Recall and unscheduled list',
+    aria: 'A recall and unscheduled treatment list worked from the top, stopping partway down, with the remainder never reached',
+    worked: WORKED,
+    unreached: UNREACHED,
+  },
+  'med-spa': {
+    title: 'Rebooking and unbooked list',
+    aria: 'A rebooking and unbooked consultation list worked from the top, stopping partway down, with the remainder never reached',
+    worked: [
+      'Repeat client · due to rebook',
+      'Consultation · no booking',
+      'Repeat client · due to rebook',
+      'Series · next visit unbooked',
+      'Repeat client · overdue',
+    ],
+    unreached: [
+      'Consultation · no booking',
+      'Membership · lapsed',
+      'Series · next visit unbooked',
+      'Repeat client · overdue',
+      'Consultation · no booking',
+      'Membership · lapsed',
+      'Repeat client · overdue',
+    ],
+  },
+} as const;
+
+export function ListDepth({ variant = 'dental' }: { variant?: keyof typeof COPY }) {
+  const copy = COPY[variant];
   return (
     <figure className="depth">
       <div className="depth__head">
-        <span className="depth__title">Recall and unscheduled list</span>
+        <span className="depth__title">{copy.title}</span>
         <span className="depth__meta">Worked top-down</span>
       </div>
 
-      <div
-        className="depth__rows"
-        role="img"
-        aria-label="A recall and unscheduled treatment list worked from the top, stopping partway down, with the remainder never reached"
-      >
+      <div className="depth__rows" role="img" aria-label={copy.aria}>
         <ul className="depth__group">
-          {WORKED.map((label, i) => (
+          {copy.worked.map((label, i) => (
             <li className="depth__row" key={`${label}-${i}`} data-worked="true">
               <span className="depth__mark" aria-hidden="true" />
               <span className="depth__label">{label}</span>
@@ -60,7 +86,7 @@ export function ListDepth() {
         </p>
 
         <ul className="depth__group">
-          {UNREACHED.map((label, i) => (
+          {copy.unreached.map((label, i) => (
             <li
               className="depth__row"
               key={`${label}-${i}`}

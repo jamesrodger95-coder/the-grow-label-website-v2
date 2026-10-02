@@ -4636,10 +4636,10 @@
 .calc-layout:has(.calc--result) .calc-aside {
   display: none;
 }
-#site-main:has(.calc--result) .phead {
+#site-main:has(.calculator-section .calc--result) .phead {
   display: none;
 }
-.section:has(.calc--result) {
+.calculator-section:has(.calc--result) {
   padding-top: clamp(24px, 3vw, 44px);
 }
 

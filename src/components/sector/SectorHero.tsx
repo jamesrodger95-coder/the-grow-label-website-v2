@@ -56,7 +56,11 @@ export function SectorHero({ industry }: { industry: IndustryDefinition }) {
           </div>
 
           <Reveal className="shero__visual" variant="card" index={2}>
-            {hero.visual === 'day' ? <DayShape /> : <ListDepth />}
+            {hero.visual === 'day' ? (
+              <DayShape />
+            ) : (
+              <ListDepth variant={industry.slug === 'med-spa' ? 'med-spa' : 'dental'} />
+            )}
             <p className="micro shero__caption">{hero.visualCaption}</p>
           </Reveal>
         </div>

@@ -16,7 +16,14 @@
  * `lib/contact-fields` in CLAUDE.md — same rule, same reason.
  */
 
-export type PracticeType = 'veterinary' | 'dental';
+export type PracticeType = 'veterinary' | 'dental' | 'med-spa';
+
+/** How a practice type reads mid-sentence, in the report. */
+export const PRACTICE_NAMES: Record<PracticeType, string> = {
+  veterinary: 'veterinary',
+  dental: 'dental',
+  'med-spa': 'med spa',
+};
 export type LocationBand = '1' | '2-3' | '4-7' | '8+';
 export type RecordBand = 'under-1500' | '1500-4000' | '4000-10000' | '10000-plus';
 export type ValueBand = 'under-100' | '100-200' | '200-400' | '400-800' | '800-plus';
@@ -99,6 +106,8 @@ export const DEFAULTS: Record<
 > = {
   dental: { noShowRate: 0.15, lapseRate: 0.3, value: '200-400' },
   veterinary: { noShowRate: 0.12, lapseRate: 0.35, value: '100-200' },
+  // Held at or below the dental figures on both rates, per the under-promise rule.
+  'med-spa': { noShowRate: 0.1, lapseRate: 0.3, value: '200-400' },
 };
 
 export const COEFFICIENTS = {

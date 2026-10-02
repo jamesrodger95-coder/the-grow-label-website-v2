@@ -11,6 +11,7 @@ import {
 import {
   COEFFICIENTS,
   DEFAULTS,
+  PRACTICE_NAMES,
   RECORD_THRESHOLD,
   WEEKS_PER_YEAR,
   count,
@@ -567,7 +568,7 @@ function estimateDerivations(answers: Answers): [string, string][] {
     ['Trading weeks a year', String(WEEKS_PER_YEAR)],
     [
       'Assumed dormant share',
-      `${percent(defaults.lapseRate)} of active records, the default for ${answers.practice} practices`,
+      `${percent(defaults.lapseRate)} of active records, the default for ${PRACTICE_NAMES[answers.practice]} practices`,
     ],
     [
       'No-show rate applied',
@@ -951,7 +952,7 @@ function coefficientRows(answers: Answers, estimate: Estimate): [string, string]
     ],
     [
       'No-show rate',
-      `${percent(estimate.noShowRate)}. ${answers.noShows === 'not-sure' ? `Default for ${answers.practice} practices, used because the answer was "not sure".` : 'The midpoint of the band you chose.'}`,
+      `${percent(estimate.noShowRate)}. ${answers.noShows === 'not-sure' ? `Default for ${PRACTICE_NAMES[answers.practice]} practices, used because the answer was "not sure".` : 'The midpoint of the band you chose.'}`,
     ],
     [
       'No-show reduction',
@@ -959,7 +960,7 @@ function coefficientRows(answers: Answers, estimate: Estimate): [string, string]
     ],
     [
       'Dormant share',
-      `${percent(defaults.lapseRate)} of active records, the default for ${answers.practice} practices.`,
+      `${percent(defaults.lapseRate)} of active records, the default for ${PRACTICE_NAMES[answers.practice]} practices.`,
     ],
     [
       'Campaign factor',

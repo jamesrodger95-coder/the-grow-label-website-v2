@@ -1,11 +1,11 @@
 /**
- * Veterinary and dental pages.
+ * Veterinary, dental and med spa pages.
  *
  * These describe workflow candidates and the data each would need. They do not
  * describe delivered outcomes, and they contain no clinical claim of any kind.
  */
 
-export type IndustrySlug = 'veterinary' | 'dental';
+export type IndustrySlug = 'veterinary' | 'dental' | 'med-spa';
 
 export type Workflow = {
   index: string;
@@ -34,10 +34,18 @@ export type IndustryDefinition = {
     visualCaption: string;
   };
   /** The distinct organising idea for this sector's page. */
-  thesis: { title: string; emphasis: string; body: string[] };
+  thesis: {
+    title: string;
+    emphasis: string;
+    /** The section heading above the body copy. */
+    headline: string;
+    body: string[];
+    /** The three patterns, one sentence each. */
+    patterns: string[];
+  };
   strip: { key: string; detail: string }[];
   workflows: Workflow[];
-  /** Sector-specific closing section; deliberately different between the two. */
+  /** Sector-specific closing section. */
   feature: {
     aside: string;
     title: string;
@@ -72,6 +80,12 @@ export const INDUSTRIES: IndustryDefinition[] = [
     thesis: {
       title: 'The veterinary problem is',
       emphasis: 'the shape of the day.',
+      headline: 'Demand arrives when the desk is thinnest.',
+      patterns: [
+        'Contact peaks outside the hours the desk is staffed for, every week, in the same places.',
+        'Return visits are discussed rather than booked, and the record ages past the point where anyone would notice.',
+        'A group multiplies both, and the variation between sites is usually larger than anyone expects.',
+      ],
       body: [
         'Consulting runs in blocks, surgery takes the middle of the day, and the phone does not observe either. Owners call when something changes at home, in the early morning, in the evening and across the weekend. That is precisely when the desk is thinnest or closed.',
         'The second pattern is interval-based. A client comes in once, the follow-up is discussed rather than booked, and the record quietly ages past the point where anyone would notice. Multiply that across a group and the back book becomes the largest addressable list the business owns.',
@@ -179,6 +193,12 @@ export const INDUSTRIES: IndustryDefinition[] = [
     thesis: {
       title: 'The dental problem is',
       emphasis: 'the interval and the gap after yes.',
+      headline: 'The highest-intent demand is already inside the practice.',
+      patterns: [
+        'Treatment is accepted in the chair and never given a date before the patient leaves.',
+        'The hygiene recall list is worked from the top until the day runs out, and stops at a different depth every week.',
+        'Chair time released on the day competes with checkout, and the gap usually wins.',
+      ],
       body: [
         'Dentistry is unusual in that a large amount of demand is already qualified and already agreed. Treatment is discussed, the patient accepts, and then the appointment is not made before they leave. The plan sits in the system as an accepted, unscheduled item. It is the highest-intent demand in the practice and the least worked.',
         'The second pattern is the recall. Hygiene runs on fixed intervals, the list is generated reliably, and it is worked as far down as the day allows. Where the list stops is where the revenue stops, and that line moves depending on how busy reception was.',
@@ -263,6 +283,130 @@ export const INDUSTRIES: IndustryDefinition[] = [
       'No clinical claim is made anywhere in this system. Grow Label does not assess, diagnose or advise.',
       'Treatment content is never read, quoted or discussed. Only the scheduling status of a plan is used.',
       'Recall intervals are set by the practice as a clinical decision.',
+      'Suppression and consent are applied immediately and without exception across every module.',
+    ],
+  },
+  {
+    slug: 'med-spa',
+    name: 'Med spa',
+    label: 'Med spa',
+    lead: 'Med spas lose demand in the minutes after an enquiry arrives, in consultations that end without a date, and in repeat visits that stop being rebooked.',
+    hero: {
+      titleLines: ['The enquiry is warm', 'for about an hour.'],
+      lead: 'Enquiries arrive from ads, social and search at all hours, and the first reply decides who gets the booking. Consultations end without a date, and regular clients drift past the point they would have rebooked. Grow Label reads the enquiries, the consultations and the visit history your business already holds, works the ones nobody reached, and reports what came back at four separate stages.',
+      signals: [
+        { key: 'Missed enquiries', kind: 'loss' },
+        { key: 'Slow first response', kind: 'loss' },
+        { key: 'Unbooked consultations', kind: 'loss' },
+        { key: 'Lapsed repeat clients', kind: 'loss' },
+        { key: 'No-shows and gaps', kind: 'loss' },
+        { key: 'Recovered bookings', kind: 'recovered' },
+      ],
+      visual: 'list',
+      visualCaption:
+        'A rebooking and unbooked-consultation list, and the line where working it stopped. Everything under that line is demand the business already owns.',
+    },
+    thesis: {
+      title: 'The med spa problem is',
+      emphasis: 'speed to reply and the visit that never gets rebooked.',
+      headline: 'Most of the demand is paid for, and the first reply decides it.',
+      patterns: [
+        'An enquiry from an ad or a social message is answered after the person has already booked somewhere else.',
+        'A consultation ends with interest and no date, and nobody is assigned to follow it up.',
+        'Repeat clients stop rebooking quietly, and the list of who has gone quiet is never worked in one go.',
+      ],
+      body: [
+        'A med spa buys a large share of its demand. Enquiries arrive from ads, social messages, web forms and search, often in the evening and at weekends, and the person enquiring is usually comparing two or three businesses at once. The first reply tends to win, and a reply the next morning tends not to.',
+        'The second pattern is the repeat client. Many appointments are part of a series or a regular schedule, so the history shows who is due. When the front desk is busy, that list is worked as far as the day allows, and the clients below the line simply stop booking. They were never lost to a competitor. Nobody asked them.',
+      ],
+    },
+    strip: [
+      {
+        key: 'Operating shape',
+        detail: 'Paid and social enquiries, consultations, and series or repeat bookings',
+      },
+      {
+        key: 'Primary loss',
+        detail: 'Slow first response; consultations with no date; lapsed repeat clients',
+      },
+      {
+        key: 'Group question',
+        detail: 'Which locations and providers turn an enquiry into an attended appointment',
+      },
+      { key: 'Modules in scope', detail: 'Answer · Respond · Retain · Reactivate' },
+    ],
+    workflows: [
+      {
+        index: '01',
+        title: 'First-reply speed on new enquiries',
+        problem:
+          'Ad, social and web-form enquiries that arrive in the evening or at the weekend and are answered the next working day, after the person has chosen elsewhere.',
+        reads: 'Arrival and first-reply timestamps per channel, per location, per hour.',
+        module: 'Respond',
+      },
+      {
+        index: '02',
+        title: 'Missed calls at the front desk',
+        problem:
+          'New-client calls that ring out while the team is with a client, leaving no record and no callback.',
+        reads: 'Call detail records, abandonment, repeat attempts from the same number.',
+        module: 'Answer',
+      },
+      {
+        index: '03',
+        title: 'Consultations without a booking',
+        problem:
+          'A consultation that ends with interest and no appointment attached, and no one assigned to follow it up.',
+        reads:
+          'Whether a consultation has a linked booking. Status only, never what was discussed.',
+        module: 'Retain',
+      },
+      {
+        index: '04',
+        title: 'Series and package continuation',
+        problem:
+          'Clients part-way through a booked series whose next appointment was never made, so the series quietly stops.',
+        reads: 'Package or series status and next-booking presence. Never the treatment record.',
+        module: 'Retain',
+      },
+      {
+        index: '05',
+        title: 'Lapsed repeat-client reactivation',
+        problem:
+          'Regular clients past the interval at which they usually rebook, who have not been contacted since their last visit.',
+        reads:
+          'Last-visit dates, the business’s own rebooking intervals, consent and suppression state.',
+        module: 'Reactivate',
+      },
+      {
+        index: '06',
+        title: 'Membership lapse',
+        problem:
+          'Memberships that stop renewing or go unused, with no recorded reason and nobody assigned to ask.',
+        reads: 'Membership status and renewal dates. Status only, never payment details.',
+        module: 'Reactivate',
+      },
+      {
+        index: '07',
+        title: 'No-show and late-cancellation recovery',
+        problem:
+          'A held room and provider slot lost inside the notice window, where refilling it by hand competes with the client in front of the desk.',
+        reads:
+          'Cancellation events with notice period, and the waiting demand that matches the slot.',
+        module: 'Retain',
+      },
+    ],
+    feature: {
+      aside: 'Rebooking view',
+      title: 'Where interest stops',
+      emphasis: 'becoming a booked visit.',
+      lead: 'Reporting by location and by provider is only useful if every one is measured on the same four stages. The interesting number is not how many enquiries or consultations there were; it is the distance between interest and an attended appointment, and whether that distance is the same on a Tuesday as on a Saturday.',
+      kind: 'recall',
+    },
+    boundaries: [
+      'No clinical claim is made anywhere in this system. Grow Label does not assess, diagnose, recommend or advise on any treatment.',
+      'Treatment content is never read, quoted or discussed. Only the scheduling status of a consultation, series or membership is used.',
+      'Rebooking intervals are set by the business and its clinicians, never by Grow Label.',
       'Suppression and consent are applied immediately and without exception across every module.',
     ],
   },

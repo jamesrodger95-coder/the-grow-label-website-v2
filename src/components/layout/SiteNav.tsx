@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Logo } from '@/components/layout/Logo';
-import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE } from '@/content/site';
+import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE, type NavLink } from '@/content/site';
 
 /**
  * Global navigation.
@@ -25,6 +25,110 @@ function isActive(pathname: string, href: string): boolean {
   if (href.includes('#')) return false;
   if (href === '/') return pathname === '/';
   return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/**
+ * A dropdown in the primary bar.
+ *
+ * The panel is always in the markup, so its links are in the document with
+ * scripts blocked and visible to crawlers; CSS keeps it closed. It opens on
+ * click, on Enter, Space or ArrowDown, and on pointer hover where a pointer
+ * can hover. Escape closes it and returns focus to the button, arrows move
+ * between items, and tabbing out or clicking elsewhere closes it.
+ */
+function NavMenu({ item, pathname }: { item: NavLink; pathname: string }) {
+  const [open, setOpen] = useState(false);
+  const [lastPathname, setLastPathname] = useState(pathname);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelId = useId();
+  const children = item.children ?? [];
+  const active = children.some((child) => isActive(pathname, child.href));
+
+  // Close when the route changes, derived during render as SiteNav does.
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
+    setOpen(false);
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [open]);
+
+  const items = () =>
+    Array.from(rootRef.current?.querySelectorAll<HTMLElement>('.nav__menuitem') ?? []);
+
+  const onKeyDown = (event: React.KeyboardEvent) => {
+    const target = event.target as HTMLElement;
+    const onButton = target === buttonRef.current;
+    if (event.key === 'Escape' && open) {
+      event.preventDefault();
+      setOpen(false);
+      buttonRef.current?.focus();
+      return;
+    }
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      const list = items();
+      if (!open) setOpen(true);
+      if (onButton) {
+        // Wait a frame so the panel is focusable once it has opened.
+        requestAnimationFrame(() => {
+          const fresh = items();
+          (event.key === 'ArrowUp' ? fresh[fresh.length - 1] : fresh[0])?.focus();
+        });
+        return;
+      }
+      const at = list.indexOf(target);
+      const next = event.key === 'ArrowDown' ? at + 1 : at - 1;
+      if (next < 0) buttonRef.current?.focus();
+      else list[next % list.length]?.focus();
+    }
+  };
+
+  return (
+    <div
+      className="nav__item"
+      ref={rootRef}
+      data-open={open ? 'true' : 'false'}
+      onKeyDown={onKeyDown}
+      onBlur={(event) => {
+        if (!rootRef.current?.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        ref={buttonRef}
+        className="nav__link nav__trigger"
+        aria-expanded={open}
+        aria-controls={panelId}
+        aria-current={active ? 'page' : undefined}
+        onClick={() => setOpen((value) => !value)}
+      >
+        {item.label}
+        <span className="nav__caret" aria-hidden="true" />
+      </button>
+      <div className="nav__menu" id={panelId}>
+        {children.map((child) => (
+          <Link
+            key={child.href}
+            className="nav__menuitem"
+            href={child.href}
+            aria-current={isActive(pathname, child.href) ? 'page' : undefined}
+            onClick={() => setOpen(false)}
+          >
+            <span className="nav__menulabel">{child.label}</span>
+            {child.note ? <span className="nav__menunote">{child.note}</span> : null}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 const DRAWER_ENTRIES = NAV_GROUPS.flatMap((group) =>
@@ -149,16 +253,20 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
             </Link>
 
             <nav className="nav__links" aria-label="Primary">
-              {PRIMARY_NAV.map((link) => (
-                <Link
-                  key={link.href}
-                  className="nav__link"
-                  href={link.href}
-                  aria-current={isActive(pathname, link.href) ? 'page' : undefined}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {PRIMARY_NAV.map((link) =>
+                link.children ? (
+                  <NavMenu key={link.href} item={link} pathname={pathname} />
+                ) : (
+                  <Link
+                    key={link.href}
+                    className="nav__link"
+                    href={link.href}
+                    aria-current={isActive(pathname, link.href) ? 'page' : undefined}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </nav>
 
             <div className="nav__actions">

@@ -465,24 +465,29 @@ describe('module definitions', () => {
 
 describe('industry pages', () => {
   it('are genuinely different, not mirrored', () => {
-    expect(INDUSTRIES).toHaveLength(2);
+    expect(INDUSTRIES.map((i) => i.slug)).toEqual(['veterinary', 'dental', 'med-spa']);
+
+    // Distinct signature devices between the first two; the med spa page is
+    // the dental page's shape with its own copy, so it is held to copy only.
     const [vet, dental] = INDUSTRIES;
     expect(vet && dental).toBeTruthy();
     if (!vet || !dental) return;
-
-    // Distinct signature devices.
     expect(vet.feature.kind).not.toBe(dental.feature.kind);
 
-    // No workflow title is shared between the two sectors.
-    const vetTitles = new Set(vet.workflows.map((w) => w.title.toLowerCase()));
-    const shared = dental.workflows.filter((w) => vetTitles.has(w.title.toLowerCase()));
-    expect(shared).toEqual([]);
-
-    // Distinct thesis copy.
-    expect(vet.thesis.body[0]).not.toBe(dental.thesis.body[0]);
+    // No workflow title and no thesis paragraph is shared between any two sectors.
+    for (const a of INDUSTRIES) {
+      for (const b of INDUSTRIES) {
+        if (a.slug >= b.slug) continue;
+        const titles = new Set(a.workflows.map((w) => w.title.toLowerCase()));
+        expect(b.workflows.filter((w) => titles.has(w.title.toLowerCase()))).toEqual([]);
+        expect(a.thesis.body[0]).not.toBe(b.thesis.body[0]);
+        expect(a.hero.lead).not.toBe(b.hero.lead);
+        expect(a.thesis.patterns).not.toEqual(b.thesis.patterns);
+      }
+    }
   });
 
-  it('states a no-clinical-claim boundary on both', () => {
+  it('states a no-clinical-claim boundary on every sector', () => {
     for (const industry of INDUSTRIES) {
       expect(industry.boundaries.join(' ').toLowerCase()).toContain('clinical');
       expect(industry.workflows.length).toBeGreaterThanOrEqual(6);
@@ -537,8 +542,7 @@ describe('navigation', () => {
     expect(labels).toEqual([
       'Platform',
       'Modules',
-      'Veterinary',
-      'Dental',
+      'Industries',
       'Results',
       'Case studies',
       'About',
@@ -551,17 +555,27 @@ describe('navigation', () => {
       '/modules',
       '/industries/veterinary',
       '/industries/dental',
+      '/industries/med-spa',
       '/case-studies',
       '/about',
     ]);
     const anchors = new Set(['results']);
     for (const link of PRIMARY_NAV) {
-      if (link.href.startsWith('/#')) {
-        expect(anchors.has(link.href.slice(2))).toBe(true);
-      } else {
-        expect(routes.has(link.href)).toBe(true);
+      // A dropdown's own href is never navigated to; its children are.
+      for (const target of link.children ?? [link]) {
+        if (target.href.startsWith('/#')) {
+          expect(anchors.has(target.href.slice(2))).toBe(true);
+        } else {
+          expect(routes.has(target.href)).toBe(true);
+        }
       }
     }
+  });
+
+  it('lists every industry page under one Industries dropdown', () => {
+    const menu = PRIMARY_NAV.find((link) => link.label === 'Industries');
+    const listed = (menu?.children ?? []).map((c) => c.href).sort();
+    expect(listed).toEqual(INDUSTRIES.map((i) => `/industries/${i.slug}`).sort());
   });
 
   /**
@@ -609,9 +623,12 @@ describe('frequently asked questions', () => {
   it('carries a distinct set for each sector', () => {
     const vet = SECTOR_FAQ.veterinary.map((i) => i.q);
     const dental = SECTOR_FAQ.dental.map((i) => i.q);
+    const medSpa = SECTOR_FAQ['med-spa'].map((i) => i.q);
     expect(vet.length).toBeGreaterThanOrEqual(3);
     expect(dental.length).toBeGreaterThanOrEqual(3);
+    expect(medSpa.length).toBeGreaterThanOrEqual(3);
     expect(vet.filter((q) => dental.includes(q))).toEqual([]);
+    expect(medSpa.filter((q) => [...vet, ...dental].includes(q))).toEqual([]);
   });
 
   it('restates the clinical boundary rather than softening it', () => {

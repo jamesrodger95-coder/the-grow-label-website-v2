@@ -7,7 +7,7 @@
  * Validation itself is server-side, in contact-schema.ts.
  */
 
-export const SECTORS = ['veterinary', 'dental', 'both', 'other'] as const;
+export const SECTORS = ['veterinary', 'dental', 'med-spa', 'both', 'other'] as const;
 export const SITE_BANDS = ['1', '2-5', '6-15', '16-50', '50+'] as const;
 
 export type Sector = (typeof SECTORS)[number];
@@ -16,6 +16,7 @@ export type SiteBand = (typeof SITE_BANDS)[number];
 export const SECTOR_LABELS: Record<Sector, string> = {
   veterinary: 'Veterinary',
   dental: 'Dental',
+  'med-spa': 'Med spa',
   both: 'Both veterinary and dental',
   other: 'Other healthcare group',
 };

@@ -22,6 +22,8 @@ export type NavLink = {
   label: string;
   /** Short descriptor used in the mobile drawer and the footer. */
   note?: string;
+  /** Makes the item a dropdown. The item's own href is then not navigated to. */
+  children?: NavLink[];
 };
 
 export type NavGroup = {
@@ -45,8 +47,15 @@ export type NavGroup = {
 export const PRIMARY_NAV: NavLink[] = [
   { href: '/platform', label: 'Platform' },
   { href: '/modules', label: 'Modules' },
-  { href: '/industries/veterinary', label: 'Veterinary' },
-  { href: '/industries/dental', label: 'Dental' },
+  {
+    href: '/industries',
+    label: 'Industries',
+    children: [
+      { href: '/industries/dental', label: 'Dental', note: 'Practices and dental groups' },
+      { href: '/industries/veterinary', label: 'Veterinary', note: 'Practices and groups' },
+      { href: '/industries/med-spa', label: 'Med spa', note: 'Med spas and groups' },
+    ],
+  },
   { href: '/#results', label: 'Results' },
   // Points at the page, not at an anchor: the homepage case-study section is
   // off while the studies are still placeholders. See src/app/page.tsx.
@@ -70,10 +79,11 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     id: 'sector',
-    label: 'Sectors',
+    label: 'Industries',
     links: [
-      { href: '/industries/veterinary', label: 'Veterinary', note: 'Practices and groups' },
       { href: '/industries/dental', label: 'Dental', note: 'Practices and dental groups' },
+      { href: '/industries/veterinary', label: 'Veterinary', note: 'Practices and groups' },
+      { href: '/industries/med-spa', label: 'Med spa', note: 'Med spas and groups' },
     ],
   },
   {

@@ -42,7 +42,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
   const industry = getIndustry(slug);
   if (!industry) notFound();
 
-  const other = INDUSTRIES.find((i) => i.slug !== industry.slug);
+  const others = INDUSTRIES.filter((i) => i.slug !== industry.slug);
   const studies = CASE_STUDIES.filter((study) => study.sectorSlug === industry.slug);
   const faq = SECTOR_FAQ[industry.slug];
 
@@ -66,11 +66,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
             <SectionHeader
               eyebrow="Where it goes"
               id="thesis-title"
-              title={
-                industry.slug === 'veterinary'
-                  ? 'Demand arrives when the desk is thinnest.'
-                  : 'The highest-intent demand is already inside the practice.'
-              }
+              title={industry.thesis.headline}
             />
           </Reveal>
           <div className="two-col">
@@ -86,37 +82,9 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
                 The two patterns, in one sentence each
               </p>
               <ul className="ticks">
-                {industry.slug === 'veterinary' ? (
-                  <>
-                    <li>
-                      Contact peaks outside the hours the desk is staffed for, every week, in the
-                      same places.
-                    </li>
-                    <li>
-                      Return visits are discussed rather than booked, and the record ages past the
-                      point where anyone would notice.
-                    </li>
-                    <li>
-                      A group multiplies both, and the variation between sites is usually larger
-                      than anyone expects.
-                    </li>
-                  </>
-                ) : (
-                  <>
-                    <li>
-                      Treatment is accepted in the chair and never given a date before the patient
-                      leaves.
-                    </li>
-                    <li>
-                      The hygiene recall list is worked from the top until the day runs out, and
-                      stops at a different depth every week.
-                    </li>
-                    <li>
-                      Chair time released on the day competes with checkout, and the gap usually
-                      wins.
-                    </li>
-                  </>
-                )}
+                {industry.thesis.patterns.map((pattern) => (
+                  <li key={pattern.slice(0, 24)}>{pattern}</li>
+                ))}
               </ul>
             </Reveal>
           </div>
@@ -184,55 +152,66 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
               </p>
             </Reveal>
             <Reveal index={1}>
-              {industry.feature.kind === 'sites' ? <SiteComparison /> : <RecallRail />}
+              {industry.feature.kind === 'sites' ? (
+                <SiteComparison />
+              ) : (
+                <RecallRail variant={industry.slug === 'med-spa' ? 'med-spa' : 'dental'} />
+              )}
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Written up: the three studies for this sector. -------------------- */}
-      <section className="surface--white on-light section" aria-labelledby="sector-cases-title">
-        <div className="shell">
-          <Reveal variant="group">
-            <SectionHeader
-              eyebrow="Written up"
-              aside={`${studies.length} studies`}
-              id="sector-cases-title"
-              title={`Three ${industry.name.toLowerCase()} write-ups,`}
-              emphasis="reported at four stages."
-            />
-          </Reveal>
-
-          <div className="entries">
-            {studies.map((study, i) => (
-              <Reveal key={study.slug} index={i}>
-                <Link className="entry" href={`/case-studies/${study.slug}`}>
-                  <span>
-                    <span className="label label--accent" style={{ display: 'block' }}>
-                      {study.chips.join(' · ')}
-                    </span>
-                    <span
-                      className="label"
-                      style={{ display: 'block', marginTop: 10, textTransform: 'none' }}
-                    >
-                      {`${study.shape} · ${study.period}`}
-                    </span>
-                  </span>
-                  <span>
-                    <span className="entry__title" style={{ display: 'block', marginBottom: 10 }}>
-                      {study.title}
-                    </span>
-                    <span className="small">{study.summary}</span>
-                  </span>
-                  <span className="label label--accent" aria-hidden="true">
-                    Read &rarr;
-                  </span>
-                </Link>
+      {studies.length > 0 ? (
+        <>
+          {/* Written up: the three studies for this sector. -------------------- */}
+          <section className="surface--white on-light section" aria-labelledby="sector-cases-title">
+            <div className="shell">
+              <Reveal variant="group">
+                <SectionHeader
+                  eyebrow="Written up"
+                  aside={`${studies.length} studies`}
+                  id="sector-cases-title"
+                  title={`Three ${industry.name.toLowerCase()} write-ups,`}
+                  emphasis="reported at four stages."
+                />
               </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
+
+              <div className="entries">
+                {studies.map((study, i) => (
+                  <Reveal key={study.slug} index={i}>
+                    <Link className="entry" href={`/case-studies/${study.slug}`}>
+                      <span>
+                        <span className="label label--accent" style={{ display: 'block' }}>
+                          {study.chips.join(' · ')}
+                        </span>
+                        <span
+                          className="label"
+                          style={{ display: 'block', marginTop: 10, textTransform: 'none' }}
+                        >
+                          {`${study.shape} · ${study.period}`}
+                        </span>
+                      </span>
+                      <span>
+                        <span
+                          className="entry__title"
+                          style={{ display: 'block', marginBottom: 10 }}
+                        >
+                          {study.title}
+                        </span>
+                        <span className="small">{study.summary}</span>
+                      </span>
+                      <span className="label label--accent" aria-hidden="true">
+                        Read &rarr;
+                      </span>
+                    </Link>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      ) : null}
 
       {/* Sector questions. ------------------------------------------------- */}
       <section className="surface--mist on-light section" aria-labelledby="sector-faq-title">
@@ -295,11 +274,11 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
             <ActionLink href={CTA.primary.href}>
               {`Request a ${industry.name.toLowerCase()} assessment`}
             </ActionLink>
-            {other ? (
-              <ActionLink href={`/industries/${other.slug}`} variant="ghost">
+            {others.map((other) => (
+              <ActionLink key={other.slug} href={`/industries/${other.slug}`} variant="ghost">
                 {`${other.name} instead`}
               </ActionLink>
-            ) : null}
+            ))}
           </Reveal>
         </div>
       </section>

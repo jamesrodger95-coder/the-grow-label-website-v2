@@ -129,8 +129,8 @@ export const FAQ_GROUPS: FaqGroup[] = [
   },
 ];
 
-/** Short, sector-specific sets shown on the two industry pages. */
-export const SECTOR_FAQ: Record<'veterinary' | 'dental', FaqItem[]> = {
+/** Short, sector-specific sets shown on the industry pages. */
+export const SECTOR_FAQ: Record<'veterinary' | 'dental' | 'med-spa', FaqItem[]> = {
   veterinary: [
     {
       q: 'Does this replace our out-of-hours provider?',
@@ -184,6 +184,34 @@ export const SECTOR_FAQ: Record<'veterinary' | 'dental', FaqItem[]> = {
       q: 'What about plan patients and finance arrangements?',
       a: [
         'Plan status is read as status only — active, lapsed, due — because that is what determines whether an appointment is owed. Payment arrangements, balances and finance agreements are not read and are not discussed in any contact.',
+      ],
+    },
+  ],
+  'med-spa': [
+    {
+      q: 'Does Grow Label say anything about treatments or suitability?',
+      a: [
+        'No. Grow Label works on scheduling and contact data. It does not describe treatments, comment on suitability, give aftercare guidance or answer any question a clinician would answer.',
+        'Anything of that kind is routed to the business’s own team immediately and is never answered by the system.',
+      ],
+    },
+    {
+      q: 'How fast does a first reply need to be?',
+      a: [
+        'That is a question the first weeks of reporting answer for your own business, rather than something to assume. Respond measures the gap between an enquiry arriving and the first reply, by channel and by hour, so the size of the gap is visible before anything is changed.',
+      ],
+    },
+    {
+      q: 'Can you work with social and ad enquiries as well as calls?',
+      a: [
+        'The scope is set by which channels your systems expose. Web forms, calls and the messaging channels you already use are the usual starting set, and the assessment confirms which are readable before any work is proposed.',
+      ],
+    },
+    {
+      q: 'How do you handle clients on a series or a membership?',
+      a: [
+        'Series and membership status is read as status only: active, lapsed, due. Whether a next appointment exists is what matters. What the treatment is, and any payment arrangement behind it, is not read and is not discussed in any contact.',
+        'Rebooking intervals are the business’s own decision. Reactivate reads the interval you set and never proposes a different one.',
       ],
     },
   ],

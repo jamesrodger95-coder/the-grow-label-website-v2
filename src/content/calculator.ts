@@ -141,6 +141,7 @@ export type Question = ChoiceQuestion | NumberQuestion;
 const PRACTICE_OPTIONS: readonly Choice<PracticeType>[] = [
   { value: 'veterinary', label: 'Veterinary' },
   { value: 'dental', label: 'Dental' },
+  { value: 'med-spa', label: 'Med spa' },
 ];
 
 const LOCATION_OPTIONS: readonly Choice<LocationBand>[] = [
@@ -543,7 +544,7 @@ export const REPORT = {
   basisTitle: 'Where the ranges come from',
   basisBody:
     'Each coefficient above is set at or beneath the conservative end of the range the underlying operation is commonly worked at, and several are set well beneath it. Where a range is wide, the model takes the bottom of it. Where an input was answered "not sure", the model takes the default for the practice type rather than the most favourable option.',
-  footer: 'Grow Label · Revenue recovery for veterinary and dental groups',
+  footer: 'Grow Label · Revenue recovery for veterinary, dental and med spa groups',
 } as const;
 
 /**

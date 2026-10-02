@@ -204,8 +204,13 @@ describe('the questions', () => {
     }
   });
 
+  it('holds the med spa defaults at or below the dental ones', () => {
+    expect(DEFAULTS['med-spa'].noShowRate).toBeLessThanOrEqual(DEFAULTS.dental.noShowRate);
+    expect(DEFAULTS['med-spa'].lapseRate).toBeLessThanOrEqual(DEFAULTS.dental.lapseRate);
+  });
+
   it('opens on the appointment value band that matches the practice type', () => {
-    for (const practice of ['veterinary', 'dental'] as const) {
+    for (const practice of ['veterinary', 'dental', 'med-spa'] as const) {
       const band = DEFAULTS[practice].value;
       expect(Object.keys(VALUE_BANDS)).toContain(band);
     }

@@ -67,18 +67,22 @@ test('sitemap and robots are served and consistent', async ({ request }) => {
 test('navigation reaches every primary destination', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Primary' });
-  const labels = [
-    'Platform',
-    'Modules',
-    'Veterinary',
-    'Dental',
-    'Results',
-    'Case studies',
-    'About',
-  ];
+  const labels = ['Platform', 'Modules', 'Results', 'Case studies', 'About'];
   for (const label of labels) {
     await expect(nav.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
+
+  // Industries is a dropdown: closed until asked, then three pages.
+  const trigger = nav.getByRole('button', { name: 'Industries' });
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await trigger.click();
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+  for (const label of ['Dental', 'Veterinary', 'Med spa']) {
+    await expect(nav.getByRole('link', { name: new RegExp(`^${label}`) })).toBeVisible();
+  }
+  await page.keyboard.press('Escape');
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect(trigger).toBeFocused();
   await nav.getByRole('link', { name: 'Modules', exact: true }).click();
   await expect(page).toHaveURL(/\/modules$/);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

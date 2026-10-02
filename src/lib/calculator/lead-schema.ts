@@ -14,7 +14,7 @@ import type { LeadInput } from './lead-fields';
  */
 
 export const answersSchema = z.object({
-  practice: z.enum(['veterinary', 'dental']),
+  practice: z.enum(['veterinary', 'dental', 'med-spa']),
   locations: z.enum(['1', '2-3', '4-7', '8+']),
   records: z.enum(['under-1500', '1500-4000', '4000-10000', '10000-plus']),
   weeklyAppointments: z.coerce.number().int().positive().max(20000),
