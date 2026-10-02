@@ -9,7 +9,7 @@ import { CTA } from '@/content/site';
 export const metadata: Metadata = {
   title: 'Insights',
   description:
-    'Notes on measurement, scheduling and revenue operations for veterinary and dental groups.',
+    'Notes on measurement, scheduling and revenue operations for veterinary, dental and med spa groups.',
   alternates: { canonical: '/insights' },
 };
 

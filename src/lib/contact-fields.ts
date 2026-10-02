@@ -17,7 +17,7 @@ export const SECTOR_LABELS: Record<Sector, string> = {
   veterinary: 'Veterinary',
   dental: 'Dental',
   'med-spa': 'Med spa',
-  both: 'Both veterinary and dental',
+  both: 'More than one of these',
   other: 'Other healthcare group',
 };
 

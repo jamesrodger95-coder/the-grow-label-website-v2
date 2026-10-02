@@ -10,9 +10,9 @@ export const SITE = {
   name: 'Grow Label',
   /** One-line description used in metadata and the footer. */
   description:
-    'Revenue recovery and revenue operations for veterinary and dental organisations. Grow Label finds demand a practice already generated and did not convert, then reports the result at four separate stages.',
+    'Revenue recovery and revenue operations for veterinary, dental and med spa organisations. Grow Label finds demand a practice already generated and did not convert, then reports the result at four separate stages.',
   shortDescription:
-    'Revenue recovery and revenue operations for veterinary and dental organisations.',
+    'Revenue recovery and revenue operations for veterinary, dental and med spa organisations.',
   locale: 'en_GB',
   themeColor: '#fbfaf8',
 } as const;

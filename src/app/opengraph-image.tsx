@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 
-export const alt = 'Grow Label: revenue recovery for veterinary and dental groups';
+export const alt = 'Grow Label: revenue recovery for veterinary, dental and med spa groups';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -90,7 +90,7 @@ export default function OpenGraphImage() {
         }}
       >
         <div>ANSWER · RESPOND · RETAIN · REACTIVATE</div>
-        <div>VETERINARY &amp; DENTAL</div>
+        <div>VETERINARY · DENTAL · MED SPA</div>
       </div>
     </div>,
     size

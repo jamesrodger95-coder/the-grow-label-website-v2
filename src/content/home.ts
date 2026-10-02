@@ -5,10 +5,10 @@
  */
 
 export const HERO = {
-  eyebrow: 'Revenue recovery for veterinary and dental groups',
+  eyebrow: 'Revenue recovery for clinic groups',
   /** Line breaks are a design decision, so the headline is authored as lines. */
   titleLines: ['Recover the revenue', 'you already earned.'],
-  lead: 'Grow Label watches every call, enquiry, recall and open treatment plan your practice generates. It works the ones that were missed and reports what came back at four separate stages, so the number survives a board meeting.',
+  lead: 'Grow Label watches every call, enquiry, recall and unbooked consultation your practice generates. It works the ones that were missed and reports what came back at four separate stages, so the number survives a board meeting.',
   columnLabel: 'A working day',
   columnNote:
     'Every open slot in a working schedule is demand that already existed and did not arrive.',
@@ -265,10 +265,10 @@ export const EVIDENCE = {
 } as const;
 
 export const SECTORS = {
-  aside: 'Two operating pictures',
-  title: 'Veterinary and dental lose money',
+  aside: 'Three operating pictures',
+  title: 'Different practices lose money',
   titleEmphasis: 'in different places.',
-  lead: 'The recovery system is the same. The workflows, the intervals and the language are not, so the two sectors are treated as two products rather than one page with the noun swapped.',
+  lead: 'The recovery system is the same. The workflows, the intervals and the language are not, so each sector is treated as its own product rather than one page with the noun swapped.',
 } as const;
 
 export const CLOSING = {

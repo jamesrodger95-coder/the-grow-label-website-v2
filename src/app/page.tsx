@@ -18,7 +18,7 @@ import { READS_STRIP } from '@/content/proof';
 import { CTA, SITE, VALUE_STAGES } from '@/content/site';
 
 export const metadata: Metadata = {
-  title: `${SITE.name}: revenue recovery for veterinary and dental groups`,
+  title: `${SITE.name}: revenue recovery for clinic groups`,
   description: SITE.description,
   alternates: { canonical: '/' },
 };
@@ -329,7 +329,7 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Two sectors                                                       */}
+      {/* Sectors                                                       */}
       {/* ---------------------------------------------------------------- */}
       <section className="surface--white on-light section" aria-labelledby="sectors-title">
         <div className="shell">
@@ -339,7 +339,7 @@ export default function HomePage() {
                 as="h2"
                 id="sectors-title"
                 className="display d2"
-                lines={['Veterinary and dental lose', <em key="e">money in different places.</em>]}
+                lines={['Different practices lose', <em key="e">money in different places.</em>]}
               />
             </div>
           </div>

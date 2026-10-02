@@ -1111,7 +1111,7 @@
    ========================================================================= */
 .split {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 .split__panel {
@@ -1170,6 +1170,11 @@
 .on-dark .split__panel:hover,
 .on-dark .split__panel:focus-within {
   background: rgba(154, 143, 240, 0.07);
+}
+@media (max-width: 1080px) {
+  .split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 @media (max-width: 860px) {
   .split {
