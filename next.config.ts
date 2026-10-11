@@ -29,7 +29,7 @@ function policy({ cal = false }: { cal?: boolean } = {}): string {
     `script-src ${script}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
-    "font-src 'self' data:",
+    `font-src 'self' data:${cal ? ' https://cal.com' : ''}`,
     `connect-src 'self'${cal ? ` ${CAL}` : ''}`,
     // The calendar is an iframe on the booking route and nowhere else.
     cal ? `frame-src ${CAL}` : "frame-src 'none'",

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import { preconnect, preload } from 'react-dom';
 import { RESULT } from '@/content/calculator';
 
 /**
@@ -53,8 +53,32 @@ const ORIGIN = 'https://app.cal.com';
 const LOADER = 'https://app.cal.com/embed/embed.js';
 const MOUNT_ID = 'my-cal-inline-revenue-assessment';
 
-/** How long to wait for the iframe before offering the link instead. */
-const GIVE_UP_AFTER = 8000;
+/**
+ * How long to wait before the new-tab link is promoted. Not a failure: on a
+ * phone the embed fetches thirty-odd files and measured over twelve seconds in
+ * Safari's engine before its spinner cleared, so it keeps loading behind the
+ * promoted link and replaces the message if it arrives.
+ */
+const SLOW_AFTER = 7000;
+
+/**
+ * Starts the connection to Cal.com and fetches its loader early, while the
+ * reader is still answering, so less of the wait lands after the last
+ * question. Safe to call on every render; React dedupes the hints.
+ */
+export function warmCal(): void {
+  preconnect(ORIGIN);
+  preload(LOADER, { as: 'script' });
+}
+
+/**
+ * Where "book in a new tab" goes: the booking URL if one is configured,
+ * otherwise the same Cal.com event the embed shows. Never the contact page,
+ * which on this site is the questionnaire again.
+ */
+export function bookingHref(bookingUrl?: string): string {
+  return bookingUrl || `https://cal.com/${calLinkFrom(bookingUrl)}`;
+}
 
 /**
  * Cal's bootstrap, transcribed.
@@ -126,7 +150,7 @@ export function calLinkFrom(bookingUrl?: string): string {
   }
 }
 
-type Status = 'loading' | 'ready' | 'failed';
+type Status = 'loading' | 'ready' | 'slow';
 
 export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
   const [status, setStatus] = useState<Status>('loading');
@@ -138,19 +162,27 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
 
     let cancelled = false;
 
-    // The calendar has arrived when something is inside the mount point. An
-    // observer rather than a poll, and a deadline so a blocked script ends in
-    // a usable state rather than a spinner that never resolves.
+    // The calendar has arrived when Cal marks its element `loading="done"`,
+    // not when the element first appears: the iframe is inserted at once and
+    // then shows Cal's own spinner for as long as the booking page takes,
+    // which on a phone is the whole of the wait. Counting children called
+    // that spinner "ready" and so never offered the link.
+    const done = () => Boolean(frame.querySelector('cal-inline[loading="done"]'));
     const observer = new MutationObserver(() => {
-      if (cancelled || frame.childElementCount === 0) return;
+      if (cancelled || !done()) return;
       setStatus('ready');
       observer.disconnect();
     });
-    observer.observe(frame, { childList: true });
+    observer.observe(frame, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['loading'],
+    });
 
     const deadline = setTimeout(() => {
-      if (!cancelled && frame.childElementCount === 0) setStatus('failed');
-    }, GIVE_UP_AFTER);
+      if (!cancelled && !done()) setStatus('slow');
+    }, SLOW_AFTER);
 
     // Cal is started on the next frame rather than in the effect body, so both
     // outcomes — a calendar or a failure — report through a callback.
@@ -173,9 +205,9 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
           ns('ui', { hideEventTypeDetails: false, layout: 'month_view' });
         }
         // A remount lands in an element Cal has already filled.
-        if (!cancelled && frame.childElementCount > 0) setStatus('ready');
+        if (!cancelled && done()) setStatus('ready');
       } catch {
-        if (!cancelled) setStatus('failed');
+        if (!cancelled) setStatus('slow');
       }
     });
 
@@ -187,23 +219,27 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
     };
   }, [bookingUrl]);
 
+  const href = bookingHref(bookingUrl);
+
   return (
-    <div className="calembed">
+    <div className="calembed" data-status={status}>
+      {/* On a phone the booking page in its own tab is the quicker route, so
+          it is offered first, above the embed, rather than under it. */}
+      <a className="btn calembed__open" href={href} rel="noopener noreferrer" target="_blank">
+        {RESULT.openCalendar}
+        <span className="btn__arrow" aria-hidden="true">
+          &rarr;
+        </span>
+      </a>
+
       <div className="calembed__frame" id={MOUNT_ID} ref={frameRef} data-status={status} />
 
-      <p className="micro calembed__fallback">
-        {status === 'failed' ? RESULT.embedFailed : RESULT.embedFallback}{' '}
-        {bookingUrl ? (
-          <a className="tlink" href={bookingUrl} rel="noopener noreferrer" target="_blank">
-            {RESULT.bookCta}
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        ) : (
-          <Link className="tlink" href="/contact">
-            {RESULT.unbookedCta}
-            <span aria-hidden="true">&rarr;</span>
-          </Link>
-        )}
+      <p className="micro calembed__fallback" role={status === 'slow' ? 'status' : undefined}>
+        {status === 'slow' ? RESULT.embedSlow : RESULT.embedFallback}{' '}
+        <a className="tlink" href={href} rel="noopener noreferrer" target="_blank">
+          {RESULT.bookCta}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </p>
     </div>
   );

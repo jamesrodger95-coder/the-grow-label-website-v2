@@ -10,6 +10,7 @@ import {
 } from '@/content/calculator';
 import { DEFAULTS, estimate, type Answers } from '@/lib/calculator/model';
 import { Result } from './Result';
+import { warmCal } from './CalEmbed';
 
 /**
  * The nine questions, one per screen.
@@ -47,6 +48,8 @@ export function Calculator({
   bookingUrl?: string;
   embedded?: boolean;
 }) {
+  // Connect to Cal.com while the questions are answered, not after.
+  warmCal();
   const groupId = useId();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Draft>({});

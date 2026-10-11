@@ -5283,8 +5283,25 @@
   font-size: var(--gl-t-small);
   color: var(--ghost);
 }
-.calembed__frame[data-status="failed"]::before {
-  content: "";
+.calembed__frame[data-status="slow"]::before {
+  content: "Still loading the calendar…";
+  place-self: center;
+  font-size: var(--gl-t-small);
+  color: var(--ghost);
+}
+/* The new-tab route leads on a phone, where it is the quicker one. */
+.calembed__open {
+  display: none;
+  justify-content: space-between;
+}
+@media (max-width: 720px) {
+  .calembed__open {
+    display: inline-flex;
+  }
+}
+.calembed[data-status="slow"] .calembed__fallback {
+  color: var(--ink);
+  font-weight: var(--gl-w-medium);
 }
 .calembed__frame > * {
   min-width: 0;
@@ -5292,11 +5309,6 @@
 .calembed__fallback {
   color: var(--faint);
   margin: 0;
-}
-.calembed__frame[data-status="failed"] {
-  min-height: 0;
-  padding: clamp(24px, 3vw, 40px);
-  text-align: center;
 }
 
 /* --- The calendar, and the heading above it ------------------------------- */
@@ -5958,15 +5970,6 @@
 .work__bar i:nth-child(3),
 .sample__lights i:nth-child(3) {
   background: #28c840;
-}
-.work__file {
-  min-width: 0;
-  margin-left: 8px;
-  overflow: hidden;
-  color: var(--s-on-night-mute);
-  font-size: 0.75rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .work__frame {
   position: relative;

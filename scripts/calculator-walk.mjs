@@ -81,7 +81,15 @@ page.on('request', (request) => {
   }
 });
 
-await page.goto(`http://localhost:${port}/calculator`, { waitUntil: 'load', timeout: 90000 });
+// BASE_URL walks a deployed site instead of a local server. The lead POST is
+// answered locally there, so a test walk never lands in the real CRM.
+const BASE = process.env.BASE_URL ?? `http://localhost:${port}`;
+if (process.env.BASE_URL) {
+  await page.route('**/api/calculator/lead', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '{"status":"ok"}' })
+  );
+}
+await page.goto(`${BASE}/calculator`, { waitUntil: 'load', timeout: 90000 });
 await page.waitForTimeout(700);
 
 for (let i = 0; i < ANSWERS.length; i += 1) {

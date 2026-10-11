@@ -323,10 +323,10 @@ export const RESULT = {
   embedLoading: 'Loading the calendar…',
   /** Sits under the calendar whether or not it arrived. */
   embedFallback: 'Would rather book in a new tab?',
-  /** Replaces it once the calendar has visibly failed to load. */
-  embedFailed:
-    'The calendar has not loaded — some networks block it. It opens in a new tab instead:',
-  unbookedCta: 'Request a time',
+  /** Replaces it once the calendar is taking a while; it keeps loading. */
+  embedSlow: 'Still loading? The calendar opens straight away in a new tab:',
+  /** The phone's first route to a booking, above the embed. */
+  openCalendar: 'Open the calendar',
   getsTitle: 'What the call covers',
   whatYouGet: [
     'The full revenue figure, at four separate stages rather than as one number.',

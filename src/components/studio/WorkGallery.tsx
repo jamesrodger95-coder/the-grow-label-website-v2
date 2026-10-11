@@ -89,9 +89,6 @@ function Piece({
   const videoRef = useInViewPlayback(Boolean(item.src) && item.media === 'video');
   const windowRef = useRef<HTMLSpanElement | null>(null);
   const credit = creditLabel(item);
-  const file = item.src
-    ? item.src.split('/').pop()
-    : `${item.id}.${item.media === 'video' ? 'mp4' : 'jpg'}`;
 
   // A small lean towards the pointer. Transform only, and none at all for a
   // reader who has asked for less motion.
@@ -166,7 +163,6 @@ function Piece({
               <i />
               <i />
               <i />
-              <span className="work__file">{file}</span>
             </span>
             <span className="work__frame">{media}</span>
           </span>
@@ -179,7 +175,6 @@ function Piece({
               <i />
               <i />
               <i />
-              <span className="work__file">{file}</span>
             </span>
             <span className="work__frame">{media}</span>
           </span>
