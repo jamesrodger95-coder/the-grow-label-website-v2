@@ -720,6 +720,33 @@ export const WORK: WorkEntry[] = [
     category: 'Construction',
     credit: CONCEPT,
   },
+  {
+    id: 'w54',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'Leather wallet: lightweight, hand stitched',
+    category: 'Leather goods',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w55',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'Which look: one outfit, five ways',
+    category: 'Fashion',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w56',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'Four palettes: one fit, four colourways',
+    category: 'Fashion',
+    credit: CONCEPT,
+  },
 ];
 
 export const STUDIO_MAKE = {

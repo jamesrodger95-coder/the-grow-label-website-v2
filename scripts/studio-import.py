@@ -80,6 +80,17 @@ STILLS = [
 # tunnel stays mostly motion. By position in STILLS, counted from 1.
 NOT_IN_TUNNEL = {17}
 
+# Films added after the stills, numbered after them so nothing renumbers.
+LATE_FILMS = [
+    '82772c0a-9518-472c-9825-3d84b74f3ee0.mp4',
+    'a7c2bc28-b911-42a8-a9ac-0c6151a21324.mp4',
+    '326c512a-ee04-417d-bb2a-faa3f2d1c6d1.mp4',
+]
+
+# Software demos kept out of the hero tunnel (portfolio only), so the hero
+# reads as many industries rather than SaaS. By w number.
+FILMS_NOT_IN_TUNNEL = {1, 17, 26, 32}
+
 
 def run(args):
     return subprocess.run(args, capture_output=True, text=True, check=True)
@@ -137,7 +148,7 @@ def done(path):
 os.makedirs(WORK, exist_ok=True)
 os.makedirs(REEL, exist_ok=True)
 
-for n, rel in enumerate(FILMS, start=1):
+def film(n, rel):
     src = os.path.join(ROOT_IN, rel)
     w, h, dur, audio = probe(src)
     sh = shape(w, h)
@@ -155,7 +166,10 @@ for n, rel in enumerate(FILMS, start=1):
         else:
             args += ['-an']
         run(args + [out])
-    if not done(reel):
+    if n in FILMS_NOT_IN_TUNNEL:
+        if os.path.exists(reel):
+            os.remove(reel)
+    elif not done(reel):
         start = round(min(max(1.0, cut * 0.33), max(0.0, cut - LOOP)), 2)
         rscale = {'16x9': 'scale=-2:270', '3x2': 'scale=-2:270', '4x3': 'scale=-2:270',
                   '9x16': 'scale=270:-2', '2x3': 'scale=270:-2', '4x5': 'scale=288:-2',
@@ -164,6 +178,10 @@ for n, rel in enumerate(FILMS, start=1):
              f'{rscale},fps=30,format=yuv420p', '-an', '-c:v', 'libx264', '-preset', 'slow',
              '-crf', '30', '-maxrate', '700k', '-bufsize', '1400k', '-movflags', '+faststart', reel])
     print(f'w{n:02d}  film  {sh:5s} {dur:5.1f}s -> {cut:5.1f}s  {rel}', flush=True)
+
+
+for n, rel in enumerate(FILMS, start=1):
+    film(n, rel)
 
 for k, rel in enumerate(STILLS, start=len(FILMS) + 1):
     src = os.path.join(ROOT_IN, rel)
@@ -184,3 +202,6 @@ for k, rel in enumerate(STILLS, start=len(FILMS) + 1):
         run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-vf', small, '-c:v', 'libwebp',
              '-quality', '78', reel])
     print(f'w{k:02d}  still {sh:5s} {w}x{h}  {rel}', flush=True)
+
+for m, rel in enumerate(LATE_FILMS, start=len(FILMS) + len(STILLS) + 1):
+    film(m, rel)

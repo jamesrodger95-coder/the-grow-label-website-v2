@@ -37,14 +37,21 @@ const RATIO_IN_NAME = /(?:^|[-_ .])(\d{1,2})x(\d{1,2})(?=$|[-_ .])/i;
  * Tunnel tiles placed at the centre of their row, so they are front and
  * middle when the hero first settles: the work outside software (property,
  * construction, roofing, tools), so the page says "many industries" at once.
- * By the number the import script gives the tile's file.
+ * By the number the import script gives the tile's file, in priority order:
+ * the first three take the most prominent spot in each row.
  */
-const FEATURED = new Set(['44', '46', '47', '48', '51', '53']);
+const FEATURED = ['54', '55', '56', '44', '46', '47', '48', '51', '53'];
 
 export type ReelTile =
-  | { kind: 'clip'; src: string; poster?: string; ratio: number; feature?: boolean }
-  | { kind: 'still'; src: string; ratio: number; feature?: boolean }
-  | { kind: 'slot'; ratio: number; number: string; shape: string; feature?: boolean };
+  | { kind: 'clip'; src: string; poster?: string; ratio: number; feature?: number }
+  | { kind: 'still'; src: string; ratio: number; feature?: number }
+  | { kind: 'slot'; ratio: number; number: string; shape: string; feature?: number };
+
+/** A tile's place in FEATURED, or undefined. */
+function rank(name: string): number | undefined {
+  const at = FEATURED.indexOf(name.slice(0, 2));
+  return at >= 0 ? at : undefined;
+}
 
 export function ratioFromName(stem: string): number | undefined {
   const m = RATIO_IN_NAME.exec(stem);
@@ -101,6 +108,7 @@ export function reelTiles(): { tiles: ReelTile[]; live: boolean } {
       kind: 'clip' as const,
       src: `/ai/reel/${name}`,
       poster: poster ? `/ai/reel/${poster}` : undefined,
+      feature: rank(name),
       ratio: ratioFromName(stem) ?? FALLBACK_RATIOS[i % FALLBACK_RATIOS.length]!,
     };
   });
@@ -108,7 +116,7 @@ export function reelTiles(): { tiles: ReelTile[]; live: boolean } {
   const stills = stillNames.map((name, i) => ({
     kind: 'still' as const,
     src: `/ai/reel/${name}`,
-    feature: FEATURED.has(name.slice(0, 2)),
+    feature: rank(name),
     ratio:
       ratioFromName(name.replace(/\.[^.]+$/, '')) ?? FALLBACK_RATIOS[i % FALLBACK_RATIOS.length]!,
   }));

@@ -101,16 +101,33 @@ function saveData(): boolean {
  * the middle of the row, which is where a row sits front and centre once the
  * spin-in settles. They are dealt across the rows, a share each.
  */
+/**
+ * Where each featured piece in a row sits, as an angle from the row's centre:
+ * the lead piece at about 60 degrees, near enough the viewer to be large and
+ * well inside the frame (the dead centre is the tunnel's far end, too small
+ * to read), the others either side of it. By angle rather than by counting
+ * tiles, because rows hold tiles of very different widths.
+ */
+const AT_DEGREES = [60, 46, 72];
+/** Measured: how far a row has turned once the hero has settled (about 2s). */
+const SETTLE_TURN = 24;
+
 function centreFeatured(row: ReelTile[], featured: ReelTile[], r: number): ReelTile[] {
   const mine = featured.filter((_, i) => i % ROWS === r);
-  const mid = Math.floor(row.length / 2);
   const out = [...row];
   mine.forEach((tile, k) => {
-    // Either side of centre, a few tiles out: the dead centre of a tunnel is
-    // its far end, where a tile is too small to read; four out, a tile is
-    // close enough to be large and still well inside the frame.
-    const at = mid + (k % 2 ? 1 : -1) * (4 + Math.floor(k / 2) * 2);
-    out.splice(Math.max(0, Math.min(out.length, at)), 0, tile);
+    // The side alternates by piece and by row, so the leads are spread
+    // across both sides of the hero rather than stacked on one.
+    const side = (k + r) % 2 ? 1 : -1;
+    // The row has turned by about SETTLE_TURN degrees by the time the spin-in
+    // has settled, so the target is set back by that much.
+    const target = side * (AT_DEGREES[k] ?? 50 + k * 6) - SETTLE_TURN;
+    const { angles } = layout([out], SSR_GEOMETRY)[0]!;
+    let best = 0;
+    angles.forEach((a, i) => {
+      if (Math.abs(a - target) < Math.abs(angles[best]! - target)) best = i;
+    });
+    out.splice(side > 0 ? best + 1 : best, 0, tile);
   });
   return out;
 }
@@ -139,8 +156,10 @@ export function Tunnel({
   // Every piece once: dealt round the rows in turn, so each row is a third of
   // the work and no piece meets itself. (A short reel is padded upstream, in
   // reelTiles, so a row is never too sparse to fill its arc.)
-  const featured = tiles.filter((t) => t.feature);
-  const rest = tiles.filter((t) => !t.feature);
+  const featured = tiles
+    .filter((t) => t.feature !== undefined)
+    .sort((a, b) => (a.feature ?? 0) - (b.feature ?? 0));
+  const rest = tiles.filter((t) => t.feature === undefined);
   const rows = Array.from({ length: ROWS }, (_, r) =>
     centreFeatured(
       rest.filter((_, i) => i % ROWS === r),
