@@ -39,29 +39,19 @@ more often.
 Declared in `WORK` in `src/content/studio.ts`; the filename is the entry's
 `id`.
 
-- **w01 to w30** are the studio's films. They are produced, together with
-  their hero tunnel loops, by the import script from the exported folders
-  (`Horizontal/`, `Square/`, `Vertical/`):
+- **w01 to w35** are films and **w36 to w43** product stills. All of them are
+  produced, together with their hero tunnel tiles, by the import script from
+  the exported folders; the paths are listed at the top of the script:
 
   ```bash
-  python scripts/studio-import.py "C:/path/to/export"
+  python scripts/studio-import.py "C:/Users/james/Downloads"
   pnpm studio:media
   ```
 
-  Each film becomes a 720p piece of at most 20 seconds (cut at a scene change
-  where it can be) plus a five-second silent tunnel loop. New films in the
-  folder are appended automatically; give each a `WORK` entry.
-
-- **w31 to w34** are reserved stills, waiting for styled shoots and imagery:
-
-| File stem | Treatment    | Shape |
-| --------- | ------------ | ----- |
-| `w31`     | Styled shoot | 4:5   |
-| `w32`     | Imagery      | 1:1   |
-| `w33`     | Styled shoot | 4:5   |
-| `w34`     | Imagery      | 3:4   |
-
-`w31.webp` or `.jpg`, 1600 px on the long side.
+  Films become a 720p piece of at most 20 seconds plus a five-second silent
+  tunnel loop; stills a 1600 px WebP plus a 360 px tunnel tile. Existing
+  outputs are skipped (pass `--force` to redo them). Add new files to FILMS or
+  STILLS in the script, and give each a `WORK` entry.
 
 ### Every piece needs a label before it ships
 

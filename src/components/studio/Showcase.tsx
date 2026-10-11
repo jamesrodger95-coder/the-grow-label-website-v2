@@ -130,7 +130,12 @@ export function Showcase({ items }: { items: WorkItem[] }) {
                 } as CSSProperties
               }
             >
-              <LoopVideo src={item.src!} poster={item.poster} />
+              {item.media === 'image' ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.src} alt="" loading="lazy" decoding="async" />
+              ) : (
+                <LoopVideo src={item.src!} poster={item.poster} />
+              )}
               <span className="show__tag">{`${piece.tag} · ${item.ratio}`}</span>
             </div>
           ))}

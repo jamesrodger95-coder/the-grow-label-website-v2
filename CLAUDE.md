@@ -178,8 +178,8 @@ cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/style
 ## The /AI page
 
 `/AI` sells AI-made video, imagery, ad creative and demos to businesses that
-sell something: ecommerce brands, B2B SaaS, home improvement and the trades
-(HVAC, plumbing, electrical). It supports cold outreach offering a free sample. It shares
+sell something: ecommerce, software, home improvement, construction, the
+trades and more (the list is `STUDIO_BAND` in `src/content/studio.ts`). It supports cold outreach offering a free sample. It shares
 the stack, the deploy and the delivery provider with the clinic site and
 nothing else:
 

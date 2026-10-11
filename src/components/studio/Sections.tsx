@@ -149,7 +149,7 @@ export function StudioHero({ tiles, live }: { tiles: ReelTile[]; live: boolean }
 /** Who the work is for, drifting past under the hero. */
 export function StudioBand() {
   const run = (copy: number) => (
-    <span className="band__run" aria-hidden={copy === 1 ? 'true' : undefined} key={copy}>
+    <span className="band__run" aria-hidden={copy > 0 ? 'true' : undefined} key={copy}>
       {STUDIO_BAND.map((label) => (
         <span className="band__item" key={label}>
           {label}
@@ -160,7 +160,7 @@ export function StudioBand() {
   );
   return (
     <div className="studio-band">
-      <div className="band__track">{[run(0), run(1)]}</div>
+      <div className="band__track">{[run(0), run(1), run(2)]}</div>
     </div>
   );
 }

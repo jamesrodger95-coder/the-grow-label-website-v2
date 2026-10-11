@@ -17,7 +17,11 @@ const PUBLIC = join(process.cwd(), 'public');
 const REEL_DIR = join(PUBLIC, 'ai', 'reel');
 const WORK_DIR = join(PUBLIC, 'ai', 'work');
 
-/** Reel tiles the hero is composed for. Fewer clips than this are cycled. */
+/**
+ * Below this many pieces the tunnel's rows would leave gaps, so the pieces are
+ * cycled up to it. At or above it every piece appears exactly once: a repeat
+ * on a curved wall is always visible, because the wall shows most of a row.
+ */
 export const REEL_TILES = 36;
 
 /**
@@ -31,6 +35,7 @@ const RATIO_IN_NAME = /(?:^|[-_ .])(\d{1,2})x(\d{1,2})(?=$|[-_ .])/i;
 
 export type ReelTile =
   | { kind: 'clip'; src: string; poster?: string; ratio: number }
+  | { kind: 'still'; src: string; ratio: number }
   | { kind: 'slot'; ratio: number; number: string; shape: string };
 
 export function ratioFromName(stem: string): number | undefined {
@@ -58,11 +63,13 @@ function ratioLabel(ratio: number): string {
  * numbered, so it is obvious what is missing and where it goes.
  */
 export function reelTiles(): { tiles: ReelTile[]; live: boolean } {
-  const names = existsSync(REEL_DIR)
-    ? readdirSync(REEL_DIR)
-        .filter((f) => /\.(mp4|webm)$/i.test(f) && !f.startsWith('.'))
-        .sort()
-    : [];
+  const all = existsSync(REEL_DIR) ? readdirSync(REEL_DIR).filter((f) => !f.startsWith('.')) : [];
+  const names = all.filter((f) => /\.(mp4|webm)$/i.test(f)).sort();
+  const filmStems = new Set(names.map((f) => f.replace(/\.[^.]+$/, '')));
+  // A still is an image that is not some film's poster.
+  const stillNames = all
+    .filter((f) => /\.(webp|jpg|png)$/i.test(f) && !filmStems.has(f.replace(/\.[^.]+$/, '')))
+    .sort();
 
   if (names.length === 0) {
     const tiles: ReelTile[] = Array.from({ length: REEL_TILES }, (_, i) => {
@@ -90,8 +97,25 @@ export function reelTiles(): { tiles: ReelTile[]; live: boolean } {
     };
   });
 
-  const count = Math.max(REEL_TILES, clips.length);
-  return { tiles: Array.from({ length: count }, (_, i) => clips[i % clips.length]!), live: true };
+  const stills = stillNames.map((name, i) => ({
+    kind: 'still' as const,
+    src: `/ai/reel/${name}`,
+    ratio:
+      ratioFromName(name.replace(/\.[^.]+$/, '')) ?? FALLBACK_RATIOS[i % FALLBACK_RATIOS.length]!,
+  }));
+
+  // Spread the stills evenly through the films rather than in one clump.
+  const pieces: ReelTile[] = [];
+  const every = stills.length ? Math.max(1, Math.floor(clips.length / stills.length)) : Infinity;
+  let s = 0;
+  clips.forEach((clip, i) => {
+    pieces.push(clip);
+    if ((i + 1) % every === 0 && s < stills.length) pieces.push(stills[s++]!);
+  });
+  while (s < stills.length) pieces.push(stills[s++]!);
+
+  const count = Math.max(REEL_TILES, pieces.length);
+  return { tiles: Array.from({ length: count }, (_, i) => pieces[i % pieces.length]!), live: true };
 }
 
 export type WorkItem = WorkEntry & {

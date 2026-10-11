@@ -4,7 +4,7 @@
  * A separate offering from the revenue-recovery site: AI-made video, imagery
  * and ad creative for businesses that sell something, whether that is a
  * product, software or a service. The first audiences are ecommerce brands,
- * B2B SaaS, home improvement and the trades (HVAC, plumbing, electrical). The
+ * software, home improvement, construction and the trades, and more. The
  * page is reached from cold outreach that offers a free sample. Every word on
  * it lives here, in the same way the rest of the site keeps copy out of routes.
  *
@@ -55,11 +55,23 @@ export const STUDIO_HERO = {
 /** The drifting band under the hero: who the work is for. */
 export const STUDIO_BAND = [
   'Ecommerce',
-  'B2B SaaS',
+  'Software',
   'Home improvement',
+  'Construction',
   'HVAC',
   'Plumbing',
   'Electrical',
+  'Roofing',
+  'Solar',
+  'Landscaping',
+  'Real estate',
+  'Beauty and skincare',
+  'Fashion',
+  'Food and drink',
+  'Health and wellness',
+  'Fitness',
+  'Automotive',
+  'Hospitality',
 ] as const;
 
 export const STUDIO_WORK = {
@@ -124,7 +136,7 @@ export const STUDIO_SHOWCASE = {
   pieces: [
     {
       id: 'w05',
-      tag: 'Widescreen',
+      tag: 'Launch film',
       x: 50,
       y: 50,
       w: 36,
@@ -132,19 +144,37 @@ export const STUDIO_SHOWCASE = {
       depth: 0.2,
       m: { x: 50, y: 22, w: 92 },
     },
-    { id: 'w01', tag: 'Widescreen', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
-    { id: 'w22', tag: 'Widescreen', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
-    { id: 'w07', tag: 'Widescreen', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
-    { id: 'w03', tag: 'Widescreen', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
-    { id: 'w02', tag: 'Reel', x: 7.5, y: 52, w: 10, r: -6, depth: 1, m: { x: 21, y: 70, w: 34 } },
-    { id: 'w06', tag: 'Reel', x: 35, y: 15, w: 8, r: 3, depth: 0.9, m: null },
-    { id: 'w09', tag: 'Reel', x: 63, y: 86, w: 8.5, r: -3, depth: 0.9, m: null },
-    { id: 'w13', tag: 'Reel', x: 92.5, y: 50, w: 10, r: 6, depth: 1, m: { x: 79, y: 70, w: 34 } },
-    { id: 'w04', tag: 'Feed post', x: 50, y: 12, w: 9, r: -2, depth: 0.7, m: null },
-    { id: 'w19', tag: 'Feed post', x: 25.5, y: 50, w: 9, r: -5, depth: 0.8, m: null },
+    { id: 'w01', tag: 'Feature demo', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
+    { id: 'w22', tag: 'YouTube ad', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
+    { id: 'w42', tag: 'Website hero', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
+    { id: 'w31', tag: 'Product launch', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
     {
-      id: 'w11',
-      tag: 'Feed post',
+      id: 'w02',
+      tag: 'TikTok ad',
+      x: 7.5,
+      y: 52,
+      w: 10,
+      r: -6,
+      depth: 1,
+      m: { x: 21, y: 70, w: 34 },
+    },
+    { id: 'w06', tag: 'Story', x: 35, y: 15, w: 8, r: 3, depth: 0.9, m: null },
+    { id: 'w35', tag: 'Meta ad', x: 63, y: 86, w: 8.5, r: -3, depth: 0.9, m: null },
+    {
+      id: 'w13',
+      tag: 'Paid social',
+      x: 92.5,
+      y: 50,
+      w: 10,
+      r: 6,
+      depth: 1,
+      m: { x: 79, y: 70, w: 34 },
+    },
+    { id: 'w39', tag: 'Product image', x: 50, y: 12, w: 9, r: -2, depth: 0.7, m: null },
+    { id: 'w41', tag: 'Product shot', x: 25.5, y: 50, w: 9, r: -5, depth: 0.8, m: null },
+    {
+      id: 'w36',
+      tag: 'Instagram post',
       x: 74.5,
       y: 50,
       w: 9,
@@ -189,7 +219,7 @@ export type WorkEntry = {
   media: 'video' | 'image';
   treatment: Treatment;
   /** Width over height, as the frame is reserved on the page. */
-  ratio: '9:16' | '4:5' | '3:4' | '1:1' | '16:9';
+  ratio: '9:16' | '4:5' | '3:4' | '4:3' | '1:1' | '16:9';
   /** Filled in when the file arrives. Never before. */
   title?: string;
   /** What was being sold, e.g. "Skincare" or "HVAC". Filled in with the file. */
@@ -206,11 +236,10 @@ const CONCEPT: Credit = { kind: 'concept' };
 /**
  * The portfolio, in display order.
  *
- * w01 to w30 are the studio's films, imported by scripts/studio-import.py
- * (720p, at most 20 seconds). Every one of them is also a tile in the hero
- * tunnel. w31 to w34 are reserved stills for styled shoots and imagery: they
- * render as reserved frames until their files are in public/ai/work/. The
- * grid shows the first twelve and a "Show all" control.
+ * w01 to w35 are the studio's films and w36 to w43 its product stills, all
+ * imported by scripts/studio-import.py (films at 720p and at most 20 seconds,
+ * stills at 1600 px). Every one of them is also a tile in the hero tunnel.
+ * The grid shows the first twelve and a "Show all" control.
  */
 export const WORK: WorkEntry[] = [
   {
@@ -219,7 +248,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Demo',
     ratio: '16:9',
     title: 'Muse: connect and track',
-    category: 'SaaS',
+    category: 'Software',
     credit: CONCEPT,
   },
   {
@@ -237,7 +266,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Ad creative',
     ratio: '16:9',
     title: 'AI influencers, marketing your app',
-    category: 'Marketing app',
+    category: 'Marketing software',
     credit: CONCEPT,
   },
   {
@@ -246,7 +275,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Video',
     ratio: '1:1',
     title: 'Lidlezz: lid closed, still working',
-    category: 'Mac software',
+    category: 'Software',
     credit: CONCEPT,
   },
   {
@@ -444,7 +473,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Demo',
     ratio: '16:9',
     title: 'Client intake, answered by AI',
-    category: 'SaaS',
+    category: 'Software',
     credit: CONCEPT,
   },
   {
@@ -483,10 +512,123 @@ export const WORK: WorkEntry[] = [
     category: 'Brand',
     credit: CONCEPT,
   },
-  { id: 'w31', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
-  { id: 'w32', media: 'image', treatment: 'Imagery', ratio: '1:1' },
-  { id: 'w33', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
-  { id: 'w34', media: 'image', treatment: 'Imagery', ratio: '3:4' },
+  {
+    id: 'w31',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Cinetic: now it directs',
+    category: 'Developer tools',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w32',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'AjustaCV Pro, plan by plan',
+    category: 'Software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w33',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'New for you: a music player',
+    category: 'Music app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w34',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '4:3',
+    title: 'Badges: Early Explorer',
+    category: 'Mobile app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w35',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'Onde fica o boteco?',
+    category: 'Food and drink',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w36',
+    media: 'image',
+    treatment: 'Imagery',
+    ratio: '1:1',
+    title: 'Fragrance, spotlit',
+    category: 'Fragrance',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w37',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '4:3',
+    title: 'Skincare, styled set',
+    category: 'Skincare',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w38',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '4:3',
+    title: 'Sunscreen, product and on-model',
+    category: 'Skincare',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w39',
+    media: 'image',
+    treatment: 'Imagery',
+    ratio: '1:1',
+    title: 'Leather tote, studio',
+    category: 'Fashion',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w40',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '1:1',
+    title: 'Sun cream, on-model',
+    category: 'Skincare',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w41',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '1:1',
+    title: 'Serum on stone',
+    category: 'Skincare',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w42',
+    media: 'image',
+    treatment: 'Imagery',
+    ratio: '16:9',
+    title: "L'Or d'Ambre, two settings",
+    category: 'Fragrance',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w43',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '4:5',
+    title: 'Fragrance on travertine',
+    category: 'Fragrance',
+    credit: CONCEPT,
+  },
 ];
 
 export const STUDIO_MAKE = {
@@ -546,11 +688,19 @@ export const STUDIO_PROCESS = {
 
 export const BUSINESS_OPTIONS = [
   { value: 'ecommerce', label: 'Ecommerce' },
-  { value: 'saas', label: 'B2B software' },
+  { value: 'software', label: 'Software' },
   { value: 'home-improvement', label: 'Home improvement' },
+  { value: 'construction', label: 'Construction' },
   { value: 'hvac', label: 'HVAC' },
   { value: 'plumbing', label: 'Plumbing' },
   { value: 'electrical', label: 'Electrical' },
+  { value: 'roofing-solar', label: 'Roofing and solar' },
+  { value: 'landscaping', label: 'Landscaping' },
+  { value: 'real-estate', label: 'Real estate' },
+  { value: 'beauty', label: 'Beauty and skincare' },
+  { value: 'fashion', label: 'Fashion' },
+  { value: 'food-drink', label: 'Food and drink' },
+  { value: 'health-fitness', label: 'Health and fitness' },
   { value: 'other', label: 'Something else' },
 ] as const;
 

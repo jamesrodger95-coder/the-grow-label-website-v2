@@ -17,11 +17,19 @@ export const SAMPLE_PREFERENCE_LABELS: Record<SamplePreference, string> = {
 
 export const SAMPLE_BUSINESSES = [
   'ecommerce',
-  'saas',
+  'software',
   'home-improvement',
+  'construction',
   'hvac',
   'plumbing',
   'electrical',
+  'roofing-solar',
+  'landscaping',
+  'real-estate',
+  'beauty',
+  'fashion',
+  'food-drink',
+  'health-fitness',
   'other',
 ] as const;
 export type SampleBusiness = (typeof SAMPLE_BUSINESSES)[number];

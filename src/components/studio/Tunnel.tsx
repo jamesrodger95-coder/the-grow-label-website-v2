@@ -33,7 +33,6 @@ import type { ReelTile } from '@/lib/studio-media';
  */
 
 const ROWS = 3;
-const PER_ROW = 24;
 /** Degrees per second at rest, and the per-row multipliers. */
 const BASE_SPEED = 3.2;
 const ROW_SPEED = [1, 0.82, 1.14];
@@ -118,9 +117,10 @@ export function Tunnel({
   const [choice, setChoice] = useState<boolean | null>(null);
   const paused = choice ?? prefersStill;
 
-  const rows = Array.from({ length: ROWS }, (_, r) =>
-    Array.from({ length: PER_ROW }, (_, k) => tiles[(k * ROWS + r) % tiles.length]!)
-  );
+  // Every piece once: dealt round the rows in turn, so each row is a third of
+  // the work and no piece meets itself. (A short reel is padded upstream, in
+  // reelTiles, so a row is never too sparse to fill its arc.)
+  const rows = Array.from({ length: ROWS }, (_, r) => tiles.filter((_, i) => i % ROWS === r));
   const ssr = layout(rows, SSR_GEOMETRY);
 
   // Everything the frame loop needs, kept out of React state.
@@ -361,7 +361,16 @@ export function Tunnel({
                       className="tunnel__face"
                       style={{ '--ratio': tile.ratio } as CSSProperties}
                     >
-                      {tile.kind === 'clip' ? (
+                      {tile.kind === 'still' ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={tile.src}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          draggable={false}
+                        />
+                      ) : tile.kind === 'clip' ? (
                         <video
                           src={tile.src}
                           poster={tile.poster}

@@ -5710,6 +5710,7 @@
   background: var(--s-paper-2);
   box-shadow: 0 0 0 1px rgba(12, 12, 14, 0.06);
 }
+.tunnel__face img,
 .tunnel__face video {
   display: block;
   width: 100%;
@@ -5808,7 +5809,7 @@
 .band__track {
   display: flex;
   width: max-content;
-  animation: band-drift calc(var(--gl-dur-drift) * 0.5) linear infinite;
+  animation: band-drift calc(var(--gl-dur-drift) * 0.6) linear infinite;
   animation-play-state: paused;
 }
 [data-motion="on"] .band__track {
@@ -5819,12 +5820,14 @@
     animation-play-state: paused;
   }
 }
+/* Three copies of the list; moving by one copy loops without a seam, and
+   the other two always cover the screen while it does. */
 @keyframes band-drift {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(calc(100% / -3), 0, 0);
   }
 }
 .band__run {
@@ -6279,6 +6282,7 @@
     0 0 0 6px rgba(12, 12, 14, 0.12),
     0 34px 70px -30px rgba(28, 20, 80, 0.55);
 }
+.show__card img,
 .show__card video {
   position: absolute;
   inset: 0;
