@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Logo } from '@/components/layout/Logo';
-import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE, STUDIO_LINK, type NavLink } from '@/content/site';
+import { CTA, NAV_GROUPS, PRIMARY_NAV, SITE, type NavLink } from '@/content/site';
 
 /**
  * Global navigation.
@@ -259,9 +259,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                 ) : (
                   <Link
                     key={link.href}
-                    className={
-                      link.variant === 'studio' ? 'nav__link nav__link--studio' : 'nav__link'
-                    }
+                    className="nav__link"
                     href={link.href}
                     aria-current={isActive(pathname, link.href) ? 'page' : undefined}
                   >
@@ -287,13 +285,6 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                 <span className="btn__arrow" aria-hidden="true">
                   &rarr;
                 </span>
-              </Link>
-              <Link
-                className="nav__link nav__link--studio"
-                href={STUDIO_LINK.href}
-                aria-current={isActive(pathname, STUDIO_LINK.href) ? 'page' : undefined}
-              >
-                {STUDIO_LINK.label}
               </Link>
               <button
                 ref={toggleRef}
@@ -338,11 +329,7 @@ export function SiteNav({ dashboardHref }: { dashboardHref?: string }) {
                     {DRAWER_ENTRIES.filter((entry) => entry.group === group.id).map((entry, i) => (
                       <Link
                         key={entry.href}
-                        className={
-                          entry.variant === 'studio'
-                            ? 'drawer__link drawer__link--studio'
-                            : 'drawer__link'
-                        }
+                        className="drawer__link"
                         href={entry.href}
                         aria-current={isActive(pathname, entry.href) ? 'page' : undefined}
                         onClick={close}

@@ -18,6 +18,9 @@ import type { WorkItem } from '@/lib/studio-media';
 
 type Filter = 'all' | WorkFilter;
 
+/** How many pieces show before "Show all". */
+const INITIAL = 12;
+
 function ratioValue(ratio: WorkItem['ratio']): number {
   const [w, h] = ratio.split(':').map(Number);
   return (w ?? 1) / (h ?? 1);
@@ -193,7 +196,12 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const openerRef = useRef<HTMLElement | null>(null);
 
-  const shown = items.filter((i) => filter === 'all' || TREATMENT_FILTER[i.treatment] === filter);
+  const [expanded, setExpanded] = useState(false);
+  const matching = items.filter(
+    (i) => filter === 'all' || TREATMENT_FILTER[i.treatment] === filter
+  );
+  // The first twelve of whatever is selected, until the reader asks for all.
+  const shown = expanded ? matching : matching.slice(0, INITIAL);
   const viewable = shown.filter((i) => i.src);
   const at = viewable.findIndex((i) => i.id === openId);
   const current = at >= 0 ? viewable[at] : undefined;
@@ -246,6 +254,14 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
           <Piece key={item.id} item={item} index={i} hidden={!shown.includes(item)} onOpen={open} />
         ))}
       </ul>
+
+      {matching.length > shown.length ? (
+        <div className="work__more">
+          <button type="button" className="work__filter" onClick={() => setExpanded(true)}>
+            {`${STUDIO_WORK.showAll} (${matching.length})`}
+          </button>
+        </div>
+      ) : null}
 
       <dialog
         ref={dialogRef}

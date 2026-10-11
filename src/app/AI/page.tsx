@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { studioAccent } from '@/components/studio/fonts';
-import { IndustrySwitch } from '@/components/studio/IndustrySwitch';
+import { Showcase } from '@/components/studio/Showcase';
 import {
   StudioBand,
   StudioFooter,
@@ -12,9 +12,9 @@ import {
   StudioStatement,
   StudioWork,
 } from '@/components/studio/Sections';
-import { STUDIO_INDUSTRIES, STUDIO_META } from '@/content/studio';
+import { STUDIO_META } from '@/content/studio';
 import { deliveryMode } from '@/lib/env';
-import { industryMedia, reelTiles, workItems } from '@/lib/studio-media';
+import { reelTiles, workItems } from '@/lib/studio-media';
 
 /**
  * /AI: the content studio.
@@ -52,10 +52,7 @@ export default function StudioPage() {
       <StudioHero tiles={tiles} live={live} />
       <StudioBand />
       <StudioWork items={items} />
-      <IndustrySwitch
-        items={[...STUDIO_INDUSTRIES.items]}
-        media={industryMedia(STUDIO_INDUSTRIES.items.map((i) => i.slug))}
-      />
+      <Showcase items={items} />
       <StudioStatement tiles={tiles} />
       <StudioMake items={items} />
       <StudioProcess />

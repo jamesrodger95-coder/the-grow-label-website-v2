@@ -186,10 +186,8 @@ nothing else:
 - **Its own chrome.** `components/layout/SiteChrome` withholds `SiteNav` and
   `SiteFooter` on `/ai*`; the page renders its own header and footer from
   `components/studio/Sections.tsx`.
-- **Linked as "Design Studio".** In the header to the right of "Request an
-  assessment" (`STUDIO_LINK` in `content/site.ts`), styled apart as a purple
-  pill with a breathing aura (`.nav__link--studio`), and in the drawer,
-  footer and sitemap.
+- **Linked as "Design Studio".** A plain item in the primary nav after Case
+  studies, and in the drawer, footer and sitemap.
 - **The Grow Label palette, its own composition and a second face.** Warm
   white, ink and purple on a dotted canvas. Styles are the `.studio` block at
   the end of `sections.css`, scoped so nothing reaches the main site. Every display
@@ -202,9 +200,9 @@ nothing else:
 - **Copy** is `src/content/studio.ts`. No em dashes, no results, no client
   names unless the client agreed. `tests/unit/studio-media.test.ts` checks all
   three.
-- **Media is dropped in.** `public/ai/reel/` feeds the hero tunnel,
-  `public/ai/work/` the portfolio and `public/ai/industries/` the industry
-  stage; absent files leave numbered reserved frames or a storyboard.
+- **Media is dropped in.** `public/ai/reel/` feeds the hero tunnel and
+  `public/ai/work/` the portfolio; absent files leave numbered reserved
+  frames. `scripts/studio-import.py` builds both from exported film folders.
   `docs/media/STUDIO_MEDIA.md` has names, sizes and encoding. Run
   `pnpm studio:media` after adding video, then rebuild. A portfolio file whose
   entry has no `title` or `credit` fails the unit test.
@@ -389,8 +387,8 @@ Client components exist only where there is genuine interaction:
 - `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`
 - `SiteChrome` — withholds the site nav and footer on `/AI`
-- `Tunnel`, `IndustrySwitch`, `StatementWords`, `WorkGallery` (with
-  `LoopVideo`) and `SampleForm` — the `/AI` page's hero, industry stage,
+- `Tunnel`, `Showcase`, `StatementWords`, `WorkGallery` (with
+  `LoopVideo`) and `SampleForm` — the `/AI` page's hero, format showcase,
   scroll-filled statement, portfolio viewer and form. The three scroll-linked
   ones run on `useScene`, like the module scenes
 

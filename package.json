@@ -23,7 +23,7 @@
     "quality": "node scripts/quality.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "posters": "node scripts/posters.mjs",
-    "studio:media": "node scripts/posters.mjs public/ai/reel 480 && node scripts/posters.mjs public/ai/work 1280 && node scripts/posters.mjs public/ai/industries 1280",
+    "studio:media": "node scripts/posters.mjs public/ai/reel 480 && node scripts/posters.mjs public/ai/work 1280",
     "report": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/report.mjs"
   },
   "dependencies": {

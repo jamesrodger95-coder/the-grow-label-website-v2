@@ -164,10 +164,11 @@ it was briefed against. None of it is used anywhere else.
   8 narrow) and limited to clips facing the viewer.
 - **The band** drifts on `--gl-dur-drift` after first paint; paused under
   reduced motion.
-- **The industry stage** (`IndustrySwitch.tsx`) is sticky on wide screens and
-  steps with scroll position (read by the ticker, never a scroll listener). It
-  types each brief, then draws the output links (the draw verb) and raises the
-  output cards (rise). On a phone or with reduced motion it is plain tabs.
+- **The showcase** (`Showcase.tsx`) flies a dozen pieces of work out of a
+  stack into a layered collage as the section scrolls in (scene ticker,
+  transform only), then lets each float slightly at its own depth. The server
+  renders the finished collage, so reduced motion and blocked scripts get it
+  still. The industry names roll through a slot on the ambient loop.
 - **The statement** fills in word by word with scroll progress (opacity only).
 - **Portfolio windows** lean slightly towards a mouse pointer (transform only,
   not under reduced motion).

@@ -50,8 +50,8 @@ type Geometry = { W: number; th: number; g: number; R: number; P: number; c: num
 function geometry(W: number): Geometry {
   const narrow = W < 720;
   const th = narrow
-    ? Math.min(110, Math.max(56, W * 0.22))
-    : Math.min(160, Math.max(64, W * 0.095));
+    ? Math.min(120, Math.max(60, W * 0.24))
+    : Math.min(176, Math.max(70, W * 0.105));
   const R = W * 0.62;
   const P = W * (narrow ? 0.8 : 0.5);
   // Places the camera so the tunnel's sides meet the edges of the screen.
@@ -143,11 +143,15 @@ export function Tunnel({
     angles: [] as number[][],
     anchors: [] as HTMLElement[][],
     lastWrite: [] as string[][],
+    /** Re-decides playback now; set by the playback effect. */
+    tick: undefined as undefined | (() => void),
   });
 
   useEffect(() => {
     state.current.paused = paused;
     state.current.reduced = reduced;
+    // Pausing stops every clip at once, not at the next playback check.
+    state.current.tick?.();
   }, [paused, reduced]);
 
   const camRef = useRef<HTMLDivElement | null>(null);
@@ -326,9 +330,11 @@ export function Tunnel({
       }
     };
     const timer = window.setInterval(tick, 350);
+    s.tick = tick;
     tick();
     return () => {
       window.clearInterval(timer);
+      s.tick = undefined;
       io.disconnect();
       for (const v of playing) v.pause();
     };

@@ -540,7 +540,7 @@ describe('navigation', () => {
     const labels = PRIMARY_NAV.map((link) => link.label);
     expect(labels).not.toContain('Methodology');
     expect(labels).not.toContain('Insights');
-    expect(labels).toEqual(['Modules', 'Industries', 'Case studies']);
+    expect(labels).toEqual(['Modules', 'Industries', 'Case studies', 'Design Studio']);
   });
 
   it('points every primary item at a route or an anchor that exists', () => {
@@ -549,6 +549,7 @@ describe('navigation', () => {
       '/industries/veterinary',
       '/industries/dental',
       '/industries/med-spa',
+      '/AI',
     ]);
     const anchors = new Set(['videos']);
     for (const link of PRIMARY_NAV) {

@@ -67,7 +67,7 @@ test('sitemap and robots are served and consistent', async ({ request }) => {
 test('navigation reaches every primary destination', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Primary' });
-  const labels = ['Modules', 'Case studies'];
+  const labels = ['Modules', 'Case studies', 'Design Studio'];
   for (const label of labels) {
     await expect(nav.getByRole('link', { name: label, exact: true })).toBeVisible();
   }

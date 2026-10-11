@@ -216,57 +216,6 @@
   color: var(--gl-graphite);
 }
 
-/* --- Design Studio: the one nav item that glows ---------------------------
-   A different offering, so it is set apart: a purple pill with a soft aura
-   behind it that breathes on the ambient loop. The aura is decoration on a
-   pseudo-element; the label keeps full contrast. Still under reduced motion. */
-.nav__link--studio {
-  isolation: isolate;
-  color: var(--gl-purple-ink);
-  background: var(--gl-purple-quiet);
-  box-shadow: inset 0 0 0 1px var(--gl-purple-line);
-}
-.nav__link--studio::before {
-  content: "";
-  position: absolute;
-  inset: -12px -18px;
-  z-index: -1;
-  border-radius: var(--gl-r-pill);
-  background: radial-gradient(closest-side, rgba(110, 92, 230, 0.75), rgba(127, 112, 226, 0));
-  filter: blur(10px);
-  opacity: 0.9;
-  pointer-events: none;
-}
-[data-motion="on"] .nav__link--studio::before {
-  animation: studio-aura var(--gl-dur-ambient) var(--gl-ease) infinite alternate;
-}
-@keyframes studio-aura {
-  from {
-    opacity: 0.6;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-.nav__link--studio:hover {
-  color: var(--gl-white);
-  background: var(--gl-purple);
-}
-.nav__link--studio[aria-current="page"]::after {
-  display: none;
-}
-.drawer__link--studio .drawer__label {
-  color: var(--gl-purple);
-  text-shadow: 0 0 18px rgba(127, 112, 226, 0.55);
-}
-@media (prefers-reduced-motion: reduce) {
-  [data-motion="on"] .nav__link--studio::before {
-    animation: none;
-  }
-}
-
 .nav__actions {
   display: flex;
   align-items: center;
@@ -313,8 +262,7 @@
 
 @media (max-width: 1080px) {
   .nav__links,
-  .nav__actions .nav__cta,
-  .nav__actions .nav__link--studio {
+  .nav__actions .nav__cta {
     display: none;
   }
   .nav__toggle {

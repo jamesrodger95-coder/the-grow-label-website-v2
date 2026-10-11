@@ -31,10 +31,10 @@ test('is reached from the main nav as the Design Studio, and is in the sitemap',
   page,
 }) => {
   await page.goto('/');
-  // Beside the primary call to action in the header, not among the nav items.
-  const link = page.locator('.nav__actions').getByRole('link', { name: 'Design Studio' });
+  const link = page
+    .getByRole('navigation', { name: 'Primary' })
+    .getByRole('link', { name: 'Design Studio' });
   await expect(link).toHaveAttribute('href', '/AI');
-  await expect(link).toHaveClass(/nav__link--studio/);
   await link.click();
   await expect(page).toHaveURL(/\/AI$/);
   const sitemap = await (await page.request.get('/sitemap.xml')).text();
@@ -109,28 +109,23 @@ test('the viewer opens, steps and closes from the keyboard', async ({ page }) =>
   await expect(pieces.first()).toBeFocused();
 });
 
-test('the industry stage switches by tab and by keyboard', async ({ page }) => {
+test('the showcase lays the work out in every format', async ({ page }) => {
   await page.goto('/AI#industries');
-  const tabs = page.getByRole('tablist', { name: 'Choose an industry' }).getByRole('tab');
-  await expect(tabs).toHaveCount(6);
-  await expect(tabs.first()).toHaveAttribute('aria-selected', 'true');
-
-  await tabs.nth(3).click();
-  await expect(tabs.nth(3)).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('tabpanel')).toContainText(/heat pump/i);
-
-  await tabs.nth(3).focus();
-  await page.keyboard.press('ArrowRight');
-  await expect(tabs.nth(4)).toHaveAttribute('aria-selected', 'true');
-  await expect(tabs.nth(4)).toBeFocused();
+  const cards = page.locator('.show__card');
+  expect(await cards.count()).toBeGreaterThanOrEqual(10);
+  for (const shape of ['9:16', '1:1', '16:9']) {
+    await expect(page.locator(`.show__card[data-shape="${shape}"]`).first()).toBeVisible();
+  }
+  await expect(cards.first().locator('video')).toHaveAttribute('src', /\/ai\/work\//);
 });
 
-test('every industry brief is in the page without scripts', async ({ browser }) => {
+test('the showcase is complete without scripts', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('/AI');
-  const list = page.locator('.ind__list');
-  await expect(list).toBeVisible();
-  await expect(list.locator('li')).toHaveCount(6);
+  const first = page.locator('.show__card').first();
+  await expect(first).toBeVisible();
+  // Rendered at rest, not stacked waiting for a scroll.
+  await expect(first).toHaveAttribute('style', /rotate\(0deg\)/);
   await context.close();
 });

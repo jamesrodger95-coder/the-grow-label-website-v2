@@ -1,6 +1,6 @@
-# /AI media: the reel, the portfolio and the industries
+# /AI media: the reel and the portfolio
 
-Drop files in. Nothing else is needed. `src/lib/studio-media.ts` reads all three
+Drop files in. Nothing else is needed. `src/lib/studio-media.ts` reads both
 folders at build time, so a file that is present is used and one that is absent
 leaves a numbered, reserved frame. There is no flag and no list to keep in step.
 
@@ -10,7 +10,7 @@ After adding or replacing any video, run:
 pnpm studio:media
 ```
 
-It covers the reel, the portfolio and the industries. It makes each file faststart (a lossless remux) and writes its poster from frame
+It covers the reel and the portfolio. It makes each file faststart (a lossless remux) and writes its poster from frame
 zero. Every clip is `preload="none"`, so without a poster it starts on a blank
 tile. Then rebuild, because the folders are read at build time.
 
@@ -36,30 +36,32 @@ more often.
 
 ## 2. The portfolio: `public/ai/work/`
 
-Twelve frames, declared in `WORK` in `src/content/studio.ts`. The filename is the
-entry's `id`:
+Declared in `WORK` in `src/content/studio.ts`; the filename is the entry's
+`id`.
 
-| File stem | Media | Treatment    | Shape |
-| --------- | ----- | ------------ | ----- |
-| `w01`     | video | Video        | 9:16  |
-| `w02`     | image | Styled shoot | 4:5   |
-| `w03`     | video | Explainer    | 16:9  |
-| `w04`     | video | Ad creative  | 1:1   |
-| `w05`     | image | Imagery      | 3:4   |
-| `w06`     | video | Demo         | 16:9  |
-| `w07`     | video | Ad creative  | 9:16  |
-| `w08`     | image | Styled shoot | 4:5   |
-| `w09`     | video | Video        | 4:5   |
-| `w10`     | image | Imagery      | 1:1   |
-| `w11`     | image | Ad creative  | 4:5   |
-| `w12`     | video | Demo         | 9:16  |
+- **w01 to w30** are the studio's films. They are produced, together with
+  their hero tunnel loops, by the import script from the exported folders
+  (`Horizontal/`, `Square/`, `Vertical/`):
 
-- **Videos:** `w01.mp4`. 1080 px on the short side, H.264, 10 to 30 seconds, no
-  audio needed (the viewer starts muted and offers controls). Poster comes from
-  `pnpm studio:media`.
-- **Images:** `w02.webp` or `w02.jpg`, 1600 px on the long side.
-- **Match the shape in the table**, or change `ratio` on the entry. The frame is
-  reserved at that shape, so a different shape is cropped.
+  ```bash
+  python scripts/studio-import.py "C:/path/to/export"
+  pnpm studio:media
+  ```
+
+  Each film becomes a 720p piece of at most 20 seconds (cut at a scene change
+  where it can be) plus a five-second silent tunnel loop. New films in the
+  folder are appended automatically; give each a `WORK` entry.
+
+- **w31 to w34** are reserved stills, waiting for styled shoots and imagery:
+
+| File stem | Treatment    | Shape |
+| --------- | ------------ | ----- |
+| `w31`     | Styled shoot | 4:5   |
+| `w32`     | Imagery      | 1:1   |
+| `w33`     | Styled shoot | 4:5   |
+| `w34`     | Imagery      | 3:4   |
+
+`w31.webp` or `.jpg`, 1600 px on the long side.
 
 ### Every piece needs a label before it ships
 
@@ -81,28 +83,6 @@ When a file goes in, fill in its entry in `src/content/studio.ts`:
 
 `tests/unit/studio-media.test.ts` fails the build if a file is present and its
 entry has no `title` or `credit`, so an unlabelled piece cannot go live.
-
-## 3. The industries: `public/ai/industries/`
-
-One piece per industry, shown large beside that industry's example brief in
-the sticky "Whatever you sell" section. Without a file, the section draws a
-storyboard of the three outputs instead, which is fine to ship.
-
-| File stem          | Industry         |
-| ------------------ | ---------------- |
-| `ecommerce`        | Ecommerce        |
-| `saas`             | B2B SaaS         |
-| `home-improvement` | Home improvement |
-| `hvac`             | HVAC             |
-| `plumbing`         | Plumbing         |
-| `electrical`       | Electrical       |
-
-- **Video** (`hvac.mp4`, with `hvac.jpg` beside it as the poster) or **an
-  image** (`hvac.webp` or `.jpg`). It is cropped to fill a tall panel on desktop
-  and a 16:10 panel on a phone, so keep the subject central.
-- 1280 px on the long side. Encode video as for the portfolio.
-- The brief beside it is labelled "Example brief", so the piece does not need
-  to be the result of that exact brief.
 
 ## Never caption a piece with a result
 

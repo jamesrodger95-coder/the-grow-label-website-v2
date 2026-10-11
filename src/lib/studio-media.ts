@@ -16,7 +16,6 @@ import { WORK, type WorkEntry } from '@/content/studio';
 const PUBLIC = join(process.cwd(), 'public');
 const REEL_DIR = join(PUBLIC, 'ai', 'reel');
 const WORK_DIR = join(PUBLIC, 'ai', 'work');
-const INDUSTRY_DIR = join(PUBLIC, 'ai', 'industries');
 
 /** Reel tiles the hero is composed for. Fewer clips than this are cycled. */
 export const REEL_TILES = 36;
@@ -119,33 +118,4 @@ export function workItems(): WorkItem[] {
     }
     return { ...entry, src: firstExisting(entry.id, ['webp', 'jpg', 'png']) };
   });
-}
-
-/**
- * The large piece shown beside each industry's brief: `<slug>.mp4` (with an
- * optional poster beside it) or `<slug>.webp|jpg|png` in public/ai/industries/.
- * Absent, the section draws a storyboard of the outputs instead.
- */
-export function industryMedia(
-  slugs: readonly string[]
-): Record<string, { src: string; poster?: string; kind: 'video' | 'image' } | undefined> {
-  const out: Record<string, { src: string; poster?: string; kind: 'video' | 'image' } | undefined> =
-    {};
-  const find = (stem: string, exts: string[]) =>
-    exts.map((ext) => `${stem}.${ext}`).find((f) => existsSync(join(INDUSTRY_DIR, f)));
-  for (const slug of slugs) {
-    const video = find(slug, ['mp4', 'webm']);
-    if (video) {
-      const poster = find(slug, ['jpg', 'webp', 'png']);
-      out[slug] = {
-        kind: 'video',
-        src: `/ai/industries/${video}`,
-        poster: poster ? `/ai/industries/${poster}` : undefined,
-      };
-      continue;
-    }
-    const image = find(slug, ['webp', 'jpg', 'png']);
-    out[slug] = image ? { kind: 'image', src: `/ai/industries/${image}` } : undefined;
-  }
-  return out;
 }

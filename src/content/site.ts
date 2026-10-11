@@ -24,8 +24,6 @@ export type NavLink = {
   note?: string;
   /** Makes the item a dropdown. The item's own href is then not navigated to. */
   children?: NavLink[];
-  /** Set apart from the rest of the nav: the Design Studio's glowing pill. */
-  variant?: 'studio';
 };
 
 export type NavGroup = {
@@ -59,14 +57,9 @@ export const PRIMARY_NAV: NavLink[] = [
     ],
   },
   { href: '/#videos', label: 'Case studies' },
+  // AI video, imagery and ad creative: a separate offering with its own page.
+  { href: '/AI', label: 'Design Studio' },
 ];
-
-/**
- * The Design Studio: a different offering (AI video, imagery and ad creative),
- * so it sits apart from the clinic destinations, to the right of the primary
- * call to action, as a glowing pill.
- */
-export const STUDIO_LINK: NavLink = { href: '/AI', label: 'Design Studio', variant: 'studio' };
 
 /** Grouped navigation for the mobile drawer and the footer. */
 export const NAV_GROUPS: NavGroup[] = [
@@ -84,14 +77,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     id: 'studio',
     label: 'Design Studio',
-    links: [
-      {
-        href: '/AI',
-        label: 'Design Studio',
-        note: 'AI video, imagery and ad creative',
-        variant: 'studio',
-      },
-    ],
+    links: [{ href: '/AI', label: 'Design Studio', note: 'AI video, imagery and ad creative' }],
   },
   {
     id: 'sector',

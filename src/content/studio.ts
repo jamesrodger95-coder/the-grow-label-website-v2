@@ -12,8 +12,7 @@
  *
  *   - No invented evidence. No client names, results, uplift figures or
  *     testimonials. The work is shown as work; it is never presented as proof
- *     that it sold anything. The briefs in STUDIO_INDUSTRIES are labelled as
- *     examples on the page, because that is what they are.
+ *     that it sold anything.
  *   - Every piece of work is labelled for what it is. A real project carries
  *     the brand it was made for; anything made on spec says "Concept work".
  *
@@ -79,6 +78,7 @@ export const STUDIO_WORK = {
   open: 'View larger',
   concept: 'Concept work',
   slot: 'Frame reserved',
+  showAll: 'Show all the work',
   viewer: {
     close: 'Close',
     previous: 'Previous piece',
@@ -87,96 +87,72 @@ export const STUDIO_WORK = {
   },
 } as const;
 
-export type IndustryOutput = {
-  format: string;
-  kind: 'Video' | 'Images';
-  ratio: '9:16' | '4:5' | '1:1' | '16:9';
-};
-
-export type Industry = {
-  /** Also the filename stem in public/ai/industries/. */
-  slug: string;
-  label: string;
-  /** An example of the kind of brief we take. Labelled as an example. */
-  brief: string;
-  outputs: IndustryOutput[];
+/** One piece in the showcase collage, by its portfolio id. */
+export type ShowcasePiece = {
+  id: string;
+  /** What the format is, shown on the piece. */
+  tag: string;
+  /** Final position: centre x and y as % of the stage, width as % of it. */
+  x: number;
+  y: number;
+  w: number;
+  /** Final tilt in degrees, and how far it floats (0 to 1, back to front). */
+  r: number;
+  depth: number;
+  /** Position on a phone, or null to leave it out there. */
+  m: { x: number; y: number; w: number } | null;
 };
 
 /**
- * The sticky industry section. Each brief is an illustration of the kind of
- * request we work from, not a project we have delivered, and the page says
- * "Example brief" above it for exactly that reason.
+ * "Whatever you sell": the work itself, flown out of a stack into a layered
+ * collage as the section scrolls in. A widescreen film at the centre, reels in
+ * phone frames, feed posts tucked between, so the three formats read at once.
  */
-export const STUDIO_INDUSTRIES = {
+export const STUDIO_SHOWCASE = {
   eyebrow: 'Industries',
   title: 'Whatever you sell,',
   emphasis: 'it can look this good.',
-  lead: 'The same studio, pointed at very different businesses. Pick one, or scroll through them.',
-  briefLabel: 'Example brief',
-  outputsLabel: 'What we would make',
-  tabsLabel: 'Choose an industry',
-  items: [
+  lead: 'Reels for the feed, squares for the grid, widescreen for the site and the launch. One studio, every format, built around what you sell.',
+  forLabel: 'Made for',
+  label:
+    'A collage of the studio’s work in three formats: vertical reels, square feed posts and widescreen films.',
+  legend: [
+    { ratio: '9:16', label: 'Reels and stories' },
+    { ratio: '1:1', label: 'Feed posts' },
+    { ratio: '16:9', label: 'Site, launch and YouTube' },
+  ],
+  pieces: [
     {
-      slug: 'ecommerce',
-      label: 'Ecommerce',
-      brief: 'Turn our new bottle into a product page loop and three short ads for Meta.',
-      outputs: [
-        { format: 'Product page loop', kind: 'Video', ratio: '4:5' },
-        { format: 'Meta ad, three hooks', kind: 'Video', ratio: '9:16' },
-        { format: 'Lifestyle set of six', kind: 'Images', ratio: '1:1' },
-      ],
+      id: 'w05',
+      tag: 'Widescreen',
+      x: 50,
+      y: 50,
+      w: 36,
+      r: 0,
+      depth: 0.2,
+      m: { x: 50, y: 22, w: 92 },
     },
+    { id: 'w01', tag: 'Widescreen', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
+    { id: 'w22', tag: 'Widescreen', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
+    { id: 'w07', tag: 'Widescreen', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
+    { id: 'w03', tag: 'Widescreen', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
+    { id: 'w02', tag: 'Reel', x: 7.5, y: 52, w: 10, r: -6, depth: 1, m: { x: 21, y: 70, w: 34 } },
+    { id: 'w06', tag: 'Reel', x: 35, y: 15, w: 8, r: 3, depth: 0.9, m: null },
+    { id: 'w09', tag: 'Reel', x: 63, y: 86, w: 8.5, r: -3, depth: 0.9, m: null },
+    { id: 'w13', tag: 'Reel', x: 92.5, y: 50, w: 10, r: 6, depth: 1, m: { x: 79, y: 70, w: 34 } },
+    { id: 'w04', tag: 'Feed post', x: 50, y: 12, w: 9, r: -2, depth: 0.7, m: null },
+    { id: 'w19', tag: 'Feed post', x: 25.5, y: 50, w: 9, r: -5, depth: 0.8, m: null },
     {
-      slug: 'saas',
-      label: 'B2B SaaS',
-      brief: 'Show a manager approving a timesheet in our app, in under thirty seconds.',
-      outputs: [
-        { format: 'Feature demo', kind: 'Video', ratio: '16:9' },
-        { format: 'LinkedIn ad', kind: 'Video', ratio: '1:1' },
-        { format: 'Launch visuals', kind: 'Images', ratio: '16:9' },
-      ],
+      id: 'w11',
+      tag: 'Feed post',
+      x: 74.5,
+      y: 50,
+      w: 9,
+      r: 5,
+      depth: 0.8,
+      m: { x: 50, y: 82, w: 36 },
     },
-    {
-      slug: 'home-improvement',
-      label: 'Home improvement',
-      brief: 'Show a tired kitchen becoming the finished refit, for our website and ads.',
-      outputs: [
-        { format: 'Before and after', kind: 'Video', ratio: '4:5' },
-        { format: 'Facebook ad', kind: 'Video', ratio: '9:16' },
-        { format: 'Room visuals', kind: 'Images', ratio: '4:5' },
-      ],
-    },
-    {
-      slug: 'hvac',
-      label: 'HVAC',
-      brief: 'Explain what happens on heat pump install day, so customers know what to expect.',
-      outputs: [
-        { format: 'Service explainer', kind: 'Video', ratio: '16:9' },
-        { format: 'Local ad', kind: 'Video', ratio: '9:16' },
-        { format: 'Service page visuals', kind: 'Images', ratio: '16:9' },
-      ],
-    },
-    {
-      slug: 'plumbing',
-      label: 'Plumbing',
-      brief: 'A short ad for emergency call-outs that feels calm and reassuring, not pushy.',
-      outputs: [
-        { format: 'Emergency ad, three hooks', kind: 'Video', ratio: '9:16' },
-        { format: 'Google Business video', kind: 'Video', ratio: '1:1' },
-        { format: 'Website hero visual', kind: 'Images', ratio: '16:9' },
-      ],
-    },
-    {
-      slug: 'electrical',
-      label: 'Electrical',
-      brief: 'Walk a homeowner through an EV charger install, from survey to first charge.',
-      outputs: [
-        { format: 'Install walkthrough', kind: 'Video', ratio: '16:9' },
-        { format: 'Short ad cut', kind: 'Video', ratio: '9:16' },
-        { format: 'Social set of four', kind: 'Images', ratio: '4:5' },
-      ],
-    },
-  ] satisfies Industry[],
+  ] satisfies ShowcasePiece[],
 } as const;
 
 export const STUDIO_STATEMENT = {
@@ -222,25 +198,295 @@ export type WorkEntry = {
 };
 
 /**
+ * Every piece is labelled "Concept work" until the business it was made for
+ * has agreed to be named; then its credit becomes { kind: 'client', brand }.
+ */
+const CONCEPT: Credit = { kind: 'concept' };
+
+/**
  * The portfolio, in display order.
  *
- * Twelve frames, chosen for a spread of treatments and shapes rather than to
- * fill a grid. Each one renders as a reserved frame until its file is in
- * public/ai/work/, and as the work itself once it is.
+ * w01 to w30 are the studio's films, imported by scripts/studio-import.py
+ * (720p, at most 20 seconds). Every one of them is also a tile in the hero
+ * tunnel. w31 to w34 are reserved stills for styled shoots and imagery: they
+ * render as reserved frames until their files are in public/ai/work/. The
+ * grid shows the first twelve and a "Show all" control.
  */
 export const WORK: WorkEntry[] = [
-  { id: 'w01', media: 'video', treatment: 'Video', ratio: '9:16' },
-  { id: 'w02', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
-  { id: 'w03', media: 'video', treatment: 'Explainer', ratio: '16:9' },
-  { id: 'w04', media: 'video', treatment: 'Ad creative', ratio: '1:1' },
-  { id: 'w05', media: 'image', treatment: 'Imagery', ratio: '3:4' },
-  { id: 'w06', media: 'video', treatment: 'Demo', ratio: '16:9' },
-  { id: 'w07', media: 'video', treatment: 'Ad creative', ratio: '9:16' },
-  { id: 'w08', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
-  { id: 'w09', media: 'video', treatment: 'Video', ratio: '4:5' },
-  { id: 'w10', media: 'image', treatment: 'Imagery', ratio: '1:1' },
-  { id: 'w11', media: 'image', treatment: 'Ad creative', ratio: '4:5' },
-  { id: 'w12', media: 'video', treatment: 'Demo', ratio: '9:16' },
+  {
+    id: 'w01',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'Muse: connect and track',
+    category: 'SaaS',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w02',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'sweetRegret: your lineup, your order',
+    category: 'Food and drink',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w03',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'AI influencers, marketing your app',
+    category: 'Marketing app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w04',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '1:1',
+    title: 'Lidlezz: lid closed, still working',
+    category: 'Mac software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w05',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Every photo has a better version',
+    category: 'Photo app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w06',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '9:16',
+    title: 'PicTwin: change anything in plain words',
+    category: 'AI app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w07',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Réservez votre vol',
+    category: 'Travel',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w08',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'FigPad: sketch to scientific figure',
+    category: 'Research software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w09',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '9:16',
+    title: 'Mew: less mental load',
+    category: 'Family app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w10',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'Your next ad is one hook away',
+    category: 'Ad tech',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w11',
+    media: 'video',
+    treatment: 'Explainer',
+    ratio: '1:1',
+    title: 'Negroni, step by step',
+    category: 'Drinks',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w12',
+    media: 'video',
+    treatment: 'Explainer',
+    ratio: '16:9',
+    title: 'Claim the job',
+    category: 'Workflow software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w13',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '9:16',
+    title: 'Lightspark: the TCP/IP of money',
+    category: 'Fintech',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w14',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'FundMyCompute',
+    category: 'Fintech',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w15',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Double It: provably fair',
+    category: 'Gaming',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w16',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '9:16',
+    title: 'ocrX: handwriting to text',
+    category: 'Mobile app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w17',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'Bento: tell your agent',
+    category: 'AI software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w18',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'Clean the list before you send',
+    category: 'Email software',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w19',
+    media: 'video',
+    treatment: 'Explainer',
+    ratio: '1:1',
+    title: 'Token bucket, explained',
+    category: 'Developer tools',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w20',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Mil listas, sob medida',
+    category: 'Lifestyle app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w21',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: "Primavera Sound '26 line-up",
+    category: 'Events',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w22',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'We buy upfront',
+    category: 'Ecommerce finance',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w23',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'Order by craving',
+    category: 'Food delivery',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w24',
+    media: 'video',
+    treatment: 'Explainer',
+    ratio: '16:9',
+    title: 'Watch every idea get drawn',
+    category: 'Education',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w25',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '9:16',
+    title: 'Overthinking',
+    category: 'Music',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w26',
+    media: 'video',
+    treatment: 'Demo',
+    ratio: '16:9',
+    title: 'Client intake, answered by AI',
+    category: 'SaaS',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w27',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'UGC video, made to order',
+    category: 'AI video app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w28',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'A day in motion',
+    category: 'Mobile game',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w29',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Field-bearing assets',
+    category: 'Agriculture',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w30',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Type in motion',
+    category: 'Brand',
+    credit: CONCEPT,
+  },
+  { id: 'w31', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
+  { id: 'w32', media: 'image', treatment: 'Imagery', ratio: '1:1' },
+  { id: 'w33', media: 'image', treatment: 'Styled shoot', ratio: '4:5' },
+  { id: 'w34', media: 'image', treatment: 'Imagery', ratio: '3:4' },
 ];
 
 export const STUDIO_MAKE = {
