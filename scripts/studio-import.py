@@ -85,11 +85,16 @@ LATE_FILMS = [
     '82772c0a-9518-472c-9825-3d84b74f3ee0.mp4',
     'a7c2bc28-b911-42a8-a9ac-0c6151a21324.mp4',
     '326c512a-ee04-417d-bb2a-faa3f2d1c6d1.mp4',
+    'malarkey-reel.mp4',
+    'modus-projects-reel.mp4',
+    'tandem-reel.mp4',
+    'bollano-plumbers-reel.mp4',
+    'b287e37c-1f67-424d-b121-8121e4d48c32.mp4',
 ]
 
 # Software demos kept out of the hero tunnel (portfolio only), so the hero
 # reads as many industries rather than SaaS. By w number.
-FILMS_NOT_IN_TUNNEL = {1, 17, 26, 32}
+FILMS_NOT_IN_TUNNEL = {1, 4, 8, 10, 12, 14, 17, 18, 19, 20, 24, 26, 28, 31, 32}
 
 
 def run(args):

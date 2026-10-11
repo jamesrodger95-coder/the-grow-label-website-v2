@@ -40,7 +40,7 @@ const RATIO_IN_NAME = /(?:^|[-_ .])(\d{1,2})x(\d{1,2})(?=$|[-_ .])/i;
  * By the number the import script gives the tile's file, in priority order:
  * the first three take the most prominent spot in each row.
  */
-const FEATURED = ['54', '55', '56', '44', '46', '47', '48', '51', '53'];
+const FEATURED = ['57', '59', '60', '58', '61', '54', '44', '46', '48', '55', '47', '51'];
 
 export type ReelTile =
   | { kind: 'clip'; src: string; poster?: string; ratio: number; feature?: number }
