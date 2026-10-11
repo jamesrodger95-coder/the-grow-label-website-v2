@@ -34,7 +34,7 @@ for (const [engine, launch] of [
   await page.addStyleTag({ content: 'html{scroll-behavior:auto !important}' });
   await page.waitForTimeout(900);
 
-  const hops = ['Platform', 'Modules', 'Veterinary', 'Dental', 'About', 'Results'];
+  const hops = ['Modules', 'Case studies'];
   for (const name of hops) {
     const link = page.locator(`.nav__link:text-is("${name}")`);
     if (!(await link.count())) continue;

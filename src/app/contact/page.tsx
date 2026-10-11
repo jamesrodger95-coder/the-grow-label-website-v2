@@ -119,7 +119,7 @@ export default function ContactPage() {
                 not commit either side to anything.
               </p>
               <p style={{ marginTop: 24 }}>
-                <TextLink href="/platform#value-stages">
+                <TextLink href="/modules#value-stages">
                   How the four value stages are defined
                 </TextLink>
               </p>
@@ -148,9 +148,9 @@ export default function ContactPage() {
           <Reveal
             style={{ marginTop: 'var(--gl-s-8)', display: 'flex', gap: 14, flexWrap: 'wrap' }}
           >
-            <ActionLink href="/platform">How the system fits together</ActionLink>
-            <ActionLink href="/modules" variant="ghost">
-              The four modules in full
+            <ActionLink href="/modules">The four modules in full</ActionLink>
+            <ActionLink href="/modules#value-stages" variant="ghost">
+              How value is measured
             </ActionLink>
           </Reveal>
         </div>

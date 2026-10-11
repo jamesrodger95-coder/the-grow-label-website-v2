@@ -51,11 +51,11 @@ test.describe('mobile navigation', () => {
 
     const drawerNav = page.getByRole('navigation', { name: 'All pages' });
     await expect(drawerNav).toBeVisible();
-    await expect(drawerNav.getByRole('link', { name: /^Platform/ })).toBeVisible();
+    await expect(drawerNav.getByRole('link', { name: /^Modules/ })).toBeVisible();
     // The note is part of the link's accessible name, which is the point:
     // a destination and what it is for, not a destination and a number.
-    await expect(drawerNav.getByRole('link', { name: /^Platform/ })).toHaveAccessibleName(
-      /how the system fits together/i
+    await expect(drawerNav.getByRole('link', { name: /^Modules/ })).toHaveAccessibleName(
+      /the four modules in one place/i
     );
 
     // Focus is inside the drawer.
@@ -96,7 +96,7 @@ test.describe('mobile navigation', () => {
   });
 
   test('the drawer does not reopen when a route is revisited', async ({ page }) => {
-    await page.goto('/platform');
+    await page.goto('/modules');
     await awaitHydration(page);
     const toggle = page.getByRole('button', { name: /^(menu|close)$/i });
     const drawer = page.getByRole('navigation', { name: 'All pages' });
@@ -111,7 +111,7 @@ test.describe('mobile navigation', () => {
 
     // Returning to the route it was opened on must not resurrect it.
     await page.goBack();
-    await expect(page).toHaveURL(/\/platform$/);
+    await expect(page).toHaveURL(/\/modules$/);
     await expect(drawer).toBeHidden();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     expect(await page.evaluate(() => document.body.style.overflow)).toBe('');

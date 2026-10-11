@@ -23,12 +23,18 @@ import { join } from 'node:path';
  *
  * Run after adding or replacing a recording:
  *
- *   pnpm posters
+ *   pnpm posters                               # public/testimonials
+ *   pnpm studio:media                          # public/ai/reel and public/ai/work
+ *   node scripts/posters.mjs <dir> [width]     # any folder, poster width in px
+ *
+ * The /AI reel tiles render at under 200 CSS pixels tall, so their posters are
+ * cut at 480 wide rather than 1280: forty of them sit on the first screen.
  *
  * Requires ffmpeg on PATH. Safe to re-run; it overwrites.
  */
 
-const DIR = join('public', 'testimonials');
+const DIR = process.argv[2] ?? join('public', 'testimonials');
+const WIDTH = Number(process.argv[3] ?? 1280);
 
 function ff(args) {
   return execFileSync('ffmpeg', ['-v', 'error', ...args], { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -72,7 +78,20 @@ for (const name of videos) {
   }
 
   const poster = join(DIR, name.replace(/\.mp4$/, '.jpg'));
-  ff(['-i', file, '-ss', '0', '-frames:v', '1', '-vf', 'scale=1280:-2', '-q:v', '6', '-y', poster]);
+  ff([
+    '-i',
+    file,
+    '-ss',
+    '0',
+    '-frames:v',
+    '1',
+    '-vf',
+    `scale='min(${WIDTH},iw)':-2`,
+    '-q:v',
+    '6',
+    '-y',
+    poster,
+  ]);
   const kb = (statSync(poster).size / 1024).toFixed(0);
   console.log(`  poster ${kb.padStart(4)} KB      ${name.replace(/\.mp4$/, '.jpg')}`);
 }

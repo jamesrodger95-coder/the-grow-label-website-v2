@@ -33,7 +33,6 @@ function fetchPath(path, extra = []) {
 
 const ROUTES = [
   ['/', 'Find the revenue your practice already earned', 'revenue recovery for veterinary'],
-  ['/platform', 'four points of contact with the schedule', 'Platform'],
   ['/modules/answer', 'Coverage for the calls', 'Answer'],
   ['/modules/respond', 'first response on every written enquiry', 'Respond'],
   ['/modules/retain', 'Protecting appointments that are already booked', 'Retain'],
@@ -41,7 +40,6 @@ const ROUTES = [
   ['/industries/veterinary', 'the shape of the day', 'Veterinary revenue recovery'],
   ['/industries/dental', 'the interval and the gap after yes', 'Dental revenue recovery'],
   ['/methodology', 'and what it does not mean', 'Measurement methodology'],
-  ['/about', 'not a marketing channel', 'About'],
   ['/insights', 'scheduling and the back book', 'Insights'],
   [
     '/insights/why-one-revenue-number-is-not-enough',
@@ -90,7 +88,7 @@ const sitemap = fetchPath('/sitemap.xml');
 checks += 1;
 if (!sitemap.includes('<urlset')) failures.push('/sitemap.xml is not a urlset');
 else {
-  for (const path of ['/platform', '/methodology', '/contact', '/modules/answer']) {
+  for (const path of ['/modules', '/methodology', '/contact', '/modules/answer']) {
     if (!sitemap.includes(`${path}<`)) failures.push(`sitemap missing ${path}`);
   }
   if (sitemap.includes('/dev/')) failures.push('sitemap exposes a dev route');

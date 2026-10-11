@@ -39,7 +39,7 @@ test('the recovery sequence shows its completed final state', async ({ page }) =
 });
 
 test('stage bars are drawn at full width, not animating from zero', async ({ page }) => {
-  await page.goto('/platform');
+  await page.goto('/modules');
   await page.waitForTimeout(400);
   const fills = page.locator('.stagebar__fill');
   const count = await fills.count();

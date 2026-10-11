@@ -160,7 +160,7 @@ test.describe('the nine questions', () => {
     expect(contactPolicy).toMatch(/script-src[^;]*https:\/\/app\.cal\.com/);
     expect(contactPolicy).toMatch(/connect-src[^;]*https:\/\/app\.cal\.com/);
 
-    const elsewhere = await request.get('/platform');
+    const elsewhere = await request.get('/modules');
     const strict = elsewhere.headers()['content-security-policy'] ?? '';
     expect(strict).toContain("frame-src 'none'");
     expect(strict).not.toContain('cal.com');

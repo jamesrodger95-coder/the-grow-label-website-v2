@@ -199,7 +199,7 @@ export const ILLUSTRATIVE_METRICS: MetricTile[] = [
     label: 'Collected value to platform fee',
     basis: 'Collected value only. Gross, before the cost of delivering the recovered work.',
     module: 'Reporting',
-    href: '/platform#value-stages',
+    href: '/modules#value-stages',
   },
 ];
 

@@ -75,9 +75,25 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return [
-      { source: '/methodology', destination: '/platform#value-stages', permanent: true },
+      { source: '/methodology', destination: '/modules#value-stages', permanent: true },
+      // Retired from the live site. Platform and About are kept in
+      // src/app/_archive/ and could return, so these are temporary; the case
+      // studies were removed and their nav item now points at the videos.
+      { source: '/platform', destination: '/modules', permanent: false },
+      { source: '/about', destination: '/', permanent: false },
+      { source: '/case-studies', destination: '/#videos', permanent: false },
+      { source: '/case-studies/:slug', destination: '/#videos', permanent: false },
       { source: '/modules/index', destination: '/modules', permanent: true },
     ];
+  },
+  /**
+   * /AI is the published address and the route folder is `src/app/AI`. Paths
+   * are case-sensitive in production, so a lower-case link typed into an
+   * email would otherwise 404. A rewrite rather than a redirect: the page is
+   * served either way and the canonical tag names /AI.
+   */
+  async rewrites() {
+    return [{ source: '/ai', destination: '/AI' }];
   },
   async headers() {
     return [

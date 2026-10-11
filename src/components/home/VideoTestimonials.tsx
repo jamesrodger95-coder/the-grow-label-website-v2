@@ -42,6 +42,7 @@ export function VideoTestimonials() {
   return (
     <section
       className="surface--white on-light section section--tight-b"
+      id="videos"
       aria-labelledby="videos-title"
     >
       <div className="shell">

@@ -92,7 +92,7 @@ export default function HomePage() {
               ))}
               <p className="detect__boundary small">{DETECTION.boundary}</p>
               <p style={{ margin: 0 }}>
-                <TextLink href="/platform">See the platform architecture</TextLink>
+                <TextLink href="/modules">See the four modules</TextLink>
               </p>
             </Reveal>
 
@@ -205,7 +205,7 @@ export default function HomePage() {
                 part worth a management conversation.
               </p>
               <p style={{ marginTop: 26 }}>
-                <TextLink href="/platform#value-stages">How a figure is promoted</TextLink>
+                <TextLink href="/modules#value-stages">How a figure is promoted</TextLink>
               </p>
             </Reveal>
             <Reveal variant="card" index={1}>
@@ -275,19 +275,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* The case-study section is off the homepage for now.
-
-          It is not deleted, and it is deliberately not deleted: the six
-          write-ups are the only long-form worked examples on the site, and
-          `/case-studies` still carries them, still labelled. What it could not
-          do was sit two sections away from six real, named client
-          testimonials while every card on it said "Placeholder case study".
-          Restore this line once the studies are real engagements.
-
-          The primary nav item for case studies now points at `/case-studies`
-          rather than at the `#case-studies` anchor this used to render. */}
-      {/* <CaseStudies /> */}
-
       {/* ---------------------------------------------------------------- */}
       {/* Evidence                                                          */}
       {/* ---------------------------------------------------------------- */}
@@ -313,9 +300,6 @@ export default function HomePage() {
                 {EVIDENCE.lead}
               </p>
               <StepList items={EVIDENCE.items} />
-              <p style={{ marginTop: 26 }}>
-                <TextLink href="/platform#limits">What we cannot claim</TextLink>
-              </p>
             </Reveal>
             {/* The quiet variant, on the right. No chrome bar and no motion of
                 its own: the pipeline two sections above already shows an event
@@ -397,7 +381,7 @@ export default function HomePage() {
               </div>
               <div style={{ marginTop: 34, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-                <ActionLink href="/platform#value-stages" variant="ghost">
+                <ActionLink href="/modules#value-stages" variant="ghost">
                   See how value is measured
                 </ActionLink>
               </div>

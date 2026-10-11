@@ -15,7 +15,6 @@ const OUT = process.env.OUT_DIR ?? 'artifacts/final-screenshots';
 
 export const ROUTES = [
   ['home', '/'],
-  ['platform', '/platform'],
   ['modules-answer', '/modules/answer'],
   ['modules-respond', '/modules/respond'],
   ['modules-retain', '/modules/retain'],
@@ -23,10 +22,6 @@ export const ROUTES = [
   ['industries-veterinary', '/industries/veterinary'],
   ['industries-dental', '/industries/dental'],
   ['modules', '/modules'],
-  ['case-studies', '/case-studies'],
-  ['case-vet', '/case-studies/after-hours-demand-veterinary-group'],
-  ['case-dental', '/case-studies/accepted-unscheduled-treatment-dental'],
-  ['about', '/about'],
   ['insights', '/insights'],
   ['insights-entry', '/insights/why-one-revenue-number-is-not-enough'],
   ['contact', '/contact'],

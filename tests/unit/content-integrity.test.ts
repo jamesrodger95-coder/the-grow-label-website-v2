@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { MODULES } from '@/content/modules';
@@ -214,7 +214,7 @@ describe('unevidenced commercial claims', () => {
     const consumers = readAllExceptFixture().filter(({ text }) =>
       /from '@\/content\/illustrative'/.test(text)
     );
-    expect(consumers.length).toBeGreaterThan(3);
+    expect(consumers.length).toBeGreaterThan(0);
     // Nothing imports the fixture except pages and the sitemap — no component
     // may reach around it to define a figure of its own.
     for (const { file } of consumers) {
@@ -532,34 +532,25 @@ describe('typography constraints', () => {
 describe('navigation', () => {
   /**
    * Methodology and Insights were nav items that asked the reader to guess.
-   * The methodology content now lives on the platform page, beside the
-   * reporting it governs.
+   * The methodology content now lives on the modules page, beside the modules
+   * it governs. Platform, Results and About were retired from the nav, and
+   * Platform and About from the live site.
    */
   it('offers no destination the reader has to decode', () => {
     const labels = PRIMARY_NAV.map((link) => link.label);
     expect(labels).not.toContain('Methodology');
     expect(labels).not.toContain('Insights');
-    expect(labels).toEqual([
-      'Platform',
-      'Modules',
-      'Industries',
-      'Results',
-      'Case studies',
-      'About',
-    ]);
+    expect(labels).toEqual(['Modules', 'Industries', 'Case studies']);
   });
 
   it('points every primary item at a route or an anchor that exists', () => {
     const routes = new Set([
-      '/platform',
       '/modules',
       '/industries/veterinary',
       '/industries/dental',
       '/industries/med-spa',
-      '/case-studies',
-      '/about',
     ]);
-    const anchors = new Set(['results']);
+    const anchors = new Set(['videos']);
     for (const link of PRIMARY_NAV) {
       // A dropdown's own href is never navigated to; its children are.
       for (const target of link.children ?? [link]) {
@@ -580,22 +571,25 @@ describe('navigation', () => {
 
   /**
    * An anchored nav item needs the id it names to be rendered on the homepage —
-   * rendered, not merely present in a file. The case-study section is commented
-   * out of `page.tsx` while the studies are placeholders, so `#case-studies` is
-   * no longer an anchor anywhere and the nav item points at the page instead.
-   * This reads the route file so that stays true.
+   * rendered, not merely present in a file. "Case studies" points at the client
+   * video testimonials, so that section must be mounted and carry the id. This
+   * reads the route file so that stays true.
    */
   it('renders the ids the anchored nav items point at', () => {
     const page = readFileSync(join('src', 'app', 'page.tsx'), 'utf8');
-    const mounted = ['Results', 'Team'].filter((name) =>
+    const mounted = ['VideoTestimonials', 'Results', 'Team'].filter((name) =>
       new RegExp(`^\\s*<${name} />`, 'm').test(page)
     );
-    expect(mounted).toEqual(['Results', 'Team']);
+    expect(mounted).toEqual(['VideoTestimonials', 'Results', 'Team']);
 
-    const homeSources = ['src/components/home/Results.tsx', 'src/components/home/Team.tsx']
+    const homeSources = [
+      'src/components/home/VideoTestimonials.tsx',
+      'src/components/home/Results.tsx',
+      'src/components/home/Team.tsx',
+    ]
       .map((file) => readFileSync(file, 'utf8'))
       .join('\n');
-    expect(homeSources).toContain('id="results"');
+    expect(homeSources).toContain('id="videos"');
     expect(homeSources).toContain('id="team"');
 
     for (const link of PRIMARY_NAV.filter((l) => l.href.startsWith('/#'))) {
@@ -654,13 +648,15 @@ describe('case studies', () => {
     expect(new Set(CASE_STUDIES.map((s) => s.slug)).size).toBe(CASE_STUDIES.length);
   });
 
-  /** A fabricated study must not be indexed as though it were evidence. */
-  it('keeps placeholder studies out of the index and the sitemap', () => {
-    const page = readFileSync(join('src', 'app', 'case-studies', '[slug]', 'page.tsx'), 'utf8');
-    expect(page).toMatch(/robots:\s*study\.illustrative/);
-
+  /**
+   * The written placeholder studies are no longer published at all: there is
+   * no route for them and the sitemap does not name them. The fixture stays,
+   * because the results section still draws its worked example from it.
+   */
+  it('publishes no placeholder study', () => {
+    expect(existsSync(join('src', 'app', 'case-studies'))).toBe(false);
     const sitemap = readFileSync(join('src', 'app', 'sitemap.ts'), 'utf8');
-    expect(sitemap).toMatch(/filter\(\(s\) => !s\.illustrative\)/);
+    expect(sitemap).not.toMatch(/case-studies/);
   });
 });
 

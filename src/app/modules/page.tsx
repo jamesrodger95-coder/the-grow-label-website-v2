@@ -5,14 +5,9 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { ModuleTimeline } from '@/components/modules/ModuleTimeline';
 import { ModulePreview } from '@/components/modules/ModulePreview';
 import { ModulesHero } from '@/components/modules/ModulesHero';
+import { ValueStages } from '@/components/modules/ValueStages';
 import { Reveal } from '@/components/motion/Reveal';
-import {
-  ActionLink,
-  KeyValueStrip,
-  PullStatement,
-  SectionHeader,
-  TextLink,
-} from '@/components/primitives';
+import { ActionLink, KeyValueStrip, PullStatement, SectionHeader } from '@/components/primitives';
 import { MODULES } from '@/content/modules';
 import { MODULES_PAGE } from '@/content/pages';
 import { CTA } from '@/content/site';
@@ -167,6 +162,8 @@ export default function ModulesPage() {
         </div>
       </section>
 
+      <ValueStages />
+
       {/* Where to start. ------------------------------------------------ */}
       <section className="ctaband surface--black on-dark" aria-labelledby="modules-cta">
         <div className="shell">
@@ -183,13 +180,10 @@ export default function ModulesPage() {
               </p>
               <div style={{ marginTop: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
                 <ActionLink href={CTA.primary.href}>{CTA.primary.longLabel}</ActionLink>
-                <ActionLink href="/platform" variant="ghost">
-                  How the system fits together
+                <ActionLink href="#value-stages" variant="ghost">
+                  How value is measured
                 </ActionLink>
               </div>
-              <p style={{ marginTop: 28 }}>
-                <TextLink href="/platform#value-stages">How value is measured</TextLink>
-              </p>
             </Reveal>
           </div>
         </div>

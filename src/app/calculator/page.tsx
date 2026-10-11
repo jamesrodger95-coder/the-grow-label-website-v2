@@ -94,7 +94,7 @@ export default function CalculatorPage() {
                 reports what was actually lost, priced from your own fee schedule.
               </p>
               <p style={{ marginTop: 20 }}>
-                <TextLink href="/platform#value-stages">How value is measured, in full</TextLink>
+                <TextLink href="/modules#value-stages">How value is measured, in full</TextLink>
               </p>
             </Reveal>
           </div>

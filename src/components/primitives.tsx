@@ -164,7 +164,7 @@ export function KeyValueStrip({ items }: { items: readonly { key: string; detail
  * takes the purple response as it lands, and stays lit.
  *
  * It is opt-in rather than the default because most of the step lists on this
- * site are reference material — the controls on `/platform`, what we cannot
+ * site are reference material — the value-stage definitions on `/modules`, what we cannot
  * claim — where a row lighting up as you reach it would be decoration. It is
  * used where the list is the section's argument and is read in order.
  */

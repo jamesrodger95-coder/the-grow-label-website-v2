@@ -1,6 +1,5 @@
 export const ROUTES = [
   { path: '/', name: 'home', title: /revenue recovery/i },
-  { path: '/platform', name: 'platform', title: /Platform/ },
   { path: '/modules', name: 'modules-index', title: /Modules/ },
   { path: '/modules/answer', name: 'answer', title: /Answer/ },
   { path: '/modules/respond', name: 'respond', title: /Respond/ },
@@ -8,22 +7,6 @@ export const ROUTES = [
   { path: '/modules/reactivate', name: 'reactivate', title: /Reactivate/ },
   { path: '/industries/veterinary', name: 'veterinary', title: /Veterinary/ },
   { path: '/industries/dental', name: 'dental', title: /Dental/ },
-  { path: '/case-studies', name: 'case-index', title: /Case studies/ },
-  // Placeholder studies carry `robots: noindex` and are deliberately absent
-  // from the sitemap; they join it when their `illustrative` flag is cleared.
-  {
-    path: '/case-studies/after-hours-demand-veterinary-group',
-    name: 'case-vet',
-    title: /After-hours demand/i,
-    unlisted: true,
-  },
-  {
-    path: '/case-studies/accepted-unscheduled-treatment-dental',
-    name: 'case-dental',
-    title: /accepted in the chair/i,
-    unlisted: true,
-  },
-  { path: '/about', name: 'about', title: /About/ },
   { path: '/insights', name: 'insights', title: /Insights/ },
   {
     path: '/insights/why-one-revenue-number-is-not-enough',
@@ -40,6 +23,8 @@ export const ROUTES = [
     title: /booked/i,
     unlisted: true,
   },
+  // The Design Studio: its own header and footer, linked from the main nav.
+  { path: '/AI', name: 'studio', title: /AI video, imagery and ad creative/i },
   { path: '/privacy', name: 'privacy', title: /Privacy/ },
   { path: '/terms', name: 'terms', title: /Terms/ },
   { path: '/dev/styleguide', name: 'styleguide', title: /Styleguide/ },

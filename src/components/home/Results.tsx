@@ -128,7 +128,7 @@ export function Results() {
             note about them; what a reader wants at the foot of a results table
             is the method, which is where this goes. */}
         <Reveal className="results__more" variant="rise">
-          <TextLink href="/platform#value-stages">How a stage is promoted</TextLink>
+          <TextLink href="/modules#value-stages">How a stage is promoted</TextLink>
         </Reveal>
       </div>
     </section>

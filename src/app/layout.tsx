@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { SiteNav } from '@/components/layout/SiteNav';
 import { SiteFooter } from '@/components/layout/SiteFooter';
+import { SiteChrome } from '@/components/layout/SiteChrome';
 import { MotionProvider } from '@/components/motion/MotionProvider';
 import { SITE } from '@/content/site';
 import { dashboardUrl, siteUrl } from '@/lib/env';
@@ -58,11 +59,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <MotionProvider />
-        <SiteNav dashboardHref={dashboardUrl()} />
+        <SiteChrome>
+          <SiteNav dashboardHref={dashboardUrl()} />
+        </SiteChrome>
         <main id="site-main" tabIndex={-1}>
           {children}
         </main>
-        <SiteFooter />
+        <SiteChrome>
+          <SiteFooter />
+        </SiteChrome>
       </body>
     </html>
   );

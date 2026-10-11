@@ -39,25 +39,27 @@ export function formatSubmission(input: ContactInput, reference: string): string
     .join('\n');
 }
 
-async function sendWebhook(url: string, input: ContactInput, reference: string) {
+/**
+ * One outgoing message, already shaped for both providers: the JSON body a
+ * webhook receives, and the subject, text and reply address an email needs.
+ * The contact form and the /AI sample request both go through this, so there
+ * is one delivery path and one place to add a provider.
+ */
+export type OutgoingMessage = {
+  webhook: Record<string, unknown>;
+  subject: string;
+  text: string;
+  replyTo: string;
+};
+
+async function sendWebhook(url: string, body: Record<string, unknown>) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
   try {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        reference,
-        source: 'grow-label-website',
-        submittedAt: new Date().toISOString(),
-        name: input.name,
-        email: input.email,
-        organisation: input.organisation,
-        role: input.role || undefined,
-        sector: input.sector,
-        sites: input.sites,
-        message: input.message,
-      }),
+      body: JSON.stringify(body),
       signal: controller.signal,
     });
     if (!res.ok) {
@@ -72,7 +74,7 @@ async function sendWebhook(url: string, input: ContactInput, reference: string) 
   }
 }
 
-async function sendEmail(input: ContactInput, reference: string) {
+async function sendEmail(message: Pick<OutgoingMessage, 'subject' | 'text' | 'replyTo'>) {
   const apiKey = serverEnv.resendApiKey();
   const to = serverEnv.contactToEmail();
   if (!apiKey || !to) return { ok: false as const, detail: 'email provider not configured' };
@@ -89,9 +91,9 @@ async function sendEmail(input: ContactInput, reference: string) {
       body: JSON.stringify({
         from: serverEnv.contactFromEmail(),
         to: [to],
-        reply_to: input.email,
-        subject: `Assessment request — ${input.organisation} [${reference}]`,
-        text: formatSubmission(input, reference),
+        reply_to: message.replyTo,
+        subject: message.subject,
+        text: message.text,
       }),
       signal: controller.signal,
     });
@@ -107,23 +109,47 @@ async function sendEmail(input: ContactInput, reference: string) {
   }
 }
 
-export async function deliver(input: ContactInput): Promise<DeliveryOutcome> {
+/** Sends a message built for a reference, through whichever provider is set. */
+export async function deliverMessage(
+  build: (reference: string) => OutgoingMessage
+): Promise<DeliveryOutcome> {
   const mode = deliveryMode();
   if (mode === 'unconfigured') return { delivered: false, reason: 'unconfigured' };
 
   const reference = buildReference();
+  const message = build(reference);
 
   if (mode === 'webhook') {
     const url = serverEnv.contactWebhookUrl();
     if (!url) return { delivered: false, reason: 'unconfigured' };
-    const result = await sendWebhook(url, input, reference);
+    const result = await sendWebhook(url, message.webhook);
     return result.ok
       ? { delivered: true, reference, via: 'webhook' }
       : { delivered: false, reason: 'provider-error', detail: result.detail };
   }
 
-  const result = await sendEmail(input, reference);
+  const result = await sendEmail(message);
   return result.ok
     ? { delivered: true, reference, via: 'email' }
     : { delivered: false, reason: 'provider-error', detail: result.detail };
+}
+
+export function deliver(input: ContactInput): Promise<DeliveryOutcome> {
+  return deliverMessage((reference) => ({
+    webhook: {
+      reference,
+      source: 'grow-label-website',
+      submittedAt: new Date().toISOString(),
+      name: input.name,
+      email: input.email,
+      organisation: input.organisation,
+      role: input.role || undefined,
+      sector: input.sector,
+      sites: input.sites,
+      message: input.message,
+    },
+    subject: `Assessment request — ${input.organisation} [${reference}]`,
+    text: formatSubmission(input, reference),
+    replyTo: input.email,
+  }));
 }

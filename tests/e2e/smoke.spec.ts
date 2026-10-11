@@ -67,7 +67,7 @@ test('sitemap and robots are served and consistent', async ({ request }) => {
 test('navigation reaches every primary destination', async ({ page }) => {
   await page.goto('/');
   const nav = page.getByRole('navigation', { name: 'Primary' });
-  const labels = ['Platform', 'Modules', 'Results', 'Case studies', 'About'];
+  const labels = ['Modules', 'Case studies'];
   for (const label of labels) {
     await expect(nav.getByRole('link', { name: label, exact: true })).toBeVisible();
   }
@@ -89,14 +89,28 @@ test('navigation reaches every primary destination', async ({ page }) => {
 });
 
 /**
- * The methodology page was folded into Platform. The old URL must still land
- * somewhere sensible, because it was linked from every page for a while.
+ * Methodology was folded into Platform, and Platform into Modules. The old
+ * URLs must still land somewhere sensible, because they were linked from every
+ * page for a while; so must About and the case studies, which were retired.
  */
-test('the old methodology URL redirects into the platform page', async ({ page }) => {
+test('the old methodology URL redirects to how value is measured', async ({ page }) => {
   const response = await page.goto('/methodology');
   expect(response?.status()).toBe(200);
-  await expect(page).toHaveURL(/\/platform#value-stages$/);
+  await expect(page).toHaveURL(/\/modules#value-stages$/);
   await expect(page.locator('#value-stages')).toBeAttached();
+});
+
+test('retired pages redirect rather than 404', async ({ page }) => {
+  for (const [from, to] of [
+    ['/platform', /\/modules$/],
+    ['/about', /\/$/],
+    ['/case-studies', /\/#videos$/],
+    ['/case-studies/after-hours-demand-veterinary-group', /\/#videos$/],
+  ] as const) {
+    const response = await page.goto(from);
+    expect(response?.status(), from).toBe(200);
+    await expect(page).toHaveURL(to);
+  }
 });
 
 /**
@@ -119,7 +133,7 @@ test('the anchored navigation items resolve to real sections', async ({ page }) 
 });
 
 test('the current route is marked in the navigation', async ({ page }) => {
-  await page.goto('/platform');
+  await page.goto('/modules');
   const current = page.locator('.nav__link[aria-current="page"]');
-  await expect(current).toHaveText('Platform');
+  await expect(current).toHaveText('Modules');
 });

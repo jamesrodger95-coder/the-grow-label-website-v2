@@ -435,7 +435,7 @@ export default async function ModulePage({ params }: { params: Promise<Params> }
                 ))}
               </div>
               <p style={{ marginTop: 24 }}>
-                <TextLink href="/platform">How the four fit together</TextLink>
+                <TextLink href="/modules">How the four fit together</TextLink>
               </p>
             </Reveal>
           </div>

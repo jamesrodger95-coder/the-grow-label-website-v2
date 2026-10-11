@@ -8,7 +8,7 @@ import { awaitHydration } from './helpers';
  */
 
 test('stage bars actually fill once scrolled into view', async ({ page }) => {
-  await page.goto('/platform');
+  await page.goto('/modules');
   await awaitHydration(page);
 
   const bar = page.locator('.stagebar').first();

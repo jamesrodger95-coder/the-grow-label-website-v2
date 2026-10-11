@@ -145,3 +145,29 @@ state, and the stage bars are drawn at full width.
 - No motion above the fold before the hero text has painted.
 - No information carried only by movement.
 - No effect that keeps running outside the viewport.
+
+## The /AI exceptions
+
+The content studio at `/AI` is a separate offering and was given more motion
+than the clinic site, at the owner's direction, modelled on the reference sites
+it was briefed against. None of it is used anywhere else.
+
+- **The tunnel** (`components/studio/Tunnel.tsx`). Three rows of clips on the
+  inside of a cylinder, in CSS 3D. Driven by the shared scene ticker
+  (`useScene`, ambient), so it only runs while on screen and writes only
+  `transform` and `opacity`. It spins up into place on arrival, turns slowly,
+  turns a little faster while the page is scrolled, leans towards the pointer,
+  pushes in as the hero leaves, and can be dragged sideways. Starting angles
+  are rendered on the server, so a blocked bundle leaves a still tunnel.
+  Reduced motion and save-data start it still; the visible "Pause motion"
+  control stops it and every clip (WCAG 2.2.2). Playback is capped (24 wide,
+  8 narrow) and limited to clips facing the viewer.
+- **The band** drifts on `--gl-dur-drift` after first paint; paused under
+  reduced motion.
+- **The industry stage** (`IndustrySwitch.tsx`) is sticky on wide screens and
+  steps with scroll position (read by the ticker, never a scroll listener). It
+  types each brief, then draws the output links (the draw verb) and raises the
+  output cards (rise). On a phone or with reduced motion it is plain tabs.
+- **The statement** fills in word by word with scroll progress (opacity only).
+- **Portfolio windows** lean slightly towards a mouse pointer (transform only,
+  not under reduced motion).

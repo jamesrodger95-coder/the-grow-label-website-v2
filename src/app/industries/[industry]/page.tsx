@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { SectorHero } from '@/components/sector/SectorHero';
 import { FaqList } from '@/components/layout/Faq';
 import { Reveal } from '@/components/motion/Reveal';
@@ -14,7 +13,6 @@ import {
 import { SiteComparison } from '@/components/sector/SiteComparison';
 import { RecallRail } from '@/components/sector/RecallRail';
 import { getIndustry, INDUSTRIES } from '@/content/industries';
-import { CASE_STUDIES } from '@/content/illustrative';
 import { SECTOR_FAQ } from '@/content/faq';
 import { CTA } from '@/content/site';
 
@@ -43,7 +41,6 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
   if (!industry) notFound();
 
   const others = INDUSTRIES.filter((i) => i.slug !== industry.slug);
-  const studies = CASE_STUDIES.filter((study) => study.sectorSlug === industry.slug);
   const faq = SECTOR_FAQ[industry.slug];
 
   return (
@@ -148,7 +145,7 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
             <Reveal>
               <p className="lead">{industry.feature.lead}</p>
               <p style={{ marginTop: 28 }}>
-                <TextLink href="/platform#value-stages">How each stage is defined</TextLink>
+                <TextLink href="/modules#value-stages">How each stage is defined</TextLink>
               </p>
             </Reveal>
             <Reveal index={1}>
@@ -161,57 +158,6 @@ export default async function IndustryPage({ params }: { params: Promise<Params>
           </div>
         </div>
       </section>
-
-      {studies.length > 0 ? (
-        <>
-          {/* Written up: the three studies for this sector. -------------------- */}
-          <section className="surface--white on-light section" aria-labelledby="sector-cases-title">
-            <div className="shell">
-              <Reveal variant="group">
-                <SectionHeader
-                  eyebrow="Written up"
-                  aside={`${studies.length} studies`}
-                  id="sector-cases-title"
-                  title={`Three ${industry.name.toLowerCase()} write-ups,`}
-                  emphasis="reported at four stages."
-                />
-              </Reveal>
-
-              <div className="entries">
-                {studies.map((study, i) => (
-                  <Reveal key={study.slug} index={i}>
-                    <Link className="entry" href={`/case-studies/${study.slug}`}>
-                      <span>
-                        <span className="label label--accent" style={{ display: 'block' }}>
-                          {study.chips.join(' · ')}
-                        </span>
-                        <span
-                          className="label"
-                          style={{ display: 'block', marginTop: 10, textTransform: 'none' }}
-                        >
-                          {`${study.shape} · ${study.period}`}
-                        </span>
-                      </span>
-                      <span>
-                        <span
-                          className="entry__title"
-                          style={{ display: 'block', marginBottom: 10 }}
-                        >
-                          {study.title}
-                        </span>
-                        <span className="small">{study.summary}</span>
-                      </span>
-                      <span className="label label--accent" aria-hidden="true">
-                        Read &rarr;
-                      </span>
-                    </Link>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </section>
-        </>
-      ) : null}
 
       {/* Sector questions. ------------------------------------------------- */}
       <section className="surface--mist on-light section" aria-labelledby="sector-faq-title">

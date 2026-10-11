@@ -15,7 +15,7 @@ import { chromium } from '@playwright/test';
 const BASE = process.env.BASE_URL ?? 'http://localhost:3112';
 const ROUTES = process.argv.slice(2).length
   ? process.argv.slice(2)
-  : ['/', '/modules', '/modules/answer', '/platform', '/contact'];
+  : ['/', '/modules', '/modules/answer', '/contact'];
 
 const browser = await chromium.launch();
 const problems = [];

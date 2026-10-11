@@ -8,6 +8,10 @@ The Grow Label marketing website. A static-first Next.js App Router site whose
 job is to generate qualified requests for a revenue-recovery assessment from
 veterinary and dental groups.
 
+One route is a different business: **`/AI`**, the AI product content studio
+for ecommerce brands. See "The /AI page" below. Everything else here is the
+clinic site.
+
 It is **not** the Grow Label dashboard. Nothing here connects to the dashboard,
 its repository, or its Vercel project.
 
@@ -113,6 +117,9 @@ These come from the brief and are enforced by tests, not just convention.
 ```
 src/
   app/           routes; server components unless a file says 'use client'
+    _archive/    retired pages (platform, about), kept but not served: Next
+                 ignores folders that start with an underscore. Their old URLs
+                 redirect in next.config.ts. Move a folder back up to restore it
   components/
     layout/      nav, footer, page header, legal page shell
     motion/      the only client components that exist for motion
@@ -167,6 +174,45 @@ render exactly as production does. After changing a stylesheet, re-copy:
 ```bash
 cp src/styles/tokens.css src/styles/base.css src/styles/components.css src/styles/sections.css design/
 ```
+
+## The /AI page
+
+`/AI` sells AI-made video, imagery, ad creative and demos to businesses that
+sell something: ecommerce brands, B2B SaaS, home improvement and the trades
+(HVAC, plumbing, electrical). It supports cold outreach offering a free sample. It shares
+the stack, the deploy and the delivery provider with the clinic site and
+nothing else:
+
+- **Its own chrome.** `components/layout/SiteChrome` withholds `SiteNav` and
+  `SiteFooter` on `/ai*`; the page renders its own header and footer from
+  `components/studio/Sections.tsx`.
+- **Linked as "Design Studio".** In the header to the right of "Request an
+  assessment" (`STUDIO_LINK` in `content/site.ts`), styled apart as a purple
+  pill with a breathing aura (`.nav__link--studio`), and in the drawer,
+  footer and sitemap.
+- **The Grow Label palette, its own composition and a second face.** Warm
+  white, ink and purple on a dotted canvas. Styles are the `.studio` block at
+  the end of `sections.css`, scoped so nothing reaches the main site. Every display
+  line is Archivo, expanded and italic (`components/studio/fonts.ts`), with the
+  purple emphasis by colour alone; body copy stays in Schibsted Grotesk. The
+  face is imported by that route alone, so the one-family rule still holds
+  everywhere else.
+- **`/ai` is rewritten to `/AI`** in `next.config.ts`; production paths are
+  case-sensitive.
+- **Copy** is `src/content/studio.ts`. No em dashes, no results, no client
+  names unless the client agreed. `tests/unit/studio-media.test.ts` checks all
+  three.
+- **Media is dropped in.** `public/ai/reel/` feeds the hero tunnel,
+  `public/ai/work/` the portfolio and `public/ai/industries/` the industry
+  stage; absent files leave numbered reserved frames or a storyboard.
+  `docs/media/STUDIO_MEDIA.md` has names, sizes and encoding. Run
+  `pnpm studio:media` after adding video, then rebuild. A portfolio file whose
+  entry has no `title` or `credit` fails the unit test.
+- **The form** posts to `/api/sample`, which goes through the same delivery
+  provider as the contact form (`deliverMessage` in `lib/delivery.ts`) with
+  `kind: 'ai-sample-request'` in the webhook body. With no provider it is
+  switched off and says so. The page is static, so it reads the provider state
+  at build time; the route re-checks on every post.
 
 ## The calculator, and the funnel it feeds
 
@@ -342,6 +388,11 @@ Client components exist only where there is genuine interaction:
 - `Testimonials` — the two rails and their step controls
 - `VideoTestimonials` — one piece of state per card: playing or not
 - the four module scenes, which all share `modules/scene/useScene`
+- `SiteChrome` — withholds the site nav and footer on `/AI`
+- `Tunnel`, `IndustrySwitch`, `StatementWords`, `WorkGallery` (with
+  `LoopVideo`) and `SampleForm` — the `/AI` page's hero, industry stage,
+  scroll-filled statement, portfolio viewer and form. The three scroll-linked
+  ones run on `useScene`, like the module scenes
 
 `PointerSignals`, `SignalField` and `Parallax` were removed. The first two were
 never mounted anywhere, and parallax was a fifth motion verb used exactly once
@@ -374,6 +425,13 @@ Four verbs, and nothing else:
    Never a lift, never a shadow bloom.
 
 One curve (`--gl-ease`) and three durations (180 / 320 / 700ms).
+
+**Scoped exceptions on `/AI` only, at the owner's direction.** The hero is a
+CSS 3D tunnel that turns continuously, leans to the pointer and can be dragged;
+the industry band drifts on `--gl-dur-drift`; the industry stage types its
+brief. All of it runs after first paint, stops off screen, respects reduced
+motion, and the tunnel has a visible pause control. None of it belongs on the
+clinic site. `docs/MOTION_SYSTEM.md` has the detail.
 `scripts/motion-inventory.mjs` runs inside `pnpm quality` and fails on any
 duration or easing outside that set, so the system is enforced rather than
 reviewed. If a proposed effect is not one of the four verbs, it does not ship.

@@ -24,6 +24,8 @@ export type NavLink = {
   note?: string;
   /** Makes the item a dropdown. The item's own href is then not navigated to. */
   children?: NavLink[];
+  /** Set apart from the rest of the nav: the Design Studio's glowing pill. */
+  variant?: 'studio';
 };
 
 export type NavGroup = {
@@ -35,17 +37,17 @@ export type NavGroup = {
 /**
  * Primary navigation.
  *
- * Ordered the way a buyer actually reads the business: what it is, what it
- * does, who it is for, what came of it, who is behind it. Methodology and
- * Insights are deliberately absent — methodology is not a destination, it is
- * the argument the Platform page makes, and a nav item called "Insights" asks
- * the reader to guess.
+ * Ordered the way a buyer actually reads the business: what it does, who it
+ * is for, and what came of it. Methodology lives on the modules page, beside
+ * the modules it governs, and a nav item called "Insights" asks the reader to
+ * guess.
  *
- * Results and case studies live on the homepage, so they are anchors rather
- * than invented routes.
+ * Platform and About were retired from the live site (their routes are kept
+ * in `src/app/_archive/`, which Next does not serve). "Case studies" points at
+ * the client video testimonials on the homepage: the written placeholder
+ * studies and their pages were removed.
  */
 export const PRIMARY_NAV: NavLink[] = [
-  { href: '/platform', label: 'Platform' },
   { href: '/modules', label: 'Modules' },
   {
     href: '/industries',
@@ -56,12 +58,15 @@ export const PRIMARY_NAV: NavLink[] = [
       { href: '/industries/med-spa', label: 'Med spa', note: 'Med spas and groups' },
     ],
   },
-  { href: '/#results', label: 'Results' },
-  // Points at the page, not at an anchor: the homepage case-study section is
-  // off while the studies are still placeholders. See src/app/page.tsx.
-  { href: '/case-studies', label: 'Case studies' },
-  { href: '/about', label: 'About' },
+  { href: '/#videos', label: 'Case studies' },
 ];
+
+/**
+ * The Design Studio: a different offering (AI video, imagery and ad creative),
+ * so it sits apart from the clinic destinations, to the right of the primary
+ * call to action, as a glowing pill.
+ */
+export const STUDIO_LINK: NavLink = { href: '/AI', label: 'Design Studio', variant: 'studio' };
 
 /** Grouped navigation for the mobile drawer and the footer. */
 export const NAV_GROUPS: NavGroup[] = [
@@ -69,12 +74,23 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'product',
     label: 'Product',
     links: [
-      { href: '/platform', label: 'Platform', note: 'How the system fits together' },
       { href: '/modules', label: 'Modules', note: 'The four modules in one place' },
       { href: '/modules/answer', label: 'Answer', note: 'Calls that go unanswered' },
       { href: '/modules/respond', label: 'Respond', note: 'First response on enquiries' },
       { href: '/modules/retain', label: 'Retain', note: 'Protecting a filled schedule' },
       { href: '/modules/reactivate', label: 'Reactivate', note: 'Records that stopped moving' },
+    ],
+  },
+  {
+    id: 'studio',
+    label: 'Design Studio',
+    links: [
+      {
+        href: '/AI',
+        label: 'Design Studio',
+        note: 'AI video, imagery and ad creative',
+        variant: 'studio',
+      },
     ],
   },
   {
@@ -90,8 +106,7 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'evidence',
     label: 'Evidence',
     links: [
-      { href: '/#results', label: 'Results', note: 'How an outcome is reported' },
-      { href: '/case-studies', label: 'Case studies', note: 'Six write-ups, three per sector' },
+      { href: '/#videos', label: 'Case studies', note: 'Clients, in their own words' },
       { href: '/#team', label: 'Team', note: 'The people who do the work' },
     ],
   },
@@ -99,7 +114,6 @@ export const NAV_GROUPS: NavGroup[] = [
     id: 'company',
     label: 'Company',
     links: [
-      { href: '/about', label: 'About', note: 'Position and operating principles' },
       { href: '/insights', label: 'Insights', note: 'Notes on revenue operations' },
       { href: '/contact', label: 'Contact', note: 'Request an assessment' },
     ],
@@ -122,7 +136,7 @@ export const CTA = {
   },
   methodology: {
     label: 'How value is measured',
-    href: '/platform#value-stages',
+    href: '/modules#value-stages',
   },
 } as const;
 

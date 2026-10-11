@@ -11,7 +11,6 @@ const BASE = process.env.BASE_URL ?? 'http://localhost:3112';
 
 const SEEDS = [
   '/',
-  '/platform',
   '/modules',
   '/modules/answer',
   '/modules/respond',
@@ -20,7 +19,6 @@ const SEEDS = [
   '/industries/veterinary',
   '/industries/dental',
   '/insights',
-  '/about',
   '/contact',
   '/privacy',
   '/terms',
