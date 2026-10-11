@@ -188,18 +188,29 @@ export function StudioWork({ items }: { items: WorkItem[] }) {
  * A single sentence across the full width that fills in as it is read, with
  * two pieces of the reel set into the line like words.
  */
-export function StudioStatement({ tiles }: { tiles: ReelTile[] }) {
-  const pill = (tile: ReelTile | undefined, tone: number) => (
-    <span className="statement__pill" data-tone={tone} aria-hidden="true" key={tone}>
-      {tile?.kind === 'clip' ? <LoopVideo src={tile.src} poster={tile.poster} /> : null}
-    </span>
-  );
+/** The two widescreen pieces set into the statement, by portfolio id. */
+const STATEMENT_PILLS = ['w44', 'w05'];
+
+export function StudioStatement({ items }: { items: WorkItem[] }) {
+  const pill = (id: string, tone: number) => {
+    const item = items.find((w) => w.id === id && w.src);
+    return (
+      <span className="statement__pill" data-tone={tone} aria-hidden="true" key={id}>
+        {item?.media === 'image' ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={item.src} alt="" loading="lazy" decoding="async" />
+        ) : item ? (
+          <LoopVideo src={item.src!} poster={item.poster} />
+        ) : null}
+      </span>
+    );
+  };
   return (
     <div className="studio-statement">
       <div className="studio-shell">
         <StatementWords
           lines={[STUDIO_STATEMENT.before, STUDIO_STATEMENT.after]}
-          pills={[pill(tiles[2], 2), pill(tiles[7], 5)]}
+          pills={STATEMENT_PILLS.map((id, i) => pill(id, i + 2))}
         />
       </div>
     </div>

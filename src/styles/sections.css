@@ -6378,10 +6378,13 @@
 .statement__pill {
   position: relative;
   display: inline-block;
-  width: 1.8em;
+  /* A rounded frame at the work's own 16:9, not a pill: rounded ends crop
+     the edges of the picture inside. */
+  width: 1.5em;
   height: 0.84em;
-  margin-inline: 0.04em;
-  border-radius: var(--gl-r-pill);
+  margin-inline: 0.06em;
+  border-radius: 0.16em;
+  box-shadow: 0 0.06em 0.2em -0.08em rgba(28, 20, 80, 0.35);
   overflow: hidden;
   vertical-align: middle;
   transform: translateY(-0.05em);
@@ -6389,9 +6392,14 @@
 }
 @media (max-width: 560px) {
   .statement__pill {
-    width: 1.3em;
+    width: 1.2em;
+    height: 0.68em;
   }
 }
+.statement__tail {
+  white-space: nowrap;
+}
+.statement__pill img,
 .statement__pill video {
   position: absolute;
   inset: 0;

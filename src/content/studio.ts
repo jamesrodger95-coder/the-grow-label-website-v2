@@ -146,8 +146,8 @@ export const STUDIO_SHOWCASE = {
     },
     { id: 'w01', tag: 'Feature demo', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
     { id: 'w22', tag: 'YouTube ad', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
-    { id: 'w42', tag: 'Website hero', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
-    { id: 'w31', tag: 'Product launch', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
+    { id: 'w44', tag: 'Website hero', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
+    { id: 'w46', tag: 'LinkedIn ad', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
     {
       id: 'w02',
       tag: 'TikTok ad',
@@ -158,8 +158,8 @@ export const STUDIO_SHOWCASE = {
       depth: 1,
       m: { x: 21, y: 70, w: 34 },
     },
-    { id: 'w06', tag: 'Story', x: 35, y: 15, w: 8, r: 3, depth: 0.9, m: null },
-    { id: 'w35', tag: 'Meta ad', x: 63, y: 86, w: 8.5, r: -3, depth: 0.9, m: null },
+    { id: 'w49', tag: 'Property listing', x: 35, y: 15, w: 9, r: 3, depth: 0.9, m: null },
+    { id: 'w48', tag: 'Facebook ad', x: 63, y: 86, w: 10, r: -3, depth: 0.9, m: null },
     {
       id: 'w13',
       tag: 'Paid social',
@@ -171,10 +171,10 @@ export const STUDIO_SHOWCASE = {
       m: { x: 79, y: 70, w: 34 },
     },
     { id: 'w39', tag: 'Product image', x: 50, y: 12, w: 9, r: -2, depth: 0.7, m: null },
-    { id: 'w41', tag: 'Product shot', x: 25.5, y: 50, w: 9, r: -5, depth: 0.8, m: null },
+    { id: 'w53', tag: 'Instagram post', x: 25.5, y: 50, w: 9, r: -5, depth: 0.8, m: null },
     {
-      id: 'w36',
-      tag: 'Instagram post',
+      id: 'w51',
+      tag: 'Paid social',
       x: 74.5,
       y: 50,
       w: 9,
@@ -219,7 +219,7 @@ export type WorkEntry = {
   media: 'video' | 'image';
   treatment: Treatment;
   /** Width over height, as the frame is reserved on the page. */
-  ratio: '9:16' | '4:5' | '3:4' | '4:3' | '1:1' | '16:9';
+  ratio: '9:16' | '2:3' | '4:5' | '3:4' | '4:3' | '3:2' | '1:1' | '16:9';
   /** Filled in when the file arrives. Never before. */
   title?: string;
   /** What was being sold, e.g. "Skincare" or "HVAC". Filled in with the file. */
@@ -236,12 +236,22 @@ const CONCEPT: Credit = { kind: 'concept' };
 /**
  * The portfolio, in display order.
  *
- * w01 to w35 are the studio's films and w36 to w43 its product stills, all
+ * w01 to w35 are the studio's films and w36 to w53 its stills, all
  * imported by scripts/studio-import.py (films at 720p and at most 20 seconds,
  * stills at 1600 px). Every one of them is also a tile in the hero tunnel.
- * The grid shows the first twelve and a "Show all" control.
+ * Listed in display order, not id order: the first twelve (shown before
+ * "Show all") are picked to span the industries, not just software.
  */
 export const WORK: WorkEntry[] = [
+  {
+    id: 'w44',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'The Estates: a world of your own',
+    category: 'Real estate',
+    credit: CONCEPT,
+  },
   {
     id: 'w01',
     media: 'video',
@@ -252,12 +262,93 @@ export const WORK: WorkEntry[] = [
     credit: CONCEPT,
   },
   {
+    id: 'w48',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '4:5',
+    title: 'Apex Roofing: built to last',
+    category: 'Roofing',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w05',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Every photo has a better version',
+    category: 'Photo app',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w39',
+    media: 'image',
+    treatment: 'Imagery',
+    ratio: '1:1',
+    title: 'Leather tote, studio',
+    category: 'Fashion',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w46',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'Formwork: the next business landmark',
+    category: 'Construction',
+    credit: CONCEPT,
+  },
+  {
     id: 'w02',
     media: 'video',
     treatment: 'Ad creative',
     ratio: '9:16',
     title: 'sweetRegret: your lineup, your order',
     category: 'Food and drink',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w52',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '1:1',
+    title: 'Make room for better',
+    category: 'Home improvement',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w31',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Cinetic: now it directs',
+    category: 'Developer tools',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w45',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '3:2',
+    title: 'Villa collection, two posters',
+    category: 'Real estate',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w13',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '9:16',
+    title: 'Lightspark: the TCP/IP of money',
+    category: 'Fintech',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w53',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '1:1',
+    title: 'Built for the long haul',
+    category: 'Tools and trades',
     credit: CONCEPT,
   },
   {
@@ -276,15 +367,6 @@ export const WORK: WorkEntry[] = [
     ratio: '1:1',
     title: 'Lidlezz: lid closed, still working',
     category: 'Software',
-    credit: CONCEPT,
-  },
-  {
-    id: 'w05',
-    media: 'video',
-    treatment: 'Video',
-    ratio: '16:9',
-    title: 'Every photo has a better version',
-    category: 'Photo app',
     credit: CONCEPT,
   },
   {
@@ -348,15 +430,6 @@ export const WORK: WorkEntry[] = [
     ratio: '16:9',
     title: 'Claim the job',
     category: 'Workflow software',
-    credit: CONCEPT,
-  },
-  {
-    id: 'w13',
-    media: 'video',
-    treatment: 'Video',
-    ratio: '9:16',
-    title: 'Lightspark: the TCP/IP of money',
-    category: 'Fintech',
     credit: CONCEPT,
   },
   {
@@ -513,15 +586,6 @@ export const WORK: WorkEntry[] = [
     credit: CONCEPT,
   },
   {
-    id: 'w31',
-    media: 'video',
-    treatment: 'Video',
-    ratio: '16:9',
-    title: 'Cinetic: now it directs',
-    category: 'Developer tools',
-    credit: CONCEPT,
-  },
-  {
     id: 'w32',
     media: 'video',
     treatment: 'Demo',
@@ -585,15 +649,6 @@ export const WORK: WorkEntry[] = [
     credit: CONCEPT,
   },
   {
-    id: 'w39',
-    media: 'image',
-    treatment: 'Imagery',
-    ratio: '1:1',
-    title: 'Leather tote, studio',
-    category: 'Fashion',
-    credit: CONCEPT,
-  },
-  {
     id: 'w40',
     media: 'image',
     treatment: 'Styled shoot',
@@ -627,6 +682,42 @@ export const WORK: WorkEntry[] = [
     ratio: '4:5',
     title: 'Fragrance on travertine',
     category: 'Fragrance',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w47',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '3:2',
+    title: 'Forge: serious tools, serious work',
+    category: 'Tools and trades',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w49',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '2:3',
+    title: 'Private villas: space to live',
+    category: 'Real estate',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w50',
+    media: 'image',
+    treatment: 'Styled shoot',
+    ratio: '4:5',
+    title: 'Freestanding bath tap, styled',
+    category: 'Home and bathroom',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w51',
+    media: 'image',
+    treatment: 'Ad creative',
+    ratio: '4:5',
+    title: 'From groundwork to greatness',
+    category: 'Construction',
     credit: CONCEPT,
   },
 ];

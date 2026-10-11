@@ -96,6 +96,25 @@ function saveData(): boolean {
   );
 }
 
+/**
+ * Places the featured tiles (see FEATURED in studio-media) either side of
+ * the middle of the row, which is where a row sits front and centre once the
+ * spin-in settles. They are dealt across the rows, a share each.
+ */
+function centreFeatured(row: ReelTile[], featured: ReelTile[], r: number): ReelTile[] {
+  const mine = featured.filter((_, i) => i % ROWS === r);
+  const mid = Math.floor(row.length / 2);
+  const out = [...row];
+  mine.forEach((tile, k) => {
+    // Either side of centre, a few tiles out: the dead centre of a tunnel is
+    // its far end, where a tile is too small to read; four out, a tile is
+    // close enough to be large and still well inside the frame.
+    const at = mid + (k % 2 ? 1 : -1) * (4 + Math.floor(k / 2) * 2);
+    out.splice(Math.max(0, Math.min(out.length, at)), 0, tile);
+  });
+  return out;
+}
+
 /** Server-side starting layout, at desktop proportions. */
 const SSR_GEOMETRY = geometry(1440);
 
@@ -120,7 +139,15 @@ export function Tunnel({
   // Every piece once: dealt round the rows in turn, so each row is a third of
   // the work and no piece meets itself. (A short reel is padded upstream, in
   // reelTiles, so a row is never too sparse to fill its arc.)
-  const rows = Array.from({ length: ROWS }, (_, r) => tiles.filter((_, i) => i % ROWS === r));
+  const featured = tiles.filter((t) => t.feature);
+  const rest = tiles.filter((t) => !t.feature);
+  const rows = Array.from({ length: ROWS }, (_, r) =>
+    centreFeatured(
+      rest.filter((_, i) => i % ROWS === r),
+      featured,
+      r
+    )
+  );
   const ssr = layout(rows, SSR_GEOMETRY);
 
   // Everything the frame loop needs, kept out of React state.

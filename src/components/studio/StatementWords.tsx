@@ -45,15 +45,17 @@ export function StatementWords({
         {words.map((row, l) => {
           const content = (
             <>
-              {row.map((word, w) => {
-                const i = offsets[l]! + w;
-                return (
-                  <span className="statement__word" key={i}>
-                    {word}{' '}
-                  </span>
-                );
-              })}
-              {pills[l]}
+              {row.slice(0, -1).map((word, w) => (
+                <span className="statement__word" key={offsets[l]! + w}>
+                  {word}{' '}
+                </span>
+              ))}
+              {/* The last word and the pill travel together: the pill must never
+                  wrap onto a line of its own. */}
+              <span className="statement__tail">
+                <span className="statement__word">{row[row.length - 1]} </span>
+                {pills[l]}
+              </span>
             </>
           );
           return (

@@ -33,10 +33,18 @@ const FALLBACK_RATIOS = [9 / 16, 1, 4 / 5, 16 / 9, 3 / 4, 1, 9 / 16, 4 / 5, 16 /
 /** `-9x16`, `_4x5`, `1x1` and so on, anywhere in the stem. */
 const RATIO_IN_NAME = /(?:^|[-_ .])(\d{1,2})x(\d{1,2})(?=$|[-_ .])/i;
 
+/**
+ * Tunnel tiles placed at the centre of their row, so they are front and
+ * middle when the hero first settles: the work outside software (property,
+ * construction, roofing, tools), so the page says "many industries" at once.
+ * By the number the import script gives the tile's file.
+ */
+const FEATURED = new Set(['44', '46', '47', '48', '51', '53']);
+
 export type ReelTile =
-  | { kind: 'clip'; src: string; poster?: string; ratio: number }
-  | { kind: 'still'; src: string; ratio: number }
-  | { kind: 'slot'; ratio: number; number: string; shape: string };
+  | { kind: 'clip'; src: string; poster?: string; ratio: number; feature?: boolean }
+  | { kind: 'still'; src: string; ratio: number; feature?: boolean }
+  | { kind: 'slot'; ratio: number; number: string; shape: string; feature?: boolean };
 
 export function ratioFromName(stem: string): number | undefined {
   const m = RATIO_IN_NAME.exec(stem);
@@ -100,6 +108,7 @@ export function reelTiles(): { tiles: ReelTile[]; live: boolean } {
   const stills = stillNames.map((name, i) => ({
     kind: 'still' as const,
     src: `/ai/reel/${name}`,
+    feature: FEATURED.has(name.slice(0, 2)),
     ratio:
       ratioFromName(name.replace(/\.[^.]+$/, '')) ?? FALLBACK_RATIOS[i % FALLBACK_RATIOS.length]!,
   }));

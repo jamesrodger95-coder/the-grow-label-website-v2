@@ -53,7 +53,7 @@ export default function StudioPage() {
       <StudioBand />
       <StudioWork items={items} />
       <Showcase items={items} />
-      <StudioStatement tiles={tiles} />
+      <StudioStatement items={items} />
       <StudioMake items={items} />
       <StudioProcess />
       <StudioSample configured={deliveryMode() !== 'unconfigured'} />
