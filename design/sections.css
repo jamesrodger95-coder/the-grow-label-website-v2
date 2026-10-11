@@ -6204,31 +6204,18 @@
   grid-area: 1 / 1;
   line-height: 1.3;
   white-space: nowrap;
-  opacity: 0;
-  transform: translateY(100%);
-}
-.show__rotor span:first-child {
-  opacity: 1;
-  transform: none;
 }
 [data-motion="on"] .show__rotor span {
-  animation: show-rotor calc(var(--gl-dur-ambient) * 1.2) var(--gl-ease) infinite both;
-  animation-delay: calc(var(--i) * var(--gl-dur-ambient) * 1.2 / var(--n));
+  animation: show-rotor var(--gl-dur-standard) var(--gl-ease) both;
 }
 @keyframes show-rotor {
-  0% {
+  from {
     opacity: 0;
-    transform: translateY(100%);
+    transform: translateY(80%);
   }
-  3%,
-  14% {
+  to {
     opacity: 1;
     transform: none;
-  }
-  17%,
-  100% {
-    opacity: 0;
-    transform: translateY(-100%);
   }
 }
 .show__lead {

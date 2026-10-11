@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { usePrefersReducedMotion } from '@/components/motion/useInView';
 import { useScene } from '@/components/modules/scene/useScene';
 import { STUDIO_BAND, STUDIO_SHOWCASE } from '@/content/studio';
 import type { WorkItem } from '@/lib/studio-media';
@@ -31,6 +32,32 @@ function ratioOf(item: WorkItem): number {
 function settled(piece: Piece): string {
   return `translate(-50%, -50%) rotate(${piece.r}deg)`;
 }
+
+/**
+ * "Made for ___": one industry at a time, rolling up through a slot.
+ *
+ * Driven by a timer rather than by staggered CSS animations: with eighteen
+ * industries, a shared keyframe cycle left several of them visible at once.
+ * Here exactly one label is ever on screen; the key change re-runs its
+ * entrance. Still under reduced motion (first label only).
+ */
+function IndustryRotor() {
+  const reduced = usePrefersReducedMotion();
+  const [at, setAt] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const t = window.setInterval(() => setAt((i) => (i + 1) % STUDIO_BAND.length), ROTOR_MS);
+    return () => window.clearInterval(t);
+  }, [reduced]);
+  return (
+    <span className="show__rotor" aria-hidden="true">
+      <span key={at}>{STUDIO_BAND[at]}</span>
+    </span>
+  );
+}
+
+/** How long each industry holds in the "Made for" slot. */
+const ROTOR_MS = 2000;
 
 export function Showcase({ items }: { items: WorkItem[] }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -95,13 +122,7 @@ export function Showcase({ items }: { items: WorkItem[] }) {
         <div className="show__aside">
           <p className="show__for">
             <span>{STUDIO_SHOWCASE.forLabel}</span>
-            <span className="show__rotor" aria-hidden="true">
-              {STUDIO_BAND.map((label, i) => (
-                <span key={label} style={{ '--i': i, '--n': STUDIO_BAND.length } as CSSProperties}>
-                  {label}
-                </span>
-              ))}
-            </span>
+            <IndustryRotor />
             <span className="gl-sr">{STUDIO_BAND.join(', ')}</span>
           </p>
           <p className="show__lead">{STUDIO_SHOWCASE.lead}</p>
