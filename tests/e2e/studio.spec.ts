@@ -13,7 +13,10 @@ test('serves /AI and /ai, with its own chrome and not the site’s', async ({ pa
   for (const path of ['/AI', '/ai']) {
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
-    await expect(page.locator('h1')).toHaveText(/Turn what you sell\s*into content\s*that sells\./);
+    // By id: the Cal.com embed further down brings an h1 of its own.
+    await expect(page.locator('#studio-title')).toHaveText(
+      /Turn what you sell\s*into content\s*that sells\./
+    );
     await expect(page.locator('header.nav')).toHaveCount(0);
     await expect(page.locator('.studio-bar')).toBeVisible();
     await expect(page.locator('.studio-footer')).toBeVisible();
