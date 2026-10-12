@@ -39,6 +39,8 @@ WORK = os.path.join(ROOT, 'public', 'ai', 'work')
 REEL = os.path.join(ROOT, 'public', 'ai', 'reel')
 MAX = 20.0
 LOOP = 5.0
+# Films this short are used whole as tunnel tiles rather than cut to a loop.
+FULL_UP_TO = 12.0
 
 FILMS = [
     'V/Horizontal/video.9511a01d.mp4', 'V/Vertical/video.b8abaf29.mp4',
@@ -175,11 +177,14 @@ def film(n, rel):
         if os.path.exists(reel):
             os.remove(reel)
     elif not done(reel):
-        start = round(min(max(1.0, cut * 0.33), max(0.0, cut - LOOP)), 2)
+        # A short film plays whole in the tunnel; a longer one gives a loop.
+        full = cut <= FULL_UP_TO
+        start = 0.0 if full else round(min(max(1.0, cut * 0.33), max(0.0, cut - LOOP)), 2)
+        length = cut if full else LOOP
         rscale = {'16x9': 'scale=-2:270', '3x2': 'scale=-2:270', '4x3': 'scale=-2:270',
                   '9x16': 'scale=270:-2', '2x3': 'scale=270:-2', '4x5': 'scale=288:-2',
                   '1x1': 'scale=320:320'}[sh]
-        run(['ffmpeg', '-v', 'error', '-y', '-ss', str(start), '-i', src, '-t', str(LOOP), '-vf',
+        run(['ffmpeg', '-v', 'error', '-y', '-ss', str(start), '-i', src, '-t', str(length), '-vf',
              f'{rscale},fps=30,format=yuv420p', '-an', '-c:v', 'libx264', '-preset', 'slow',
              '-crf', '30', '-maxrate', '700k', '-bufsize', '1400k', '-movflags', '+faststart', reel])
     print(f'w{n:02d}  film  {sh:5s} {dur:5.1f}s -> {cut:5.1f}s  {rel}', flush=True)

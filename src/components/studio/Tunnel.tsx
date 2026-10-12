@@ -59,9 +59,9 @@ function geometry(W: number): Geometry {
 }
 
 /** Each tile's resting angle, in degrees, centred on the row. */
-function layout(rows: { ratio: number }[][], g: Geometry) {
+function layout(rows: { ratio: number; feature?: number }[][], g: Geometry) {
   return rows.map((row) => {
-    const arcs = row.map((t) => ((t.ratio * g.th + g.g) / g.R) * (180 / Math.PI));
+    const arcs = row.map((t) => ((t.ratio * g.th * scaleOf(t) + g.g) / g.R) * (180 / Math.PI));
     const total = arcs.reduce((a, b) => a + b, 0);
     const period = Math.max(total, MIN_PERIOD);
     const spacing = period / total;
@@ -108,9 +108,21 @@ function saveData(): boolean {
  * to read), the others either side of it. By angle rather than by counting
  * tiles, because rows hold tiles of very different widths.
  */
-const AT_DEGREES = [60, 46, 72];
+const AT_DEGREES = [30, 46, 64, 74];
+
+/** The first few featured pieces lead the hero: drawn larger, nearer centre. */
+const LEADS = 5;
+const LEAD_SCALE = 1;
+/**
+ * Each lead's own angle, by rank (the sign is the side), so the leads form a
+ * staircase across both sides and the three rows rather than stacking.
+ */
+const LEAD_AT = [-30, 30, -50, 44, -66];
+function scaleOf(t: { feature?: number }): number {
+  return t.feature !== undefined && t.feature < LEADS ? LEAD_SCALE : 1;
+}
 /** Measured: how far a row has turned once the hero has settled (about 2s). */
-const SETTLE_TURN = 24;
+const SETTLE_TURN = 55;
 
 function centreFeatured(row: ReelTile[], featured: ReelTile[], r: number): ReelTile[] {
   const mine = featured.filter((_, i) => i % ROWS === r);
@@ -121,13 +133,14 @@ function centreFeatured(row: ReelTile[], featured: ReelTile[], r: number): ReelT
     const side = (k + r) % 2 ? 1 : -1;
     // The row has turned by about SETTLE_TURN degrees by the time the spin-in
     // has settled, so the target is set back by that much.
-    const target = side * (AT_DEGREES[k] ?? 50 + k * 6) - SETTLE_TURN;
+    const lead = tile.feature !== undefined ? LEAD_AT[tile.feature] : undefined;
+    const target = (lead ?? side * (AT_DEGREES[k] ?? 50 + k * 6)) - SETTLE_TURN;
     const { angles } = layout([out], SSR_GEOMETRY)[0]!;
     let best = 0;
     angles.forEach((a, i) => {
       if (Math.abs(a - target) < Math.abs(angles[best]! - target)) best = i;
     });
-    out.splice(side > 0 ? best + 1 : best, 0, tile);
+    out.splice(target + SETTLE_TURN > 0 ? best + 1 : best, 0, tile);
   });
   return out;
 }
@@ -405,7 +418,7 @@ export function Tunnel({
                   >
                     <div
                       className="tunnel__face"
-                      style={{ '--ratio': tile.ratio } as CSSProperties}
+                      style={{ '--ratio': tile.ratio, '--scale': scaleOf(tile) } as CSSProperties}
                     >
                       {tile.kind === 'still' ? (
                         // eslint-disable-next-line @next/next/no-img-element
