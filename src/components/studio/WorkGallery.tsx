@@ -193,7 +193,10 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
 
   const [expanded, setExpanded] = useState(false);
   const matching = items.filter(
-    (i) => filter === 'all' || TREATMENT_FILTER[i.treatment] === filter
+    (i) =>
+      filter === 'all' ||
+      // "Video" is every film, whatever it is for; the other filters go by use.
+      (filter === 'video' ? i.media === 'video' : TREATMENT_FILTER[i.treatment] === filter)
   );
   // The first twelve of whatever is selected, until the reader asks for all.
   const shown = expanded ? matching : matching.slice(0, INITIAL);
