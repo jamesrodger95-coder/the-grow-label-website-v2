@@ -152,7 +152,14 @@ export function calLinkFrom(bookingUrl?: string): string {
 
 type Status = 'loading' | 'ready' | 'slow';
 
-export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
+export function CalEmbed({
+  bookingUrl,
+  hideDetails = false,
+}: {
+  bookingUrl?: string;
+  /** Hide the event's title and description so only the calendar and slots show. */
+  hideDetails?: boolean;
+}) {
   const [status, setStatus] = useState<Status>('loading');
   const frameRef = useRef<HTMLDivElement | null>(null);
 
@@ -202,7 +209,7 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
             config: { layout: 'month_view', useSlotsViewOnSmallScreen: 'true' },
             calLink: calLinkFrom(bookingUrl),
           });
-          ns('ui', { hideEventTypeDetails: false, layout: 'month_view' });
+          ns('ui', { hideEventTypeDetails: hideDetails, layout: 'month_view' });
         }
         // A remount lands in an element Cal has already filled.
         if (!cancelled && done()) setStatus('ready');
@@ -217,7 +224,7 @@ export function CalEmbed({ bookingUrl }: { bookingUrl?: string }) {
       observer.disconnect();
       clearTimeout(deadline);
     };
-  }, [bookingUrl]);
+  }, [bookingUrl, hideDetails]);
 
   const href = bookingHref(bookingUrl);
 

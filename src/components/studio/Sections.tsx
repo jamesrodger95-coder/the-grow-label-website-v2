@@ -308,7 +308,7 @@ export function StudioSample() {
           </ul>
         </div>
         <Reveal className="studio-sample__form" index={1}>
-          <CalEmbed bookingUrl={STUDIO_SAMPLE.bookingUrl} />
+          <CalEmbed bookingUrl={STUDIO_SAMPLE.bookingUrl} hideDetails />
         </Reveal>
       </div>
     </section>

@@ -873,7 +873,8 @@ export const STUDIO_SAMPLE = {
   emphasis: 'for what you sell.',
   lead: 'Pick a time for a short call. Tell us what you sell and what you would like to see, and we will make a short video or a set of images for it, free.',
   /** The Cal.com event the free-sample call is booked on. */
-  bookingUrl: 'https://cal.com/thegrowlabel/proposal-discussion',
+  /** 'Scale With Content' on Cal.com; its slug is scale-with-ai. */
+  bookingUrl: 'https://cal.com/thegrowlabel/scale-with-ai',
   points: [
     'Free, with no purchase required',
     'One product or service, your choice',
