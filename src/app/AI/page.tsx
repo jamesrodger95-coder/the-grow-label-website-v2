@@ -13,7 +13,6 @@ import {
   StudioWork,
 } from '@/components/studio/Sections';
 import { STUDIO_META } from '@/content/studio';
-import { deliveryMode } from '@/lib/env';
 import { reelTiles, workItems } from '@/lib/studio-media';
 
 /**
@@ -56,7 +55,7 @@ export default function StudioPage() {
       <StudioStatement items={items} />
       <StudioMake items={items} />
       <StudioProcess />
-      <StudioSample configured={deliveryMode() !== 'unconfigured'} />
+      <StudioSample />
       <StudioFooter />
     </div>
   );

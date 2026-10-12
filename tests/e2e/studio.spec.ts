@@ -20,11 +20,13 @@ test('serves /AI and /ai, with its own chrome and not the site’s', async ({ pa
   }
 });
 
-test('keeps the strict policy: no frames, no third-party connections', async ({ request }) => {
+test('allows the Cal.com embed and nothing else third-party', async ({ request }) => {
   const res = await request.get('/AI');
   const csp = res.headers()['content-security-policy'] ?? '';
-  expect(csp).toContain("frame-src 'none'");
-  expect(csp).toContain("connect-src 'self'");
+  expect(csp).toContain('frame-src https://app.cal.com');
+  expect(csp).toMatch(/connect-src 'self' https:\/\/app\.cal\.com/);
+  // Exactly one policy header, or the browser intersects them.
+  expect(csp.split('frame-src').length).toBe(2);
 });
 
 test('is reached from the main nav as the Design Studio, and is in the sitemap', async ({
@@ -70,29 +72,14 @@ test.describe('with reduced motion', () => {
   });
 });
 
-test('the sample form never reports a send it did not make', async ({ page }) => {
+test('the free-sample section books a call on Cal.com', async ({ page }) => {
   await page.goto('/AI#sample');
-  const form = page.locator('form.sample__form');
-  if ((await form.count()) === 0) {
-    // No delivery provider configured: the form is switched off and says so.
-    await expect(page.locator('.sample__panel')).toContainText(/not connected/i);
-    return;
-  }
-  await form.getByRole('button', { name: /request my free sample/i }).click();
-  await expect(form.locator('.sample__error').first()).toBeVisible();
-  await expect(page.locator('.sample__panel')).toHaveCount(0);
-});
-
-test('labels the form for assistive technology', async ({ page }) => {
-  await page.goto('/AI#sample');
-  const form = page.locator('form.sample__form');
-  test.skip((await form.count()) === 0, 'form switched off without a delivery provider');
-  for (const label of ['Your name', 'Work email', 'Company or website', 'Page to feature']) {
-    await expect(form.getByLabel(label)).toBeVisible();
-  }
-  await expect(form.getByLabel('Your business')).toBeVisible();
-  await expect(form.getByRole('radio', { name: 'Video' })).toBeChecked();
-  await expect(form.getByRole('radio', { name: 'Images' })).toBeVisible();
+  const sample = page.locator('#sample');
+  await expect(sample.locator('#my-cal-inline-revenue-assessment')).toBeAttached();
+  await expect(sample.getByRole('link', { name: /book the call/i })).toHaveAttribute(
+    'href',
+    /cal\.com\/thegrowlabel\//
+  );
 });
 
 test('the viewer opens, steps and closes from the keyboard', async ({ page }) => {

@@ -14,7 +14,7 @@ import {
   STUDIO_WORK,
 } from '@/content/studio';
 import type { ReelTile, WorkItem } from '@/lib/studio-media';
-import { SampleForm } from './SampleForm';
+import { CalEmbed } from '@/components/calculator/CalEmbed';
 import { StatementWords } from './StatementWords';
 import { Tunnel } from './Tunnel';
 import { LoopVideo, WorkGallery } from './WorkGallery';
@@ -287,7 +287,7 @@ export function StudioProcess() {
   );
 }
 
-export function StudioSample({ configured }: { configured: boolean }) {
+export function StudioSample() {
   return (
     <section className="studio-sample" id="sample" aria-labelledby="sample-title">
       <div className="studio-shell studio-sample__grid">
@@ -308,7 +308,7 @@ export function StudioSample({ configured }: { configured: boolean }) {
           </ul>
         </div>
         <Reveal className="studio-sample__form" index={1}>
-          <SampleForm configured={configured} />
+          <CalEmbed bookingUrl={STUDIO_SAMPLE.bookingUrl} />
         </Reveal>
       </div>
     </section>

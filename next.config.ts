@@ -114,8 +114,16 @@ const nextConfig: NextConfig = {
           ...SHARED_HEADERS,
         ],
       },
+      // The Design Studio books its free-sample call through the same embed.
+      ...['/AI', '/ai'].map((source) => ({
+        source,
+        headers: [
+          { key: 'Content-Security-Policy', value: policy({ cal: true }) },
+          ...SHARED_HEADERS,
+        ],
+      })),
       {
-        source: '/:path((?!calculator$|contact$).*)',
+        source: '/:path((?!calculator$|contact$|AI$|ai$).*)',
         headers: [{ key: 'Content-Security-Policy', value: policy() }, ...SHARED_HEADERS],
       },
     ];
