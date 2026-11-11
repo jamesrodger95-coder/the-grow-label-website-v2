@@ -13,7 +13,8 @@ import type { ReactNode } from 'react';
  * still server-rendered, and on every other route they render exactly as
  * before.
  */
-const STANDALONE = /^\/ai(?:\/|$)/i;
+// '/' shows the studio too while it is the home page (see next.config.ts rewrites).
+const STANDALONE = /^\/(?:ai(?:\/|$)|$)/i;
 
 export function SiteChrome({ children }: { children: ReactNode }) {
   const pathname = usePathname();

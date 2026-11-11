@@ -15,7 +15,10 @@ import type { NextConfig } from 'next';
  */
 const CAL = 'https://app.cal.com https://cal.com';
 
-function policy({ cal = false }: { cal?: boolean } = {}): string {
+// Sample pages (/s/<lead>) send view events back to the ops site.
+const OPS = 'https://thegrowlabel.online';
+
+function policy({ cal = false, ops = false }: { cal?: boolean; ops?: boolean } = {}): string {
   const dev = process.env.NODE_ENV === 'development';
 
   // Next injects a small inline bootstrap; 'unsafe-eval' is development only,
@@ -30,7 +33,7 @@ function policy({ cal = false }: { cal?: boolean } = {}): string {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     `font-src 'self' data:${cal ? ' https://cal.com' : ''}`,
-    `connect-src 'self'${cal ? ` ${CAL}` : ''}`,
+    `connect-src 'self'${cal ? ` ${CAL}` : ''}${ops ? ` ${OPS}` : ''}`,
     // The calendar is an iframe on the booking route and nowhere else.
     cal ? `frame-src ${CAL}` : "frame-src 'none'",
     "form-action 'self'",
@@ -93,7 +96,17 @@ const nextConfig: NextConfig = {
    * served either way and the canonical tag names /AI.
    */
   async rewrites() {
-    return [{ source: '/ai', destination: '/AI' }];
+    return {
+      // The AI content studio is the home page for now. The clinic home page
+      // (src/app/page.tsx) is kept, not deleted; remove this line to bring it back.
+      beforeFiles: [{ source: '/', destination: '/AI' }],
+      afterFiles: [
+        { source: '/ai', destination: '/AI' },
+        // Per-lead sample pages, exported as static files into public/s/ by the
+        // ops site (Shared/Grow Label/outreach/tools/export_to_website.py).
+        { source: '/s/:token([a-z0-9][a-z0-9-]{7,63})', destination: '/s/:token.html' },
+      ],
+    };
   },
   async headers() {
     return [
@@ -115,15 +128,23 @@ const nextConfig: NextConfig = {
         ],
       },
       // The Design Studio books its free-sample call through the same embed.
-      ...['/AI', '/ai'].map((source) => ({
+      ...['/', '/AI', '/ai'].map((source) => ({
         source,
         headers: [
           { key: 'Content-Security-Policy', value: policy({ cal: true }) },
           ...SHARED_HEADERS,
         ],
       })),
+      // Sample pages: the booking calendar plus view events to the ops site.
       {
-        source: '/:path((?!calculator$|contact$|AI$|ai$).*)',
+        source: '/s/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: policy({ cal: true, ops: true }) },
+          ...SHARED_HEADERS,
+        ],
+      },
+      {
+        source: '/:path((?!calculator$|contact$|AI$|ai$|s/).+)',
         headers: [{ key: 'Content-Security-Policy', value: policy() }, ...SHARED_HEADERS],
       },
     ];
