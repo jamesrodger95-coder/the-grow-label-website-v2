@@ -7039,7 +7039,6 @@
   background: radial-gradient(ellipse 16% 38% at 50% 50%, rgba(251, 250, 248, 0.5), transparent 100%);
 }
 .tunnel__caption {
-  position: relative;
   z-index: 2;
 }
 
@@ -7213,4 +7212,11 @@
   .work__grid--lead .work__item {
     margin-bottom: 16px;
   }
+}
+
+/* Collage labels always fit inside their card. */
+.show__tag {
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

@@ -73,9 +73,9 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (deliveryMode() === 'unconfigured') return json(UNCONFIGURED, 503);
 
-  const need = SAMPLE_NEED_LABELS[input.need];
+  const need = input.need ? SAMPLE_NEED_LABELS[input.need] : '(not asked)';
   const business =
-    BUSINESS_OPTIONS.find((o) => o.value === input.business)?.label ?? input.business;
+    BUSINESS_OPTIONS.find((o) => o.value === input.business)?.label ?? (input.business || '(not asked)');
   const outcome = await deliverMessage((reference) => ({
     webhook: {
       reference,

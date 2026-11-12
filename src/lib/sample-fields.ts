@@ -40,8 +40,10 @@ export type SampleInput = {
   name: string;
   email: string;
   brand: string;
-  business: SampleBusiness;
-  need: SampleNeed;
+  /** Optional (not asked on the form for now); empty when not given. */
+  business: SampleBusiness | '';
+  /** Optional (not asked on the form for now); empty when not given. */
+  need: SampleNeed | '';
   /** Optional: a page to feature. Empty when not given. */
   productUrl: string;
   /** Optional: anything specific they want to see. Empty when not given. */

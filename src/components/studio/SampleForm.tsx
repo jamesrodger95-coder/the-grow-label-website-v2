@@ -2,10 +2,8 @@
 
 import Link from 'next/link';
 import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { BUSINESS_OPTIONS, STUDIO_SAMPLE } from '@/content/studio';
+import { STUDIO_SAMPLE } from '@/content/studio';
 import {
-  SAMPLE_NEEDS,
-  SAMPLE_NEED_LABELS,
   type SampleFieldErrors,
   type SampleInput,
   type SampleResult,
@@ -14,7 +12,7 @@ import {
 /**
  * The free-sample request, framed as a small app window.
  *
- * Four required fields, one qualifying question and two optional ones. It
+ * Three required fields (name, email, website) and two optional ones. It
  * posts to the ops site (STUDIO_SAMPLE.requestUrl), which stores the request
  * for review; success is shown only when that server says it stored it
  * (rule 5 in CLAUDE.md). Sent as text/plain so the cross-origin post needs no
@@ -88,8 +86,8 @@ export function SampleForm({ configured }: { configured: boolean }) {
       name: String(data.get('name') ?? ''),
       email: String(data.get('email') ?? ''),
       brand: String(data.get('brand') ?? ''),
-      business: String(data.get('business') ?? '') as SampleInput['business'],
-      need: String(data.get('need') ?? '') as SampleInput['need'],
+      business: '',
+      need: '',
       productUrl: String(data.get('productUrl') ?? ''),
       note: String(data.get('note') ?? ''),
       hp: String(data.get('hp') ?? ''),
@@ -190,52 +188,10 @@ export function SampleForm({ configured }: { configured: boolean }) {
             input('email', { type: 'email', autoComplete: 'email', inputMode: 'email' })
           )}
         </div>
-        <div className="sample__row">
-          {field('brand', F.brand, input('brand', { type: 'text', autoComplete: 'organization' }))}
-          {field(
-            'business',
-            F.business,
-            <select
-              className="sample__input sample__select"
-              id={id('business')}
-              name="business"
-              required
-              defaultValue=""
-              aria-invalid={errors.business ? true : undefined}
-              aria-describedby={describedBy('business')}
-            >
-              <option value="" disabled>
-                {F.businessPlaceholder}
-              </option>
-              {BUSINESS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
         {field(
-          'need',
-          F.need,
-          <select
-            className="sample__input sample__select"
-            id={id('need')}
-            name="need"
-            required
-            defaultValue=""
-            aria-invalid={errors.need ? true : undefined}
-            aria-describedby={describedBy('need')}
-          >
-            <option value="" disabled>
-              {F.needPlaceholder}
-            </option>
-            {SAMPLE_NEEDS.map((value) => (
-              <option key={value} value={value}>
-                {SAMPLE_NEED_LABELS[value]}
-              </option>
-            ))}
-          </select>
+          'brand',
+          F.brand,
+          input('brand', { type: 'text', autoComplete: 'url', inputMode: 'url' })
         )}
         {field(
           'productUrl',

@@ -47,8 +47,8 @@ export const sampleSchema = z.object({
     .transform((v) => v.trim())
     .pipe(z.string().email().max(200)),
   brand: trimmed(2, 160),
-  business: z.enum(SAMPLE_BUSINESSES),
-  need: z.enum(SAMPLE_NEEDS),
+  business: z.enum(SAMPLE_BUSINESSES).or(z.literal('')),
+  need: z.enum(SAMPLE_NEEDS).or(z.literal('')),
   // Optional: empty is fine; anything given must be a web address.
   productUrl: z.string().transform((v, ctx) => {
     if (!v.trim()) return '';

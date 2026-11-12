@@ -140,7 +140,6 @@ export function StudioHero({ tiles, live }: { tiles: ReelTile[]; live: boolean }
             {STUDIO_HERO.secondary.label}
           </a>
         </div>
-        <p className="studio-hero__note">{STUDIO_HERO.note}</p>
       </Reveal>
     </section>
   );
