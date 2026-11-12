@@ -63,6 +63,18 @@
       if (pct >= 25 && !marks.has(pct)) { marks.add(pct); send("progress", pct); }
     });
     video.addEventListener("ended", () => { if (!marks.has(100)) { marks.add(100); send("progress", 100); } });
+    // Two or three films: the switch swaps the source and goes back to the silent loop.
+    const ideaText = document.querySelector(".idea p");
+    document.querySelectorAll(".film").forEach((b) => b.addEventListener("click", () => {
+      if (b.classList.contains("on")) return;
+      document.querySelectorAll(".film").forEach((x) => { x.classList.toggle("on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+      marks.clear();
+      video.controls = false; video.muted = true; video.loop = true;
+      wrap.classList.remove("playing"); if (stage) stage.classList.remove("playing");
+      video.poster = b.dataset.poster; video.src = b.dataset.src;
+      video.play().catch(() => {});
+      if (ideaText && b.dataset.idea) ideaText.textContent = b.dataset.idea;
+    }));
   }
   // Scroll prompts: progress line and a floating button that names the next part.
   const bar = document.querySelector(".progress i");
