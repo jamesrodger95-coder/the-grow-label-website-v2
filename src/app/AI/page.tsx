@@ -2,17 +2,15 @@ import type { Metadata } from 'next';
 import { studioAccent } from '@/components/studio/fonts';
 import { Showcase } from '@/components/studio/Showcase';
 import {
-  StudioBand,
   StudioFooter,
+  StudioGetCards,
   StudioHeader,
   StudioHero,
-  StudioMake,
   StudioProcess,
   StudioSample,
-  StudioStatement,
   StudioWork,
 } from '@/components/studio/Sections';
-import { STUDIO_META } from '@/content/studio';
+import { STUDIO_META, WORK_SHOWN } from '@/content/studio';
 import { reelTiles, workItems } from '@/lib/studio-media';
 
 /**
@@ -44,16 +42,19 @@ export const metadata: Metadata = {
 export default function StudioPage() {
   const { tiles, live } = reelTiles();
   const items = workItems();
+  // The Selected work grid shows the curated pieces, in their own order.
+  const shown = WORK_SHOWN.map((id) => items.find((w) => w.id === id)).filter(
+    (w): w is (typeof items)[number] => Boolean(w)
+  );
 
   return (
     <div className={`studio ${studioAccent.variable}`}>
       <StudioHeader />
       <StudioHero tiles={tiles} live={live} />
-      <StudioBand />
-      <StudioWork items={items} />
-      <Showcase items={items} />
-      <StudioStatement items={items} />
-      <StudioMake items={items} />
+      <StudioWork items={shown} />
+      <Showcase items={items}>
+        <StudioGetCards items={shown} />
+      </Showcase>
       <StudioProcess />
       <StudioSample />
       <StudioFooter />

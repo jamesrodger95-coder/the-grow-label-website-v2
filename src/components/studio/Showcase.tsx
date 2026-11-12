@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { usePrefersReducedMotion } from '@/components/motion/useInView';
 import { useScene } from '@/components/modules/scene/useScene';
 import { STUDIO_BAND, STUDIO_SHOWCASE } from '@/content/studio';
@@ -59,7 +59,7 @@ function IndustryRotor() {
 /** How long each industry holds in the "Made for" slot. */
 const ROTOR_MS = 2000;
 
-export function Showcase({ items }: { items: WorkItem[] }) {
+export function Showcase({ items, children }: { items: WorkItem[]; children?: ReactNode }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const cards = useRef<{ el: HTMLElement; piece: Piece; dx: number; dy: number; i: number }[]>([]);
 
@@ -111,7 +111,7 @@ export function Showcase({ items }: { items: WorkItem[] }) {
   }, []);
 
   return (
-    <section className="show" id="industries" aria-labelledby="show-title">
+    <section className="show" id="get" aria-labelledby="show-title">
       <div className="studio-shell show__head">
         <p className="studio-eyebrow">{STUDIO_SHOWCASE.eyebrow}</p>
         <h2 className="studio-display" id="show-title">
@@ -163,19 +163,7 @@ export function Showcase({ items }: { items: WorkItem[] }) {
         </div>
       </div>
 
-      <ul className="studio-shell show__legend">
-        {STUDIO_SHOWCASE.legend.map((entry) => (
-          <li key={entry.ratio}>
-            <span
-              className="show__glyph"
-              style={{ '--ratio': entry.ratio.replace(':', ' / ') } as CSSProperties}
-              aria-hidden="true"
-            />
-            <span className="show__legendratio">{entry.ratio}</span>
-            {entry.label}
-          </li>
-        ))}
-      </ul>
+      {children}
     </section>
   );
 }

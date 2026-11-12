@@ -6879,3 +6879,113 @@
 .studio-footer__legal a:hover {
   color: var(--s-on-night);
 }
+
+/* What you get: three benefit cards set under the collage, each with a piece
+   of matching work as its picture. Light paper cards; the picture leans in on
+   hover. */
+.get__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+  margin: clamp(28px, 4vw, 56px) auto 0;
+  padding-block: 0;
+  list-style: none;
+}
+.get__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--s-line);
+  border-radius: 24px;
+  background: var(--s-paper);
+  transition:
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    border-color var(--gl-dur-standard) var(--gl-ease);
+}
+.get__card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gl-purple-200);
+  box-shadow: 0 30px 60px -36px rgba(46, 33, 138, 0.45);
+}
+.get__media {
+  display: grid;
+  place-items: center;
+  height: clamp(180px, 18vw, 240px);
+  padding: 18px;
+  background-color: var(--gl-purple-50);
+  background-image: radial-gradient(rgba(74, 58, 196, 0.14) 1px, transparent 1.3px);
+  background-size: 14px 14px;
+}
+.get__media .studio-frame {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.get__card:hover .get__media .studio-frame {
+  transform: scale(1.04) rotate(-1deg);
+}
+.get__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(18px, 2vw, 26px);
+}
+.get__index {
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.get__title {
+  margin: 0;
+  font-family: var(--s-accent);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem);
+  font-stretch: 125%;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.get__text {
+  margin: 0 0 8px;
+  color: var(--s-mute);
+  line-height: 1.5;
+}
+.get__makes {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--gl-purple-50);
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .get__cards {
+    grid-template-columns: 1fr;
+  }
+  .get__card {
+    flex-direction: row;
+  }
+  .get__media {
+    flex: none;
+    width: 42%;
+    height: auto;
+    min-height: 180px;
+  }
+}
+@media (max-width: 560px) {
+  .get__card {
+    flex-direction: column;
+  }
+  .get__media {
+    width: auto;
+    height: 200px;
+  }
+}

@@ -29,9 +29,8 @@ export const STUDIO_NAV = {
   brand: 'The Grow Label',
   links: [
     { href: '#work', label: 'Work' },
-    { href: '#industries', label: 'Industries' },
-    { href: '#make', label: 'What we make' },
-    { href: '#process', label: 'Process' },
+    { href: '#get', label: 'What you get' },
+    { href: '#process', label: 'How it works' },
   ],
   cta: { href: '#sample', label: 'Free sample' },
 } as const;
@@ -77,13 +76,12 @@ export const STUDIO_WORK = {
   eyebrow: 'Selected work',
   title: 'One idea,',
   emphasis: 'many ways to show it.',
-  lead: 'Each piece is shown as it was delivered. Work made for a business carries that business’s name. Anything we made on our own initiative is labelled as concept work.',
+  lead: 'Films, ads and images for products, apps and services. Work made for a business carries its name; anything we made on our own is labelled concept work.',
   filters: [
     { id: 'all', label: 'All' },
     { id: 'video', label: 'Video' },
     { id: 'imagery', label: 'Imagery' },
     { id: 'ads', label: 'Ad creative' },
-    { id: 'demos', label: 'Demos' },
   ],
   filterLabel: 'Filter the work',
   open: 'View larger',
@@ -120,10 +118,10 @@ export type ShowcasePiece = {
  * phone frames, feed posts tucked between, so the three formats read at once.
  */
 export const STUDIO_SHOWCASE = {
-  eyebrow: 'Industries',
+  eyebrow: 'What you get',
   title: 'Whatever you sell,',
   emphasis: 'it can look this good.',
-  lead: 'Reels for the feed, squares for the grid, widescreen for the site and the launch. One studio, every format, built around what you sell.',
+  lead: 'Reels for the feed, squares for the grid, widescreen for the site and the launch. Every format, built around what you sell, without a photo shoot.',
   forLabel: 'Made for',
   label:
     'A collage of the studio’s work in three formats: vertical reels, square feed posts and widescreen films.',
@@ -143,7 +141,7 @@ export const STUDIO_SHOWCASE = {
       depth: 0.2,
       m: { x: 50, y: 22, w: 92 },
     },
-    { id: 'w01', tag: 'Feature demo', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
+    { id: 'w17', tag: 'Launch ad', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
     { id: 'w22', tag: 'YouTube ad', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
     { id: 'w44', tag: 'Website hero', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
     { id: 'w46', tag: 'LinkedIn ad', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
@@ -160,8 +158,8 @@ export const STUDIO_SHOWCASE = {
     { id: 'w49', tag: 'Property listing', x: 35, y: 15, w: 9, r: 3, depth: 0.9, m: null },
     { id: 'w48', tag: 'Facebook ad', x: 63, y: 86, w: 10, r: -3, depth: 0.9, m: null },
     {
-      id: 'w13',
-      tag: 'Paid social',
+      id: 'w55',
+      tag: 'Reel',
       x: 92.5,
       y: 50,
       w: 10,
@@ -793,6 +791,61 @@ export const WORK: WorkEntry[] = [
   },
 ];
 
+/**
+ * The work, curated: what the Selected work grid shows, in display order.
+ * The rest of WORK stays listed (and its files in public/ai/work) so a piece
+ * can come back by adding its id here.
+ */
+export const WORK_SHOWN = [
+  'w05',
+  'w55',
+  'w04',
+  'w58',
+  'w11',
+  'w36',
+  'w17',
+  'w56',
+  'w47',
+  'w02',
+  'w37',
+  'w12',
+  'w54',
+  'w10',
+  'w40',
+  'w30',
+] as const;
+
+/** What you get: three benefits, each naming what we make for it. */
+export const STUDIO_GET = {
+  items: [
+    {
+      index: '01',
+      title: 'Made for social',
+      piece: 'w55',
+      body: 'New videos for Reels, TikTok and Stories, so your feed always has something fresh to post.',
+      makes: 'Video and motion design',
+      treatments: ['Video', 'Explainer'] as Treatment[],
+    },
+    {
+      index: '02',
+      title: 'Ready for ads',
+      piece: 'w47',
+      body: 'Images and videos in every ad size, with new hooks and variations, so there is always something new to run.',
+      makes: 'Ad creative and imagery',
+      treatments: ['Ad creative', 'Imagery'] as Treatment[],
+    },
+    {
+      index: '03',
+      title: 'A stronger brand image',
+      piece: 'w36',
+      body: 'What you sell in new scenes with one consistent look. No studio, no models, no travel.',
+      makes: 'Styled shoots, demos and walkthroughs',
+      treatments: ['Styled shoot', 'Demo'] as Treatment[],
+    },
+  ],
+} as const;
+
+/** From the earlier, longer layout; the page now uses STUDIO_GET. */
 export const STUDIO_MAKE = {
   eyebrow: 'What we make',
   title: 'Four kinds of content,',
@@ -826,14 +879,14 @@ export const STUDIO_MAKE = {
 } as const;
 
 export const STUDIO_PROCESS = {
-  eyebrow: 'Process',
+  eyebrow: 'How it works',
   title: 'Three steps,',
   emphasis: 'and the sample is free.',
   steps: [
     {
       index: '01',
-      title: 'Share what you sell.',
-      body: 'Send us a link to a product, a feature or a service page, and a line about your business. That is all we need to start.',
+      title: 'Tell us what you sell.',
+      body: 'Fill in the short form below: your website, and anything you would like to see. That is all we need to start.',
     },
     {
       index: '02',

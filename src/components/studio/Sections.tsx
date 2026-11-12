@@ -5,6 +5,7 @@ import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import {
   STUDIO_BAND,
   STUDIO_FOOTER,
+  STUDIO_GET,
   STUDIO_HERO,
   STUDIO_MAKE,
   STUDIO_NAV,
@@ -252,6 +253,37 @@ export function StudioMake({ items }: { items: WorkItem[] }) {
         </ol>
       </div>
     </section>
+  );
+}
+
+/**
+ * What you get: three benefit cards, set under the collage in the same
+ * section. Each card carries a piece of matching work as its picture.
+ */
+export function StudioGetCards({ items }: { items: WorkItem[] }) {
+  return (
+    <ol className="studio-shell get__cards">
+      {STUDIO_GET.items.map((entry, i) => {
+        const piece =
+          items.find((w) => w.id === entry.piece && w.src) ??
+          items.find((w) => entry.treatments.includes(w.treatment) && w.src);
+        return (
+          <Reveal as="li" className="get__card" key={entry.index} index={i}>
+            {piece ? (
+              <span className="get__media">
+                <Frame item={piece} tone={i + 1} />
+              </span>
+            ) : null}
+            <span className="get__body">
+              <span className="get__index">{entry.index}</span>
+              <h3 className="get__title">{entry.title}</h3>
+              <p className="get__text">{entry.body}</p>
+              <span className="get__makes">{entry.makes}</span>
+            </span>
+          </Reveal>
+        );
+      })}
+    </ol>
   );
 }
 
