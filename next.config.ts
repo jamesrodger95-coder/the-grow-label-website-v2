@@ -89,7 +89,6 @@ const nextConfig: NextConfig = {
       '/industries/:path*',
       '/insights',
       '/insights/:path*',
-      '/contact',
       '/calculator',
       '/assessment-booked',
       '/platform',
@@ -135,7 +134,8 @@ const nextConfig: NextConfig = {
       {
         source: '/contact',
         headers: [
-          { key: 'Content-Security-Policy', value: policy({ cal: true }) },
+          // The studio contact form posts to the ops site.
+          { key: 'Content-Security-Policy', value: policy({ ops: true }) },
           ...SHARED_HEADERS,
         ],
       },

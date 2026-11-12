@@ -28,11 +28,11 @@ export const STUDIO_META = {
 export const STUDIO_NAV = {
   brand: 'The Grow Label',
   links: [
-    { href: '#work', label: 'Work' },
-    { href: '#get', label: 'What you get' },
-    { href: '#process', label: 'How it works' },
+    { href: '/#work', label: 'Work' },
+    { href: '/#get', label: 'What you get' },
+    { href: '/#process', label: 'How it works' },
   ],
-  cta: { href: '#sample', label: 'Free sample' },
+  cta: { href: '/#sample', label: 'Free sample' },
 } as const;
 
 export const STUDIO_HERO = {
@@ -1024,7 +1024,7 @@ export const STUDIO_SAMPLE = {
     productUrl: 'Enter the full address of the page, or leave it empty.',
     note: 'Keep the note under 600 characters.',
     generic: 'Some details need correcting before this can be sent.',
-    network: 'The request could not be sent. Check your connection and try again, or email hello@thegrowlabel.com.',
+    network: 'The request could not be sent. Check your connection and try again, or send us a message on the contact page.',
   },
 } as const;
 
@@ -1033,7 +1033,45 @@ export const STUDIO_FOOTER = {
   wordmark: ['The Grow', 'Label'],
   line: 'Video, imagery and ad creative for businesses that sell.',
   legal: [
+    { href: '/contact', label: 'Contact' },
     { href: '/privacy', label: 'Privacy' },
     { href: '/terms', label: 'Terms' },
   ],
+} as const;
+
+/** The contact page: a short form whose messages are read on the ops site. */
+export const STUDIO_CONTACT = {
+  meta: {
+    title: 'Contact · The Grow Label',
+    description: 'Send The Grow Label a message about video, imagery or ad creative for your business.',
+  },
+  eyebrow: 'Contact',
+  title: 'Send us',
+  emphasis: 'a message.',
+  lead: 'Questions about our work, a project you have in mind, or anything about your data. We read every message and reply by email.',
+  sampleNote: 'Want a free sample instead?',
+  sampleLink: { href: '/#sample', label: 'Request one here' },
+  requestUrl: 'https://thegrowlabel.online/s/contact',
+  windowTitle: 'message',
+  fields: {
+    name: 'Your name',
+    email: 'Email',
+    message: 'Your message',
+  },
+  submit: 'Send message',
+  sending: 'Sending',
+  fineprint: 'We use these details only to reply to you.',
+  privacy: 'Privacy notice',
+  success: {
+    title: 'Message received.',
+    body: 'Thank you. We will reply by email.',
+    reference: 'Your reference',
+  },
+  errors: {
+    name: 'Enter your name, at least two characters.',
+    email: 'Enter a valid email address.',
+    message: 'Write a message of at least a few words.',
+    generic: 'Some details need correcting before this can be sent.',
+    network: 'The message could not be sent. Check your connection and try again.',
+  },
 } as const;

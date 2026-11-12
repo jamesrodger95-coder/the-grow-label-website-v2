@@ -1,6 +1,7 @@
 export const ROUTES = [
   { path: '/', name: 'home', title: /video, imagery and ad creative/i },
   { path: '/AI', name: 'studio', title: /video, imagery and ad creative/i },
+  { path: '/contact', name: 'contact', title: /Contact/ },
   { path: '/privacy', name: 'privacy', title: /Privacy/ },
   { path: '/terms', name: 'terms', title: /Terms/ },
 ] as const;

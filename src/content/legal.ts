@@ -1,13 +1,12 @@
 /**
- * Privacy and terms copy.
+ * Privacy and terms copy for The Grow Label's content studio site.
  *
- * These describe how this marketing website behaves. They are not a substitute
- * for the data-processing agreement that governs a client engagement, and they
- * say so. Company registration details, a registered address and a data
- * controller contact must be supplied before launch — see docs/CLAIMS_REGISTER.md.
+ * These describe how this website behaves. Paid work is governed by its own
+ * written agreement, and these pages say so. Nothing here may state a result,
+ * a client, or a figure the business cannot show.
  */
 
-export const LAST_UPDATED = '2026-08-30';
+export const LAST_UPDATED = '2026-11-12';
 
 export type LegalSection = {
   heading: string;
@@ -19,53 +18,53 @@ export const PRIVACY: LegalSection[] = [
   {
     heading: 'Scope of this notice',
     paragraphs: [
-      'This notice covers personal data collected through this website only. It does not cover data processed on behalf of a client under an engagement: that is governed by the data-processing agreement signed at the start of the engagement, in which Grow Label acts as a processor and the practice remains the controller.',
-      'No client, patient or clinical data is held on this website, published on it, or reachable from it.',
+      'This notice covers personal data collected through this website, including the sample pages we send to businesses. Paid work for a client is covered by the agreement we sign for that work.',
     ],
   },
   {
     heading: 'What this site collects',
     paragraphs: [
-      'The only personal data this site collects is what you type into the assessment request form: your name, work email address, organisation, optional role, the sector and size band you select, and the message you write.',
+      'We only collect what you choose to send us, plus a small amount of information about how a sample page we sent you is used.',
     ],
     list: [
-      'The form is for commercial enquiries. It asks for no client, patient or clinical information, and you should not include any.',
-      'The form does not use cookies, and this site sets no analytics, advertising or tracking cookies of any kind.',
-      'Your IP address is used transiently to apply a rate limit to the form endpoint. It is not written to a database and is not associated with your submission.',
+      'The free sample form: your name, email address and website, and, if you add them, a page to feature and a note about what you would like to see.',
+      'The contact form: your name, email address and your message.',
+      'Sample pages: when a page made for your business is opened, played or used to book a call, we record that it happened and when. We do not record who you are beyond the business the page was made for.',
+      'This site sets no advertising or analytics cookies. Your IP address is used briefly to limit repeated form submissions and is not stored with what you send.',
     ],
   },
   {
-    heading: 'How a submission is handled',
+    heading: 'How we use it',
     paragraphs: [
-      'A submission is passed to the configured delivery provider, either an internal webhook or a transactional email provider, so that a person can read and reply to it. It is not stored in a database by this website.',
-      'If no delivery provider is configured on a given deployment, the form is switched off and tells you so. It never accepts details it cannot deliver.',
+      'We use what you send to make your sample, to reply to you, and to talk with you about work you have asked about. We do not sell it or share it for anyone else’s marketing.',
+      'Form submissions are stored on our own systems so that we can read and answer them.',
     ],
   },
   {
     heading: 'Lawful basis and retention',
     paragraphs: [
-      'The lawful basis for handling an enquiry is legitimate interest: you have asked us to respond to a commercial question, and we need your details to do it.',
-      'Enquiries are retained for as long as the commercial conversation is live, and are then deleted in line with our internal retention schedule. You can ask for yours to be deleted sooner at any time.',
+      'We rely on legitimate interest: you have asked us for a sample or a reply, and we need your details to give you one.',
+      'We keep your details while the conversation is live and delete them when it is over. You can ask us to delete them sooner at any time.',
     ],
   },
   {
     heading: 'Your rights',
     paragraphs: [
-      'You have the right to ask what personal data we hold about you, to have it corrected, to have it deleted, to object to our handling of it, and to complain to the Information Commissioner’s Office.',
-      'To exercise any of these, use the contact route published on this site. We will confirm receipt and respond inside the statutory period.',
+      'You can ask what personal data we hold about you, ask us to correct or delete it, or object to how we use it. You can also complain to the Information Commissioner’s Office.',
+      'To do any of these, send us a message through the contact page. We will reply within the statutory period.',
     ],
   },
   {
     heading: 'Third parties',
     paragraphs: [
-      'This site is served by a hosting provider, which processes request logs on our behalf for security and availability. Fonts are self-hosted and served from this domain, so no font request leaves it.',
-      'There are no advertising networks, session recorders, chat widgets, embedded videos or social plugins on this site.',
+      'This site is hosted by Vercel, which keeps request logs for security and reliability. Fonts are served from this domain.',
+      'Sample pages include a booking calendar from Cal.com. If you book a call, Cal.com handles the booking details under its own privacy policy.',
     ],
   },
   {
     heading: 'Changes',
     paragraphs: [
-      'When this notice changes materially, the date at the top of this page changes with it. Previous versions are retained internally.',
+      'When this notice changes materially, the date at the top of this page changes with it.',
     ],
   },
 ];
@@ -74,50 +73,46 @@ export const TERMS: LegalSection[] = [
   {
     heading: 'About these terms',
     paragraphs: [
-      'These terms govern your use of this website. They do not govern a Grow Label engagement: the commercial terms, service levels and data-processing terms for an engagement are set out in the agreement signed at the start of it, and that agreement takes precedence over anything published here.',
+      'These terms cover your use of this website and of any sample page we send you. Paid work is covered by the written agreement we make for it, and that agreement takes precedence over anything here.',
     ],
   },
   {
-    heading: 'The status of the information on this site',
-    paragraphs: [
-      'Everything on this site describes designed behaviour and measurement definitions. It is not an offer, a warranty, or a representation about results.',
-    ],
+    heading: 'The work shown on this site',
     list: [
-      'No figure on this site is a client figure. Every proportion shown in a diagram is illustrative of a shape, not evidence of an outcome.',
-      'No benchmark, industry average or comparison figure is published anywhere on this site.',
-      'No performance guarantee is offered, expressly or by implication.',
-      'Recovered value depends on demand that already exists in a practice’s data, on capacity being available, and on the practice acting on escalations.',
+      'Work made for a business carries that business’s name. Work we made on our own initiative is labelled as concept work, and any brand shown in it is invented.',
+      'Nothing on this site is a promise of results. We make content; how it performs depends on many things outside our control.',
+      'Nothing on this site is an offer of a fixed price. Prices are agreed in writing before any paid work starts.',
     ],
   },
   {
-    heading: 'No clinical content',
+    heading: 'Free samples',
     paragraphs: [
-      'Nothing on this site is clinical advice, guidance or assessment, and the platform it describes performs none. Clinical judgement, triage and treatment decisions rest entirely with the practice and its registered professionals.',
+      'A free sample is made for you to review. There is no charge and no obligation to buy anything. Any use of a sample beyond reviewing it is agreed with us separately.',
+      'Samples are made from material on your public website. If you would rather we did not use something, tell us and we will remove it.',
     ],
   },
   {
     heading: 'Acceptable use',
     paragraphs: [
-      'You may read, print and share this site for your own commercial evaluation. You may not attempt to interfere with its availability, probe it for vulnerabilities without written permission, or submit content through its form that you have no right to send.',
-      'Do not submit client, patient or clinical information through any form on this site.',
+      'You may read and share this site. You may not interfere with how it works, probe it for vulnerabilities without our written permission, or send anything through its forms that you have no right to send.',
     ],
   },
   {
     heading: 'Intellectual property',
     paragraphs: [
-      'The text, design, code and diagrams on this site belong to Grow Label unless stated otherwise. The measurement definitions may be quoted with attribution. We would rather they were used than not.',
+      'The text, design, code and work on this site belong to The Grow Label, or to the business credited where a piece was made for a client. Please ask before reusing any of it.',
     ],
   },
   {
     heading: 'Liability',
     paragraphs: [
-      'This site is provided as it is. To the extent permitted by law, Grow Label is not liable for loss arising from reliance on information published here rather than on the terms of a signed engagement. Nothing in these terms limits liability for fraud, or for anything that cannot lawfully be limited.',
+      'This site is provided as it is. To the extent the law allows, we are not liable for loss caused by relying on it rather than on a signed agreement. Nothing in these terms limits liability for fraud, or anything else that cannot lawfully be limited.',
     ],
   },
   {
     heading: 'Governing law',
     paragraphs: [
-      'These terms are governed by the law of England and Wales, and the courts of England and Wales have exclusive jurisdiction over any dispute arising from them.',
+      'These terms are governed by the law of England and Wales, and its courts have exclusive jurisdiction over any dispute arising from them.',
     ],
   },
 ];
