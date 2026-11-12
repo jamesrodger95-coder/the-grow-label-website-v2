@@ -314,3 +314,5 @@ h2.display { font-size: clamp(1.8rem, 1.15rem + 2.3vw, 3.1rem); }
   .stage { transform: none; }
   .cal-spin { animation: turn .8s linear infinite !important; }
 }
+/* Two-film switch: above the video on phones, where the floating "Next" button sits over the bottom edge */
+@media (max-width: 860px) { .player-wrap { display: flex; flex-direction: column; } .films { order: -1; margin: 0 0 16px; } .films + .player-cap { margin-top: 16px; } }
