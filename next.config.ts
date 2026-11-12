@@ -76,18 +76,30 @@ const nextConfig: NextConfig = {
    * governs actually lives. Permanent, because the content moved rather than
    * disappeared and any existing link should follow it.
    */
+  /**
+   * The clinic site is retired from public view (the owner runs only the
+   * content studio now). Its pages stay in the code; every address sends the
+   * visitor to the studio home. Temporary, so it can come back by deleting
+   * this list.
+   */
   async redirects() {
-    return [
-      { source: '/methodology', destination: '/modules#value-stages', permanent: true },
-      // Retired from the live site. Platform and About are kept in
-      // src/app/_archive/ and could return, so these are temporary; the case
-      // studies were removed and their nav item now points at the videos.
-      { source: '/platform', destination: '/modules', permanent: false },
-      { source: '/about', destination: '/', permanent: false },
-      { source: '/case-studies', destination: '/#videos', permanent: false },
-      { source: '/case-studies/:slug', destination: '/#videos', permanent: false },
-      { source: '/modules/index', destination: '/modules', permanent: true },
+    const retired = [
+      '/modules',
+      '/modules/:path*',
+      '/industries/:path*',
+      '/insights',
+      '/insights/:path*',
+      '/contact',
+      '/calculator',
+      '/assessment-booked',
+      '/platform',
+      '/about',
+      '/case-studies',
+      '/case-studies/:path*',
+      '/methodology',
+      '/dev/:path*',
     ];
+    return retired.map((source) => ({ source, destination: '/', permanent: false }));
   },
   /**
    * /AI is the published address and the route folder is `src/app/AI`. Paths

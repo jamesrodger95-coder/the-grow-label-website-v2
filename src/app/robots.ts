@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: isPreview
       ? [{ userAgent: '*', disallow: '/' }]
-      : [{ userAgent: '*', allow: '/', disallow: ['/dev/', '/api/'] }],
+      : [{ userAgent: '*', allow: '/', disallow: ['/dev/', '/api/', '/s/'] }],
     sitemap: `${base}/sitemap.xml`,
     host: base,
   };

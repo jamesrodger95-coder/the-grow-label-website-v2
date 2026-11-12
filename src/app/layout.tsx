@@ -4,6 +4,7 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteChrome } from '@/components/layout/SiteChrome';
 import { MotionProvider } from '@/components/motion/MotionProvider';
 import { SITE } from '@/content/site';
+import { STUDIO_META } from '@/content/studio';
 import { dashboardUrl, siteUrl } from '@/lib/env';
 import { fontVariables } from './fonts';
 import './globals.css';
@@ -11,10 +12,10 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
-    default: `${SITE.name}: revenue recovery for veterinary, dental and med spa groups`,
+    default: STUDIO_META.title,
     template: `%s · ${SITE.name}`,
   },
-  description: SITE.description,
+  description: STUDIO_META.description,
   applicationName: SITE.name,
   authors: [{ name: SITE.name }],
   creator: SITE.name,
@@ -26,13 +27,13 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     locale: SITE.locale,
     url: '/',
-    title: `${SITE.name}: revenue recovery for veterinary, dental and med spa groups`,
-    description: SITE.description,
+    title: STUDIO_META.title,
+    description: STUDIO_META.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${SITE.name}: revenue recovery for veterinary, dental and med spa groups`,
-    description: SITE.description,
+    title: STUDIO_META.title,
+    description: STUDIO_META.description,
   },
   robots: {
     index: true,

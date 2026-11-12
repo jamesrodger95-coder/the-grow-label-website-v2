@@ -29,6 +29,11 @@ export function LegalPage({
 }) {
   return (
     <>
+      <div className="surface--paper on-light">
+        <div className="shell" style={{ paddingBlock: 20 }}>
+          <TextLink href="/">Back to The Grow Label</TextLink>
+        </div>
+      </div>
       <PageHeader
         label={label}
         meta={`Last updated ${dateFormat.format(new Date(lastUpdated))}`}
