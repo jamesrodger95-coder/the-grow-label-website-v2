@@ -241,6 +241,33 @@ const CONCEPT: Credit = { kind: 'concept' };
  */
 export const WORK: WorkEntry[] = [
   {
+    id: 'w65',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'Sundrip: sweet, heat, repeat',
+    category: 'Food',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w66',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Stillmoor: light the slow hour',
+    category: 'Home',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w67',
+    media: 'video',
+    treatment: 'Explainer',
+    ratio: '16:9',
+    title: 'Pawlune: fresh water, always',
+    category: 'Pet products',
+    credit: CONCEPT,
+  },
+  {
     id: 'w64',
     media: 'video',
     treatment: 'Video',
@@ -825,8 +852,11 @@ export const WORK: WorkEntry[] = [
  */
 export const WORK_SHOWN = [
   'w62',
+  'w66',
   'w63',
+  'w65',
   'w64',
+  'w67',
   'w05',
   'w55',
   'w04',
@@ -838,11 +868,8 @@ export const WORK_SHOWN = [
   'w47',
   'w02',
   'w37',
-  'w12',
   'w54',
   'w10',
-  'w40',
-  'w30',
 ] as const;
 
 /** What you get: three benefits, each naming what we make for it. */
@@ -859,7 +886,7 @@ export const STUDIO_GET = {
     {
       index: '02',
       title: 'Ready for ads',
-      piece: 'w47',
+      piece: 'w65',
       body: 'Images and videos in every ad size, with new hooks and variations, so there is always something new to run.',
       makes: 'Ad creative and imagery',
       treatments: ['Ad creative', 'Imagery'] as Treatment[],

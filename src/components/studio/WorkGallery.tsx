@@ -19,7 +19,7 @@ import type { WorkItem } from '@/lib/studio-media';
 type Filter = 'all' | WorkFilter;
 
 /** How many pieces show before "Show all". */
-const INITIAL = 16;
+const INITIAL = 20;
 
 function ratioValue(ratio: WorkItem['ratio']): number {
   const [w, h] = ratio.split(':').map(Number);
