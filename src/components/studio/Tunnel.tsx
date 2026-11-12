@@ -50,7 +50,7 @@ function geometry(W: number): Geometry {
   const narrow = W < 720;
   const th = narrow
     ? Math.min(120, Math.max(60, W * 0.24))
-    : Math.min(196, Math.max(70, W * 0.118));
+    : Math.min(232, Math.max(70, W * 0.118));
   const R = W * 0.62;
   const P = W * (narrow ? 0.8 : 0.5);
   // Places the camera so the tunnel's sides meet the edges of the screen.
@@ -173,13 +173,21 @@ export function Tunnel({
     .filter((t) => t.feature !== undefined)
     .sort((a, b) => (a.feature ?? 0) - (b.feature ?? 0));
   const rest = tiles.filter((t) => t.feature === undefined);
-  const rows = Array.from({ length: ROWS }, (_, r) =>
-    centreFeatured(
-      rest.filter((_, i) => i % ROWS === r),
-      featured,
-      r
-    )
+  // Dealt by width, not in strict rotation: each tile goes to the row with the
+  // least width so far, so no row ends up all narrow 9:16s, comes up short of
+  // a full turn and has to be spread out with gaps.
+  const width = (t: ReelTile) => t.ratio * scaleOf(t) + 0.1;
+  const buckets: ReelTile[][] = Array.from({ length: ROWS }, () => []);
+  const load = Array.from({ length: ROWS }, (_, r) =>
+    featured.filter((_, i) => i % ROWS === r).reduce((sum, t) => sum + width(t), 0)
   );
+  for (const tile of rest) {
+    let r = 0;
+    for (let k = 1; k < ROWS; k++) if (load[k]! < load[r]!) r = k;
+    buckets[r]!.push(tile);
+    load[r]! += width(tile);
+  }
+  const rows = buckets.map((row, r) => centreFeatured(row, featured, r));
   const ssr = layout(rows, SSR_GEOMETRY);
 
   // Everything the frame loop needs, kept out of React state.
