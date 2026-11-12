@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { STUDIO_SAMPLE } from '@/content/studio';
 import {
   SAMPLE_BUSINESSES,
-  SAMPLE_PREFERENCES,
+  SAMPLE_NEEDS,
   type SampleFieldErrors,
   type SampleInput,
 } from './sample-fields';
@@ -48,7 +48,10 @@ export const sampleSchema = z.object({
     .pipe(z.string().email().max(200)),
   brand: trimmed(2, 160),
   business: z.enum(SAMPLE_BUSINESSES),
+  need: z.enum(SAMPLE_NEEDS),
+  // Optional: empty is fine; anything given must be a web address.
   productUrl: z.string().transform((v, ctx) => {
+    if (!v.trim()) return '';
     const url = normaliseProductUrl(v);
     if (!url) {
       ctx.addIssue({ code: 'custom', message: 'invalid url' });
@@ -56,7 +59,10 @@ export const sampleSchema = z.object({
     }
     return url;
   }),
-  preference: z.enum(SAMPLE_PREFERENCES),
+  note: z
+    .string()
+    .transform((v) => v.trim())
+    .pipe(z.string().max(600)),
   hp: z.string().max(0, 'unexpected').optional().or(z.literal('')),
   elapsed: z.coerce.number().int().nonnegative().optional(),
 });

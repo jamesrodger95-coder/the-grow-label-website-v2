@@ -15,10 +15,10 @@ import {
   STUDIO_WORK,
 } from '@/content/studio';
 import type { ReelTile, WorkItem } from '@/lib/studio-media';
-import { CalEmbed } from '@/components/calculator/CalEmbed';
 import { StatementWords } from './StatementWords';
 import { Tunnel } from './Tunnel';
 import { LoopVideo, WorkGallery } from './WorkGallery';
+import { SampleForm } from './SampleForm';
 
 /**
  * The /AI page's sections, in order. Server components; the client code is
@@ -339,7 +339,7 @@ export function StudioSample() {
           </ul>
         </div>
         <Reveal className="studio-sample__form" index={1}>
-          <CalEmbed bookingUrl={STUDIO_SAMPLE.bookingUrl} hideDetails />
+          <SampleForm configured />
         </Reveal>
       </div>
     </section>

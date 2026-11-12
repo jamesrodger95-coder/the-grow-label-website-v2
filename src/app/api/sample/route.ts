@@ -3,7 +3,7 @@ import { BUSINESS_OPTIONS, STUDIO_SAMPLE } from '@/content/studio';
 import { deliverMessage } from '@/lib/delivery';
 import { deliveryMode } from '@/lib/env';
 import { clientKey, rateLimit } from '@/lib/rate-limit';
-import { SAMPLE_PREFERENCE_LABELS, type SampleResult } from '@/lib/sample-fields';
+import { SAMPLE_NEED_LABELS, type SampleResult } from '@/lib/sample-fields';
 import { sampleSchema, toSampleFieldErrors } from '@/lib/sample-schema';
 
 /**
@@ -73,7 +73,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (deliveryMode() === 'unconfigured') return json(UNCONFIGURED, 503);
 
-  const preference = SAMPLE_PREFERENCE_LABELS[input.preference];
+  const need = SAMPLE_NEED_LABELS[input.need];
   const business =
     BUSINESS_OPTIONS.find((o) => o.value === input.business)?.label ?? input.business;
   const outcome = await deliverMessage((reference) => ({
@@ -86,8 +86,9 @@ export async function POST(request: Request): Promise<NextResponse> {
       email: input.email,
       brand: input.brand,
       business: input.business,
+      need: input.need,
       productUrl: input.productUrl,
-      preference: input.preference,
+      note: input.note,
     },
     subject: `Free sample request: ${input.brand} [${reference}]`,
     text: [
@@ -96,8 +97,9 @@ export async function POST(request: Request): Promise<NextResponse> {
       `Email: ${input.email}`,
       `Company or website: ${input.brand}`,
       `Business: ${business}`,
-      `Page to feature: ${input.productUrl}`,
-      `Preferred sample: ${preference}`,
+      `Content needed: ${need}`,
+      `Page to feature: ${input.productUrl || '(none)'}`,
+      `Note: ${input.note || '(none)'}`,
     ].join('\n'),
     replyTo: input.email,
   }));

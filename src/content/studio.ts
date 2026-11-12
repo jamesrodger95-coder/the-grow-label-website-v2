@@ -923,7 +923,9 @@ export const STUDIO_SAMPLE = {
   eyebrow: 'Free sample',
   title: 'Get a free sample',
   emphasis: 'for what you sell.',
-  lead: 'Pick a time for a short call. Tell us what you sell and what you would like to see, and we will make a short video or a set of images for it, free.',
+  lead: 'Tell us what you sell and what you would like to see. We make a short video or a set of images for it, free.',
+  /** Where requests go: the ops site, which lists them for review. */
+  requestUrl: 'https://thegrowlabel.online/s/request',
   /** The Cal.com event the free-sample call is booked on. */
   /** 'Scale With Content' on Cal.com; its slug is scale-with-ai. */
   bookingUrl: 'https://cal.com/thegrowlabel/scale-with-ai',
@@ -940,9 +942,12 @@ export const STUDIO_SAMPLE = {
     brandHint: 'Your business name or your website’s address',
     business: 'Your business',
     businessPlaceholder: 'Choose one',
-    productUrl: 'Page to feature',
-    productUrlHint: 'A link to the product, feature or service you want the sample made for',
-    preference: 'Preferred sample',
+    need: 'How much content do you need?',
+    needPlaceholder: 'Choose one',
+    productUrl: 'Page to feature (optional)',
+    productUrlHint: 'A link to the product or service, if you have one in mind',
+    note: 'Anything specific you want? (optional)',
+    noteHint: 'The product, the look, or anything you would like to see',
   },
   submit: 'Request my free sample',
   sending: 'Sending',
@@ -962,10 +967,11 @@ export const STUDIO_SAMPLE = {
     email: 'Enter a valid work email address.',
     brand: 'Enter your business name or website.',
     business: 'Choose the kind of business you run.',
-    productUrl: 'Enter the full address of the page to feature.',
-    preference: 'Choose a video or images.',
+    need: 'Choose how much content you need.',
+    productUrl: 'Enter the full address of the page, or leave it empty.',
+    note: 'Keep the note under 600 characters.',
     generic: 'Some details need correcting before this can be sent.',
-    network: 'The request could not be sent. Check your connection and try again.',
+    network: 'The request could not be sent. Check your connection and try again, or email hello@thegrowlabel.com.',
   },
 } as const;
 

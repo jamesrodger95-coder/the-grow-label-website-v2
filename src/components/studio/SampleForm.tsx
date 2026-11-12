@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { useId, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { BUSINESS_OPTIONS, STUDIO_SAMPLE } from '@/content/studio';
 import {
-  SAMPLE_PREFERENCES,
-  SAMPLE_PREFERENCE_LABELS,
+  SAMPLE_NEEDS,
+  SAMPLE_NEED_LABELS,
   type SampleFieldErrors,
   type SampleInput,
   type SampleResult,
@@ -14,10 +14,11 @@ import {
 /**
  * The free-sample request, framed as a small app window.
  *
- * Six fields and one choice. With no delivery provider configured the form is
- * not rendered at all and the window says so, rather than accepting details it
- * cannot send (rule 5 in CLAUDE.md). The server checks again on every post, so
- * a provider removed after the build still produces an honest answer.
+ * Four required fields, one qualifying question and two optional ones. It
+ * posts to the ops site (STUDIO_SAMPLE.requestUrl), which stores the request
+ * for review; success is shown only when that server says it stored it
+ * (rule 5 in CLAUDE.md). Sent as text/plain so the cross-origin post needs no
+ * preflight.
  */
 
 type Status =
@@ -88,8 +89,9 @@ export function SampleForm({ configured }: { configured: boolean }) {
       email: String(data.get('email') ?? ''),
       brand: String(data.get('brand') ?? ''),
       business: String(data.get('business') ?? '') as SampleInput['business'],
+      need: String(data.get('need') ?? '') as SampleInput['need'],
       productUrl: String(data.get('productUrl') ?? ''),
-      preference: String(data.get('preference') ?? '') as SampleInput['preference'],
+      note: String(data.get('note') ?? ''),
       hp: String(data.get('hp') ?? ''),
       elapsed: startedAt.current ? Date.now() - startedAt.current : undefined,
     };
@@ -97,9 +99,9 @@ export function SampleForm({ configured }: { configured: boolean }) {
     setStatus({ kind: 'sending' });
     setErrors({});
     try {
-      const res = await fetch('/api/sample', {
+      const res = await fetch(STUDIO_SAMPLE.requestUrl, {
         method: 'POST',
-        headers: { 'content-type': 'application/json' },
+        headers: { 'content-type': 'text/plain' },
         body: JSON.stringify(body),
       });
       const result = (await res.json()) as SampleResult;
@@ -148,7 +150,13 @@ export function SampleForm({ configured }: { configured: boolean }) {
 
   const input = (
     name: 'name' | 'email' | 'brand' | 'productUrl',
-    props: { type: string; autoComplete: string; inputMode?: 'url' | 'email'; hint?: boolean }
+    props: {
+      type: string;
+      autoComplete: string;
+      inputMode?: 'url' | 'email';
+      hint?: boolean;
+      optional?: boolean;
+    }
   ) => (
     <input
       className="sample__input"
@@ -157,7 +165,7 @@ export function SampleForm({ configured }: { configured: boolean }) {
       type={props.type}
       inputMode={props.inputMode}
       autoComplete={props.autoComplete}
-      required
+      required={!props.optional}
       aria-invalid={errors[name] ? true : undefined}
       aria-describedby={describedBy(name, props.hint)}
     />
@@ -208,34 +216,53 @@ export function SampleForm({ configured }: { configured: boolean }) {
           )}
         </div>
         {field(
+          'need',
+          F.need,
+          <select
+            className="sample__input sample__select"
+            id={id('need')}
+            name="need"
+            required
+            defaultValue=""
+            aria-invalid={errors.need ? true : undefined}
+            aria-describedby={describedBy('need')}
+          >
+            <option value="" disabled>
+              {F.needPlaceholder}
+            </option>
+            {SAMPLE_NEEDS.map((value) => (
+              <option key={value} value={value}>
+                {SAMPLE_NEED_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        )}
+        {field(
           'productUrl',
           F.productUrl,
-          input('productUrl', { type: 'text', autoComplete: 'url', inputMode: 'url', hint: true }),
+          input('productUrl', {
+            type: 'text',
+            autoComplete: 'url',
+            inputMode: 'url',
+            hint: true,
+            optional: true,
+          }),
           F.productUrlHint
         )}
-
-        <fieldset className="sample__choice" aria-describedby={describedBy('preference')}>
-          <legend className="sample__label">{F.preference}</legend>
-          <div className="sample__options">
-            {SAMPLE_PREFERENCES.map((value, i) => (
-              <label className="sample__option" key={value}>
-                <input
-                  type="radio"
-                  name="preference"
-                  value={value}
-                  defaultChecked={i === 0}
-                  required
-                />
-                <span>{SAMPLE_PREFERENCE_LABELS[value]}</span>
-              </label>
-            ))}
-          </div>
-          {errors.preference ? (
-            <p className="sample__error" id={id('preference-error')}>
-              {errors.preference}
-            </p>
-          ) : null}
-        </fieldset>
+        {field(
+          'note',
+          F.note,
+          <textarea
+            className="sample__input sample__textarea"
+            id={id('note')}
+            name="note"
+            rows={3}
+            maxLength={600}
+            aria-invalid={errors.note ? true : undefined}
+            aria-describedby={describedBy('note', true)}
+          />,
+          F.noteHint
+        )}
 
         {/* Honeypot: off screen, out of the tab order, ignored by autofill. */}
         <div className="sample__hp" aria-hidden="true">

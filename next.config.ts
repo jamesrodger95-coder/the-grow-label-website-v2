@@ -140,10 +140,11 @@ const nextConfig: NextConfig = {
         ],
       },
       // The Design Studio books its free-sample call through the same embed.
+      // The studio home: the free-sample form posts to the ops site.
       ...['/', '/AI', '/ai'].map((source) => ({
         source,
         headers: [
-          { key: 'Content-Security-Policy', value: policy({ cal: true }) },
+          { key: 'Content-Security-Policy', value: policy({ cal: true, ops: true }) },
           ...SHARED_HEADERS,
         ],
       })),

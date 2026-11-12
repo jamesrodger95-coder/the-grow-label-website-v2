@@ -6989,3 +6989,11 @@
     height: 200px;
   }
 }
+
+/* The free-sample note: a short textarea in the same style as the inputs. */
+.sample__textarea {
+  min-height: 96px;
+  padding: 14px 16px;
+  line-height: 1.5;
+  resize: vertical;
+}

@@ -7,12 +7,14 @@
  * the validator into the browser bundle. Validation is in sample-schema.ts.
  */
 
-export const SAMPLE_PREFERENCES = ['video', 'images'] as const;
-export type SamplePreference = (typeof SAMPLE_PREFERENCES)[number];
+/** The one qualifying question: how much content the business needs. */
+export const SAMPLE_NEEDS = ['one-off', 'monthly', 'unsure'] as const;
+export type SampleNeed = (typeof SAMPLE_NEEDS)[number];
 
-export const SAMPLE_PREFERENCE_LABELS: Record<SamplePreference, string> = {
-  video: 'Video',
-  images: 'Images',
+export const SAMPLE_NEED_LABELS: Record<SampleNeed, string> = {
+  'one-off': 'A one-off project',
+  monthly: 'Regular content each month',
+  unsure: 'Not sure yet',
 };
 
 export const SAMPLE_BUSINESSES = [
@@ -39,8 +41,11 @@ export type SampleInput = {
   email: string;
   brand: string;
   business: SampleBusiness;
+  need: SampleNeed;
+  /** Optional: a page to feature. Empty when not given. */
   productUrl: string;
-  preference: SamplePreference;
+  /** Optional: anything specific they want to see. Empty when not given. */
+  note: string;
   /** Honeypot. Must be empty; bots fill it in. */
   hp?: string;
   /** Milliseconds between form render and submit. */
