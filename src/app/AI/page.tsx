@@ -27,10 +27,10 @@ import { reelTiles, workItems } from '@/lib/studio-media';
 export const metadata: Metadata = {
   title: { absolute: STUDIO_META.title },
   description: STUDIO_META.description,
-  alternates: { canonical: '/AI' },
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    url: '/AI',
+    url: '/',
     title: STUDIO_META.title,
     description: STUDIO_META.description,
   },

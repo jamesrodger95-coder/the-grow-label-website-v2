@@ -84,7 +84,6 @@ export function StudioHeader() {
         <a className="studio-logo" href="#top" aria-label={`${STUDIO_NAV.brand}, back to top`}>
           <Mark />
           <span className="studio-logo__word">{STUDIO_NAV.brand}</span>
-          <span className="studio-logo__tag">{STUDIO_NAV.tag}</span>
         </a>
         <nav className="studio-bar__links" aria-label="Page">
           {STUDIO_NAV.links.map((link) => (

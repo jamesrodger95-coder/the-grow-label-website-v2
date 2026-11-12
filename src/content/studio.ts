@@ -20,14 +20,13 @@
  */
 
 export const STUDIO_META = {
-  title: 'The Grow Label: AI video, imagery and ad creative for businesses that sell',
+  title: 'The Grow Label: video, imagery and ad creative for businesses that sell',
   description:
-    'Videos, images and ad creative designed to help turn more visitors into customers. Created with AI, built around your brand, for products, software and services. Request a free sample.',
+    'Videos, images and ad creative designed to help turn more visitors into customers. Built around your brand, without a photo shoot, for products, software and services. Request a free sample.',
 } as const;
 
 export const STUDIO_NAV = {
   brand: 'The Grow Label',
-  tag: 'Studio',
   links: [
     { href: '#work', label: 'Work' },
     { href: '#industries', label: 'Industries' },
@@ -38,11 +37,11 @@ export const STUDIO_NAV = {
 } as const;
 
 export const STUDIO_HERO = {
-  eyebrow: 'AI content for products, software and services',
+  eyebrow: 'Content for products, software and services',
   titleLine: 'Turn what you sell',
   titleRest: 'into content',
   titleEmphasis: 'that sells.',
-  lead: 'Videos, images and ad creative designed to help turn more visitors into customers. Created with AI, built around your brand.',
+  lead: 'Videos, images and ad creative designed to help turn more visitors into customers. Built around your brand, without a photo shoot.',
   primary: { href: '#sample', label: 'Get a free sample' },
   secondary: { href: '#work', label: 'Explore the work' },
   note: 'One product or service, free. No purchase required.',
@@ -186,7 +185,7 @@ export const STUDIO_SHOWCASE = {
 } as const;
 
 export const STUDIO_STATEMENT = {
-  before: 'AI is how we make it.',
+  before: 'Whatever you sell, it can look this good.',
   after: 'Selling what you sell is the point.',
 } as const;
 
@@ -437,7 +436,7 @@ export const WORK: WorkEntry[] = [
     media: 'video',
     treatment: 'Ad creative',
     ratio: '16:9',
-    title: 'AI influencers, marketing your app',
+    title: 'Creators, marketing your app',
     category: 'Marketing software',
     credit: CONCEPT,
   },
@@ -456,7 +455,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Demo',
     ratio: '9:16',
     title: 'PicTwin: change anything in plain words',
-    category: 'AI app',
+    category: 'Photo app',
     credit: CONCEPT,
   },
   {
@@ -546,7 +545,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Demo',
     ratio: '16:9',
     title: 'Bento: tell your agent',
-    category: 'AI software',
+    category: 'Workflow software',
     credit: CONCEPT,
   },
   {
@@ -626,7 +625,7 @@ export const WORK: WorkEntry[] = [
     media: 'video',
     treatment: 'Demo',
     ratio: '16:9',
-    title: 'Client intake, answered by AI',
+    title: 'Client intake, answered for you',
     category: 'Software',
     credit: CONCEPT,
   },
@@ -636,7 +635,7 @@ export const WORK: WorkEntry[] = [
     treatment: 'Ad creative',
     ratio: '16:9',
     title: 'UGC video, made to order',
-    category: 'AI video app',
+    category: 'Video app',
     credit: CONCEPT,
   },
   {
@@ -920,7 +919,7 @@ export const STUDIO_SAMPLE = {
 export const STUDIO_FOOTER = {
   /** Set across the footer, the second word in purple. */
   wordmark: ['The Grow', 'Label'],
-  line: 'AI video, imagery and ad creative for businesses that sell.',
+  line: 'Video, imagery and ad creative for businesses that sell.',
   legal: [
     { href: '/privacy', label: 'Privacy' },
     { href: '/terms', label: 'Terms' },
