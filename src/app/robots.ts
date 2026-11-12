@@ -3,7 +3,10 @@ import { siteUrl } from '@/lib/env';
 
 export default function robots(): MetadataRoute.Robots {
   const base = siteUrl();
-  const isPreview = process.env.VERCEL_ENV === 'preview' || !process.env.NEXT_PUBLIC_SITE_URL;
+  // Only the live production deployment is indexed; previews and local builds
+  // are not. Production no longer needs NEXT_PUBLIC_SITE_URL set to count.
+  const isPreview =
+    process.env.VERCEL_ENV !== 'production' && !process.env.NEXT_PUBLIC_SITE_URL;
 
   return {
     rules: isPreview

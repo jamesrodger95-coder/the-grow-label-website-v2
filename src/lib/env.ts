@@ -28,9 +28,13 @@ function asUrl(value: string | undefined): string | undefined {
  * Public site origin, used for canonical URLs, the sitemap and Open Graph.
  * Falls back to the Vercel-provided URL, then to localhost.
  */
+/** The live domain, used on Vercel's production deployment when no site URL is set. */
+export const PRODUCTION_ORIGIN = 'https://www.thegrowlabel.com';
+
 export function siteUrl(): string {
   const explicit = asUrl(process.env.NEXT_PUBLIC_SITE_URL);
   if (explicit) return explicit;
+  if (process.env.VERCEL_ENV === 'production') return PRODUCTION_ORIGIN;
   const vercel = clean(process.env.NEXT_PUBLIC_VERCEL_URL) ?? clean(process.env.VERCEL_URL);
   if (vercel) return `https://${vercel.replace(/\/$/, '')}`;
   return 'http://localhost:3000';
