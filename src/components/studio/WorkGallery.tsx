@@ -21,6 +21,9 @@ type Filter = 'all' | WorkFilter;
 /** How many pieces show before "Show all". */
 const INITIAL = 20;
 
+/** The first pieces (our own widescreen films) sit in an even grid above the rest. */
+const LEAD = 6;
+
 function ratioValue(ratio: WorkItem['ratio']): number {
   const [w, h] = ratio.split(':').map(Number);
   return (w ?? 1) / (h ?? 1);
@@ -250,9 +253,20 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
         ))}
       </div>
 
-      <ul className="work__grid">
-        {items.map((item, i) => (
+      <ul className="work__grid work__grid--lead">
+        {items.slice(0, LEAD).map((item, i) => (
           <Piece key={item.id} item={item} index={i} hidden={!shown.includes(item)} onOpen={open} />
+        ))}
+      </ul>
+      <ul className="work__grid">
+        {items.slice(LEAD).map((item, i) => (
+          <Piece
+            key={item.id}
+            item={item}
+            index={i + LEAD}
+            hidden={!shown.includes(item)}
+            onOpen={open}
+          />
         ))}
       </ul>
 

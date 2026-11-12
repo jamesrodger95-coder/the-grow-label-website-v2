@@ -7186,3 +7186,31 @@
     display: none;
   }
 }
+
+/* Selected work: our own films lead in an even grid of three, the rest flow
+   below in the masonry columns. */
+.work__grid--lead {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(14px, 2vw, 24px);
+  columns: auto;
+}
+.work__grid--lead .work__item {
+  margin-bottom: clamp(24px, 2.6vw, 36px);
+}
+.work__grid--lead:has(.work__item:not([hidden])) + .work__grid {
+  margin-top: 0;
+}
+@media (max-width: 900px) {
+  .work__grid--lead {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .work__grid--lead {
+    gap: 0 10px;
+  }
+  .work__grid--lead .work__item {
+    margin-bottom: 16px;
+  }
+}
