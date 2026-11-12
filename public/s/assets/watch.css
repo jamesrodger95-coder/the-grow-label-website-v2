@@ -316,3 +316,8 @@ h2.display { font-size: clamp(1.8rem, 1.15rem + 2.3vw, 3.1rem); }
 }
 /* Two-film switch: above the video on phones, where the floating "Next" button sits over the bottom edge */
 @media (max-width: 860px) { .player-wrap { display: flex; flex-direction: column; } .films { order: -1; margin: 0 0 16px; } .films + .player-cap { margin-top: 16px; } }
+/* Phones: the booking calendar lists every time slot, so keep it in a fixed box that scrolls inside instead of stretching the page */
+@media (max-width: 760px) {
+  .cal-embed.ready { max-height: min(74svh, 640px); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+  .cal-card::after { content: ""; position: absolute; left: 1.5px; right: 1.5px; bottom: 1.5px; height: 34px; border-radius: 0 0 24px 24px; background: linear-gradient(#fbfaf800, #fbfaf8); pointer-events: none; }
+}
