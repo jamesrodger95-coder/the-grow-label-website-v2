@@ -132,7 +132,7 @@ export const STUDIO_SHOWCASE = {
   ],
   pieces: [
     {
-      id: 'w05',
+      id: 'w62',
       tag: 'Launch film',
       x: 50,
       y: 50,
@@ -141,7 +141,7 @@ export const STUDIO_SHOWCASE = {
       depth: 0.2,
       m: { x: 50, y: 22, w: 92 },
     },
-    { id: 'w17', tag: 'Launch ad', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
+    { id: 'w63', tag: 'Brand film', x: 19, y: 19, w: 20, r: -4, depth: 0.5, m: null },
     { id: 'w22', tag: 'YouTube ad', x: 81, y: 18, w: 19, r: 4, depth: 0.6, m: null },
     { id: 'w44', tag: 'Website hero', x: 23, y: 83, w: 18, r: 3, depth: 0.8, m: null },
     { id: 'w46', tag: 'LinkedIn ad', x: 78, y: 84, w: 18, r: -3, depth: 0.7, m: null },
@@ -240,6 +240,24 @@ const CONCEPT: Credit = { kind: 'concept' };
  * "Show all") are picked to span the industries, not just software.
  */
 export const WORK: WorkEntry[] = [
+  {
+    id: 'w62',
+    media: 'video',
+    treatment: 'Ad creative',
+    ratio: '16:9',
+    title: 'Pomwick: pop the good stuff',
+    category: 'Drinks',
+    credit: CONCEPT,
+  },
+  {
+    id: 'w63',
+    media: 'video',
+    treatment: 'Video',
+    ratio: '16:9',
+    title: 'Orvelle: time, kept beautifully',
+    category: 'Watches',
+    credit: CONCEPT,
+  },
   {
     id: 'w44',
     media: 'image',
@@ -797,6 +815,8 @@ export const WORK: WorkEntry[] = [
  * can come back by adding its id here.
  */
 export const WORK_SHOWN = [
+  'w62',
+  'w63',
   'w05',
   'w55',
   'w04',
@@ -837,7 +857,7 @@ export const STUDIO_GET = {
     {
       index: '03',
       title: 'A stronger brand image',
-      piece: 'w36',
+      piece: 'w63',
       body: 'What you sell in new scenes with one consistent look. No studio, no models, no travel.',
       makes: 'Styled shoots, demos and walkthroughs',
       treatments: ['Styled shoot', 'Demo'] as Treatment[],
