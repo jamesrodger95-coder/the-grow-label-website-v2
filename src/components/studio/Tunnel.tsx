@@ -50,7 +50,7 @@ function geometry(W: number): Geometry {
   const narrow = W < 720;
   const th = narrow
     ? Math.min(120, Math.max(60, W * 0.24))
-    : Math.min(176, Math.max(70, W * 0.105));
+    : Math.min(196, Math.max(70, W * 0.118));
   const R = W * 0.62;
   const P = W * (narrow ? 0.8 : 0.5);
   // Places the camera so the tunnel's sides meet the edges of the screen.
@@ -229,8 +229,8 @@ export function Tunnel({
       s.lastP = p;
 
       if (!s.paused && !still) {
-        s.boost = s.boost * 0.94 + dp * 260;
-        s.phase += dt * BASE_SPEED * (1 + Math.min(s.boost, 6));
+        s.boost = s.boost * 0.94 + dp * 420;
+        s.phase += dt * BASE_SPEED * (1 + Math.min(s.boost, 9));
         s.yaw += (s.targetYaw - s.yaw) * 0.05;
         s.pitch += (s.targetPitch - s.pitch) * 0.05;
       }
@@ -243,10 +243,12 @@ export function Tunnel({
         s.spinStart = t;
       }
       const since = t - s.spinStart;
-      const spin = still ? 0 : 120 * Math.exp(-since * 1.9);
+      const spin = still ? 0 : 170 * Math.exp(-since * 1.8);
 
       const { W, c } = s.geo;
-      cam.style.transform = `translateZ(${(-c + p * W * 0.14).toFixed(1)}px) rotateX(${(s.pitch - p * 7).toFixed(2)}deg) rotateY(${s.yaw.toFixed(2)}deg)`;
+      // As the hero leaves, the camera pushes into the tunnel, so the next
+      // section feels like arriving through it.
+      cam.style.transform = `translateZ(${(-c + p * W * 0.22).toFixed(1)}px) rotateX(${(s.pitch - p * 10).toFixed(2)}deg) rotateY(${s.yaw.toFixed(2)}deg)`;
 
       for (let r = 0; r < s.anchors.length; r++) {
         const { angles, period } = s.layout[r]!;
@@ -325,17 +327,33 @@ export function Tunnel({
       dragging = false;
       delete stage.dataset.dragging;
     };
+    // The tile under a mouse pointer lifts and plays (see .tunnel__tile[data-hot]).
+    let hot: HTMLElement | null = null;
+    const onOver = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' || s.reduced) return;
+      const tile = (e.target as HTMLElement | null)?.closest<HTMLElement>('.tunnel__tile') ?? null;
+      if (tile === hot) return;
+      if (hot) delete hot.dataset.hot;
+      hot = tile;
+      if (!hot) return;
+      hot.dataset.hot = 'true';
+      if (!s.paused) hot.querySelector('video')?.play().catch(() => {});
+    };
     const onLeave = () => {
       s.targetYaw = 0;
       s.targetPitch = 0;
+      if (hot) delete hot.dataset.hot;
+      hot = null;
       onUp();
     };
     stage.addEventListener('pointermove', onMove);
+    stage.addEventListener('pointerover', onOver);
     stage.addEventListener('pointerdown', onDown);
     window.addEventListener('pointerup', onUp);
     stage.addEventListener('pointerleave', onLeave);
     return () => {
       stage.removeEventListener('pointermove', onMove);
+      stage.removeEventListener('pointerover', onOver);
       stage.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointerup', onUp);
       stage.removeEventListener('pointerleave', onLeave);

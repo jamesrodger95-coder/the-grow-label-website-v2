@@ -5657,7 +5657,7 @@
 }
 .tunnel__stage {
   --W: 100cqw;
-  --th: clamp(70px, 10.5cqw, 176px);
+  --th: clamp(70px, 11.8cqw, 196px);
   --g: calc(var(--th) * 0.1);
   --R: calc(var(--W) * 0.62);
   --P: calc(var(--W) * 0.5);
@@ -6996,4 +6996,193 @@
   padding: 14px 16px;
   line-height: 1.5;
   resize: vertical;
+}
+
+/* ===== Studio polish (12 Nov): show-off details, all transform and opacity ===== */
+
+/* Hero tunnel: the tile under the pointer lifts and plays; the rest step back
+   a little. Soft fades at the side edges and a haze at the far wall read as
+   depth. */
+.tunnel__face {
+  transition:
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    opacity var(--gl-dur-standard) var(--gl-ease);
+}
+.tunnel__tile[data-hot] .tunnel__face {
+  transform: translate(-50%, -50%) scale(1.16);
+  box-shadow:
+    0 0 0 2px var(--gl-purple-300),
+    0 26px 50px -18px rgba(46, 33, 138, 0.6);
+}
+.tunnel__stage:has(.tunnel__tile[data-hot]) .tunnel__tile:not([data-hot]) .tunnel__face {
+  opacity: 0.72;
+}
+.tunnel::before,
+.tunnel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.tunnel::before {
+  background: linear-gradient(
+    90deg,
+    var(--s-paper) 0,
+    transparent 7%,
+    transparent 93%,
+    var(--s-paper) 100%
+  );
+}
+.tunnel::after {
+  background: radial-gradient(ellipse 16% 38% at 50% 50%, rgba(251, 250, 248, 0.5), transparent 100%);
+}
+.tunnel__caption {
+  position: relative;
+  z-index: 2;
+}
+
+/* Header: a hairline progress bar fills as the page is read. Scroll-driven
+   where the browser supports it; absent (not stuck at zero) elsewhere. */
+.studio-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gl-purple), var(--gl-purple-300));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  opacity: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .studio-bar::after {
+    opacity: 1;
+    animation: studio-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes studio-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Work: a soft light follows the pointer across each piece (WorkGallery sets
+   --mx and --my) and the picture inside eases forward. */
+.work__window {
+  position: relative;
+}
+.work__window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(171, 159, 238, 0.26),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity var(--gl-dur-standard) var(--gl-ease);
+}
+.work__item:hover .work__window::after {
+  opacity: 1;
+}
+.work__frame video,
+.work__frame img {
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.work__item:hover .work__frame video,
+.work__item:hover .work__frame img {
+  transform: scale(1.04);
+}
+
+/* How it works: each step's number lights up as it arrives. */
+.process__index {
+  color: var(--gl-purple-200);
+  transition: color var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.process__step:nth-child(2) .process__index {
+  color: var(--gl-purple-200);
+}
+[data-motion="on"] .process__step[data-inview="true"] .process__index,
+:root:not([data-motion="on"]) .process__index {
+  color: var(--s-ink);
+}
+[data-motion="on"] .process__step:nth-child(2)[data-inview="true"] .process__index,
+:root:not([data-motion="on"]) .process__step:nth-child(2) .process__index {
+  color: var(--s-signal);
+}
+
+/* Free sample: a lit edge round the window and a slow sheen on the button. */
+.sample__window {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 0 8px rgba(255, 255, 255, 0.08),
+    0 50px 100px -50px rgba(12, 10, 40, 0.65);
+}
+.sample__submit {
+  position: relative;
+  overflow: hidden;
+}
+.sample__submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.28) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+[data-motion="on"] .sample__submit::after {
+  animation: studio-sheen var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes studio-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  18%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (hover: none) {
+  .tunnel__stage:has(.tunnel__tile[data-hot]) .tunnel__tile:not([data-hot]) .tunnel__face {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-bar::after,
+  .sample__submit::after {
+    animation: none;
+  }
+}
+
+/* Phones: the work in two columns, so the grid is half as long to scroll. */
+@media (max-width: 560px) {
+  .work__grid {
+    columns: 2;
+    column-gap: 10px;
+  }
+  .work__item {
+    margin-bottom: 16px;
+  }
+  .work__bar {
+    height: 18px;
+    padding: 0 7px;
+  }
+  .work__bar i {
+    width: 5px;
+    height: 5px;
+  }
+  .work__title {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+  .work__meta {
+    display: none;
+  }
 }
