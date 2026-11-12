@@ -98,7 +98,16 @@ const nextConfig: NextConfig = {
       '/methodology',
       '/dev/:path*',
     ];
-    return retired.map((source) => ({ source, destination: '/', permanent: false }));
+    return [
+      // Short booking link used in emails. Points at the Cal.com event; change
+      // the destination here if the calendar moves, and every email keeps working.
+      {
+        source: '/call',
+        destination: 'https://cal.com/thegrowlabel/scale-with-ai',
+        permanent: false,
+      },
+      ...retired.map((source) => ({ source, destination: '/', permanent: false })),
+    ];
   },
   /**
    * /AI is the published address and the route folder is `src/app/AI`. Paths
