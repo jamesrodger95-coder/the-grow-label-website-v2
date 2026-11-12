@@ -7271,3 +7271,9 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* The work section rises over the hero by one sheet radius; keep the hero's
+   buttons clear of it now that the note under them is gone. */
+.studio-hero__foot {
+  padding-bottom: calc(var(--s-sheet) + clamp(28px, 4.5vh, 56px));
+}
