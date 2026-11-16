@@ -4,6 +4,8 @@ import { Showcase } from '@/components/studio/Showcase';
 import {
   StudioFooter,
   StudioGetCards,
+  StudioGetFooter,
+  StudioProblems,
   StudioHeader,
   StudioHero,
   StudioProcess,
@@ -52,8 +54,10 @@ export default function StudioPage() {
       <StudioHeader />
       <StudioHero tiles={tiles} live={live} />
       <StudioWork items={shown} />
+      <StudioProblems />
       <Showcase items={items}>
         <StudioGetCards items={shown} />
+        <StudioGetFooter />
       </Showcase>
       <StudioProcess />
       <StudioSample />

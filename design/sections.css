@@ -5657,7 +5657,7 @@
 }
 .tunnel__stage {
   --W: 100cqw;
-  --th: clamp(70px, 10.5cqw, 176px);
+  --th: clamp(70px, 11.8cqw, 232px);
   --g: calc(var(--th) * 0.1);
   --R: calc(var(--W) * 0.62);
   --P: calc(var(--W) * 0.5);
@@ -6878,4 +6878,543 @@
 }
 .studio-footer__legal a:hover {
   color: var(--s-on-night);
+}
+
+/* What you get: three benefit cards set under the collage, each with a piece
+   of matching work as its picture. Light paper cards; the picture leans in on
+   hover. */
+.get__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+  margin: clamp(28px, 4vw, 56px) auto 0;
+  padding-block: 0;
+  list-style: none;
+}
+.get__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--s-line);
+  border-radius: 24px;
+  background: var(--s-paper);
+  transition:
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    border-color var(--gl-dur-standard) var(--gl-ease);
+}
+.get__card:hover {
+  transform: translateY(-4px);
+  border-color: var(--gl-purple-200);
+  box-shadow: 0 30px 60px -36px rgba(46, 33, 138, 0.45);
+}
+.get__media {
+  display: grid;
+  place-items: center;
+  height: clamp(180px, 18vw, 240px);
+  padding: 18px;
+  background-color: var(--gl-purple-50);
+  background-image: radial-gradient(rgba(74, 58, 196, 0.14) 1px, transparent 1.3px);
+  background-size: 14px 14px;
+}
+.get__media .studio-frame {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.get__card:hover .get__media .studio-frame {
+  transform: scale(1.04) rotate(-1deg);
+}
+.get__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(18px, 2vw, 26px);
+}
+.get__index {
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+.get__title {
+  margin: 0;
+  font-family: var(--s-accent);
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.6rem);
+  font-stretch: 125%;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.get__text {
+  margin: 0 0 8px;
+  color: var(--s-mute);
+  line-height: 1.5;
+}
+.get__makes {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--gl-purple-50);
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+@media (max-width: 900px) {
+  .get__cards {
+    grid-template-columns: 1fr;
+  }
+  .get__card {
+    flex-direction: row;
+  }
+  .get__media {
+    flex: none;
+    width: 42%;
+    height: auto;
+    min-height: 180px;
+  }
+}
+@media (max-width: 560px) {
+  .get__card {
+    flex-direction: column;
+  }
+  .get__media {
+    width: auto;
+    height: 200px;
+  }
+}
+
+/* The free-sample note: a short textarea in the same style as the inputs. */
+.sample__textarea {
+  min-height: 96px;
+  padding: 14px 16px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* ===== Studio polish (12 Nov): show-off details, all transform and opacity ===== */
+
+/* Hero tunnel: the tile under the pointer lifts and plays; the rest step back
+   a little. Soft fades at the side edges and a haze at the far wall read as
+   depth. */
+.tunnel__face {
+  transition:
+    transform var(--gl-dur-standard) var(--gl-ease),
+    box-shadow var(--gl-dur-standard) var(--gl-ease),
+    opacity var(--gl-dur-standard) var(--gl-ease);
+}
+.tunnel__tile[data-hot] .tunnel__face {
+  transform: translate(-50%, -50%) scale(1.16);
+  box-shadow:
+    0 0 0 2px var(--gl-purple-300),
+    0 26px 50px -18px rgba(46, 33, 138, 0.6);
+}
+.tunnel__stage:has(.tunnel__tile[data-hot]) .tunnel__tile:not([data-hot]) .tunnel__face {
+  opacity: 0.72;
+}
+.tunnel::before,
+.tunnel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.tunnel::before {
+  background: linear-gradient(
+    90deg,
+    var(--s-paper) 0,
+    transparent 7%,
+    transparent 93%,
+    var(--s-paper) 100%
+  );
+}
+.tunnel::after {
+  background: radial-gradient(ellipse 16% 38% at 50% 50%, rgba(251, 250, 248, 0.5), transparent 100%);
+}
+.tunnel__caption {
+  z-index: 2;
+}
+
+/* Header: a hairline progress bar fills as the page is read. Scroll-driven
+   where the browser supports it; absent (not stuck at zero) elsewhere. */
+.studio-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gl-purple), var(--gl-purple-300));
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  opacity: 0;
+}
+@supports (animation-timeline: scroll()) {
+  .studio-bar::after {
+    opacity: 1;
+    animation: studio-progress linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes studio-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Work: a soft light follows the pointer across each piece (WorkGallery sets
+   --mx and --my) and the picture inside eases forward. */
+.work__window {
+  position: relative;
+}
+.work__window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(171, 159, 238, 0.26),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity var(--gl-dur-standard) var(--gl-ease);
+}
+.work__item:hover .work__window::after {
+  opacity: 1;
+}
+.work__frame video,
+.work__frame img {
+  transition: transform var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.work__item:hover .work__frame video,
+.work__item:hover .work__frame img {
+  transform: scale(1.04);
+}
+
+/* How it works: each step's number lights up as it arrives. */
+.process__index {
+  color: var(--gl-purple-200);
+  transition: color var(--gl-dur-orchestrated) var(--gl-ease);
+}
+.process__step:nth-child(2) .process__index {
+  color: var(--gl-purple-200);
+}
+[data-motion="on"] .process__step[data-inview="true"] .process__index,
+:root:not([data-motion="on"]) .process__index {
+  color: var(--s-ink);
+}
+[data-motion="on"] .process__step:nth-child(2)[data-inview="true"] .process__index,
+:root:not([data-motion="on"]) .process__step:nth-child(2) .process__index {
+  color: var(--s-signal);
+}
+
+/* Free sample: a lit edge round the window and a slow sheen on the button. */
+.sample__window {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 0 0 8px rgba(255, 255, 255, 0.08),
+    0 50px 100px -50px rgba(12, 10, 40, 0.65);
+}
+.sample__submit {
+  position: relative;
+  overflow: hidden;
+}
+.sample__submit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.28) 50%, transparent 62%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+[data-motion="on"] .sample__submit::after {
+  animation: studio-sheen var(--gl-dur-ambient) var(--gl-ease) infinite;
+}
+@keyframes studio-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  18%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (hover: none) {
+  .tunnel__stage:has(.tunnel__tile[data-hot]) .tunnel__tile:not([data-hot]) .tunnel__face {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .studio-bar::after,
+  .sample__submit::after {
+    animation: none;
+  }
+}
+
+/* Phones: the work in two columns, so the grid is half as long to scroll. */
+@media (max-width: 560px) {
+  .work__grid {
+    columns: 2;
+    column-gap: 10px;
+  }
+  .work__item {
+    margin-bottom: 16px;
+  }
+  .work__bar {
+    height: 18px;
+    padding: 0 7px;
+  }
+  .work__bar i {
+    width: 5px;
+    height: 5px;
+  }
+  .work__title {
+    font-size: 0.875rem;
+    line-height: 1.3;
+  }
+  .work__meta {
+    display: none;
+  }
+}
+
+/* Selected work: our own films lead in an even grid of three, the rest flow
+   below in the masonry columns. */
+.work__grid--lead {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(14px, 2vw, 24px);
+  columns: auto;
+}
+.work__grid--lead .work__item {
+  margin-bottom: clamp(24px, 2.6vw, 36px);
+}
+.work__grid--lead:has(.work__item:not([hidden])) + .work__grid {
+  margin-top: 0;
+}
+@media (max-width: 900px) {
+  .work__grid--lead {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .work__grid--lead {
+    gap: 0 10px;
+  }
+  .work__grid--lead .work__item {
+    margin-bottom: 16px;
+  }
+}
+
+/* Collage labels always fit inside their card. */
+.show__tag {
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The work section's shell is the size container for the grid below. */
+.studio-work .studio-shell {
+  container-type: inline-size;
+}
+/* Selected work, below the lead six: an even grid that ends square instead of
+   ragged masonry columns. Wide and square pieces take one cell, tall pieces
+   two stacked; the pictures fill their cell. */
+.work__grid:not(.work__grid--lead) {
+  --gap: clamp(14px, 2vw, 24px);
+  --cell: calc((100cqw - 3 * var(--gap)) / 4 * 0.5625 + 28px + 82px);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: var(--cell);
+  grid-auto-flow: dense;
+  gap: var(--gap);
+  columns: auto;
+}
+.work__grid:not(.work__grid--lead) .work__item {
+  display: flex;
+  margin-bottom: 0;
+  min-height: 0;
+}
+.work__grid:not(.work__grid--lead) .work__item[data-ratio="9:16"],
+.work__grid:not(.work__grid--lead) .work__item[data-ratio="2:3"],
+.work__grid:not(.work__grid--lead) .work__item[data-ratio="3:4"],
+.work__grid:not(.work__grid--lead) .work__item[data-ratio="4:5"] {
+  grid-row: span 2;
+}
+.work__grid:not(.work__grid--lead) .work__open {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.work__grid:not(.work__grid--lead) .work__window {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.work__grid:not(.work__grid--lead) .work__frame {
+  flex: 1;
+  aspect-ratio: auto;
+  min-height: 0;
+}
+@media (max-width: 900px) {
+  .work__grid:not(.work__grid--lead) {
+    --cell: calc((100cqw - var(--gap)) / 2 * 0.5625 + 22px + 64px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The work section rises over the hero by one sheet radius; keep the hero's
+   buttons clear of it now that the note under them is gone. */
+.studio-hero__foot {
+  padding-bottom: calc(var(--s-sheet) + clamp(28px, 4.5vh, 56px));
+}
+
+/* What you get: promise row and the quiet "Also" line under the cards (15 Nov 2026). */
+.get__foot {
+  display: grid;
+  gap: clamp(12px, 1.4vw, 18px);
+  margin-top: clamp(16px, 2vw, 26px);
+}
+.get__promise {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px clamp(18px, 3vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--s-ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.get__promise li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.get__promise li::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 5px;
+  margin-top: -4px;
+  border-left: 2px solid var(--s-signal);
+  border-bottom: 2px solid var(--s-signal);
+  transform: rotate(-45deg);
+}
+.get__also {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 12px;
+  margin: 0;
+  padding: 14px clamp(16px, 2.4vw, 26px);
+  border: 1.5px dashed var(--s-line);
+  border-radius: 20px;
+  color: var(--s-mute);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+.get__also-label {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--gl-purple-50);
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.get__also-link {
+  display: inline-flex;
+  gap: 6px;
+  color: var(--s-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--s-line);
+  text-underline-offset: 4px;
+  white-space: nowrap;
+  transition: color var(--gl-dur-micro) var(--gl-ease), text-decoration-color var(--gl-dur-micro) var(--gl-ease);
+}
+.get__also-link:hover {
+  color: var(--s-signal);
+  text-decoration-color: currentColor;
+}
+@media (max-width: 720px) {
+  .get__promise {
+    flex-direction: column;
+    align-items: center;
+  }
+  .get__also {
+    font-size: 0.875rem;
+  }
+}
+
+/* Sound familiar? The problems, between the work and What you get (15 Nov 2026). */
+.studio-problems {
+  padding: clamp(96px, 12vw, 170px) 0 0;
+}
+.studio-problems + .show {
+  padding-top: clamp(64px, 8vw, 120px);
+}
+.studio-problems__lead {
+  margin: 0;
+  color: var(--s-mute);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.problems__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.problems__item {
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: 20px;
+  background: var(--s-paper-2);
+  border: 1px solid var(--s-line);
+}
+.problems__title {
+  margin: 0 0 8px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--s-ink);
+}
+.problems__title::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin-bottom: 14px;
+  border-radius: 2px;
+  background: var(--s-signal);
+}
+.problems__body {
+  margin: 0;
+  color: var(--s-mute);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+@media (max-width: 960px) {
+  .problems__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .problems__list {
+    grid-template-columns: 1fr;
+  }
 }

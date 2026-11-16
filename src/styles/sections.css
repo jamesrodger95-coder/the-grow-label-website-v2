@@ -7277,3 +7277,144 @@
 .studio-hero__foot {
   padding-bottom: calc(var(--s-sheet) + clamp(28px, 4.5vh, 56px));
 }
+
+/* What you get: promise row and the quiet "Also" line under the cards (15 Nov 2026). */
+.get__foot {
+  display: grid;
+  gap: clamp(12px, 1.4vw, 18px);
+  margin-top: clamp(16px, 2vw, 26px);
+}
+.get__promise {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px clamp(18px, 3vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--s-ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.get__promise li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.get__promise li::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 5px;
+  margin-top: -4px;
+  border-left: 2px solid var(--s-signal);
+  border-bottom: 2px solid var(--s-signal);
+  transform: rotate(-45deg);
+}
+.get__also {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 12px;
+  margin: 0;
+  padding: 14px clamp(16px, 2.4vw, 26px);
+  border: 1.5px dashed var(--s-line);
+  border-radius: 20px;
+  color: var(--s-mute);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+.get__also-label {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--gl-purple-50);
+  color: var(--s-signal);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.get__also-link {
+  display: inline-flex;
+  gap: 6px;
+  color: var(--s-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--s-line);
+  text-underline-offset: 4px;
+  white-space: nowrap;
+  transition: color var(--gl-dur-micro) var(--gl-ease), text-decoration-color var(--gl-dur-micro) var(--gl-ease);
+}
+.get__also-link:hover {
+  color: var(--s-signal);
+  text-decoration-color: currentColor;
+}
+@media (max-width: 720px) {
+  .get__promise {
+    flex-direction: column;
+    align-items: center;
+  }
+  .get__also {
+    font-size: 0.875rem;
+  }
+}
+
+/* Sound familiar? The problems, between the work and What you get (15 Nov 2026). */
+.studio-problems {
+  padding: clamp(96px, 12vw, 170px) 0 0;
+}
+.studio-problems + .show {
+  padding-top: clamp(64px, 8vw, 120px);
+}
+.studio-problems__lead {
+  margin: 0;
+  color: var(--s-mute);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.problems__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4vw, 20px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.problems__item {
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: 20px;
+  background: var(--s-paper-2);
+  border: 1px solid var(--s-line);
+}
+.problems__title {
+  margin: 0 0 8px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--s-ink);
+}
+.problems__title::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 3px;
+  margin-bottom: 14px;
+  border-radius: 2px;
+  background: var(--s-signal);
+}
+.problems__body {
+  margin: 0;
+  color: var(--s-mute);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+@media (max-width: 960px) {
+  .problems__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .problems__list {
+    grid-template-columns: 1fr;
+  }
+}

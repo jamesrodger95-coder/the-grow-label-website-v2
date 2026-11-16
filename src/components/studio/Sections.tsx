@@ -3,13 +3,16 @@ import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 import { Reveal, RevealLines } from '@/components/motion/Reveal';
 import {
+  STUDIO_ALSO,
   STUDIO_BAND,
   STUDIO_FOOTER,
   STUDIO_GET,
   STUDIO_HERO,
   STUDIO_MAKE,
   STUDIO_NAV,
+  STUDIO_PROBLEMS,
   STUDIO_PROCESS,
+  STUDIO_PROMISE,
   STUDIO_SAMPLE,
   STUDIO_STATEMENT,
   STUDIO_WORK,
@@ -283,6 +286,61 @@ export function StudioGetCards({ items }: { items: WorkItem[] }) {
         );
       })}
     </ol>
+  );
+}
+
+/**
+ * Under the What you get cards: three short promises, then the one quiet line
+ * that mentions the one-off fixes. Both read as a footnote to the cards.
+ */
+export function StudioGetFooter() {
+  return (
+    <div className="studio-shell get__foot">
+      <Reveal as="ul" className="get__promise" index={1}>
+        {STUDIO_PROMISE.map((line) => (
+          <li key={line}>{line}</li>
+        ))}
+      </Reveal>
+      <Reveal as="p" className="get__also" index={2}>
+        <span className="get__also-label">{STUDIO_ALSO.label}</span>
+        <span className="get__also-body">{STUDIO_ALSO.body}</span>
+        <Link className="get__also-link" href={STUDIO_ALSO.cta.href}>
+          {STUDIO_ALSO.cta.label}
+          <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </Reveal>
+    </div>
+  );
+}
+
+/** The problems, between the work and What you get: problem first, then the fix. */
+export function StudioProblems() {
+  return (
+    <section className="studio-problems" aria-labelledby="problems-title">
+      <div className="studio-shell">
+        <div className="studio-head">
+          <div>
+            <Eyebrow>{STUDIO_PROBLEMS.eyebrow}</Eyebrow>
+            <Display
+              id="problems-title"
+              title={STUDIO_PROBLEMS.title}
+              emphasis={STUDIO_PROBLEMS.emphasis}
+            />
+          </div>
+          <Reveal as="p" className="studio-problems__lead" index={1}>
+            {STUDIO_PROBLEMS.lead}
+          </Reveal>
+        </div>
+        <ul className="problems__list">
+          {STUDIO_PROBLEMS.items.map((item, i) => (
+            <Reveal as="li" className="problems__item" key={item.title} index={i}>
+              <h3 className="problems__title">{item.title}</h3>
+              <p className="problems__body">{item.body}</p>
+            </Reveal>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 

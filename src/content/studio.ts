@@ -22,7 +22,7 @@
 export const STUDIO_META = {
   title: 'The Grow Label: video, imagery and ad creative for businesses that sell',
   description:
-    'Videos, images and ad creative designed to help turn more visitors into customers. Built around your brand, without a photo shoot, for products, software and services. Request a free sample.',
+    'Fresh videos, images and ad creative every month, built around your brand without a photo shoot. For brands, shops and local businesses. Request a free sample.',
 } as const;
 
 export const STUDIO_NAV = {
@@ -36,7 +36,7 @@ export const STUDIO_NAV = {
 } as const;
 
 export const STUDIO_HERO = {
-  eyebrow: 'Content for products, software and services',
+  eyebrow: 'Content for brands, shops and local businesses',
   titleLine: 'Turn what you sell',
   titleRest: 'into content',
   titleEmphasis: 'that sells.',
@@ -53,16 +53,22 @@ export const STUDIO_HERO = {
 /** The drifting band under the hero: who the work is for. */
 export const STUDIO_BAND = [
   'Ecommerce',
+  'Dental',
   'Software',
   'Home improvement',
+  'Veterinary',
   'Construction',
   'HVAC',
+  'Med spas',
   'Plumbing',
   'Electrical',
+  'Salons',
   'Roofing',
   'Solar',
+  'Pet care',
   'Landscaping',
   'Real estate',
+  'Restaurants',
   'Beauty and skincare',
   'Fashion',
   'Food and drink',
@@ -112,6 +118,36 @@ export type ShowcasePiece = {
 };
 
 /**
+ * The problems we hear about content, set between the work and What you get:
+ * the reader sees the problem, then the fix. Content only; the one-off fixes
+ * are mentioned once, under the What you get cards.
+ */
+export const STUDIO_PROBLEMS = {
+  eyebrow: 'Sound familiar?',
+  title: 'Good businesses,',
+  emphasis: 'tired content.',
+  lead: 'If any of these sound like you, we can take it off your plate.',
+  items: [
+    {
+      title: 'No time or budget for a shoot',
+      body: 'A shoot takes weeks to plan and costs a lot, so most months it just does not happen.',
+    },
+    {
+      title: 'Nothing new to post',
+      body: 'Your feed goes quiet, because making content is a job on top of running the business.',
+    },
+    {
+      title: 'Your content looks dated',
+      body: 'Old or inconsistent photos and videos make a good business look cheaper than it is.',
+    },
+    {
+      title: 'The same ads, again and again',
+      body: 'One ad running for months wears out. Fresh creative needs fresh content.',
+    },
+  ],
+} as const;
+
+/**
  * "Whatever you sell": the work itself, flown out of a stack into a layered
  * collage as the section scrolls in. A widescreen film at the centre, reels in
  * phone frames, feed posts tucked between, so the three formats read at once.
@@ -120,7 +156,7 @@ export const STUDIO_SHOWCASE = {
   eyebrow: 'What you get',
   title: 'Whatever you sell,',
   emphasis: 'it can look this good.',
-  lead: 'Reels for the feed, squares for the grid, widescreen for the site and the launch. Every format, built around what you sell, without a photo shoot.',
+  lead: 'Fresh videos and images every month, in every format: reels for the feed, squares for the grid, widescreen for the site. Built around what you sell, without a photo shoot.',
   forLabel: 'Made for',
   label:
     'A collage of the studio’s work in three formats: vertical reels, square feed posts and widescreen films.',
@@ -166,16 +202,10 @@ export const STUDIO_SHOWCASE = {
       m: { x: 79, y: 70, w: 34 },
     },
     { id: 'w04', tag: 'Product', x: 25.5, y: 50, w: 10, r: -5, depth: 0.8, m: null },
-    {
-      id: 'w64',
-      tag: 'Product film',
-      x: 75.5,
-      y: 50,
-      w: 15,
-      r: 4,
-      depth: 0.8,
-      m: { x: 50, y: 84, w: 60 },
-    },
+    // Kept clear of the launch film's right edge (it overlapped by a few px
+    // and more as it floats), and left out on phones, where it covered both
+    // reels.
+    { id: 'w64', tag: 'Product film', x: 79, y: 50, w: 13.5, r: 4, depth: 0.8, m: null },
   ] satisfies ShowcasePiece[],
 } as const;
 
@@ -873,29 +903,46 @@ export const STUDIO_GET = {
   items: [
     {
       index: '01',
-      title: 'Made for social',
+      title: 'Fresh content every month',
       piece: 'w55',
-      body: 'New videos for Reels, TikTok and Stories, so your feed always has something fresh to post.',
-      makes: 'Video and motion design',
+      body: 'New videos and images each month, planned with you, so your feed, your site and your ads always have something new.',
+      makes: 'Video, motion design and imagery',
       treatments: ['Video', 'Explainer'] as Treatment[],
     },
     {
       index: '02',
-      title: 'Ready for ads',
+      title: 'Every size, ready to post',
       piece: 'w65',
-      body: 'Images and videos in every ad size, with new hooks and variations, so there is always something new to run.',
-      makes: 'Ad creative and imagery',
+      body: 'Each piece comes in the sizes you need for Reels, TikTok, Stories, feed posts, ads and your website, with variations to test.',
+      makes: 'Ad creative and variations',
       treatments: ['Ad creative', 'Imagery'] as Treatment[],
     },
     {
       index: '03',
-      title: 'A stronger brand image',
+      title: 'A more premium brand',
       piece: 'w63',
-      body: 'What you sell in new scenes with one consistent look. No studio, no models, no travel.',
+      body: 'One clean, consistent look everywhere people find you. No studio, no models, no travel.',
       makes: 'Styled shoots, demos and walkthroughs',
       treatments: ['Styled shoot', 'Demo'] as Treatment[],
     },
   ],
+} as const;
+
+/** Three short promises, in one row under the What you get cards. */
+export const STUDIO_PROMISE = [
+  'Changes included on every piece',
+  'Every size you need',
+  'You own everything we make',
+] as const;
+
+/**
+ * The one quiet mention of the one-off fixes. The site sells content; the
+ * fixes are offered on the call, so this stays a footnote, never a section.
+ */
+export const STUDIO_ALSO = {
+  label: 'Also, if you need it',
+  body: 'We refresh websites, tidy up Google listings and set up social profiles properly.',
+  cta: { href: '/contact', label: 'Ask us about it' },
 } as const;
 
 /** From the earlier, longer layout; the page now uses STUDIO_GET. */
@@ -938,18 +985,18 @@ export const STUDIO_PROCESS = {
   steps: [
     {
       index: '01',
-      title: 'Tell us what you sell.',
-      body: 'Fill in the short form below: your website, and anything you would like to see. That is all we need to start.',
+      title: 'Get a free sample.',
+      body: 'Fill in the short form below: your website, and anything you would like to see. We make a short video or a small set of images for it. No cost and no commitment.',
     },
     {
       index: '02',
-      title: 'We create a free sample.',
-      body: 'A short video or a small set of images, made for that product or service in your brand’s look. No cost and no commitment.',
+      title: 'A quick call.',
+      body: 'If you like it, we talk through what you want from your content. We will also tell you what we would fix on your website, Google listing and social profiles.',
     },
     {
       index: '03',
-      title: 'If you like it, we can create more.',
-      body: 'If the sample is useful, we talk about a range, a launch or ongoing ad creative. If it is not, there is nothing to cancel.',
+      title: 'Fresh content every month.',
+      body: 'We plan each month with you, make everything and send it ready to post. If you would rather test us first, we can start with a small first project.',
     },
   ],
 } as const;
@@ -979,9 +1026,6 @@ export const STUDIO_SAMPLE = {
   lead: 'Tell us what you sell and what you would like to see. We make a short video or a set of images for it, free.',
   /** Where requests go: the ops site, which lists them for review. */
   requestUrl: 'https://thegrowlabel.online/s/request',
-  /** The Cal.com event the free-sample call is booked on. */
-  /** 'Scale With Content' on Cal.com; its slug is scale-with-ai. */
-  bookingUrl: 'https://cal.com/thegrowlabel/scale-with-ai',
   points: [
     'Free, with no purchase required',
     'One product or service, your choice',
@@ -1031,7 +1075,7 @@ export const STUDIO_SAMPLE = {
 export const STUDIO_FOOTER = {
   /** Set across the footer, the second word in purple. */
   wordmark: ['The Grow', 'Label'],
-  line: 'Video, imagery and ad creative for businesses that sell.',
+  line: 'Fresh video, imagery and ad creative every month, for businesses that sell.',
   legal: [
     { href: '/contact', label: 'Contact' },
     { href: '/privacy', label: 'Privacy' },
@@ -1043,12 +1087,12 @@ export const STUDIO_FOOTER = {
 export const STUDIO_CONTACT = {
   meta: {
     title: 'Contact · The Grow Label',
-    description: 'Send The Grow Label a message about video, imagery or ad creative for your business.',
+    description: 'Send us a message about content, your website, your Google listing or your social profiles.',
   },
   eyebrow: 'Contact',
   title: 'Send us',
   emphasis: 'a message.',
-  lead: 'Questions about our work, a project you have in mind, or anything about your data. We read every message and reply by email.',
+  lead: 'Questions about our work, a project you have in mind, help with your website, Google listing or social profiles, or anything about your data. We read every message and reply by email.',
   sampleNote: 'Want a free sample instead?',
   sampleLink: { href: '/#sample', label: 'Request one here' },
   requestUrl: 'https://thegrowlabel.online/s/contact',
