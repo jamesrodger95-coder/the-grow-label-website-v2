@@ -13,7 +13,8 @@ import type { NextConfig } from 'next';
  * Widening this globally would have been one line shorter and would have cost
  * the other twenty routes their guarantee.
  */
-const CAL = 'https://app.cal.com https://cal.com';
+// Calendly is Q's booking calendar (from 17 Nov 2026); Cal.com stays for the old clinic pages.
+const CAL = 'https://app.cal.com https://cal.com https://calendly.com';
 
 // Sample pages (/s/<lead>) send view events back to the ops site.
 const OPS = 'https://thegrowlabel.online';
@@ -99,13 +100,6 @@ const nextConfig: NextConfig = {
       '/dev/:path*',
     ];
     return [
-      // Short booking link used in emails. Points at the Cal.com event; change
-      // the destination here if the calendar moves, and every email keeps working.
-      {
-        source: '/call',
-        destination: 'https://cal.com/thegrowlabel/scale-with-ai',
-        permanent: false,
-      },
       ...retired.map((source) => ({ source, destination: '/', permanent: false })),
     ];
   },
@@ -140,6 +134,14 @@ const nextConfig: NextConfig = {
           ...SHARED_HEADERS,
         ],
       },
+      // /call: the booking page with the Calendly calendar embedded.
+      {
+        source: '/call',
+        headers: [
+          { key: 'Content-Security-Policy', value: policy({ cal: true }) },
+          ...SHARED_HEADERS,
+        ],
+      },
       {
         source: '/contact',
         headers: [
@@ -166,7 +168,7 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        source: '/:path((?!calculator$|contact$|AI$|ai$|s/).+)',
+        source: '/:path((?!calculator$|call$|contact$|AI$|ai$|s/).+)',
         headers: [{ key: 'Content-Security-Policy', value: policy() }, ...SHARED_HEADERS],
       },
     ];

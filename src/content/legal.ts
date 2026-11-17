@@ -58,7 +58,7 @@ export const PRIVACY: LegalSection[] = [
     heading: 'Third parties',
     paragraphs: [
       'This site is hosted by Vercel, which keeps request logs for security and reliability. Fonts are served from this domain.',
-      'Sample pages include a booking calendar from Cal.com. If you book a call, Cal.com handles the booking details under its own privacy policy.',
+      'Our booking page and sample pages include a booking calendar from Calendly. If you book a call, Calendly handles the booking details under its own privacy policy.',
     ],
   },
   {

@@ -109,26 +109,23 @@
   onScroll();
   document.querySelectorAll("[data-cta], [data-cta-out]").forEach((a) => a.addEventListener("click", () => send("cta")));
 
-  // Booking calendar, shown on the page itself. If it cannot load, the "open in a new tab" link still works.
+  // Booking calendar (Calendly), shown on the page itself as a plain iframe. The "open in a new tab" link still works if it cannot load.
   const calBox = document.getElementById("cal");
-  if (calBox && calBox.dataset.calLink) {
+  if (calBox && calBox.dataset.calSrc) {
+    let booked = false;
+    addEventListener("message", (e) => {
+      if (e.origin !== "https://calendly.com" || !e.data || typeof e.data.event !== "string") return;
+      if (e.data.event === "calendly.event_type_viewed" || e.data.event === "calendly.profile_page_viewed") calBox.classList.add("ready");
+      if (e.data.event === "calendly.event_scheduled" && !booked) { booked = true; send("booked"); }
+    });
     const loadCal = () => {
       if (calBox.dataset.loaded) return;
       calBox.dataset.loaded = "1";
-      const origin = calBox.dataset.calOrigin || "https://cal.com";
-      const src = (origin === "https://cal.com" ? "https://app.cal.com" : origin) + "/embed/embed.js";
-      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, src, "init");
-      const Cal = window.Cal;
-      Cal("init", { origin });
-      Cal("inline", { elementOrSelector: "#cal", calLink: calBox.dataset.calLink, layout: "month_view", config: { theme: "light", layout: "month_view" } });
-      Cal("ui", { theme: "light", layout: "month_view", hideEventTypeDetails: false, cssVarsPerTheme: { light: { "cal-brand": "#4a3ac4" }, dark: { "cal-brand": "#ab9fee" } } });
-      const ready = () => calBox.classList.add("ready");
-      Cal("on", { action: "linkReady", callback: ready });
-      Cal("on", { action: "__iframeReady", callback: ready });
-      let booked = false;
-      const onBooked = () => { if (!booked) { booked = true; send("booked"); } };
-      Cal("on", { action: "bookingSuccessful", callback: onBooked });
-      Cal("on", { action: "bookingSuccessfulV2", callback: onBooked });
+      const f = document.createElement("iframe");
+      f.src = calBox.dataset.calSrc;
+      f.title = "Book a call with The Grow Label";
+      f.addEventListener("load", () => calBox.classList.add("ready"));
+      calBox.appendChild(f);
       setTimeout(() => calBox.classList.add("slow"), 7000);
     };
     if ("IntersectionObserver" in window) {

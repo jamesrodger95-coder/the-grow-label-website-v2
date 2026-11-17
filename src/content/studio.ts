@@ -31,6 +31,7 @@ export const STUDIO_NAV = {
     { href: '/#work', label: 'Work' },
     { href: '/#get', label: 'What you get' },
     { href: '/#process', label: 'How it works' },
+    { href: '/call', label: 'Book a call' },
   ],
   cta: { href: '/#sample', label: 'Free sample' },
 } as const;
@@ -1118,4 +1119,29 @@ export const STUDIO_CONTACT = {
     generic: 'Some details need correcting before this can be sent.',
     network: 'The message could not be sent. Check your connection and try again.',
   },
+} as const;
+
+/** /call: the booking page. Q's Calendly event, embedded on our own page. */
+export const STUDIO_CALL = {
+  meta: {
+    title: 'Book a call · The Grow Label',
+    description: 'Book a quick call with The Grow Label about fresh content for your business.',
+  },
+  eyebrow: 'Book a call',
+  title: 'One quick call.',
+  emphasis: 'One clear plan.',
+  lead: 'Pick a time that suits you. We look at your business, share ideas for your content and tell you what we would make first, what it costs and how long it takes.',
+  points: [
+    'Ideas for your content, built around your business',
+    'A look at your website, Google listing and social profiles',
+    'A clear first step, with the price',
+  ],
+  bookingUrl: 'https://calendly.com/quill_wilson/30min',
+  barTitle: 'Pick a time',
+  barNote: 'Free · No contract · No card details',
+  loading: 'Loading the calendar…',
+  fallback: 'Calendar not showing?',
+  fallbackLink: 'Open it in a new tab',
+  sampleNote: 'Want a free sample first?',
+  sampleLink: { href: '/#sample', label: 'Request one here' },
 } as const;

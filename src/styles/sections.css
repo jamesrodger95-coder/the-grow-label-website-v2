@@ -7418,3 +7418,89 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* --- /call: booking page with Q's Calendly calendar ------------------------ */
+.studio-call__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.35fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+.studio-call__points {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-weight: var(--gl-w-medium);
+}
+.studio-call__points li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.studio-call__points li::before {
+  content: "";
+  flex: none;
+  width: 11px;
+  height: 6px;
+  margin-top: -4px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+.studio-call__alt a,
+.studio-call__note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.studio-call__card {
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--gl-white);
+  color: var(--s-ink);
+  box-shadow: 0 50px 100px -50px rgba(12, 10, 40, 0.65);
+}
+.studio-call__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--s-line);
+}
+.studio-call__bar b { font-weight: var(--gl-w-medium); }
+.studio-call__bar span { font-size: 13.5px; color: var(--s-mute); }
+.studio-call__frame {
+  position: relative;
+  height: 720px;
+}
+.studio-call__wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  color: var(--s-mute);
+}
+.studio-call__frame iframe {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+.studio-call__note {
+  grid-column: 2;
+  margin: -12px 0 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+@media (max-width: 960px) {
+  .studio-call__grid { grid-template-columns: minmax(0, 1fr); }
+  .studio-call__note { grid-column: 1; }
+  .studio-call__frame { height: min(78svh, 680px); }
+}
